@@ -1,0 +1,88 @@
+package server
+
+import (
+	"context"
+	"encoding/json"
+	"errors"
+	"net/http"
+
+	"github.com/Its-donkey/Sharpen-live/platforms/youtube/internal/alerts"
+)
+
+// AlertProcessor processes incoming stream alerts.
+type AlertProcessor interface {
+	Handle(ctx context.Context, alert alerts.StreamAlert) error
+}
+
+// Logger mirrors the log.Printf signature.
+type Logger interface {
+	Printf(format string, v ...any)
+}
+
+// Config configures a Server instance.
+type Config struct {
+	Processor AlertProcessor
+	Logger    Logger
+}
+
+// Server exposes HTTP endpoints for alert delivery.
+type Server struct {
+	processor AlertProcessor
+	logger    Logger
+}
+
+// New constructs a Server.
+func New(cfg Config) *Server {
+	logger := cfg.Logger
+	if logger == nil {
+		logger = httpLogger{}
+	}
+
+	return &Server{processor: cfg.Processor, logger: logger}
+}
+
+// Routes returns the HTTP handler for the server.
+func (s *Server) Routes() http.Handler {
+	mux := http.NewServeMux()
+	mux.Handle("/alerts", s.handleAlerts())
+	return mux
+}
+
+func (s *Server) handleAlerts() http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodPost {
+			w.Header().Set("Allow", http.MethodPost)
+			w.WriteHeader(http.StatusMethodNotAllowed)
+			return
+		}
+
+		var alert alerts.StreamAlert
+		if err := json.NewDecoder(r.Body).Decode(&alert); err != nil {
+			s.logger.Printf("invalid payload: %v", err)
+			http.Error(w, "invalid payload", http.StatusBadRequest)
+			return
+		}
+		defer r.Body.Close()
+
+		if s.processor == nil {
+			http.Error(w, "alert processor unavailable", http.StatusServiceUnavailable)
+			return
+		}
+
+		if err := s.processor.Handle(r.Context(), alert); err != nil {
+			if errors.Is(err, alerts.ErrMissingChannelID) {
+				http.Error(w, "channelId is required", http.StatusBadRequest)
+				return
+			}
+			s.logger.Printf("alert processing failed: %v", err)
+			http.Error(w, "processing error", http.StatusInternalServerError)
+			return
+		}
+
+		w.WriteHeader(http.StatusAccepted)
+	})
+}
+
+type httpLogger struct{}
+
+func (httpLogger) Printf(string, ...any) {}

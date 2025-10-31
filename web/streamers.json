@@ -1,0 +1,37 @@
+[
+  {
+    "name": "EdgeCrafter",
+    "description": "Specializes in chef knives · Est. wait time 10 min",
+    "youtubeChannel": "https://www.youtube.com/@edgecrafter",
+    "liveStream": "https://www.youtube.com/watch?v=edgecrafter-live",
+    "status": "online"
+  },
+  {
+    "name": "Zen Edge Studio",
+    "description": "Waterstone specialist · Accepting rush orders",
+    "youtubeChannel": "https://www.youtube.com/@zenedgestudio",
+    "liveStream": "https://www.youtube.com/watch?v=zenedgestudio-live",
+    "status": "workshop"
+  },
+  {
+    "name": "Forge & Feather",
+    "description": "Damascus patterns · Next stream 19:00 UTC",
+    "youtubeChannel": "https://www.youtube.com/@forgeandfeather",
+    "liveStream": "https://www.youtube.com/watch?v=forgeandfeather-live",
+    "status": "offline"
+  },
+  {
+    "name": "Honbazuke Pro",
+    "description": "Premium partners · Bookings open",
+    "youtubeChannel": "https://www.youtube.com/@honbazukepro",
+    "liveStream": "https://www.youtube.com/watch?v=honbazukepro-live",
+    "status": "online"
+  },
+  {
+    "name": "Sharp & True",
+    "description": "Mobile service · On-site events available",
+    "youtubeChannel": "https://www.youtube.com/@sharpandtrue",
+    "liveStream": "https://www.youtube.com/watch?v=sharpandtrue-live",
+    "status": "offline"
+  }
+]

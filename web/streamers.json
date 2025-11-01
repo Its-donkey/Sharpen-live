@@ -2,36 +2,91 @@
   {
     "name": "EdgeCrafter",
     "description": "Specializes in chef knives · Est. wait time 10 min",
-    "youtubeChannel": "https://www.youtube.com/@edgecrafter",
-    "liveStream": "https://www.youtube.com/watch?v=edgecrafter-live",
-    "status": "online"
+    "status": "online",
+    "statusLabel": "Online",
+    "languages": ["English"],
+    "platforms": [
+      {
+        "name": "Twitch",
+        "channelUrl": "https://www.twitch.tv/edgecrafter",
+        "liveUrl": "https://www.twitch.tv/edgecrafter"
+      },
+      {
+        "name": "YouTube",
+        "channelUrl": "https://www.youtube.com/@edgecrafter",
+        "liveUrl": "https://www.youtube.com/watch?v=edgecrafter-live"
+      }
+    ]
   },
   {
     "name": "Zen Edge Studio",
     "description": "Waterstone specialist · Accepting rush orders",
-    "youtubeChannel": "https://www.youtube.com/@zenedgestudio",
-    "liveStream": "https://www.youtube.com/watch?v=zenedgestudio-live",
-    "status": "workshop"
+    "status": "busy",
+    "statusLabel": "Workshop",
+    "languages": ["English", "Japanese"],
+    "platforms": [
+      {
+        "name": "YouTube",
+        "channelUrl": "https://www.youtube.com/@zenedgestudio",
+        "liveUrl": "https://www.youtube.com/watch?v=zenedgestudio-live"
+      }
+    ]
   },
   {
     "name": "Forge & Feather",
     "description": "Damascus patterns · Next stream 19:00 UTC",
-    "youtubeChannel": "https://www.youtube.com/@forgeandfeather",
-    "liveStream": "https://www.youtube.com/watch?v=forgeandfeather-live",
-    "status": "offline"
+    "status": "offline",
+    "statusLabel": "Offline",
+    "languages": ["French"],
+    "platforms": [
+      {
+        "name": "Kick",
+        "channelUrl": "https://kick.com/forgeandfeather",
+        "liveUrl": "https://kick.com/forgeandfeather/live"
+      },
+      {
+        "name": "Twitch",
+        "channelUrl": "https://www.twitch.tv/forgeandfeather",
+        "liveUrl": "https://www.twitch.tv/forgeandfeather"
+      }
+    ]
   },
   {
     "name": "Honbazuke Pro",
     "description": "Premium partners · Bookings open",
-    "youtubeChannel": "https://www.youtube.com/@honbazukepro",
-    "liveStream": "https://www.youtube.com/watch?v=honbazukepro-live",
-    "status": "online"
+    "status": "online",
+    "statusLabel": "Online",
+    "languages": ["English", "German"],
+    "platforms": [
+      {
+        "name": "Twitch",
+        "channelUrl": "https://www.twitch.tv/honbazukepro",
+        "liveUrl": "https://www.twitch.tv/honbazukepro"
+      },
+      {
+        "name": "Instagram Live",
+        "channelUrl": "https://www.instagram.com/honbazukepro/",
+        "liveUrl": "https://www.instagram.com/honbazukepro/live/"
+      }
+    ]
   },
   {
     "name": "Sharp & True",
     "description": "Mobile service · On-site events available",
-    "youtubeChannel": "https://www.youtube.com/@sharpandtrue",
-    "liveStream": "https://www.youtube.com/watch?v=sharpandtrue-live",
-    "status": "offline"
+    "status": "offline",
+    "statusLabel": "Offline",
+    "languages": ["Spanish"],
+    "platforms": [
+      {
+        "name": "YouTube",
+        "channelUrl": "https://www.youtube.com/@sharpandtrue",
+        "liveUrl": "https://www.youtube.com/watch?v=sharpandtrue-live"
+      },
+      {
+        "name": "Facebook Live",
+        "channelUrl": "https://www.facebook.com/sharpandtrue/live",
+        "liveUrl": "https://www.facebook.com/sharpandtrue/live"
+      }
+    ]
   }
 ]

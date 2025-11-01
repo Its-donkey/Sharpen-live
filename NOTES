@@ -1,4 +1,4 @@
-➜  sharpen-live curl "https://www.googleapis.com/youtube/v3/channels?part=id&forHandle=ship-shape-sharpening&key=AIzaSyDK3BLtgYcA9r6qSoHXFJYbK__9qWXu0kM"
+curl "https://www.googleapis.com/youtube/v3/channels?part=id&forHandle=ship-shape-sharpening&key=AIzaSyDK3BLtgYcA9r6qSoHXFJYbK__9qWXu0kM"
 
 {
   "kind": "youtube#channelListResponse",

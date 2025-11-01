@@ -56,7 +56,7 @@ func TestHandleAlertsValidation(t *testing.T) {
 func TestHandleAlertsMethodNotAllowed(t *testing.T) {
 	srv := New(Config{})
 
-	req := httptest.NewRequest(http.MethodGet, "/alerts", nil)
+	req := httptest.NewRequest(http.MethodPut, "/alerts", nil)
 	rr := httptest.NewRecorder()
 
 	srv.Routes().ServeHTTP(rr, req)
@@ -77,5 +77,35 @@ func TestHandleAlertsProcessorError(t *testing.T) {
 
 	if rr.Code != http.StatusInternalServerError {
 		t.Fatalf("expected 500, got %d", rr.Code)
+	}
+}
+
+func TestHandleAlertsVerification(t *testing.T) {
+	srv := New(Config{})
+
+	req := httptest.NewRequest(http.MethodGet, "/alerts?hub.challenge=abc123&hub.mode=subscribe&hub.topic=test&hub.verify_token=token", nil)
+	rr := httptest.NewRecorder()
+
+	srv.Routes().ServeHTTP(rr, req)
+
+	if rr.Code != http.StatusOK {
+		t.Fatalf("expected 200, got %d", rr.Code)
+	}
+
+	if body := strings.TrimSpace(rr.Body.String()); body != "abc123" {
+		t.Fatalf("expected body abc123, got %s", body)
+	}
+}
+
+func TestHandleAlertsVerificationMissingChallenge(t *testing.T) {
+	srv := New(Config{})
+
+	req := httptest.NewRequest(http.MethodGet, "/alerts?hub.mode=subscribe", nil)
+	rr := httptest.NewRecorder()
+
+	srv.Routes().ServeHTTP(rr, req)
+
+	if rr.Code != http.StatusBadRequest {
+		t.Fatalf("expected 400, got %d", rr.Code)
 	}
 }

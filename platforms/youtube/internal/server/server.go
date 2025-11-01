@@ -50,8 +50,13 @@ func (s *Server) Routes() http.Handler {
 
 func (s *Server) handleAlerts() http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.Method == http.MethodGet {
+			s.handleVerification(w, r)
+			return
+		}
+
 		if r.Method != http.MethodPost {
-			w.Header().Set("Allow", http.MethodPost)
+			w.Header().Set("Allow", http.MethodPost+", "+http.MethodGet)
 			w.WriteHeader(http.StatusMethodNotAllowed)
 			return
 		}
@@ -81,6 +86,22 @@ func (s *Server) handleAlerts() http.Handler {
 
 		w.WriteHeader(http.StatusAccepted)
 	})
+}
+
+func (s *Server) handleVerification(w http.ResponseWriter, r *http.Request) {
+	challenge := r.URL.Query().Get("hub.challenge")
+	mode := r.URL.Query().Get("hub.mode")
+	topic := r.URL.Query().Get("hub.topic")
+	verifyToken := r.URL.Query().Get("hub.verify_token")
+
+	if challenge == "" {
+		http.Error(w, "missing hub.challenge", http.StatusBadRequest)
+		return
+	}
+
+	s.logger.Printf("verification request: mode=%s topic=%s verify_token=%s", mode, topic, verifyToken)
+	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
+	_, _ = w.Write([]byte(challenge))
 }
 
 type httpLogger struct{}

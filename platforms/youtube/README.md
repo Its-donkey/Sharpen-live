@@ -35,3 +35,7 @@ Without an API key the service will start, but polling attempts will fail until 
 ```
 
 Any status other than `online` will cancel polling for the supplied `channelId`.
+
+- `GET /alerts?hub.mode=subscribe&hub.challenge=...`
+
+  Used by YouTube's PubSubHubbub callbacks. The server automatically echos the `hub.challenge` value so subscriptions can be confirmed.

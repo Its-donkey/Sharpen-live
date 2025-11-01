@@ -4,278 +4,7 @@
     <meta charset="utf-8" />
     <title>Sharpen.Live</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <style>
-      :root {
-        color-scheme: dark light;
-        --bg-primary: #0f172a;
-        --bg-surface: rgba(15, 23, 42, 0.85);
-        --bg-table: rgba(30, 41, 59, 0.6);
-        --fg-primary: #e2e8f0;
-        --fg-muted: #94a3b8;
-        --accent: #38bdf8;
-        --accent-strong: #0ea5e9;
-        --online: #22c55e;
-        --offline: #ef4444;
-        --busy: #facc15;
-        --font-heading: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
-        --font-body: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-          sans-serif;
-        --shadow-lg: 0 25px 50px -12px rgba(15, 23, 42, 0.65);
-        --radius-xl: 18px;
-      }
-
-      * {
-        box-sizing: border-box;
-      }
-
-      body {
-        margin: 0;
-        min-height: 100vh;
-        background: radial-gradient(120% 120% at 0% 0%, #172554 0%, #0f172a 45%, #020617 100%);
-        font-family: var(--font-body);
-        color: var(--fg-primary);
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        padding: clamp(1.5rem, 2vw + 1rem, 4rem);
-        gap: 3rem;
-      }
-
-      .surface {
-        width: min(1120px, 100%);
-        background: var(--bg-surface);
-        border-radius: var(--radius-xl);
-        padding: clamp(1.75rem, 2.5vw + 1rem, 2.75rem);
-        box-shadow: var(--shadow-lg);
-        backdrop-filter: blur(12px);
-        border: 1px solid rgba(148, 163, 184, 0.12);
-      }
-
-      .site-header {
-        display: flex;
-        flex-wrap: wrap;
-        align-items: center;
-        gap: clamp(1rem, 3vw, 2.5rem);
-        justify-content: space-between;
-      }
-
-      .logo-lockup {
-        display: grid;
-        grid-template-columns: auto 1fr;
-        gap: 1rem;
-        align-items: center;
-      }
-
-      .logo-icon {
-        width: clamp(72px, 8vw + 32px, 96px);
-        height: clamp(72px, 8vw + 32px, 96px);
-        padding: 0.75rem;
-        border-radius: calc(var(--radius-xl) / 1.5);
-        background: radial-gradient(circle at 20% 20%, rgba(56, 189, 248, 0.85) 0%, rgba(14, 165, 233, 0.65) 55%, rgba(14, 165, 233, 0.25) 100%);
-        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.45), 0 15px 35px rgba(14, 165, 233, 0.35);
-      }
-
-      .logo-icon svg {
-        width: 100%;
-        height: 100%;
-      }
-
-      .logo-text h1 {
-        margin: 0;
-        font-size: clamp(2.25rem, 3vw + 1.5rem, 3.5rem);
-        font-family: var(--font-heading);
-        letter-spacing: 0.04em;
-        text-transform: uppercase;
-      }
-
-      .logo-text p {
-        margin: 0.25rem 0 0;
-        color: var(--fg-muted);
-        letter-spacing: 0.06em;
-        text-transform: uppercase;
-        font-size: clamp(0.75rem, 0.5vw + 0.6rem, 0.95rem);
-      }
-
-      .cta {
-        padding: 1rem 1.75rem;
-        border-radius: 999px;
-        background: linear-gradient(120deg, var(--accent), var(--accent-strong));
-        color: #0f172a;
-        font-weight: 600;
-        text-decoration: none;
-        transition: transform 0.25s ease, box-shadow 0.25s ease;
-        box-shadow: 0 18px 30px -12px rgba(56, 189, 248, 0.55);
-      }
-
-      .cta:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 20px 35px -15px rgba(56, 189, 248, 0.75);
-      }
-
-      .streamer-table {
-        margin-top: 2.75rem;
-        border-radius: calc(var(--radius-xl) * 0.75);
-        overflow: hidden;
-        background: var(--bg-table);
-        border: 1px solid rgba(148, 163, 184, 0.18);
-      }
-
-      table {
-        width: 100%;
-        border-collapse: collapse;
-      }
-
-      thead {
-        background: rgba(15, 23, 42, 0.6);
-        font-size: 0.85rem;
-        letter-spacing: 0.12em;
-        text-transform: uppercase;
-        color: var(--fg-muted);
-      }
-
-      th,
-      td {
-        padding: 1.15rem clamp(1rem, 1.5vw + 0.5rem, 1.75rem);
-        text-align: left;
-        vertical-align: middle;
-      }
-
-      tbody tr {
-        transition: background 0.25s ease;
-      }
-
-      tbody tr:nth-child(even) {
-        background: rgba(15, 23, 42, 0.45);
-      }
-
-      tbody tr:hover {
-        background: rgba(56, 189, 248, 0.08);
-      }
-
-      .status {
-        display: inline-flex;
-        align-items: center;
-        gap: 0.5rem;
-        padding: 0.5rem 0.9rem;
-        border-radius: 999px;
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.08em;
-        font-size: 0.75rem;
-        background: rgba(148, 163, 184, 0.18);
-      }
-
-      .status::before {
-        content: "";
-        width: 0.65rem;
-        height: 0.65rem;
-        border-radius: 999px;
-        background: var(--fg-muted);
-        box-shadow: 0 0 12px currentColor;
-      }
-
-      .status.online {
-        color: var(--online);
-        background: rgba(34, 197, 94, 0.12);
-      }
-
-      .status.online::before {
-        background: var(--online);
-      }
-
-      .status.offline {
-        color: var(--offline);
-        background: rgba(239, 68, 68, 0.12);
-      }
-
-      .status.offline::before {
-        background: var(--offline);
-      }
-
-      .status.busy {
-        color: var(--busy);
-        background: rgba(250, 204, 21, 0.12);
-      }
-
-      .status.busy::before {
-        background: var(--busy);
-      }
-
-      .platform-list {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.4rem 0.75rem;
-        list-style: none;
-        margin: 0;
-        padding: 0;
-      }
-
-      .platform-list li {
-        font-size: 0.92rem;
-        color: var(--fg-primary);
-        background: rgba(148, 163, 184, 0.12);
-        padding: 0.4rem 0.75rem;
-        border-radius: 999px;
-      }
-
-      .lang {
-        font-weight: 600;
-        letter-spacing: 0.04em;
-      }
-
-      footer {
-        width: min(1120px, 100%);
-        color: var(--fg-muted);
-        font-size: 0.9rem;
-        display: flex;
-        justify-content: space-between;
-        gap: 1rem;
-        flex-wrap: wrap;
-      }
-
-      footer a {
-        color: var(--accent);
-        text-decoration: none;
-      }
-
-      @media (max-width: 720px) {
-        .site-header {
-          flex-direction: column;
-          align-items: stretch;
-        }
-
-        thead {
-          display: none;
-        }
-
-        table,
-        tbody,
-        tr,
-        td {
-          display: block;
-          width: 100%;
-        }
-
-        tbody tr {
-          padding: 1.5rem;
-          border-bottom: 1px solid rgba(148, 163, 184, 0.18);
-        }
-
-        td {
-          padding: 0.35rem 0;
-        }
-
-        td::before {
-          content: attr(data-label);
-          display: block;
-          text-transform: uppercase;
-          letter-spacing: 0.12em;
-          font-size: 0.7rem;
-          color: var(--fg-muted);
-          margin-bottom: 0.25rem;
-        }
-      }
-    </style>
+    <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
     <header class="surface site-header">
@@ -340,87 +69,7 @@
               <th scope="col">Language</th>
             </tr>
           </thead>
-          <tbody>
-            <tr>
-              <td data-label="Status"><span class="status online">Online</span></td>
-              <td data-label="Name">
-                <strong>EdgeCrafter</strong>
-                <div style="color: var(--fg-muted); font-size: 0.85rem; margin-top: 0.2rem;">
-                  Specializes in chef knives · Est. wait time 10 min
-                </div>
-              </td>
-              <td data-label="Streaming Platforms">
-                <ul class="platform-list">
-                  <li>Twitch</li>
-                  <li>YouTube</li>
-                </ul>
-              </td>
-              <td data-label="Language"><span class="lang">English</span></td>
-            </tr>
-            <tr>
-              <td data-label="Status"><span class="status busy">Workshop</span></td>
-              <td data-label="Name">
-                <strong>Zen Edge Studio</strong>
-                <div style="color: var(--fg-muted); font-size: 0.85rem; margin-top: 0.2rem;">
-                  Waterstone specialist · Accepting rush orders
-                </div>
-              </td>
-              <td data-label="Streaming Platforms">
-                <ul class="platform-list">
-                  <li>YouTube</li>
-                </ul>
-              </td>
-              <td data-label="Language"><span class="lang">English · Japanese</span></td>
-            </tr>
-            <tr>
-              <td data-label="Status"><span class="status offline">Offline</span></td>
-              <td data-label="Name">
-                <strong>Forge &amp; Feather</strong>
-                <div style="color: var(--fg-muted); font-size: 0.85rem; margin-top: 0.2rem;">
-                  Damascus patterns · Next stream 19:00 UTC
-                </div>
-              </td>
-              <td data-label="Streaming Platforms">
-                <ul class="platform-list">
-                  <li>Kick</li>
-                  <li>Twitch</li>
-                </ul>
-              </td>
-              <td data-label="Language"><span class="lang">French</span></td>
-            </tr>
-            <tr>
-              <td data-label="Status"><span class="status online">Online</span></td>
-              <td data-label="Name">
-                <strong>Honbazuke Pro</strong>
-                <div style="color: var(--fg-muted); font-size: 0.85rem; margin-top: 0.2rem;">
-                  Premium partners · Bookings open
-                </div>
-              </td>
-              <td data-label="Streaming Platforms">
-                <ul class="platform-list">
-                  <li>Twitch</li>
-                  <li>Instagram Live</li>
-                </ul>
-              </td>
-              <td data-label="Language"><span class="lang">English · German</span></td>
-            </tr>
-            <tr>
-              <td data-label="Status"><span class="status offline">Offline</span></td>
-              <td data-label="Name">
-                <strong>Sharp &amp; True</strong>
-                <div style="color: var(--fg-muted); font-size: 0.85rem; margin-top: 0.2rem;">
-                  Mobile service · On-site events available
-                </div>
-              </td>
-              <td data-label="Streaming Platforms">
-                <ul class="platform-list">
-                  <li>YouTube</li>
-                  <li>Facebook Live</li>
-                </ul>
-              </td>
-              <td data-label="Language"><span class="lang">Spanish</span></td>
-            </tr>
-          </tbody>
+          <tbody id="streamers-table-body"></tbody>
         </table>
       </section>
     </main>
@@ -434,7 +83,161 @@
     </footer>
 
     <script>
-      document.getElementById("current-year").textContent = new Date().getFullYear();
+      const currentYearElement = document.getElementById("current-year");
+      if (currentYearElement) {
+        currentYearElement.textContent = new Date().getFullYear();
+      }
+
+      const tableBody = document.getElementById("streamers-table-body");
+      const STATUS_CLASS_FALLBACK = "offline";
+      const STATUS_LABEL_FALLBACK = "Offline";
+
+      const createStatusCell = (streamer) => {
+        const statusCell = document.createElement("td");
+        statusCell.dataset.label = "Status";
+
+        const span = document.createElement("span");
+        const state = (streamer.status || STATUS_CLASS_FALLBACK).toLowerCase();
+        span.className = `status ${state}`;
+        span.textContent = streamer.statusLabel || STATUS_LABEL_FALLBACK;
+
+        statusCell.appendChild(span);
+        return statusCell;
+      };
+
+      const createNameCell = (streamer) => {
+        const nameCell = document.createElement("td");
+        nameCell.dataset.label = "Name";
+
+        const strong = document.createElement("strong");
+        strong.textContent = streamer.name;
+        nameCell.appendChild(strong);
+
+        if (streamer.description) {
+          const description = document.createElement("div");
+          description.className = "streamer-description";
+          description.textContent = streamer.description;
+          nameCell.appendChild(description);
+        }
+
+        return nameCell;
+      };
+
+      const createPlatformCell = (streamer) => {
+        const platformCell = document.createElement("td");
+        platformCell.dataset.label = "Streaming Platforms";
+
+        const platforms = Array.isArray(streamer.platforms) ? streamer.platforms : [];
+        if (!platforms.length) {
+          platformCell.textContent = "—";
+          return platformCell;
+        }
+
+        const list = document.createElement("ul");
+        list.className = "platform-list";
+
+        const state = (streamer.status || STATUS_CLASS_FALLBACK).toLowerCase();
+        const isLive = state === "online";
+
+        platforms.forEach((platform) => {
+          const listItem = document.createElement("li");
+          const link = document.createElement("a");
+          link.className = "platform-link";
+          link.textContent = platform.name;
+
+          const liveUrl = platform.liveUrl || platform.channelUrl;
+          const channelUrl = platform.channelUrl || platform.liveUrl;
+          const targetUrl = isLive ? liveUrl : channelUrl;
+
+          if (targetUrl) {
+            link.href = targetUrl;
+            link.target = "_blank";
+            link.rel = "noopener noreferrer";
+          } else {
+            link.setAttribute("aria-disabled", "true");
+            link.tabIndex = -1;
+          }
+
+          listItem.appendChild(link);
+          list.appendChild(listItem);
+        });
+
+        platformCell.appendChild(list);
+        return platformCell;
+      };
+
+      const createLanguageCell = (streamer) => {
+        const languageCell = document.createElement("td");
+        languageCell.dataset.label = "Language";
+
+        const languages = Array.isArray(streamer.languages)
+          ? streamer.languages.join(" · ")
+          : streamer.languages || "—";
+
+        const span = document.createElement("span");
+        span.className = "lang";
+        span.textContent = languages;
+        languageCell.appendChild(span);
+
+        return languageCell;
+      };
+
+      const renderStreamerRow = (streamer) => {
+        const row = document.createElement("tr");
+        row.appendChild(createStatusCell(streamer));
+        row.appendChild(createNameCell(streamer));
+        row.appendChild(createPlatformCell(streamer));
+        row.appendChild(createLanguageCell(streamer));
+        return row;
+      };
+
+      const renderStreamers = (streamers) => {
+        if (!tableBody) {
+          return;
+        }
+
+        tableBody.innerHTML = "";
+
+        if (!Array.isArray(streamers) || !streamers.length) {
+          const emptyStateRow = document.createElement("tr");
+          const cell = document.createElement("td");
+          cell.colSpan = 4;
+          cell.textContent = "No streamers available at the moment.";
+          emptyStateRow.appendChild(cell);
+          tableBody.appendChild(emptyStateRow);
+          return;
+        }
+
+        streamers.forEach((streamer) => {
+          tableBody.appendChild(renderStreamerRow(streamer));
+        });
+      };
+
+      const loadStreamers = async () => {
+        if (!tableBody) {
+          return;
+        }
+
+        try {
+          const response = await fetch("streamers.json", { cache: "no-cache" });
+          if (!response.ok) {
+            throw new Error(`Unexpected response: ${response.status}`);
+          }
+          const streamers = await response.json();
+          renderStreamers(streamers);
+        } catch (error) {
+          console.error("Failed to load streamer roster", error);
+          const errorRow = document.createElement("tr");
+          const cell = document.createElement("td");
+          cell.colSpan = 4;
+          cell.textContent = "Unable to load streamers right now. Please try again later.";
+          errorRow.appendChild(cell);
+          tableBody.innerHTML = "";
+          tableBody.appendChild(errorRow);
+        }
+      };
+
+      loadStreamers();
     </script>
   </body>
 </html>

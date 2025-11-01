@@ -101,6 +101,7 @@ func (s *Server) handleVerification(w http.ResponseWriter, r *http.Request) {
 
 	s.logger.Printf("verification request: mode=%s topic=%s verify_token=%s", mode, topic, verifyToken)
 	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
+	w.WriteHeader(http.StatusOK)
 	_, _ = w.Write([]byte(challenge))
 }
 

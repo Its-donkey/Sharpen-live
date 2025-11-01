@@ -7,3 +7,4 @@
 - Modularize YouTube alert application with dedicated packages and automated tests.
 - Add `web/streamers.json` to track streamer metadata.
 - Support PubSubHubbub verification callbacks for `/alerts`.
+- Ensure PubSubHubbub verification replies echo `hub.challenge` with a `200 OK` status.

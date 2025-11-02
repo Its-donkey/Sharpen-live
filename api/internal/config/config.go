@@ -55,7 +55,7 @@ func FromEnv() (Config, error) {
 
 	dataDir := strings.TrimSpace(os.Getenv(envDataDir))
 	if dataDir == "" {
-		dataDir = defaultDataDir
+		dataDir = detectDataDir()
 	}
 
 	streamersPath := strings.TrimSpace(os.Getenv(envStreamersFile))
@@ -101,4 +101,19 @@ func (c Config) Validate() error {
 		return fmt.Errorf("config: admin password is required")
 	}
 	return nil
+}
+
+func detectDataDir() string {
+	candidates := []string{
+		filepath.Join("api", "data"),
+		"data",
+	}
+
+	for _, candidate := range candidates {
+		if info, err := os.Stat(candidate); err == nil && info.IsDir() {
+			return candidate
+		}
+	}
+
+	return candidates[0]
 }

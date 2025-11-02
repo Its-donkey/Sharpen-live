@@ -1,77 +1,67 @@
 package handler
 
 import (
-	"bytes"
-	"context"
-	"encoding/base64"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"io"
 	"net/http"
 	"os"
+	"path/filepath"
 	"strings"
 	"time"
+
+	"github.com/google/uuid"
 )
 
 const (
-	githubAPIBaseURL = "https://api.github.com"
-	defaultOwner     = "Its-donkey"
-	defaultRepo      = "Sharpen-live"
-	defaultBranch    = "main"
-	requestTimeout   = 15 * time.Second
+	defaultDataDir        = "api/data"
+	streamersFileName     = "streamers.json"
+	submissionsFileName   = "submissions.json"
+	defaultStatusLabel    = "Offline"
+	maxStreamerNameLength = 80
+	maxDescriptionLength  = 480
+	maxPlatformsPerEntry  = 8
+	maxLanguagesPerEntry  = 8
+	adminTokenEnvKey      = "ADMIN_TOKEN" // documented for parity with admin endpoints
+	dataDirEnvKey         = "SHARPEN_DATA_DIR"
+	streamersFileEnvKey   = "SHARPEN_STREAMERS_FILE"
+	submissionsFileEnvKey = "SHARPEN_SUBMISSIONS_FILE"
 )
 
-type platform struct {
+type submissionRequest struct {
+	Name        string          `json:"name"`
+	Description string          `json:"description"`
+	Status      string          `json:"status"`
+	StatusLabel string          `json:"statusLabel"`
+	Languages   []string        `json:"languages"`
+	Platforms   []platformEntry `json:"platforms"`
+}
+
+type platformEntry struct {
 	Name       string `json:"name"`
 	ChannelURL string `json:"channelUrl"`
 	LiveURL    string `json:"liveUrl"`
 }
 
-type submission struct {
-	Name        string     `json:"name"`
-	Description string     `json:"description"`
-	Status      string     `json:"status"`
-	StatusLabel string     `json:"statusLabel"`
-	Languages   []string   `json:"languages"`
-	Platforms   []platform `json:"platforms"`
+type storedSubmission struct {
+	ID          string            `json:"id"`
+	SubmittedAt time.Time         `json:"submittedAt"`
+	Payload     submissionRequest `json:"payload"`
 }
 
 type submissionResponse struct {
-	PullRequestURL string `json:"pullRequestUrl"`
-}
-
-type githubErrorResponse struct {
 	Message string `json:"message"`
+	ID      string `json:"id"`
 }
 
-type refResponse struct {
-	Object struct {
-		SHA string `json:"sha"`
-	} `json:"object"`
-}
-
-type fileResponse struct {
-	SHA      string `json:"sha"`
-	Content  string `json:"content"`
-	Encoding string `json:"encoding"`
-}
-
-type pullRequestResponse struct {
-	HTMLURL string `json:"html_url"`
-}
-
-var statusDefaultLabels = map[string]string{
+var statusDefaults = map[string]string{
 	"online":  "Online",
 	"busy":    "Workshop",
 	"offline": "Offline",
 }
 
-var httpClient = &http.Client{
-	Timeout: requestTimeout,
-}
-
-// Handler is the entry point for the streamer submission API.
+// Handler receives streamer submissions and stores them for review.
 func Handler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		w.Header().Set("Allow", http.MethodPost)
@@ -81,22 +71,7 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	token := os.Getenv("GITHUB_TOKEN")
-	if token == "" {
-		token = os.Getenv("SHARPEN_GITHUB_TOKEN")
-	}
-	if token == "" {
-		token = os.Getenv("SUBMISSION_GITHUB_TOKEN")
-	}
-
-	if token == "" {
-		respondJSON(w, http.StatusInternalServerError, map[string]string{
-			"message": "GitHub token is not configured on the server.",
-		})
-		return
-	}
-
-	payload, err := readPayload(r.Body)
+	req, err := decodeSubmission(r.Body)
 	if err != nil {
 		respondJSON(w, http.StatusBadRequest, map[string]string{
 			"message": err.Error(),
@@ -104,471 +79,199 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	owner := firstNonEmpty(os.Getenv("GITHUB_REPO_OWNER"), defaultOwner)
-	repo := firstNonEmpty(os.Getenv("GITHUB_REPO_NAME"), defaultRepo)
-	baseBranch := firstNonEmpty(os.Getenv("GITHUB_DEFAULT_BRANCH"), defaultBranch)
-
-	ctx := r.Context()
-	prURL, err := createStreamerPullRequest(ctx, token, owner, repo, baseBranch, payload)
+	id, err := appendSubmission(req)
 	if err != nil {
-		var githubErr *githubRequestError
-		if errors.As(err, &githubErr) && githubErr.StatusCode != 0 {
-			respondJSON(w, githubErr.StatusCode, map[string]string{
-				"message": githubErr.Error(),
-			})
-			return
-		}
-
 		respondJSON(w, http.StatusInternalServerError, map[string]string{
 			"message": err.Error(),
 		})
 		return
 	}
 
-	respondJSON(w, http.StatusOK, submissionResponse{
-		PullRequestURL: prURL,
+	respondJSON(w, http.StatusAccepted, submissionResponse{
+		Message: "Submission received and queued for review.",
+		ID:      id,
 	})
 }
 
-func readPayload(body io.ReadCloser) (*submission, error) {
+func decodeSubmission(body io.ReadCloser) (*submissionRequest, error) {
 	defer body.Close()
 
-	var raw any
+	var payload submissionRequest
 	decoder := json.NewDecoder(body)
-	if err := decoder.Decode(&raw); err != nil {
-		return nil, fmt.Errorf("invalid JSON payload: %w", err)
+	decoder.DisallowUnknownFields()
+
+	if err := decoder.Decode(&payload); err != nil {
+		return nil, fmt.Errorf("invalid submission payload: %w", err)
 	}
 
-	sub, errs := parseSubmission(raw)
-	if len(errs) > 0 {
+	normalizeSubmission(&payload)
+	if errs := validateSubmission(payload); len(errs) > 0 {
 		return nil, errors.New(strings.Join(errs, " "))
 	}
 
-	return sub, nil
+	return &payload, nil
 }
 
-func parseSubmission(raw any) (*submission, []string) {
-	data, ok := raw.(map[string]any)
-	if !ok {
-		return nil, []string{"Payload must be a JSON object."}
+func normalizeSubmission(req *submissionRequest) {
+	req.Name = strings.TrimSpace(req.Name)
+	req.Description = strings.TrimSpace(req.Description)
+	req.Status = strings.ToLower(strings.TrimSpace(req.Status))
+	req.StatusLabel = strings.TrimSpace(req.StatusLabel)
+
+	req.Languages = filterStrings(req.Languages, maxLanguagesPerEntry)
+	req.Platforms = filterPlatforms(req.Platforms, maxPlatformsPerEntry)
+
+	if req.StatusLabel == "" && statusDefaults[req.Status] != "" {
+		req.StatusLabel = statusDefaults[req.Status]
+	} else if req.StatusLabel == "" {
+		req.StatusLabel = defaultStatusLabel
 	}
+}
 
-	getString := func(key string) string {
-		val, exists := data[key]
-		if !exists {
-			return ""
-		}
-		switch v := val.(type) {
-		case string:
-			return strings.TrimSpace(v)
-		default:
-			return strings.TrimSpace(fmt.Sprint(v))
-		}
-	}
-
-	name := getString("name")
-	description := getString("description")
-	status := strings.ToLower(getString("status"))
-	statusLabel := getString("statusLabel")
-
-	langs := normalizeLanguages(data["languages"])
-	platforms := normalizePlatforms(data["platforms"])
-
+func validateSubmission(req submissionRequest) []string {
 	var errs []string
-	if name == "" {
+
+	if req.Name == "" {
 		errs = append(errs, "Streamer name is required.")
+	} else if len(req.Name) > maxStreamerNameLength {
+		errs = append(errs, fmt.Sprintf("Streamer name must be under %d characters.", maxStreamerNameLength))
 	}
 
-	if description == "" {
+	if req.Description == "" {
 		errs = append(errs, "Description is required.")
+	} else if len(req.Description) > maxDescriptionLength {
+		errs = append(errs, fmt.Sprintf("Description must be under %d characters.", maxDescriptionLength))
 	}
 
-	if status == "" || statusDefaultLabels[status] == "" {
+	if req.Status == "" || statusDefaults[req.Status] == "" {
 		errs = append(errs, "Status is required and must be one of: online, busy, or offline.")
 	}
 
-	if len(langs) == 0 {
+	if len(req.Languages) == 0 {
 		errs = append(errs, "At least one language is required.")
 	}
 
-	if len(platforms) == 0 {
+	if len(req.Platforms) == 0 {
 		errs = append(errs, "At least one platform with channel and live URLs is required.")
 	}
 
-	if statusLabel == "" && status != "" {
-		statusLabel = statusDefaultLabels[status]
-	}
-
-	return &submission{
-		Name:        name,
-		Description: description,
-		Status:      status,
-		StatusLabel: statusLabel,
-		Languages:   langs,
-		Platforms:   platforms,
-	}, errs
+	return errs
 }
 
-func normalizeLanguages(value any) []string {
-	switch v := value.(type) {
-	case []any:
-		result := make([]string, 0, len(v))
-		for _, lang := range v {
-			str := strings.TrimSpace(fmt.Sprint(lang))
-			if str != "" {
-				result = append(result, str)
-			}
+func filterStrings(values []string, max int) []string {
+	result := make([]string, 0, len(values))
+	for _, v := range values {
+		if trimmed := strings.TrimSpace(v); trimmed != "" {
+			result = append(result, trimmed)
 		}
-		return result
-	case []string:
-		result := make([]string, 0, len(v))
-		for _, lang := range v {
-			str := strings.TrimSpace(lang)
-			if str != "" {
-				result = append(result, str)
-			}
+		if len(result) >= max && max > 0 {
+			break
 		}
-		return result
-	case string:
-		parts := strings.Split(v, ",")
-		result := make([]string, 0, len(parts))
-		for _, lang := range parts {
-			str := strings.TrimSpace(lang)
-			if str != "" {
-				result = append(result, str)
-			}
-		}
-		return result
-	default:
-		return nil
 	}
-}
-
-func normalizePlatforms(value any) []platform {
-	rawList, ok := value.([]any)
-	if !ok {
-		return nil
-	}
-
-	result := make([]platform, 0, len(rawList))
-	for _, entry := range rawList {
-		data, ok := entry.(map[string]any)
-		if !ok {
-			continue
-		}
-
-		name := strings.TrimSpace(fmt.Sprint(data["name"]))
-		channelURL := strings.TrimSpace(fmt.Sprint(data["channelUrl"]))
-		liveURL := strings.TrimSpace(fmt.Sprint(data["liveUrl"]))
-
-		if name == "" || channelURL == "" || liveURL == "" {
-			continue
-		}
-
-		result = append(result, platform{
-			Name:       name,
-			ChannelURL: channelURL,
-			LiveURL:    liveURL,
-		})
-	}
-
 	return result
 }
 
-func createStreamerPullRequest(
-	ctx context.Context,
-	token, owner, repo, baseBranch string,
-	sub *submission,
-) (string, error) {
-	baseRef, err := getBaseRef(ctx, token, owner, repo, baseBranch)
-	if err != nil {
-		return "", err
-	}
-
-	branchName, err := ensureBranchExists(ctx, token, owner, repo, baseRef, sub.Name)
-	if err != nil {
-		return "", err
-	}
-
-	fileInfo, err := getStreamersFile(ctx, token, owner, repo, baseBranch)
-	if err != nil {
-		return "", err
-	}
-
-	updatedContent, err := appendStreamer(fileInfo.Content, sub, fileInfo.Encoding)
-	if err != nil {
-		return "", err
-	}
-
-	if err := updateStreamersFile(ctx, token, owner, repo, branchName, updatedContent, fileInfo.SHA, sub.Name); err != nil {
-		return "", err
-	}
-
-	return openPullRequest(ctx, token, owner, repo, branchName, baseBranch, sub.Name)
-}
-
-func getBaseRef(ctx context.Context, token, owner, repo, branch string) (*refResponse, error) {
-	var ref refResponse
-	endpoint := fmt.Sprintf("/repos/%s/%s/git/ref/heads/%s", owner, repo, branch)
-	if err := githubRequestJSON(ctx, http.MethodGet, endpoint, token, nil, &ref); err != nil {
-		return nil, err
-	}
-
-	if ref.Object.SHA == "" {
-		return nil, errors.New("unable to locate the base branch SHA")
-	}
-
-	return &ref, nil
-}
-
-func ensureBranchExists(ctx context.Context, token, owner, repo string, baseRef *refResponse, streamerName string) (string, error) {
-	baseSHA := baseRef.Object.SHA
-	desired := fmt.Sprintf("feature/items/add-%s", slugify(streamerName))
-	branchName := desired
-
-	for attempts := 0; attempts < 5; attempts++ {
-		body := map[string]string{
-			"ref": fmt.Sprintf("refs/heads/%s", branchName),
-			"sha": baseSHA,
+func filterPlatforms(values []platformEntry, max int) []platformEntry {
+	result := make([]platformEntry, 0, len(values))
+	for _, v := range values {
+		entry := platformEntry{
+			Name:       strings.TrimSpace(v.Name),
+			ChannelURL: strings.TrimSpace(v.ChannelURL),
+			LiveURL:    strings.TrimSpace(v.LiveURL),
 		}
-
-		endpoint := fmt.Sprintf("/repos/%s/%s/git/refs", owner, repo)
-		err := githubRequestJSON(ctx, http.MethodPost, endpoint, token, body, nil)
-		if err == nil {
-			return branchName, nil
-		}
-
-		var reqErr *githubRequestError
-		if errors.As(err, &reqErr) && reqErr.StatusCode == http.StatusUnprocessableEntity {
-			branchName = fmt.Sprintf("%s-%s", desired, time.Now().Format("20060102T150405"))
+		if entry.Name == "" || entry.ChannelURL == "" || entry.LiveURL == "" {
 			continue
 		}
+		result = append(result, entry)
+		if len(result) >= max && max > 0 {
+			break
+		}
+	}
+	return result
+}
 
+func appendSubmission(req *submissionRequest) (string, error) {
+	submissionsPath := resolveDataPath(submissionsFileEnvKey, submissionsFileName)
+	submissions, err := readSubmissions(submissionsPath)
+	if err != nil {
 		return "", err
 	}
 
-	return "", errors.New("unable to create a unique branch for the submission")
+	entry := storedSubmission{
+		ID:          uuid.NewString(),
+		SubmittedAt: time.Now().UTC(),
+		Payload:     *req,
+	}
+	submissions = append(submissions, entry)
+
+	if err := writeJSON(submissionsPath, submissions); err != nil {
+		return "", err
+	}
+
+	return entry.ID, nil
 }
 
-func getStreamersFile(ctx context.Context, token, owner, repo, branch string) (*fileResponse, error) {
-	var file fileResponse
-	endpoint := fmt.Sprintf("/repos/%s/%s/contents/api/data/streamers.json?ref=%s", owner, repo, branch)
-	if err := githubRequestJSON(ctx, http.MethodGet, endpoint, token, nil, &file); err != nil {
+func readSubmissions(path string) ([]storedSubmission, error) {
+	if _, err := os.Stat(path); errors.Is(err, os.ErrNotExist) {
+		if err := bootstrapDataFile(path, []storedSubmission{}); err != nil {
+			return nil, err
+		}
+	}
+
+	data, err := os.ReadFile(path)
+	if err != nil {
 		return nil, err
 	}
 
-	return &file, nil
+	var submissions []storedSubmission
+	if len(data) == 0 {
+		return submissions, nil
+	}
+
+	if err := json.Unmarshal(data, &submissions); err != nil {
+		return nil, fmt.Errorf("unable to parse submissions: %w", err)
+	}
+
+	return submissions, nil
 }
 
-func appendStreamer(encodedContent string, sub *submission, encoding string) (string, error) {
-	if encoding != "" && !strings.EqualFold(encoding, "base64") {
-		return "", fmt.Errorf("unexpected encoding %q for streamers file", encoding)
+func resolveDataPath(envKey, fileName string) string {
+	if path := strings.TrimSpace(os.Getenv(envKey)); path != "" {
+		return path
 	}
-
-	content, err := decodeStreamers(encodedContent)
-	if err != nil {
-		return "", err
+	dir := strings.TrimSpace(os.Getenv(dataDirEnvKey))
+	if dir == "" {
+		dir = defaultDataDir
 	}
-
-	var entries []submission
-	if err := json.Unmarshal(content, &entries); err != nil {
-		return "", fmt.Errorf("existing streamer list is not valid JSON: %w", err)
-	}
-
-	entries = append(entries, submission{
-		Name:        sub.Name,
-		Description: sub.Description,
-		Status:      sub.Status,
-		StatusLabel: sub.StatusLabel,
-		Languages:   sub.Languages,
-		Platforms:   sub.Platforms,
-	})
-
-	updated, err := json.MarshalIndent(entries, "", "  ")
-	if err != nil {
-		return "", fmt.Errorf("unable to encode streamer list: %w", err)
-	}
-
-	return encodeStreamers(updated), nil
+	return filepath.Join(dir, fileName)
 }
 
-func updateStreamersFile(ctx context.Context, token, owner, repo, branch, updatedContent, sha, streamerName string) error {
-	endpoint := fmt.Sprintf("/repos/%s/%s/contents/api/data/streamers.json", owner, repo)
-	body := map[string]string{
-		"message": fmt.Sprintf("feat (items): add streamer %s", streamerName),
-		"content": updatedContent,
-		"branch":  branch,
-		"sha":     sha,
-	}
-
-	return githubRequestJSON(ctx, http.MethodPut, endpoint, token, body, nil)
-}
-
-func openPullRequest(ctx context.Context, token, owner, repo, branch, baseBranch, streamerName string) (string, error) {
-	prBody := strings.Join([]string{
-		"## Summary",
-		fmt.Sprintf("- add **%s** to the Sharpen Live roster", streamerName),
-		"",
-		"## Generated By",
-		"- Sharpen Live submission form",
-	}, "\n")
-
-	payload := map[string]string{
-		"title": fmt.Sprintf("feat: add streamer %s", streamerName),
-		"head":  branch,
-		"base":  baseBranch,
-		"body":  prBody,
-	}
-
-	var pr pullRequestResponse
-	endpoint := fmt.Sprintf("/repos/%s/%s/pulls", owner, repo)
-	if err := githubRequestJSON(ctx, http.MethodPost, endpoint, token, payload, &pr); err != nil {
-		return "", err
-	}
-
-	if pr.HTMLURL == "" {
-		return "", errors.New("pull request was created, but no URL was returned")
-	}
-
-	return pr.HTMLURL, nil
-}
-
-func githubRequestJSON(ctx context.Context, method, endpoint, token string, body any, out any) error {
-	reqBody, contentType, err := encodeBody(body)
+func writeJSON(path string, payload any) error {
+	data, err := json.MarshalIndent(payload, "", "  ")
 	if err != nil {
 		return err
 	}
-
-	req, err := http.NewRequestWithContext(ctx, method, githubAPIBaseURL+endpoint, reqBody)
-	if err != nil {
+	data = append(data, '\n')
+	if err := os.MkdirAll(filepath.Dir(path), 0o755); err != nil {
 		return err
 	}
+	return os.WriteFile(path, data, 0o644)
+}
 
-	req.Header.Set("Accept", "application/vnd.github+json")
-	req.Header.Set("Authorization", "Bearer "+token)
-	if contentType != "" {
-		req.Header.Set("Content-Type", contentType)
-	}
-
-	resp, err := httpClient.Do(req)
-	if err != nil {
+func bootstrapDataFile(path string, payload any) error {
+	if err := os.MkdirAll(filepath.Dir(path), 0o755); err != nil {
 		return err
 	}
-	defer resp.Body.Close()
-
-	bodyBytes, err := io.ReadAll(resp.Body)
-	if err != nil {
-		return err
+	if _, err := os.Stat(path); err == nil {
+		return nil
 	}
-
-	if resp.StatusCode >= 400 {
-		var ghErr githubErrorResponse
-		if err := json.Unmarshal(bodyBytes, &ghErr); err != nil || ghErr.Message == "" {
-			return &githubRequestError{
-				StatusCode: resp.StatusCode,
-				Message:    fmt.Sprintf("GitHub request failed (%d %s)", resp.StatusCode, resp.Status),
-			}
-		}
-
-		return &githubRequestError{
-			StatusCode: resp.StatusCode,
-			Message:    ghErr.Message,
-		}
-	}
-
-	if out != nil && len(bodyBytes) > 0 {
-		if err := json.Unmarshal(bodyBytes, out); err != nil {
-			return err
-		}
-	}
-
-	return nil
-}
-
-func encodeBody(body any) (io.Reader, string, error) {
-	if body == nil {
-		return nil, "", nil
-	}
-
-	switch b := body.(type) {
-	case io.Reader:
-		return b, "", nil
-	case []byte:
-		return bytes.NewReader(b), "application/json", nil
-	default:
-		buf := &bytes.Buffer{}
-		if err := json.NewEncoder(buf).Encode(body); err != nil {
-			return nil, "", err
-		}
-		return buf, "application/json", nil
-	}
-}
-
-func slugify(value string) string {
-	value = strings.ToLower(strings.TrimSpace(value))
-	if value == "" {
-		return "streamer"
-	}
-
-	value = strings.Map(func(r rune) rune {
-		switch {
-		case r >= 'a' && r <= 'z':
-			return r
-		case r >= '0' && r <= '9':
-			return r
-		default:
-			return '-'
-		}
-	}, value)
-
-	value = strings.Trim(value, "-")
-	if len(value) > 50 {
-		value = value[:50]
-	}
-
-	if value == "" {
-		return "streamer"
-	}
-
-	return value
-}
-
-func decodeStreamers(encoded string) ([]byte, error) {
-	clean := strings.ReplaceAll(encoded, "\n", "")
-	decoded, err := base64.StdEncoding.DecodeString(clean)
-	if err != nil {
-		return nil, fmt.Errorf("unable to decode streamers file: %w", err)
-	}
-	return decoded, nil
-}
-
-func encodeStreamers(content []byte) string {
-	return base64.StdEncoding.EncodeToString(content)
-}
-
-type githubRequestError struct {
-	StatusCode int
-	Message    string
-}
-
-func (e *githubRequestError) Error() string {
-	return e.Message
+	return writeJSON(path, payload)
 }
 
 func respondJSON(w http.ResponseWriter, status int, payload any) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(status)
-	if payload == nil {
-		return
+	if payload != nil {
+		_ = json.NewEncoder(w).Encode(payload)
 	}
-	_ = json.NewEncoder(w).Encode(payload)
-}
-
-func firstNonEmpty(values ...string) string {
-	for _, v := range values {
-		if strings.TrimSpace(v) != "" {
-			return v
-		}
-	}
-	return ""
 }

@@ -1,10 +1,9 @@
 # Changelog
 
 ## [Unreleased]
+- Replace automatic pull-request submissions with a moderated admin dashboard for streamer approvals.
+- Queue incoming submissions in `api/data/submissions.json` and provide secure endpoints for listing, approving, or rejecting streamers.
 - Move streamer roster data to `api/data/streamers.json` and update the frontend/backend references.
-- Route streamer submissions through `/api/submit-streamer` backend using a server-held GitHub token and update the landing page to consume it.
-- Ensure streamer submission GitHub requests set `Content-Type: application/json` when sending payloads.
-- Add public submission flow that opens GitHub pull requests for new streamers from the landing page.
 - Extract Sharpen Live landing page styles into `web/styles.css` and generate the streamer roster from JSON with live-aware platform links.
 - Design Sharpen Live landing page with custom logo and live streamer status table.
 - Relocate static site assets from `doc/` to `web/`.

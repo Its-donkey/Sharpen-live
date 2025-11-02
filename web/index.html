@@ -44,7 +44,10 @@
           <p>Streaming Knife Craftsmen</p>
         </div>
       </div>
-      <a class="cta" href="#streamers">Become a Partner</a>
+      <div class="header-actions">
+        <a class="cta" href="#streamers">Become a Partner</a>
+        <button type="button" class="admin-button" data-admin-toggle>Admin</button>
+      </div>
     </header>
 
     <main class="surface" id="streamers" aria-labelledby="streamers-title">
@@ -83,8 +86,8 @@
 
         <form id="submit-streamer-form" class="submit-streamer-form" data-streamer-form hidden>
           <p class="submit-streamer-help">
-            Share the details below and our submission service will open a pull request adding the
-            streamer to the roster using our secure backend. No GitHub token required.
+            Share the details below and our team will review the submission before adding the
+            streamer to the roster. No additional access is required.
           </p>
 
           <div class="form-grid">
@@ -160,6 +163,42 @@
           ></div>
         </form>
       </section>
+
+      <section class="surface admin-panel" id="admin" aria-labelledby="admin-title" hidden>
+        <div class="admin-header">
+          <div>
+            <h2 id="admin-title">Admin Dashboard</h2>
+            <p class="admin-help">
+              Review incoming submissions, approve qualified streamers, or decline entries that do
+              not meet the roster guidelines.
+            </p>
+          </div>
+          <button type="button" class="admin-close" data-admin-toggle>Close</button>
+        </div>
+
+        <form class="admin-auth" data-admin-auth>
+          <label class="form-field form-field-wide">
+            <span>Admin token</span>
+            <div class="admin-auth-controls">
+              <input
+                type="password"
+                name="admin-token"
+                placeholder="Enter the secure admin token"
+                required
+              />
+              <button type="submit" class="admin-auth-submit">Load submissions</button>
+            </div>
+          </label>
+        </form>
+
+        <div class="admin-status" data-admin-status role="status" aria-live="polite"></div>
+
+        <div class="admin-submissions" data-admin-submissions>
+          <div class="admin-empty">
+            Enter the admin token to view pending submissions.
+          </div>
+        </div>
+      </section>
     </main>
 
     <footer>
@@ -179,6 +218,132 @@
       const tableBody = document.getElementById("streamers-table-body");
       const STATUS_CLASS_FALLBACK = "offline";
       const STATUS_LABEL_FALLBACK = "Offline";
+      const STREAMERS_SOURCE =
+        window.SHARPEN_STREAMERS_SOURCE || "/api/data/streamers.json";
+      const SUBMISSION_ENDPOINT =
+        window.SHARPEN_SUBMISSION_ENDPOINT || "/api/submit-streamer";
+      const ADMIN_ENDPOINT =
+        window.SHARPEN_ADMIN_ENDPOINT || "/api/admin/submissions";
+      const adminPanel = document.getElementById("admin");
+      const adminToggleButtons = document.querySelectorAll("[data-admin-toggle]");
+      const adminAuthForm = document.querySelector("[data-admin-auth]");
+      const adminSubmissionsContainer = document.querySelector("[data-admin-submissions]");
+      const adminStatusElement = document.querySelector("[data-admin-status]");
+      const adminTokenInput = adminAuthForm?.querySelector('input[name="admin-token"]');
+      let adminToken = "";
+
+      const setAdminStatus = (message, state = "info") => {
+        if (!adminStatusElement) {
+          return;
+        }
+        adminStatusElement.textContent = message;
+        adminStatusElement.dataset.state = state;
+      };
+
+      const clearAdminStatus = () => setAdminStatus("", "info");
+
+      const renderAdminSubmissions = (submissions) => {
+        if (!adminSubmissionsContainer) {
+          return;
+        }
+
+        adminSubmissionsContainer.innerHTML = "";
+
+        if (!Array.isArray(submissions) || !submissions.length) {
+          const empty = document.createElement("div");
+          empty.className = "admin-empty";
+          empty.textContent = "No pending submissions at the moment.";
+          adminSubmissionsContainer.appendChild(empty);
+          return;
+        }
+
+        submissions
+          .sort(
+            (a, b) =>
+              new Date(b.submittedAt).getTime() - new Date(a.submittedAt).getTime()
+          )
+          .forEach((submission) => {
+            adminSubmissionsContainer.appendChild(createAdminCard(submission));
+          });
+      };
+
+      const createAdminCard = (submission) => {
+        const card = document.createElement("article");
+        card.className = "admin-card";
+        card.dataset.submissionId = submission.id;
+
+        const header = document.createElement("div");
+        header.className = "admin-card-header";
+
+        const title = document.createElement("h3");
+        title.textContent = submission.payload.name;
+        header.appendChild(title);
+
+        const meta = document.createElement("div");
+        meta.className = "admin-card-meta";
+        meta.innerHTML = `
+          <span>Submitted ${new Date(submission.submittedAt).toLocaleString()}</span>
+          <span>Status: ${submission.payload.statusLabel || submission.payload.status}</span>
+        `;
+
+        const descriptionSection = document.createElement("section");
+        const descLabel = document.createElement("strong");
+        descLabel.textContent = "Description";
+        const descText = document.createElement("p");
+        descText.style.margin = "0";
+        descText.style.color = "var(--fg-muted)";
+        descText.textContent = submission.payload.description;
+        descriptionSection.appendChild(descLabel);
+        descriptionSection.appendChild(descText);
+
+        const languageSection = document.createElement("section");
+        const langLabel = document.createElement("strong");
+        langLabel.textContent = "Languages";
+        const langText = document.createElement("p");
+        langText.style.margin = "0";
+        langText.textContent = submission.payload.languages.join(" · ");
+        languageSection.appendChild(langLabel);
+        languageSection.appendChild(langText);
+
+        const platformSection = document.createElement("section");
+        const platformLabel = document.createElement("strong");
+        platformLabel.textContent = "Platforms";
+        platformSection.appendChild(platformLabel);
+
+        const platformList = document.createElement("ul");
+        platformList.className = "platform-list";
+        submission.payload.platforms.forEach((platform) => {
+          const item = document.createElement("li");
+          item.textContent = `${platform.name} · ${platform.channelUrl}`;
+          platformList.appendChild(item);
+        });
+        platformSection.appendChild(platformList);
+
+        const actions = document.createElement("div");
+        actions.className = "admin-card-actions";
+
+        const approveButton = document.createElement("button");
+        approveButton.type = "button";
+        approveButton.dataset.action = "approve";
+        approveButton.textContent = "Approve";
+
+        const rejectButton = document.createElement("button");
+        rejectButton.type = "button";
+        rejectButton.dataset.action = "reject";
+        rejectButton.textContent = "Reject";
+
+        actions.appendChild(approveButton);
+        actions.appendChild(rejectButton);
+
+        card.appendChild(header);
+        card.appendChild(meta);
+        card.appendChild(descriptionSection);
+        card.appendChild(languageSection);
+        card.appendChild(platformSection);
+        card.appendChild(actions);
+
+        return card;
+      };
 
       const createStatusCell = (streamer) => {
         const statusCell = document.createElement("td");
@@ -325,17 +490,11 @@
         }
       };
 
-      const STREAMERS_SOURCE =
-        window.SHARPEN_STREAMERS_SOURCE || "/api/data/streamers.json";
-
       const STATUS_DEFAULT_LABELS = {
         online: "Online",
         busy: "Workshop",
         offline: "Offline",
       };
-
-      const SUBMISSION_ENDPOINT =
-        window.SHARPEN_SUBMISSION_ENDPOINT || "/api/submit-streamer";
 
       const submitStreamerDetails = async (submission) => {
         const response = await fetch(SUBMISSION_ENDPOINT, {
@@ -357,11 +516,128 @@
           throw new Error(message);
         }
 
-        if (!payload?.pullRequestUrl) {
-          throw new Error("Submission succeeded but no pull request URL was returned.");
+        if (isJson && payload && payload.message) {
+          return payload.message;
         }
 
-        return payload.pullRequestUrl;
+        return "Submission received.";
+      };
+
+      const openAdminPanel = () => {
+        if (!adminPanel) {
+          return;
+        }
+        adminPanel.hidden = false;
+        adminPanel.scrollIntoView({ behavior: "smooth", block: "start" });
+        window.setTimeout(() => adminTokenInput?.focus(), 150);
+      };
+
+      const closeAdminPanel = () => {
+        if (!adminPanel) {
+          return;
+        }
+        adminPanel.hidden = true;
+      };
+
+      const loadAdminSubmissions = async () => {
+        if (!adminSubmissionsContainer) {
+          return;
+        }
+        if (!adminToken) {
+          setAdminStatus("Enter the admin token to load submissions.", "error");
+          return;
+        }
+
+        setAdminStatus("Loading submissions…", "info");
+
+        try {
+          const response = await fetch(ADMIN_ENDPOINT, {
+            headers: {
+              Authorization: `Bearer ${adminToken}`,
+            },
+          });
+
+          const contentType = response.headers.get("content-type") || "";
+          const isJson = contentType.includes("application/json");
+          const payload = isJson ? await response.json() : await response.text();
+
+          if (response.status === 401) {
+            setAdminStatus("Invalid admin token.", "error");
+            adminToken = "";
+            adminTokenInput?.focus();
+            renderAdminSubmissions([]);
+            return;
+          }
+
+          if (!response.ok) {
+            const message =
+              (isJson && payload && payload.message) ||
+              `Unable to load submissions (${response.status} ${response.statusText})`;
+            setAdminStatus(message, "error");
+            return;
+          }
+
+          const submissions = (payload && payload.submissions) || [];
+          renderAdminSubmissions(submissions);
+
+          if (!submissions.length) {
+            setAdminStatus("No pending submissions right now.", "success");
+          } else {
+            setAdminStatus(`Loaded ${submissions.length} submission${submissions.length > 1 ? "s" : ""}.`, "success");
+          }
+        } catch (error) {
+          console.error("Failed to load submissions", error);
+          setAdminStatus("Unable to load submissions right now. Please try again later.", "error");
+        }
+      };
+
+      const performAdminAction = async (id, action) => {
+        if (!adminToken) {
+          setAdminStatus("Enter the admin token to manage submissions.", "error");
+          return;
+        }
+
+        const actionVerb = action === "approve" ? "Approving" : "Rejecting";
+        setAdminStatus(`${actionVerb} submission…`, "info");
+
+        try {
+          const response = await fetch(ADMIN_ENDPOINT, {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${adminToken}`,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ action, id }),
+          });
+
+          const contentType = response.headers.get("content-type") || "";
+          const isJson = contentType.includes("application/json");
+          const payload = isJson ? await response.json() : await response.text();
+
+          if (response.status === 401) {
+            setAdminStatus("Invalid admin token.", "error");
+            adminToken = "";
+            adminTokenInput?.focus();
+            renderAdminSubmissions([]);
+            return;
+          }
+
+          if (!response.ok) {
+            const message =
+              (isJson && payload && payload.message) ||
+              `Unable to process submission (${response.status} ${response.statusText})`;
+            setAdminStatus(message, "error");
+            return;
+          }
+
+          const successMessage =
+            (isJson && payload && payload.message) || "Submission updated successfully.";
+          await loadAdminSubmissions();
+          setAdminStatus(successMessage, "success");
+        } catch (error) {
+          console.error("Admin action failed", error);
+          setAdminStatus("Unable to update the submission right now.", "error");
+        }
       };
 
       const initSubmitStreamerForm = () => {
@@ -608,14 +884,13 @@
 
           try {
             const submission = collectSubmission();
-            setResult("Creating pull request…", "pending");
-            const prUrl = await submitStreamerDetails(submission);
+            setResult("Submitting for review…", "pending");
+            await submitStreamerDetails(submission);
             setResult(
-              `Pull request created: <a href="${prUrl}" target="_blank" rel="noopener noreferrer">${prUrl}</a>`,
-              "success",
-              { isHtml: true }
+              "Thanks! Your submission has been queued for review. We notify you once it is live.",
+              "success"
             );
-            console.info("Streamer submission PR created:", prUrl);
+            console.info("Streamer submission stored for review", submission.name);
             form.reset();
             resetPlatformRows();
             if (statusLabelInput) {
@@ -636,6 +911,47 @@
 
       loadStreamers();
       initSubmitStreamerForm();
+
+      adminToggleButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+          if (!adminPanel) {
+            return;
+          }
+          if (adminPanel.hidden) {
+            openAdminPanel();
+          } else {
+            closeAdminPanel();
+          }
+        });
+      });
+
+      adminAuthForm?.addEventListener("submit", (event) => {
+        event.preventDefault();
+        if (!adminTokenInput) {
+          return;
+        }
+        const value = adminTokenInput.value.trim();
+        if (!value) {
+          setAdminStatus("Please enter the admin token.", "error");
+          adminTokenInput.focus();
+          return;
+        }
+        adminToken = value;
+        loadAdminSubmissions();
+      });
+
+      adminSubmissionsContainer?.addEventListener("click", (event) => {
+        const button = event.target.closest("button[data-action]");
+        if (!button) {
+          return;
+        }
+        const card = button.closest(".admin-card");
+        const submissionId = card?.dataset.submissionId;
+        if (!submissionId) {
+          return;
+        }
+        performAdminAction(submissionId, button.dataset.action);
+      });
     </script>
   </body>
 </html>

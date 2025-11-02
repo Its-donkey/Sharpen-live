@@ -1,5 +1,6 @@
 [
   {
+    "id": "67b0b3ff-af0c-4a27-b08e-6deeeacf4f3e",
     "name": "EdgeCrafter",
     "description": "Specializes in chef knives · Est. wait time 10 min",
     "status": "online",
@@ -19,6 +20,7 @@
     ]
   },
   {
+    "id": "2abf66a6-411d-47de-a006-833e86fb40d2",
     "name": "Zen Edge Studio",
     "description": "Waterstone specialist · Accepting rush orders",
     "status": "busy",
@@ -33,6 +35,7 @@
     ]
   },
   {
+    "id": "b662b624-f58b-400c-be5c-a6882ac53c60",
     "name": "Forge & Feather",
     "description": "Damascus patterns · Next stream 19:00 UTC",
     "status": "offline",
@@ -52,6 +55,7 @@
     ]
   },
   {
+    "id": "c57f3629-97e9-472e-bd53-48ff9ab1d6dc",
     "name": "Honbazuke Pro",
     "description": "Premium partners · Bookings open",
     "status": "online",
@@ -71,6 +75,7 @@
     ]
   },
   {
+    "id": "0a89a855-e146-44de-ae02-9219f941e5a2",
     "name": "Sharp & True",
     "description": "Mobile service · On-site events available",
     "status": "offline",

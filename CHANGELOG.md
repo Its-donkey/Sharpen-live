@@ -1,6 +1,10 @@
 # Changelog
 
 ## [Unreleased]
+- Implement Sharpen Live API service with JSON-backed storage, admin endpoints, and accompanying tests plus local Go module packaging.
+- Rebuild the Sharpen Live frontend as a React application with submission workflow, admin dashboard, and Vite toolchain.
+- Add `scripts/online.sh`/`make online` dev launcher, default API port 8880, and updated client configuration to target the new endpoints.
+- Fix React submit form platform removal to reset rows with `createPlatformRow()` so builds succeed.
 - Replace automatic pull-request submissions with a moderated admin dashboard for streamer approvals.
 - Queue incoming submissions in `api/data/submissions.json` and provide secure endpoints for listing, approving, or rejecting streamers.
 - Move streamer roster data to `api/data/streamers.json` and update the frontend/backend references.

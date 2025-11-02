@@ -16,18 +16,7 @@ interface SubmitStreamerFormProps {
 type PlatformField = "name" | "channelUrl" | "liveUrl";
 
 const DEFAULT_STATUS: StreamerStatus = "offline";
-const TOP_LANGUAGES = [
-  { label: "English", value: "English" },
-  { label: "Mandarin Chinese / 中文 (Zhōngwén)", value: "Mandarin Chinese" },
-  { label: "Hindi / हिंदी (Hindī)", value: "Hindi" },
-  { label: "Spanish / Español", value: "Spanish" },
-  { label: "French / Français", value: "French" },
-  { label: "Arabic / العربية", value: "Arabic" },
-  { label: "Bengali / বাংলা (Bangla)", value: "Bengali" },
-  { label: "Russian / Русский (Russkiy)", value: "Russian" },
-  { label: "Portuguese / Português", value: "Portuguese" },
-  { label: "Indonesian / Bahasa Indonesia", value: "Indonesian" }
-];
+const TOP_LANGUAGES = [{ label: "English", value: "English" }];
 
 const ADDITIONAL_LANGUAGES = [
   { label: "Afrikaans", value: "Afrikaans" },
@@ -108,9 +97,7 @@ const ADDITIONAL_LANGUAGES = [
 
 const LANGUAGE_ORDER = [
   ...TOP_LANGUAGES,
-  ...ADDITIONAL_LANGUAGES.filter((language) =>
-    !TOP_LANGUAGES.some((top) => top.value === language.value)
-  ).sort((a, b) => a.label.localeCompare(b.label))
+  ...ADDITIONAL_LANGUAGES.sort((a, b) => a.label.localeCompare(b.label))
 ];
 
 export function SubmitStreamerForm({ isOpen, onToggle }: SubmitStreamerFormProps) {
@@ -263,7 +250,7 @@ export function SubmitStreamerForm({ isOpen, onToggle }: SubmitStreamerFormProps
                   required={!selectedLanguages.length}
                 >
                   <option value="" disabled>
-                    Select a language
+                    Select the languages the streamer speaks
                   </option>
                   {availableLanguages.map((language) => (
                     <option key={language.value} value={language.value}>

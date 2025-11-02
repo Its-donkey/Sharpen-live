@@ -17,6 +17,8 @@ const (
 	envListenAddr      = "LISTEN_ADDR"
 	envPort            = "PORT"
 	envAdminToken      = "ADMIN_TOKEN"
+	envAdminEmail      = "ADMIN_EMAIL"
+	envAdminPassword   = "ADMIN_PASSWORD"
 	envDataDir         = "SHARPEN_DATA_DIR"
 	envStreamersFile   = "SHARPEN_STREAMERS_FILE"
 	envSubmissionsFile = "SHARPEN_SUBMISSIONS_FILE"
@@ -27,6 +29,8 @@ const (
 type Config struct {
 	ListenAddr      string
 	AdminToken      string
+	AdminEmail      string
+	AdminPassword   string
 	StreamersPath   string
 	SubmissionsPath string
 	StaticDir       string
@@ -46,6 +50,8 @@ func FromEnv() (Config, error) {
 	}
 
 	cfg.AdminToken = strings.TrimSpace(os.Getenv(envAdminToken))
+	cfg.AdminEmail = strings.TrimSpace(os.Getenv(envAdminEmail))
+	cfg.AdminPassword = strings.TrimSpace(os.Getenv(envAdminPassword))
 
 	dataDir := strings.TrimSpace(os.Getenv(envDataDir))
 	if dataDir == "" {
@@ -84,6 +90,15 @@ func (c Config) Validate() error {
 	}
 	if strings.TrimSpace(c.StaticDir) == "" {
 		return fmt.Errorf("config: static directory is required")
+	}
+	if c.AdminToken == "" {
+		return fmt.Errorf("config: admin token is required")
+	}
+	if c.AdminEmail == "" {
+		return fmt.Errorf("config: admin email is required")
+	}
+	if c.AdminPassword == "" {
+		return fmt.Errorf("config: admin password is required")
 	}
 	return nil
 }

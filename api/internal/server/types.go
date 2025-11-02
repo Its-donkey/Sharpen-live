@@ -26,6 +26,11 @@ type adminSubmissionAction struct {
 	ID     string `json:"id"`
 }
 
+type loginRequest struct {
+	Email    string `json:"email"`
+	Password string `json:"password"`
+}
+
 type errorPayload struct {
 	Message string `json:"message"`
 }
@@ -33,4 +38,8 @@ type errorPayload struct {
 type successPayload struct {
 	Message string `json:"message"`
 	ID      string `json:"id,omitempty"`
+}
+
+type loginResponse struct {
+	Token string `json:"token"`
 }

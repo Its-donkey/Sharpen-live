@@ -1,4 +1,10 @@
-import type { Streamer, Submission, SubmissionPayload, SuccessPayload } from "./types";
+import type {
+  LoginResponse,
+  Streamer,
+  Submission,
+  SubmissionPayload,
+  SuccessPayload
+} from "./types";
 
 const DEFAULT_DEV_BASE = "http://localhost:8880";
 
@@ -84,6 +90,13 @@ async function request<T>(
 
 export async function getStreamers(): Promise<Streamer[]> {
   return request<Streamer[]>("/api/streamers", { method: "GET" });
+}
+
+export async function loginAdmin(email: string, password: string): Promise<LoginResponse> {
+  return request<LoginResponse>("/api/admin/login", {
+    method: "POST",
+    body: JSON.stringify({ email, password })
+  });
 }
 
 export async function submitStreamer(payload: SubmissionPayload): Promise<SuccessPayload> {

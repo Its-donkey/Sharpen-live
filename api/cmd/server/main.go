@@ -38,7 +38,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	srv := server.New(store, cfg.AdminToken)
+	srv := server.New(store, cfg.AdminToken, cfg.AdminEmail, cfg.AdminPassword)
 	staticHandler := spaHandler(cfg.StaticDir)
 
 	httpServer := &http.Server{

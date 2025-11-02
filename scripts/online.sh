@@ -21,6 +21,8 @@ export SHARPEN_STATIC_DIR="${SHARPEN_STATIC_DIR:-${WEB_DIR}/dist}"
 export SHARPEN_STREAMERS_FILE="${SHARPEN_STREAMERS_FILE:-${API_DIR}/data/streamers.json}"
 export SHARPEN_SUBMISSIONS_FILE="${SHARPEN_SUBMISSIONS_FILE:-${API_DIR}/data/submissions.json}"
 export LISTEN_ADDR="${LISTEN_ADDR:-:${API_PORT}}"
+export ADMIN_EMAIL="${ADMIN_EMAIL:-admin@sharpen.live}"
+export ADMIN_PASSWORD="${ADMIN_PASSWORD:-changeme123}"
 
 cleanup() {
   local status=$1

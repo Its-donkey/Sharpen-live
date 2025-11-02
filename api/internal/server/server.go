@@ -13,15 +13,19 @@ import (
 
 // Server exposes HTTP handlers backed by the storage layer.
 type Server struct {
-	store      *storage.JSONStore
-	adminToken string
+	store         *storage.JSONStore
+	adminToken    string
+	adminEmail    string
+	adminPassword string
 }
 
 // New constructs a Server with the provided dependencies.
-func New(store *storage.JSONStore, adminToken string) *Server {
+func New(store *storage.JSONStore, adminToken, adminEmail, adminPassword string) *Server {
 	return &Server{
-		store:      store,
-		adminToken: strings.TrimSpace(adminToken),
+		store:         store,
+		adminToken:    strings.TrimSpace(adminToken),
+		adminEmail:    strings.ToLower(strings.TrimSpace(adminEmail)),
+		adminPassword: strings.TrimSpace(adminPassword),
 	}
 }
 
@@ -30,6 +34,7 @@ func (s *Server) Handler(static http.Handler) http.Handler {
 	mux := http.NewServeMux()
 
 	mux.Handle("/api/streamers", http.HandlerFunc(s.handleStreamers))
+	mux.Handle("/api/admin/login", http.HandlerFunc(s.handleAdminLogin))
 	mux.Handle("/api/admin/streamers", http.HandlerFunc(s.handleAdminStreamers))
 	mux.Handle("/api/admin/streamers/", http.HandlerFunc(s.handleAdminStreamerByID))
 	mux.Handle("/api/submit-streamer", http.HandlerFunc(s.handleSubmitStreamer))
@@ -53,6 +58,34 @@ func (s *Server) handleStreamers(w http.ResponseWriter, r *http.Request) {
 	default:
 		methodNotAllowed(w, http.MethodGet)
 	}
+}
+
+func (s *Server) handleAdminLogin(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		methodNotAllowed(w, http.MethodPost)
+		return
+	}
+
+	var payload loginRequest
+	if err := decodeJSON(r, &payload); err != nil {
+		respondError(w, http.StatusBadRequest, err)
+		return
+	}
+
+	email := strings.ToLower(strings.TrimSpace(payload.Email))
+	password := strings.TrimSpace(payload.Password)
+
+	if email == "" || password == "" {
+		respondJSON(w, http.StatusBadRequest, errorPayload{Message: "Email and password are required."})
+		return
+	}
+
+	if !constantTimeEquals(email, s.adminEmail) || !constantTimeEquals(password, s.adminPassword) {
+		respondJSON(w, http.StatusUnauthorized, errorPayload{Message: "Invalid credentials."})
+		return
+	}
+
+	respondJSON(w, http.StatusOK, loginResponse{Token: s.adminToken})
 }
 
 func (s *Server) handleAdminStreamers(w http.ResponseWriter, r *http.Request) {
@@ -253,11 +286,6 @@ func (s *Server) handleAdminSubmissions(w http.ResponseWriter, r *http.Request) 
 }
 
 func (s *Server) authorizeAdmin(w http.ResponseWriter, r *http.Request) bool {
-	if s.adminToken == "" {
-		respondJSON(w, http.StatusUnauthorized, errorPayload{Message: "Admin access is not configured."})
-		return false
-	}
-
 	header := strings.TrimSpace(r.Header.Get("Authorization"))
 	if header == "" {
 		respondJSON(w, http.StatusUnauthorized, errorPayload{Message: "Missing admin authorization."})

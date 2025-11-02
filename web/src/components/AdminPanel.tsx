@@ -8,6 +8,7 @@ import {
 import {
   createAdminStreamer,
   deleteAdminStreamer,
+  loginAdmin,
   getAdminStreamers,
   getSubmissions,
   moderateSubmission,
@@ -100,12 +101,14 @@ export function AdminPanel({
   clearToken,
   onStreamersUpdated
 }: AdminPanelProps) {
-  const [tokenInput, setTokenInput] = useState(token);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [status, setStatus] = useState<StatusState>(defaultStatus);
   const [loading, setLoading] = useState(false);
   const [submissions, setSubmissions] = useState<Submission[]>([]);
   const [streamers, setStreamers] = useState<Streamer[]>([]);
   const [isCreateOpen, setIsCreateOpen] = useState(false);
+  const isAuthenticated = Boolean(token);
 
   const loadAdminData = useCallback(
     async (currentToken: string) => {
@@ -132,13 +135,10 @@ export function AdminPanel({
   );
 
   useEffect(() => {
-    if (!isOpen) {
+    if (!isOpen || !token) {
       return;
     }
-    setTokenInput(token);
-    if (token) {
-      void loadAdminData(token);
-    }
+    void loadAdminData(token);
   }, [isOpen, token, loadAdminData]);
 
   const sortedSubmissions = useMemo(
@@ -152,26 +152,46 @@ export function AdminPanel({
     [submissions]
   );
 
-  const handleTokenSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleLoginSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const trimmed = tokenInput.trim();
-    if (!trimmed) {
-      setStatus({ message: "Admin token is required.", tone: "error" });
+    const trimmedEmail = email.trim();
+    const trimmedPassword = password;
+
+    if (!trimmedEmail || !trimmedPassword) {
+      setStatus({ message: "Email and password are required.", tone: "error" });
       return;
     }
-    setToken(trimmed);
+
+    try {
+      setLoading(true);
+      setStatus({ message: "Logging in…", tone: "info" });
+      const response = await loginAdmin(trimmedEmail, trimmedPassword);
+      setToken(response.token);
+      setEmail("");
+      setPassword("");
+      setStatus({ message: "Login successful.", tone: "success" });
+    } catch (error) {
+      setStatus({
+        message: error instanceof Error ? error.message : "Unable to log in.",
+        tone: "error"
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleLogout = () => {
     clearToken();
     setSubmissions([]);
     setStreamers([]);
-    setStatus({ message: "Admin token cleared.", tone: "info" });
+    setEmail("");
+    setPassword("");
+    setStatus({ message: "Logged out of admin console.", tone: "info" });
   };
 
   const refreshAll = async () => {
     if (!token) {
-      setStatus({ message: "Provide an admin token to load submissions.", tone: "error" });
+      setStatus({ message: "Log in to load submissions.", tone: "error" });
       return;
     }
     await loadAdminData(token);
@@ -180,7 +200,7 @@ export function AdminPanel({
 
   const moderate = async (action: "approve" | "reject", id: string) => {
     if (!token) {
-      setStatus({ message: "Admin token missing.", tone: "error" });
+      setStatus({ message: "Log in to manage submissions.", tone: "error" });
       return;
     }
     try {
@@ -201,7 +221,7 @@ export function AdminPanel({
 
   const updateStreamer = async (id: string, payload: SubmissionPayload) => {
     if (!token) {
-      setStatus({ message: "Admin token missing.", tone: "error" });
+      setStatus({ message: "Log in to manage the roster.", tone: "error" });
       return;
     }
     try {
@@ -219,7 +239,7 @@ export function AdminPanel({
 
   const removeStreamer = async (id: string) => {
     if (!token) {
-      setStatus({ message: "Admin token missing.", tone: "error" });
+      setStatus({ message: "Log in to manage the roster.", tone: "error" });
       return;
     }
     try {
@@ -237,7 +257,7 @@ export function AdminPanel({
 
   const createStreamer = async (payload: SubmissionPayload) => {
     if (!token) {
-      setStatus({ message: "Admin token missing.", tone: "error" });
+      setStatus({ message: "Log in to manage the roster.", tone: "error" });
       return;
     }
     try {
@@ -271,24 +291,46 @@ export function AdminPanel({
         </button>
       </div>
 
-      <form className="admin-auth" onSubmit={handleTokenSubmit}>
-        <label className="form-field form-field-wide">
-          <span>Admin token</span>
-          <div className="admin-auth-controls">
+      {!isAuthenticated ? (
+        <form className="admin-auth" onSubmit={handleLoginSubmit}>
+          <label className="form-field form-field-wide">
+            <span>Email</span>
             <input
-              type="password"
-              name="admin-token"
-              placeholder="Enter the secure admin token"
-              value={tokenInput}
-              onChange={(event) => setTokenInput(event.target.value)}
+              type="email"
+              name="admin-email"
+              placeholder="you@example.com"
+              value={email}
+              onChange={(event) => setEmail(event.target.value)}
               required
             />
-            <button type="submit" className="admin-auth-submit">
-              {token ? "Refresh" : "Load submissions"}
-            </button>
-          </div>
-        </label>
-      </form>
+          </label>
+          <label className="form-field form-field-wide">
+            <span>Password</span>
+            <div className="admin-auth-controls">
+              <input
+                type="password"
+                name="admin-password"
+                placeholder="Enter your password"
+                value={password}
+                onChange={(event) => setPassword(event.target.value)}
+                required
+              />
+              <button type="submit" className="admin-auth-submit" disabled={loading}>
+                {loading ? "Logging in…" : "Log in"}
+              </button>
+            </div>
+          </label>
+        </form>
+      ) : (
+        <div className="admin-actions">
+          <button type="button" className="secondary-button" onClick={refreshAll} disabled={loading}>
+            Refresh data
+          </button>
+          <button type="button" className="secondary-button" onClick={handleLogout} disabled={loading}>
+            Log out
+          </button>
+        </div>
+      )}
 
       <div
         className="admin-status"
@@ -299,16 +341,8 @@ export function AdminPanel({
         {status.message}
       </div>
 
-      <div className="admin-actions">
-        <button type="button" className="secondary-button" onClick={refreshAll} disabled={!token}>
-          Refresh data
-        </button>
-        <button type="button" className="secondary-button" onClick={handleLogout}>
-          Clear token
-        </button>
-      </div>
-
-      <div className="admin-grid">
+      {isAuthenticated ? (
+        <div className="admin-grid">
         <section aria-labelledby="admin-submissions-title">
           <h3 id="admin-submissions-title">Pending submissions</h3>
           {loading && !submissions.length ? (
@@ -364,12 +398,15 @@ export function AdminPanel({
               ))}
             </div>
           ) : (
-            <div className="admin-empty">
-              {token ? "No streamers found. Add one to get started." : "Enter the admin token to manage streamers."}
-            </div>
+            <div className="admin-empty">No streamers found. Add one to get started.</div>
           )}
         </section>
       </div>
+      ) : (
+        <div className="admin-empty">
+          Log in with your admin credentials to review submissions.
+        </div>
+      )}
     </section>
   );
 }

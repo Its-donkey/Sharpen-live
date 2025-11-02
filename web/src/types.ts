@@ -36,6 +36,10 @@ export interface SuccessPayload {
   id?: string;
 }
 
+export interface LoginResponse {
+  token: string;
+}
+
 export interface ErrorPayload {
   message: string;
 }

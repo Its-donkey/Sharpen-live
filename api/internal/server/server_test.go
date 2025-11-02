@@ -12,7 +12,11 @@ import (
 	"github.com/Its-donkey/Sharpen-live/api/internal/storage"
 )
 
-const adminToken = "secret-token"
+const (
+	adminToken    = "secret-token"
+	adminEmail    = "admin@example.com"
+	adminPassword = "strong-password"
+)
 
 type testEnv struct {
 	store   *storage.JSONStore
@@ -29,7 +33,7 @@ func newTestEnv(t *testing.T) testEnv {
 	if err != nil {
 		t.Fatalf("create store: %v", err)
 	}
-	srv := server.New(store, adminToken)
+	srv := server.New(store, adminToken, adminEmail, adminPassword)
 	handler := srv.Handler(http.NotFoundHandler())
 	return testEnv{store: store, handler: handler}
 }
@@ -58,6 +62,24 @@ func performRequest(handler http.Handler, method, target string, body any, heade
 
 func TestSubmitAndApproveFlow(t *testing.T) {
 	env := newTestEnv(t)
+
+	// Ensure login fails with incorrect credentials.
+	invalidResp := performRequest(env.handler, http.MethodPost, "/api/admin/login", map[string]string{
+		"email":    adminEmail,
+		"password": "wrong",
+	}, nil)
+	if invalidResp.Code != http.StatusUnauthorized {
+		t.Fatalf("expected 401 from invalid login, got %d", invalidResp.Code)
+	}
+
+	// Ensure login succeeds and returns token.
+	loginResp := performRequest(env.handler, http.MethodPost, "/api/admin/login", map[string]string{
+		"email":    adminEmail,
+		"password": adminPassword,
+	}, nil)
+	if loginResp.Code != http.StatusOK {
+		t.Fatalf("expected 200 from login, got %d", loginResp.Code)
+	}
 
 	submissionPayload := map[string]any{
 		"name":        "EdgeCrafter",

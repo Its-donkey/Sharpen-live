@@ -17,5 +17,6 @@
 - Restructure repository into `backend/` and `frontend/` applications with shared tooling paths.
 - Add Go unit tests covering configuration, middleware, and SPA handler utilities.
 - Provide default admin token in dev launcher so backend starts without extra env vars.
+- Refresh submission form to auto-set status and manage languages via curated dropdown with removable chips.
 - Support PubSubHubbub verification callbacks for `/alerts`.
 - Ensure PubSubHubbub verification replies echo `hub.challenge` with a `200 OK` status and log successful confirmations.

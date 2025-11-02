@@ -1,11 +1,9 @@
 import { FormEvent, useMemo, useState } from "react";
 import { submitStreamer } from "../api";
-import type { SubmissionPayload, StreamerStatus } from "../types";
+import type { StreamerStatus, SubmissionPayload } from "../types";
 import { STATUS_DEFAULT_LABELS } from "../types";
 import {
   createPlatformRow,
-  defaultStatusLabel,
-  normalizeLanguagesInput,
   PlatformFormRow,
   sanitizePlatforms
 } from "../utils/formHelpers";
@@ -17,23 +15,124 @@ interface SubmitStreamerFormProps {
 
 type PlatformField = "name" | "channelUrl" | "liveUrl";
 
+const DEFAULT_STATUS: StreamerStatus = "offline";
+const TOP_LANGUAGES = [
+  "English",
+  "Mandarin Chinese",
+  "Hindi",
+  "Spanish",
+  "French",
+  "Arabic",
+  "Bengali",
+  "Russian",
+  "Portuguese",
+  "Indonesian"
+];
+
+const ADDITIONAL_LANGUAGES = [
+  "Afrikaans",
+  "Albanian",
+  "Amharic",
+  "Armenian",
+  "Azerbaijani",
+  "Basque",
+  "Belarusian",
+  "Bosnian",
+  "Bulgarian",
+  "Catalan",
+  "Cebuano",
+  "Croatian",
+  "Czech",
+  "Danish",
+  "Dutch",
+  "Estonian",
+  "Filipino",
+  "Finnish",
+  "Galician",
+  "Georgian",
+  "German",
+  "Greek",
+  "Gujarati",
+  "Haitian Creole",
+  "Hebrew",
+  "Hmong",
+  "Hungarian",
+  "Icelandic",
+  "Igbo",
+  "Italian",
+  "Japanese",
+  "Javanese",
+  "Kannada",
+  "Kazakh",
+  "Khmer",
+  "Kinyarwanda",
+  "Korean",
+  "Kurdish",
+  "Lao",
+  "Latvian",
+  "Lithuanian",
+  "Luxembourgish",
+  "Macedonian",
+  "Malay",
+  "Malayalam",
+  "Maltese",
+  "Marathi",
+  "Mongolian",
+  "Nepali",
+  "Norwegian",
+  "Pashto",
+  "Persian",
+  "Polish",
+  "Punjabi",
+  "Romanian",
+  "Serbian",
+  "Sinhala",
+  "Slovak",
+  "Slovenian",
+  "Somali",
+  "Swahili",
+  "Swedish",
+  "Tamil",
+  "Telugu",
+  "Thai",
+  "Turkish",
+  "Ukrainian",
+  "Urdu",
+  "Uzbek",
+  "Vietnamese",
+  "Welsh",
+  "Xhosa",
+  "Yoruba",
+  "Zulu"
+];
+
+const LANGUAGE_ORDER = [
+  ...TOP_LANGUAGES,
+  ...ADDITIONAL_LANGUAGES.filter((language) => !TOP_LANGUAGES.includes(language)).sort((a, b) =>
+    a.localeCompare(b)
+  )
+];
+
 export function SubmitStreamerForm({ isOpen, onToggle }: SubmitStreamerFormProps) {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
-  const [status, setStatus] = useState<StreamerStatus>("online");
-  const [statusLabel, setStatusLabel] = useState(defaultStatusLabel("online"));
-  const [languagesInput, setLanguagesInput] = useState("");
+  const [selectedLanguages, setSelectedLanguages] = useState<string[]>([]);
+  const [languageSelection, setLanguageSelection] = useState("");
   const [platforms, setPlatforms] = useState<PlatformFormRow[]>([createPlatformRow()]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [resultMessage, setResultMessage] = useState("");
   const [resultState, setResultState] = useState<"idle" | "success" | "error">("idle");
-  const [statusLabelEdited, setStatusLabelEdited] = useState(false);
+
+  const availableLanguages = useMemo(
+    () => LANGUAGE_ORDER.filter((language) => !selectedLanguages.includes(language)),
+    [selectedLanguages]
+  );
 
   const canSubmit = useMemo(() => {
     if (!name.trim() || !description.trim()) {
       return false;
     }
-    if (!normalizeLanguagesInput(languagesInput).length) {
+    if (!selectedLanguages.length) {
       return false;
     }
     if (
@@ -45,16 +144,14 @@ export function SubmitStreamerForm({ isOpen, onToggle }: SubmitStreamerFormProps
       return false;
     }
     return true;
-  }, [description, languagesInput, name, platforms]);
+  }, [description, name, platforms, selectedLanguages]);
 
   const resetForm = () => {
     setName("");
     setDescription("");
-    setStatus("online");
-    setStatusLabel(defaultStatusLabel("online"));
-    setLanguagesInput("");
+    setSelectedLanguages([]);
+    setLanguageSelection("");
     setPlatforms([createPlatformRow()]);
-    setStatusLabelEdited(false);
   };
 
   const handlePlatformChange = (id: string, key: PlatformField, value: string): void => {
@@ -72,11 +169,17 @@ export function SubmitStreamerForm({ isOpen, onToggle }: SubmitStreamerFormProps
     });
   };
 
-  const handleStatusChange = (value: StreamerStatus) => {
-    setStatus(value);
-    if (!statusLabelEdited) {
-      setStatusLabel(defaultStatusLabel(value));
+  const handleLanguageSelect = (event: FormEvent<HTMLSelectElement>) => {
+    const value = event.currentTarget.value;
+    if (!value) {
+      return;
     }
+    setSelectedLanguages((current) => [...current, value]);
+    setLanguageSelection("");
+  };
+
+  const handleLanguageRemove = (language: string) => {
+    setSelectedLanguages((current) => current.filter((item) => item !== language));
   };
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -88,9 +191,9 @@ export function SubmitStreamerForm({ isOpen, onToggle }: SubmitStreamerFormProps
     const submission: SubmissionPayload = {
       name: name.trim(),
       description: description.trim(),
-      status,
-      statusLabel: statusLabel.trim() || defaultStatusLabel(status),
-      languages: normalizeLanguagesInput(languagesInput),
+      status: DEFAULT_STATUS,
+      statusLabel: STATUS_DEFAULT_LABELS[DEFAULT_STATUS],
+      languages: selectedLanguages,
       platforms: sanitizePlatforms(platforms)
     };
 
@@ -139,40 +242,6 @@ export function SubmitStreamerForm({ isOpen, onToggle }: SubmitStreamerFormProps
               />
             </label>
 
-            <label className="form-field">
-              <span>Status *</span>
-              <select
-                name="status"
-                value={status}
-                onChange={(event) => handleStatusChange(event.target.value as StreamerStatus)}
-                required
-              >
-                <option value="online" data-default-label="Online">
-                  Online
-                </option>
-                <option value="busy" data-default-label="Workshop">
-                  Workshop
-                </option>
-                <option value="offline" data-default-label="Offline">
-                  Offline
-                </option>
-              </select>
-            </label>
-
-            <label className="form-field">
-              <span>Status label</span>
-              <input
-                type="text"
-                name="status-label"
-                placeholder="Defaults to the selected status"
-                value={statusLabel}
-                onChange={(event) => {
-                  setStatusLabel(event.target.value);
-                  setStatusLabelEdited(event.target.value.trim().length > 0);
-                }}
-              />
-            </label>
-
             <label className="form-field form-field-wide">
               <span>Description *</span>
               <textarea
@@ -187,14 +256,41 @@ export function SubmitStreamerForm({ isOpen, onToggle }: SubmitStreamerFormProps
 
             <label className="form-field form-field-wide">
               <span>Languages *</span>
-              <input
-                type="text"
-                name="languages"
-                placeholder="Example: English, Japanese"
-                value={languagesInput}
-                onChange={(event) => setLanguagesInput(event.target.value)}
-                required
-              />
+              <div className="language-picker">
+                <select
+                  className="language-select"
+                  value={languageSelection}
+                  onChange={handleLanguageSelect}
+                  required={!selectedLanguages.length}
+                >
+                  <option value="" disabled>
+                    Select a language
+                  </option>
+                  {availableLanguages.map((language) => (
+                    <option key={language} value={language}>
+                      {language}
+                    </option>
+                  ))}
+                </select>
+                <div className="language-tags">
+                  {selectedLanguages.length ? (
+                    selectedLanguages.map((language) => (
+                      <span className="language-pill" key={language}>
+                        {language}
+                        <button
+                          type="button"
+                          onClick={() => handleLanguageRemove(language)}
+                          aria-label={`Remove ${language}`}
+                        >
+                          ×
+                        </button>
+                      </span>
+                    ))
+                  ) : (
+                    <span className="language-empty">No languages selected yet.</span>
+                  )}
+                </div>
+              </div>
             </label>
           </div>
 

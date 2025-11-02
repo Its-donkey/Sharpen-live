@@ -383,6 +383,17 @@
           Authorization: `Bearer ${token}`,
           ...(options.headers || {}),
         };
+        const requestBody = options.body;
+        const hasContentTypeHeader =
+          Object.prototype.hasOwnProperty.call(headers, "Content-Type") ||
+          Object.prototype.hasOwnProperty.call(headers, "content-type");
+        const isFormData =
+          typeof FormData !== "undefined" && requestBody instanceof FormData;
+
+        if (requestBody && !hasContentTypeHeader && !isFormData) {
+          headers["Content-Type"] = "application/json";
+        }
+
         const response = await fetch(url, { ...options, headers });
         const contentType = response.headers.get("content-type") || "";
         const isJson = contentType.includes("application/json");

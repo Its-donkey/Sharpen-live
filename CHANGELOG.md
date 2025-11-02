@@ -1,6 +1,7 @@
 # Changelog
 
 ## [Unreleased]
+- Ensure streamer submission GitHub requests set `Content-Type: application/json` when sending payloads.
 - Add public submission flow that opens GitHub pull requests for new streamers from the landing page.
 - Extract Sharpen Live landing page styles into `web/styles.css` and generate the streamer roster from JSON with live-aware platform links.
 - Design Sharpen Live landing page with custom logo and live streamer status table.

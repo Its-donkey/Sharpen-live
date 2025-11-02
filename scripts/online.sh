@@ -23,6 +23,7 @@ export SHARPEN_SUBMISSIONS_FILE="${SHARPEN_SUBMISSIONS_FILE:-${BACKEND_DIR}/data
 export LISTEN_ADDR="${LISTEN_ADDR:-:${API_PORT}}"
 export ADMIN_EMAIL="${ADMIN_EMAIL:-admin@sharpen.live}"
 export ADMIN_PASSWORD="${ADMIN_PASSWORD:-changeme123}"
+export ADMIN_TOKEN="${ADMIN_TOKEN:-dev-admin-token}"
 
 cleanup() {
   local status=$1

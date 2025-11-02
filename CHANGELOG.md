@@ -16,5 +16,6 @@
 - Add `frontend/streamers.json` to track streamer metadata.
 - Restructure repository into `backend/` and `frontend/` applications with shared tooling paths.
 - Add Go unit tests covering configuration, middleware, and SPA handler utilities.
+- Provide default admin token in dev launcher so backend starts without extra env vars.
 - Support PubSubHubbub verification callbacks for `/alerts`.
 - Ensure PubSubHubbub verification replies echo `hub.challenge` with a `200 OK` status and log successful confirmations.

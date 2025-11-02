@@ -17,100 +17,100 @@ type PlatformField = "name" | "channelUrl" | "liveUrl";
 
 const DEFAULT_STATUS: StreamerStatus = "offline";
 const TOP_LANGUAGES = [
-  "English",
-  "Mandarin Chinese",
-  "Hindi",
-  "Spanish",
-  "French",
-  "Arabic",
-  "Bengali",
-  "Russian",
-  "Portuguese",
-  "Indonesian"
+  { label: "English", value: "English" },
+  { label: "Mandarin Chinese / 中文 (Zhōngwén)", value: "Mandarin Chinese" },
+  { label: "Hindi / हिंदी (Hindī)", value: "Hindi" },
+  { label: "Spanish / Español", value: "Spanish" },
+  { label: "French / Français", value: "French" },
+  { label: "Arabic / العربية", value: "Arabic" },
+  { label: "Bengali / বাংলা (Bangla)", value: "Bengali" },
+  { label: "Russian / Русский (Russkiy)", value: "Russian" },
+  { label: "Portuguese / Português", value: "Portuguese" },
+  { label: "Indonesian / Bahasa Indonesia", value: "Indonesian" }
 ];
 
 const ADDITIONAL_LANGUAGES = [
-  "Afrikaans",
-  "Albanian",
-  "Amharic",
-  "Armenian",
-  "Azerbaijani",
-  "Basque",
-  "Belarusian",
-  "Bosnian",
-  "Bulgarian",
-  "Catalan",
-  "Cebuano",
-  "Croatian",
-  "Czech",
-  "Danish",
-  "Dutch",
-  "Estonian",
-  "Filipino",
-  "Finnish",
-  "Galician",
-  "Georgian",
-  "German",
-  "Greek",
-  "Gujarati",
-  "Haitian Creole",
-  "Hebrew",
-  "Hmong",
-  "Hungarian",
-  "Icelandic",
-  "Igbo",
-  "Italian",
-  "Japanese",
-  "Javanese",
-  "Kannada",
-  "Kazakh",
-  "Khmer",
-  "Kinyarwanda",
-  "Korean",
-  "Kurdish",
-  "Lao",
-  "Latvian",
-  "Lithuanian",
-  "Luxembourgish",
-  "Macedonian",
-  "Malay",
-  "Malayalam",
-  "Maltese",
-  "Marathi",
-  "Mongolian",
-  "Nepali",
-  "Norwegian",
-  "Pashto",
-  "Persian",
-  "Polish",
-  "Punjabi",
-  "Romanian",
-  "Serbian",
-  "Sinhala",
-  "Slovak",
-  "Slovenian",
-  "Somali",
-  "Swahili",
-  "Swedish",
-  "Tamil",
-  "Telugu",
-  "Thai",
-  "Turkish",
-  "Ukrainian",
-  "Urdu",
-  "Uzbek",
-  "Vietnamese",
-  "Welsh",
-  "Xhosa",
-  "Yoruba",
-  "Zulu"
+  { label: "Afrikaans", value: "Afrikaans" },
+  { label: "Albanian / Shqip", value: "Albanian" },
+  { label: "Amharic / አማርኛ (Amariññā)", value: "Amharic" },
+  { label: "Armenian / Հայերեն (Hayeren)", value: "Armenian" },
+  { label: "Azerbaijani / Azərbaycanca", value: "Azerbaijani" },
+  { label: "Basque / Euskara", value: "Basque" },
+  { label: "Belarusian / Беларуская (Belaruskaya)", value: "Belarusian" },
+  { label: "Bosnian / Bosanski", value: "Bosnian" },
+  { label: "Bulgarian / Български (Bŭlgarski)", value: "Bulgarian" },
+  { label: "Catalan / Català", value: "Catalan" },
+  { label: "Cebuano / Binisaya", value: "Cebuano" },
+  { label: "Croatian / Hrvatski", value: "Croatian" },
+  { label: "Czech / Čeština", value: "Czech" },
+  { label: "Danish / Dansk", value: "Danish" },
+  { label: "Dutch / Nederlands", value: "Dutch" },
+  { label: "Estonian / Eesti", value: "Estonian" },
+  { label: "Filipino / Tagalog", value: "Filipino" },
+  { label: "Finnish / Suomi", value: "Finnish" },
+  { label: "Galician / Galego", value: "Galician" },
+  { label: "Georgian / ქართული (Kartuli)", value: "Georgian" },
+  { label: "German / Deutsch", value: "German" },
+  { label: "Greek / Ελληνικά (Elliniká)", value: "Greek" },
+  { label: "Gujarati / ગુજરાતી (Gujarātī)", value: "Gujarati" },
+  { label: "Haitian Creole / Kreyòl Ayisyen", value: "Haitian Creole" },
+  { label: "Hebrew / עברית (Ivrit)", value: "Hebrew" },
+  { label: "Hmong / Hmoob", value: "Hmong" },
+  { label: "Hungarian / Magyar", value: "Hungarian" },
+  { label: "Icelandic / Íslenska", value: "Icelandic" },
+  { label: "Igbo", value: "Igbo" },
+  { label: "Italian / Italiano", value: "Italian" },
+  { label: "Japanese / 日本語 (Nihongo)", value: "Japanese" },
+  { label: "Javanese / Basa Jawa", value: "Javanese" },
+  { label: "Kannada / ಕನ್ನಡ (Kannaḍa)", value: "Kannada" },
+  { label: "Kazakh / Қазақ (Qazaq)", value: "Kazakh" },
+  { label: "Khmer / ខ្មែរ (Khmer)", value: "Khmer" },
+  { label: "Kinyarwanda", value: "Kinyarwanda" },
+  { label: "Korean / 한국어 (Hangugeo)", value: "Korean" },
+  { label: "Kurdish / کوردی", value: "Kurdish" },
+  { label: "Lao / ລາວ", value: "Lao" },
+  { label: "Latvian / Latviešu", value: "Latvian" },
+  { label: "Lithuanian / Lietuvių", value: "Lithuanian" },
+  { label: "Luxembourgish / Lëtzebuergesch", value: "Luxembourgish" },
+  { label: "Macedonian / Македонски (Makedonski)", value: "Macedonian" },
+  { label: "Malay / Bahasa Melayu", value: "Malay" },
+  { label: "Malayalam / മലയാളം (Malayāḷam)", value: "Malayalam" },
+  { label: "Maltese / Malti", value: "Maltese" },
+  { label: "Marathi / मराठी (Marāṭhī)", value: "Marathi" },
+  { label: "Mongolian / Монгол (Mongol)", value: "Mongolian" },
+  { label: "Nepali / नेपाली (Nepālī)", value: "Nepali" },
+  { label: "Norwegian / Norsk", value: "Norwegian" },
+  { label: "Pashto / پښتو", value: "Pashto" },
+  { label: "Persian / فارسی (Fārsi)", value: "Persian" },
+  { label: "Polish / Polski", value: "Polish" },
+  { label: "Punjabi / ਪੰਜਾਬੀ (Pañjābī)", value: "Punjabi" },
+  { label: "Romanian / Română", value: "Romanian" },
+  { label: "Serbian / Српски (Srpski)", value: "Serbian" },
+  { label: "Sinhala / සිංහල (Siṁhala)", value: "Sinhala" },
+  { label: "Slovak / Slovenčina", value: "Slovak" },
+  { label: "Slovenian / Slovenščina", value: "Slovenian" },
+  { label: "Somali / Soomaali", value: "Somali" },
+  { label: "Swahili / Kiswahili", value: "Swahili" },
+  { label: "Swedish / Svenska", value: "Swedish" },
+  { label: "Tamil / தமிழ் (Tamiḻ)", value: "Tamil" },
+  { label: "Telugu / తెలుగు (Telugu)", value: "Telugu" },
+  { label: "Thai / ไทย", value: "Thai" },
+  { label: "Turkish / Türkçe", value: "Turkish" },
+  { label: "Ukrainian / Українська (Ukrayins'ka)", value: "Ukrainian" },
+  { label: "Urdu / اردو", value: "Urdu" },
+  { label: "Uzbek / Oʻzbek", value: "Uzbek" },
+  { label: "Vietnamese / Tiếng Việt", value: "Vietnamese" },
+  { label: "Welsh / Cymraeg", value: "Welsh" },
+  { label: "Xhosa / isiXhosa", value: "Xhosa" },
+  { label: "Yoruba / Yorùbá", value: "Yoruba" },
+  { label: "Zulu / isiZulu", value: "Zulu" }
 ];
 
 const LANGUAGE_ORDER = [
   ...TOP_LANGUAGES,
-  ...ADDITIONAL_LANGUAGES.filter((language) => !TOP_LANGUAGES.includes(language)).sort((a, b) =>
-    a.localeCompare(b)
-  )
+  ...ADDITIONAL_LANGUAGES.filter((language) =>
+    !TOP_LANGUAGES.some((top) => top.value === language.value)
+  ).sort((a, b) => a.label.localeCompare(b.label))
 ];
 
 export function SubmitStreamerForm({ isOpen, onToggle }: SubmitStreamerFormProps) {
@@ -123,10 +123,9 @@ export function SubmitStreamerForm({ isOpen, onToggle }: SubmitStreamerFormProps
   const [resultMessage, setResultMessage] = useState("");
   const [resultState, setResultState] = useState<"idle" | "success" | "error">("idle");
 
-  const availableLanguages = useMemo(
-    () => LANGUAGE_ORDER.filter((language) => !selectedLanguages.includes(language)),
-    [selectedLanguages]
-  );
+  const availableLanguages = useMemo(() => {
+    return LANGUAGE_ORDER.filter((language) => !selectedLanguages.includes(language.value));
+  }, [selectedLanguages]);
 
   const canSubmit = useMemo(() => {
     if (!name.trim() || !description.trim()) {
@@ -267,8 +266,8 @@ export function SubmitStreamerForm({ isOpen, onToggle }: SubmitStreamerFormProps
                     Select a language
                   </option>
                   {availableLanguages.map((language) => (
-                    <option key={language} value={language}>
-                      {language}
+                    <option key={language.value} value={language.value}>
+                      {language.label}
                     </option>
                   ))}
                 </select>

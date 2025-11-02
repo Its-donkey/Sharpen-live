@@ -111,7 +111,9 @@ export function SubmitStreamerForm({ isOpen, onToggle }: SubmitStreamerFormProps
   const [resultState, setResultState] = useState<"idle" | "success" | "error">("idle");
 
   const availableLanguages = useMemo(() => {
-    return LANGUAGE_ORDER.filter((language) => !selectedLanguages.includes(language.value));
+    return LANGUAGE_ORDER.filter((language) =>
+      !selectedLanguages.includes(language.label)
+    );
   }, [selectedLanguages]);
 
   const canSubmit = useMemo(() => {
@@ -160,7 +162,8 @@ export function SubmitStreamerForm({ isOpen, onToggle }: SubmitStreamerFormProps
     if (!value) {
       return;
     }
-    setSelectedLanguages((current) => [...current, value]);
+    const displayLabel = LANGUAGE_ORDER.find((language) => language.value === value)?.label ?? value;
+    setSelectedLanguages((current) => [...current, displayLabel]);
     setLanguageSelection("");
   };
 

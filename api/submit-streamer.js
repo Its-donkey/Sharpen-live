@@ -1,0 +1,344 @@
+const STATUS_DEFAULT_LABELS = {
+  online: "Online",
+  busy: "Workshop",
+  offline: "Offline",
+};
+
+const OWNER = process.env.GITHUB_REPO_OWNER || "Its-donkey";
+const REPO = process.env.GITHUB_REPO_NAME || "Sharpen-live";
+const DEFAULT_BRANCH = process.env.GITHUB_DEFAULT_BRANCH || "main";
+const REPO_BASE_PATH = `/repos/${OWNER}/${REPO}`;
+
+const isFormData = (value) =>
+  typeof FormData !== "undefined" && value instanceof FormData;
+
+async function githubRequest(token, endpoint, options = {}) {
+  const { method = "GET", headers = {}, body } = options;
+  const finalHeaders = {
+    Accept: "application/vnd.github+json",
+    Authorization: `Bearer ${token}`,
+    ...headers,
+  };
+
+  let requestBody = body;
+
+  if (
+    body &&
+    typeof body === "object" &&
+    !isFormData(body) &&
+    !(body instanceof Buffer) &&
+    !(body instanceof Uint8Array)
+  ) {
+    requestBody = JSON.stringify(body);
+  }
+
+  const hasContentTypeHeader =
+    Object.prototype.hasOwnProperty.call(finalHeaders, "Content-Type") ||
+    Object.prototype.hasOwnProperty.call(finalHeaders, "content-type");
+
+  if (requestBody && !hasContentTypeHeader && !isFormData(requestBody)) {
+    finalHeaders["Content-Type"] = "application/json";
+  }
+
+  const response = await fetch(`https://api.github.com${endpoint}`, {
+    method,
+    headers: finalHeaders,
+    body: requestBody,
+  });
+
+  const contentType = response.headers.get("content-type") || "";
+  const isJson = contentType.includes("application/json");
+  const payload = isJson ? await response.json() : await response.text();
+
+  if (!response.ok) {
+    const message =
+      (isJson && payload && payload.message) ||
+      `GitHub request failed (${response.status} ${response.statusText})`;
+    const error = new Error(message);
+    error.status = response.status;
+    error.body = payload;
+    throw error;
+  }
+
+  return payload;
+}
+
+function slugify(value, fallback = "streamer") {
+  if (!value || typeof value !== "string") {
+    return fallback;
+  }
+
+  const slug = value
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .slice(0, 50);
+
+  return slug || fallback;
+}
+
+function decodeBase64(base64) {
+  return Buffer.from(base64, "base64").toString("utf8");
+}
+
+function encodeBase64(text) {
+  return Buffer.from(text, "utf8").toString("base64");
+}
+
+async function createBranch(token, branchName, baseSha) {
+  return githubRequest(token, `${REPO_BASE_PATH}/git/refs`, {
+    method: "POST",
+    body: {
+      ref: `refs/heads/${branchName}`,
+      sha: baseSha,
+    },
+  });
+}
+
+async function ensureBranch(token, baseSha, desiredName) {
+  let branchName = desiredName;
+
+  for (let attempt = 0; attempt < 5; attempt += 1) {
+    try {
+      await createBranch(token, branchName, baseSha);
+      return branchName;
+    } catch (error) {
+      if (error.status === 422) {
+        branchName = `${desiredName}-${Date.now().toString(36)}`;
+        continue;
+      }
+      throw error;
+    }
+  }
+
+  throw new Error("Unable to create a unique branch for the submission.");
+}
+
+function buildStreamerEntry(submission) {
+  return {
+    name: submission.name,
+    description: submission.description,
+    status: submission.status,
+    statusLabel:
+      submission.statusLabel ||
+      STATUS_DEFAULT_LABELS[submission.status] ||
+      STATUS_DEFAULT_LABELS.offline,
+    languages: submission.languages,
+    platforms: submission.platforms,
+  };
+}
+
+async function createStreamerPullRequest(token, submission) {
+  const baseRef = await githubRequest(
+    token,
+    `${REPO_BASE_PATH}/git/ref/heads/${DEFAULT_BRANCH}`
+  );
+
+  const baseSha = baseRef?.object?.sha;
+  if (!baseSha) {
+    throw new Error("Unable to locate the base branch SHA.");
+  }
+
+  const branchSlug = slugify(submission.name, "new-streamer");
+  const branchName = await ensureBranch(
+    token,
+    baseSha,
+    `feature/items/add-${branchSlug}`
+  );
+
+  const fileResponse = await githubRequest(
+    token,
+    `${REPO_BASE_PATH}/contents/web/streamers.json?ref=${DEFAULT_BRANCH}`
+  );
+
+  const existingContent = decodeBase64(fileResponse.content);
+
+  let streamers = [];
+  try {
+    const parsed = JSON.parse(existingContent);
+    if (!Array.isArray(parsed)) {
+      throw new Error("Streamer list is not an array.");
+    }
+    streamers = parsed;
+  } catch (error) {
+    throw new Error(
+      `Existing streamer list is not valid JSON: ${error.message}`
+    );
+  }
+
+  streamers.push(buildStreamerEntry(submission));
+  const updatedContent = `${JSON.stringify(streamers, null, 2)}\n`;
+
+  await githubRequest(token, `${REPO_BASE_PATH}/contents/web/streamers.json`, {
+    method: "PUT",
+    body: {
+      message: `feat (items): add streamer ${submission.name}`,
+      content: encodeBase64(updatedContent),
+      branch: branchName,
+      sha: fileResponse.sha,
+    },
+  });
+
+  const prBody = [
+    "## Summary",
+    `- add **${submission.name}** to the Sharpen Live roster`,
+    "",
+    "## Generated By",
+    "- Sharpen Live submission form",
+  ].join("\n");
+
+  const pullRequest = await githubRequest(token, `${REPO_BASE_PATH}/pulls`, {
+    method: "POST",
+    body: {
+      title: `feat: add streamer ${submission.name}`,
+      head: branchName,
+      base: DEFAULT_BRANCH,
+      body: prBody,
+    },
+  });
+
+  if (!pullRequest?.html_url) {
+    throw new Error("Pull request was created, but no URL was returned.");
+  }
+
+  return pullRequest.html_url;
+}
+
+function normalizeLanguages(languages) {
+  if (Array.isArray(languages)) {
+    return languages
+      .map((language) => language?.toString().trim())
+      .filter(Boolean);
+  }
+
+  if (typeof languages === "string") {
+    return languages
+      .split(",")
+      .map((language) => language.trim())
+      .filter(Boolean);
+  }
+
+  return [];
+}
+
+function normalizePlatforms(platforms) {
+  if (!Array.isArray(platforms)) {
+    return [];
+  }
+
+  return platforms
+    .map((platform) => {
+      const name = platform?.name?.toString().trim();
+      const channelUrl = platform?.channelUrl?.toString().trim();
+      const liveUrl = platform?.liveUrl?.toString().trim();
+
+      if (!name || !channelUrl || !liveUrl) {
+        return null;
+      }
+
+      return {
+        name,
+        channelUrl,
+        liveUrl,
+      };
+    })
+    .filter(Boolean);
+}
+
+function parseSubmission(body) {
+  const submission = body && typeof body === "object" ? body : {};
+
+  const name = submission.name?.toString().trim();
+  const description = submission.description?.toString().trim();
+  const status = submission.status?.toString().trim().toLowerCase();
+  const statusLabel = submission.statusLabel?.toString().trim();
+  const languages = normalizeLanguages(submission.languages);
+  const platforms = normalizePlatforms(submission.platforms);
+
+  const errors = [];
+
+  if (!name) {
+    errors.push("Streamer name is required.");
+  }
+
+  if (!description) {
+    errors.push("Description is required.");
+  }
+
+  if (!status || !STATUS_DEFAULT_LABELS[status]) {
+    errors.push(
+      "Status is required and must be one of: online, busy, or offline."
+    );
+  }
+
+  if (!languages.length) {
+    errors.push("At least one language is required.");
+  }
+
+  if (!platforms.length) {
+    errors.push("At least one platform with channel and live URLs is required.");
+  }
+
+  return {
+    submission: {
+      name,
+      description,
+      status,
+      statusLabel,
+      languages,
+      platforms,
+    },
+    errors,
+  };
+}
+
+export default async function handler(req, res) {
+  if (req.method !== "POST") {
+    res.setHeader("Allow", "POST");
+    res.status(405).json({ message: "Method Not Allowed" });
+    return;
+  }
+
+  const token =
+    process.env.GITHUB_TOKEN ||
+    process.env.SHARPEN_GITHUB_TOKEN ||
+    process.env.SUBMISSION_GITHUB_TOKEN;
+
+  if (!token) {
+    res
+      .status(500)
+      .json({ message: "GitHub token is not configured on the server." });
+    return;
+  }
+
+  let payload = req.body;
+  if (typeof payload === "string") {
+    try {
+      payload = JSON.parse(payload);
+    } catch (error) {
+      res.status(400).json({ message: "Invalid JSON payload." });
+      return;
+    }
+  }
+
+  const { submission, errors } = parseSubmission(payload);
+
+  if (errors.length) {
+    res.status(400).json({ message: errors.join(" ") });
+    return;
+  }
+
+  try {
+    const pullRequestUrl = await createStreamerPullRequest(token, submission);
+    res.status(200).json({ pullRequestUrl });
+  } catch (error) {
+    console.error("Streamer submission failed", error);
+    const status = error.status && Number.isInteger(error.status) ? error.status : 500;
+    res.status(status).json({
+      message:
+        error?.message ||
+        "Something went wrong while creating the pull request.",
+    });
+  }
+}

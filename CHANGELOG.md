@@ -1,6 +1,7 @@
 # Changelog
 
 ## [Unreleased]
+- Route streamer submissions through `/api/submit-streamer` backend using a server-held GitHub token and update the landing page to consume it.
 - Ensure streamer submission GitHub requests set `Content-Type: application/json` when sending payloads.
 - Add public submission flow that opens GitHub pull requests for new streamers from the landing page.
 - Extract Sharpen Live landing page styles into `web/styles.css` and generate the streamer roster from JSON with live-aware platform links.

@@ -83,9 +83,8 @@
 
         <form id="submit-streamer-form" class="submit-streamer-form" data-streamer-form hidden>
           <p class="submit-streamer-help">
-            Share the details below and we&rsquo;ll open a pull request adding the streamer to the
-            roster. You&rsquo;ll need a GitHub token with <code>repo</code> scope or a fine-grained
-            token that can read and write to this repository.
+            Share the details below and our submission service will open a pull request adding the
+            streamer to the roster using our secure backend. No GitHub token required.
           </p>
 
           <div class="form-grid">
@@ -145,16 +144,6 @@
               + Add another platform
             </button>
           </fieldset>
-
-          <label class="form-field form-field-wide">
-            <span>GitHub token *</span>
-            <input
-              type="password"
-              name="github-token"
-              placeholder="Fine-grained or classic token with repo write access"
-              required
-            />
-          </label>
 
           <div class="submit-streamer-actions">
             <button type="submit" class="submit-streamer-submit">Create pull request</button>
@@ -336,205 +325,40 @@
         }
       };
 
-      const repoConfig = {
-        owner: "Its-donkey",
-        repo: "Sharpen-live",
-        defaultBranch: "main",
-      };
-
       const STATUS_DEFAULT_LABELS = {
         online: "Online",
         busy: "Workshop",
         offline: "Offline",
       };
 
-      const decodeBase64 = (base64) => {
-        const binary = atob(base64.replace(/\n/g, ""));
-        const bytes = Uint8Array.from(binary, (char) => char.charCodeAt(0));
-        return new TextDecoder().decode(bytes);
-      };
+      const SUBMISSION_ENDPOINT =
+        window.SHARPEN_SUBMISSION_ENDPOINT || "/api/submit-streamer";
 
-      const encodeBase64 = (text) => {
-        const bytes = new TextEncoder().encode(text);
-        let binary = "";
-        bytes.forEach((byte) => {
-          binary += String.fromCharCode(byte);
+      const submitStreamerDetails = async (submission) => {
+        const response = await fetch(SUBMISSION_ENDPOINT, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(submission),
         });
-        return btoa(binary);
-      };
 
-      const slugify = (value, fallback = "streamer") => {
-        if (!value) {
-          return fallback;
-        }
-        const slug = value
-          .toLowerCase()
-          .trim()
-          .replace(/[^a-z0-9]+/g, "-")
-          .replace(/^-+|-+$/g, "")
-          .slice(0, 50);
-        return slug || fallback;
-      };
-
-      const githubRequest = async (endpoint, token, options = {}) => {
-        const url = `https://api.github.com${endpoint}`;
-        const headers = {
-          Accept: "application/vnd.github+json",
-          Authorization: `Bearer ${token}`,
-          ...(options.headers || {}),
-        };
-        const requestBody = options.body;
-        const hasContentTypeHeader =
-          Object.prototype.hasOwnProperty.call(headers, "Content-Type") ||
-          Object.prototype.hasOwnProperty.call(headers, "content-type");
-        const isFormData =
-          typeof FormData !== "undefined" && requestBody instanceof FormData;
-
-        if (requestBody && !hasContentTypeHeader && !isFormData) {
-          headers["Content-Type"] = "application/json";
-        }
-
-        const response = await fetch(url, { ...options, headers });
         const contentType = response.headers.get("content-type") || "";
         const isJson = contentType.includes("application/json");
-        const body = isJson ? await response.json() : await response.text();
+        const payload = isJson ? await response.json() : await response.text();
 
         if (!response.ok) {
           const message =
-            (isJson && body && body.message) ||
-            `GitHub request failed (${response.status} ${response.statusText})`;
-          const error = new Error(message);
-          error.status = response.status;
-          error.body = body;
-          throw error;
+            (isJson && payload && payload.message) ||
+            `Submission failed (${response.status} ${response.statusText})`;
+          throw new Error(message);
         }
 
-        return body;
-      };
-
-      const createBranch = async (branchName, baseSha, token) => {
-        return githubRequest(
-          `/repos/${repoConfig.owner}/${repoConfig.repo}/git/refs`,
-          token,
-          {
-            method: "POST",
-            body: JSON.stringify({
-              ref: `refs/heads/${branchName}`,
-              sha: baseSha,
-            }),
-          }
-        );
-      };
-
-      const ensureBranch = async (baseSha, token, desiredName) => {
-        let branchName = desiredName;
-        let attempt = 0;
-
-        while (attempt < 5) {
-          try {
-            await createBranch(branchName, baseSha, token);
-            return branchName;
-          } catch (error) {
-            if (error.status === 422) {
-              attempt += 1;
-              branchName = `${desiredName}-${Date.now().toString(36)}`;
-              continue;
-            }
-            throw error;
-          }
+        if (!payload?.pullRequestUrl) {
+          throw new Error("Submission succeeded but no pull request URL was returned.");
         }
 
-        throw new Error("Unable to create a unique branch for the submission.");
-      };
-
-      const buildStreamerEntry = (submission) => ({
-        name: submission.name,
-        description: submission.description,
-        status: submission.status,
-        statusLabel:
-          submission.statusLabel ||
-          STATUS_DEFAULT_LABELS[submission.status] ||
-          STATUS_LABEL_FALLBACK,
-        languages: submission.languages,
-        platforms: submission.platforms,
-      });
-
-      const createStreamerPullRequest = async (submission, token) => {
-        const baseRef = await githubRequest(
-          `/repos/${repoConfig.owner}/${repoConfig.repo}/git/ref/heads/${repoConfig.defaultBranch}`,
-          token
-        );
-        const baseSha = baseRef?.object?.sha;
-
-        if (!baseSha) {
-          throw new Error("Unable to locate the base branch SHA.");
-        }
-
-        const branchSlug = slugify(submission.name, "new-streamer");
-        const branchName = await ensureBranch(
-          baseSha,
-          token,
-          `feature/items/add-${branchSlug}`
-        );
-
-        const fileResponse = await githubRequest(
-          `/repos/${repoConfig.owner}/${repoConfig.repo}/contents/web/streamers.json?ref=${repoConfig.defaultBranch}`,
-          token
-        );
-
-        const existingContent = decodeBase64(fileResponse.content);
-        let streamers;
-        try {
-          streamers = JSON.parse(existingContent);
-        } catch (error) {
-          throw new Error("Existing streamer list is not valid JSON.");
-        }
-
-        const newEntry = buildStreamerEntry(submission);
-        streamers.push(newEntry);
-        const updatedContent = `${JSON.stringify(streamers, null, 2)}\n`;
-
-        await githubRequest(
-          `/repos/${repoConfig.owner}/${repoConfig.repo}/contents/web/streamers.json`,
-          token,
-          {
-            method: "PUT",
-            body: JSON.stringify({
-              message: `feat (items): add streamer ${submission.name}`,
-              content: encodeBase64(updatedContent),
-              branch: branchName,
-              sha: fileResponse.sha,
-            }),
-          }
-        );
-
-        const prBody = [
-          "## Summary",
-          `- add **${submission.name}** to the Sharpen Live roster`,
-          "",
-          "## Generated By",
-          "- Sharpen Live submission form",
-        ].join("\n");
-
-        const pullRequest = await githubRequest(
-          `/repos/${repoConfig.owner}/${repoConfig.repo}/pulls`,
-          token,
-          {
-            method: "POST",
-            body: JSON.stringify({
-              title: `feat: add streamer ${submission.name}`,
-              head: branchName,
-              base: repoConfig.defaultBranch,
-              body: prBody,
-            }),
-          }
-        );
-
-        if (!pullRequest?.html_url) {
-          throw new Error("Pull request was created, but no URL was returned.");
-        }
-
-        return pullRequest.html_url;
+        return payload.pullRequestUrl;
       };
 
       const initSubmitStreamerForm = () => {
@@ -745,9 +569,8 @@
           const status = (formData.get("status") || "").toString().trim().toLowerCase();
           const statusLabel = (formData.get("status-label") || "").toString().trim();
           const languagesRaw = (formData.get("languages") || "").toString();
-          const token = (formData.get("github-token") || "").toString().trim();
 
-          if (!name || !description || !status || !languagesRaw || !token) {
+          if (!name || !description || !status || !languagesRaw) {
             throw new Error("Please complete all required fields before submitting.");
           }
 
@@ -769,7 +592,6 @@
             statusLabel,
             languages,
             platforms,
-            token,
           };
         };
 
@@ -784,8 +606,7 @@
           try {
             const submission = collectSubmission();
             setResult("Creating pull request…", "pending");
-            const prUrl = await createStreamerPullRequest(submission, submission.token);
-            delete submission.token;
+            const prUrl = await submitStreamerDetails(submission);
             setResult(
               `Pull request created: <a href="${prUrl}" target="_blank" rel="noopener noreferrer">${prUrl}</a>`,
               "success",

@@ -66,7 +66,7 @@ export function SubmitStreamerForm({ isOpen, onToggle }: SubmitStreamerFormProps
   const handleRemovePlatform = (id: string) => {
     setPlatforms((current) => {
       if (current.length === 1) {
-        return [emptyPlatform()];
+        return [createPlatformRow()];
       }
       return current.filter((row) => row.id !== id);
     });

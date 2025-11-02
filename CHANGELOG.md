@@ -4,6 +4,7 @@
 - Implement Sharpen Live API service with JSON-backed storage, admin endpoints, and accompanying tests plus local Go module packaging.
 - Rebuild the Sharpen Live frontend as a React application with submission workflow, admin dashboard, and Vite toolchain.
 - Add `scripts/online.sh`/`make online` dev launcher, default API port 8880, and updated client configuration to target the new endpoints.
+- Fix React submit form platform removal to reset rows with `createPlatformRow()` so builds succeed.
 - Extract Sharpen Live landing page styles into `web/styles.css` and generate the streamer roster from JSON with live-aware platform links.
 - Design Sharpen Live landing page with custom logo and live streamer status table.
 - Relocate static site assets from `doc/` to `web/`.

@@ -307,7 +307,7 @@
         }
 
         try {
-          const response = await fetch("streamers.json", { cache: "no-cache" });
+          const response = await fetch(STREAMERS_SOURCE, { cache: "no-cache" });
           if (!response.ok) {
             throw new Error(`Unexpected response: ${response.status}`);
           }
@@ -324,6 +324,9 @@
           tableBody.appendChild(errorRow);
         }
       };
+
+      const STREAMERS_SOURCE =
+        window.SHARPEN_STREAMERS_SOURCE || "/api/data/streamers.json";
 
       const STATUS_DEFAULT_LABELS = {
         online: "Online",

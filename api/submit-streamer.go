@@ -352,7 +352,7 @@ func ensureBranchExists(ctx context.Context, token, owner, repo string, baseRef 
 
 func getStreamersFile(ctx context.Context, token, owner, repo, branch string) (*fileResponse, error) {
 	var file fileResponse
-	endpoint := fmt.Sprintf("/repos/%s/%s/contents/web/streamers.json?ref=%s", owner, repo, branch)
+	endpoint := fmt.Sprintf("/repos/%s/%s/contents/api/data/streamers.json?ref=%s", owner, repo, branch)
 	if err := githubRequestJSON(ctx, http.MethodGet, endpoint, token, nil, &file); err != nil {
 		return nil, err
 	}
@@ -393,7 +393,7 @@ func appendStreamer(encodedContent string, sub *submission, encoding string) (st
 }
 
 func updateStreamersFile(ctx context.Context, token, owner, repo, branch, updatedContent, sha, streamerName string) error {
-	endpoint := fmt.Sprintf("/repos/%s/%s/contents/web/streamers.json", owner, repo)
+	endpoint := fmt.Sprintf("/repos/%s/%s/contents/api/data/streamers.json", owner, repo)
 	body := map[string]string{
 		"message": fmt.Sprintf("feat (items): add streamer %s", streamerName),
 		"content": updatedContent,

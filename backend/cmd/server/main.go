@@ -80,7 +80,13 @@ func spaHandler(staticDir string) http.Handler {
 	fileServer := http.FileServer(http.Dir(staticDir))
 
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		requestPath := filepath.Join(staticDir, filepath.Clean(strings.TrimPrefix(r.URL.Path, "/")))
+		cleaned := filepath.Clean(strings.TrimPrefix(r.URL.Path, "/"))
+		requestPath := filepath.Join(staticDir, cleaned)
+
+		if !strings.HasPrefix(requestPath, staticDir) {
+			http.NotFound(w, r)
+			return
+		}
 
 		if info, err := os.Stat(requestPath); err == nil && !info.IsDir() {
 			fileServer.ServeHTTP(w, r)

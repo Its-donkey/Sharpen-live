@@ -1,6 +1,8 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useState, useMemo } from "react";
+import type { ReactNode } from "react";
+import { BrowserRouter, Link, Route, Routes } from "react-router-dom";
 import { getStreamers } from "./api";
-import { AdminPanel } from "./components/AdminPanel";
+import { AdminConsole } from "./components/AdminConsole";
 import { StreamerTable } from "./components/StreamerTable";
 import { SubmitStreamerForm } from "./components/SubmitStreamerForm";
 import { useAdminToken } from "./hooks/useAdminToken";
@@ -11,8 +13,6 @@ export function App() {
   const [streamers, setStreamers] = useState<Streamer[]>([]);
   const [streamersLoading, setStreamersLoading] = useState(true);
   const [streamersError, setStreamersError] = useState<string | null>(null);
-  const [isSubmitOpen, setIsSubmitOpen] = useState(false);
-  const [isAdminOpen, setIsAdminOpen] = useState(false);
   const [adminToken, setAdminToken, clearAdminToken] = useAdminToken();
 
   const loadStreamers = useCallback(async () => {
@@ -34,61 +34,61 @@ export function App() {
     void loadStreamers();
   }, [loadStreamers]);
 
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <HomePage
+              streamers={streamers}
+              streamersLoading={streamersLoading}
+              streamersError={streamersError}
+              onRetry={loadStreamers}
+            />
+          }
+        />
+        <Route
+          path="/admin"
+          element={
+            <AdminPage
+              token={adminToken}
+              setToken={setAdminToken}
+              clearToken={clearAdminToken}
+              onStreamersUpdated={loadStreamers}
+            />
+          }
+        />
+      </Routes>
+    </BrowserRouter>
+  );
+}
+
+interface HomePageProps {
+  streamers: Streamer[];
+  streamersLoading: boolean;
+  streamersError: string | null;
+  onRetry: () => Promise<void>;
+}
+
+function HomePage({ streamers, streamersLoading, streamersError, onRetry }: HomePageProps) {
+  const [isSubmitOpen, setIsSubmitOpen] = useState(false);
   const currentYear = useMemo(() => new Date().getFullYear(), []);
 
   return (
     <div className="app-shell">
-      <header className="surface site-header">
-        <div className="logo-lockup">
-          <div className="logo-icon" aria-hidden="true">
-            <svg viewBox="0 0 120 120" role="img" aria-labelledby="sharpen-logo-title">
-              <title id="sharpen-logo-title">Sharpen Live logo</title>
-              <defs>
-                <linearGradient id="bladeGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stopColor="#f8fafc" stopOpacity="0.95" />
-                  <stop offset="55%" stopColor="#cbd5f5" stopOpacity="0.85" />
-                  <stop offset="100%" stopColor="#7dd3fc" stopOpacity="0.95" />
-                </linearGradient>
-              </defs>
-              <path
-                d="M14 68c12-20 38-54 80-58l6 36c-12 6-26 14-41 26l-45-4z"
-                fill="url(#bladeGradient)"
-                stroke="#0f172a"
-                strokeWidth="4"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-              <path
-                d="M19 76l35 4c-5 5-10 11-15 18l-26-8 6-14z"
-                fill="rgba(15, 23, 42, 0.45)"
-                stroke="#0f172a"
-                strokeWidth="3.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-              <circle cx="32" cy="92" r="6" fill="#38bdf8" />
-              <circle cx="88" cy="36" r="6" fill="#38bdf8" />
-            </svg>
-          </div>
-          <div className="logo-text">
-            <h1>Sharpen.Live</h1>
-            <p>Streaming Knife Craftsmen</p>
-          </div>
-        </div>
-        <div className="header-actions">
-          <a className="cta" href="#streamers">
-            Become a Partner
-          </a>
-          <button
-            type="button"
-            className="admin-button"
-            onClick={() => setIsAdminOpen((value) => !value)}
-            aria-expanded={isAdminOpen}
-          >
-            Admin
-          </button>
-        </div>
-      </header>
+      <SiteHeader
+        actions={
+          <>
+            <a className="cta" href="#streamers">
+              Become a Partner
+            </a>
+            <Link className="admin-button" to="/admin">
+              Admin
+            </Link>
+          </>
+        }
+      />
 
       <main className="surface" id="streamers" aria-labelledby="streamers-title">
         <section className="intro">
@@ -109,33 +109,106 @@ export function App() {
           streamers={streamers}
           loading={streamersLoading}
           error={streamersError}
-          onRetry={loadStreamers}
+          onRetry={onRetry}
         />
 
         <SubmitStreamerForm
           isOpen={isSubmitOpen}
           onToggle={() => setIsSubmitOpen((value) => !value)}
         />
+      </main>
 
-        <AdminPanel
-          isOpen={isAdminOpen}
-          onClose={() => setIsAdminOpen(false)}
-          token={adminToken}
-          setToken={setAdminToken}
-          clearToken={clearAdminToken}
-          onStreamersUpdated={loadStreamers}
+      <SiteFooter currentYear={currentYear} />
+    </div>
+  );
+}
+
+interface AdminPageProps {
+  token: string;
+  setToken: (value: string) => void;
+  clearToken: () => void;
+  onStreamersUpdated: () => Promise<void> | void;
+}
+
+function AdminPage({ token, setToken, clearToken, onStreamersUpdated }: AdminPageProps) {
+  const currentYear = useMemo(() => new Date().getFullYear(), []);
+
+  return (
+    <div className="app-shell">
+      <SiteHeader
+        actions={
+          <Link className="cta" to="/">
+            ← Back to roster
+          </Link>
+        }
+      />
+
+      <main className="surface" aria-labelledby="admin-title">
+        <AdminConsole
+          token={token}
+          setToken={setToken}
+          clearToken={clearToken}
+          onStreamersUpdated={onStreamersUpdated}
         />
       </main>
 
-      <footer>
-        <span>
-          &copy; {currentYear} Sharpen Live. All rights reserved.
-        </span>
-        <span>
-          Interested in the roster? <a href="mailto:partners@sharpen.live">partners@sharpen.live</a>
-        </span>
-      </footer>
+      <SiteFooter currentYear={currentYear} />
     </div>
+  );
+}
+
+function SiteHeader({ actions }: { actions: ReactNode }) {
+  return (
+    <header className="surface site-header">
+      <div className="logo-lockup">
+        <div className="logo-icon" aria-hidden="true">
+          <svg viewBox="0 0 120 120" role="img" aria-labelledby="sharpen-logo-title">
+            <title id="sharpen-logo-title">Sharpen Live logo</title>
+            <defs>
+              <linearGradient id="bladeGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="#f8fafc" stopOpacity="0.95" />
+                <stop offset="55%" stopColor="#cbd5f5" stopOpacity="0.85" />
+                <stop offset="100%" stopColor="#7dd3fc" stopOpacity="0.95" />
+              </linearGradient>
+            </defs>
+            <path
+              d="M14 68c12-20 38-54 80-58l6 36c-12 6-26 14-41 26l-45-4z"
+              fill="url(#bladeGradient)"
+              stroke="#0f172a"
+              strokeWidth="4"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+            <path
+              d="M19 76l35 4c-5 5-10 11-15 18l-26-8 6-14z"
+              fill="rgba(15, 23, 42, 0.45)"
+              stroke="#0f172a"
+              strokeWidth="3.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+            <circle cx="32" cy="92" r="6" fill="#38bdf8" />
+            <circle cx="88" cy="36" r="6" fill="#38bdf8" />
+          </svg>
+        </div>
+        <div className="logo-text">
+          <h1>Sharpen.Live</h1>
+          <p>Streaming Knife Craftsmen</p>
+        </div>
+      </div>
+      <div className="header-actions">{actions}</div>
+    </header>
+  );
+}
+
+function SiteFooter({ currentYear }: { currentYear: number }) {
+  return (
+    <footer>
+      <span>&copy; {currentYear} Sharpen Live. All rights reserved.</span>
+      <span>
+        Interested in the roster? <a href="mailto:partners@sharpen.live">partners@sharpen.live</a>
+      </span>
+    </footer>
   );
 }
 

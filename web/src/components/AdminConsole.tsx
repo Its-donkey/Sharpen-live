@@ -8,9 +8,9 @@ import {
 import {
   createAdminStreamer,
   deleteAdminStreamer,
-  loginAdmin,
   getAdminStreamers,
   getSubmissions,
+  loginAdmin,
   moderateSubmission,
   updateAdminStreamer
 } from "../api";
@@ -29,9 +29,7 @@ import {
   sanitizePlatforms
 } from "../utils/formHelpers";
 
-interface AdminPanelProps {
-  isOpen: boolean;
-  onClose: () => void;
+interface AdminConsoleProps {
   token: string;
   setToken: (value: string) => void;
   clearToken: () => void;
@@ -54,6 +52,8 @@ interface StreamerFormState {
 }
 
 const defaultStatus: StatusState = { message: "", tone: "idle" };
+const DEV_EMAIL = "admin@sharpen.live";
+const DEV_PASSWORD = "changeme123";
 
 function toFormState(streamer?: Streamer): StreamerFormState {
   const status = streamer?.status ?? "online";
@@ -93,16 +93,16 @@ function formIsValid(state: StreamerFormState): boolean {
   );
 }
 
-export function AdminPanel({
-  isOpen,
-  onClose,
+export function AdminConsole({
   token,
   setToken,
   clearToken,
   onStreamersUpdated
-}: AdminPanelProps) {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+}: AdminConsoleProps) {
+  const defaultEmail = import.meta.env.DEV ? DEV_EMAIL : "";
+  const defaultPassword = import.meta.env.DEV ? DEV_PASSWORD : "";
+  const [email, setEmail] = useState(defaultEmail);
+  const [password, setPassword] = useState(defaultPassword);
   const [status, setStatus] = useState<StatusState>(defaultStatus);
   const [loading, setLoading] = useState(false);
   const [submissions, setSubmissions] = useState<Submission[]>([]);
@@ -135,11 +135,13 @@ export function AdminPanel({
   );
 
   useEffect(() => {
-    if (!isOpen || !token) {
+    if (!token) {
+      setSubmissions([]);
+      setStreamers([]);
       return;
     }
     void loadAdminData(token);
-  }, [isOpen, token, loadAdminData]);
+  }, [token, loadAdminData]);
 
   const sortedSubmissions = useMemo(
     () =>
@@ -167,9 +169,8 @@ export function AdminPanel({
       setStatus({ message: "Logging in…", tone: "info" });
       const response = await loginAdmin(trimmedEmail, trimmedPassword);
       setToken(response.token);
-      setEmail("");
-      setPassword("");
       setStatus({ message: "Login successful.", tone: "success" });
+      await loadAdminData(response.token);
     } catch (error) {
       setStatus({
         message: error instanceof Error ? error.message : "Unable to log in.",
@@ -184,8 +185,9 @@ export function AdminPanel({
     clearToken();
     setSubmissions([]);
     setStreamers([]);
-    setEmail("");
-    setPassword("");
+    setIsCreateOpen(false);
+    setEmail(defaultEmail);
+    setPassword(defaultPassword);
     setStatus({ message: "Logged out of admin console.", tone: "info" });
   };
 
@@ -273,12 +275,8 @@ export function AdminPanel({
     }
   };
 
-  if (!isOpen) {
-    return null;
-  }
-
   return (
-    <section className="surface admin-panel" aria-labelledby="admin-title">
+    <section className="admin-panel" aria-labelledby="admin-title">
       <div className="admin-header">
         <div>
           <h2 id="admin-title">Admin Dashboard</h2>
@@ -286,9 +284,6 @@ export function AdminPanel({
             Review incoming submissions, approve qualified streamers, or update the roster.
           </p>
         </div>
-        <button type="button" className="admin-close" onClick={onClose}>
-          Close
-        </button>
       </div>
 
       {!isAuthenticated ? (
@@ -332,76 +327,71 @@ export function AdminPanel({
         </div>
       )}
 
-      <div
-        className="admin-status"
-        role="status"
-        aria-live="polite"
-        data-state={status.tone}
-      >
+      <div className="admin-status" role="status" aria-live="polite" data-state={status.tone}>
         {status.message}
       </div>
 
       {isAuthenticated ? (
         <div className="admin-grid">
-        <section aria-labelledby="admin-submissions-title">
-          <h3 id="admin-submissions-title">Pending submissions</h3>
-          {loading && !submissions.length ? (
-            <div className="admin-empty">Loading submissions…</div>
-          ) : sortedSubmissions.length ? (
-            <div className="admin-submissions">
-              {sortedSubmissions.map((submission) => (
-                <SubmissionCard
-                  key={submission.id}
-                  submission={submission}
-                  onApprove={() => moderate("approve", submission.id)}
-                  onReject={() => moderate("reject", submission.id)}
-                  disabled={loading}
-                />
-              ))}
+          <section aria-labelledby="admin-submissions-title">
+            <h3 id="admin-submissions-title">Pending submissions</h3>
+            {loading && !submissions.length ? (
+              <div className="admin-empty">Loading submissions…</div>
+            ) : sortedSubmissions.length ? (
+              <div className="admin-submissions">
+                {sortedSubmissions.map((submission) => (
+                  <SubmissionCard
+                    key={submission.id}
+                    submission={submission}
+                    onApprove={() => moderate("approve", submission.id)}
+                    onReject={() => moderate("reject", submission.id)}
+                    disabled={loading}
+                  />
+                ))}
+              </div>
+            ) : (
+              <div className="admin-empty">No pending submissions at the moment.</div>
+            )}
+          </section>
+
+          <section aria-labelledby="admin-streamers-title">
+            <div className="admin-streamers-header">
+              <h3 id="admin-streamers-title">Current roster</h3>
+              <button
+                type="button"
+                className="secondary-button"
+                onClick={() => setIsCreateOpen((value) => !value)}
+                disabled={loading}
+              >
+                {isCreateOpen ? "Cancel new streamer" : "Add streamer"}
+              </button>
             </div>
-          ) : (
-            <div className="admin-empty">No pending submissions at the moment.</div>
-          )}
-        </section>
 
-        <section aria-labelledby="admin-streamers-title">
-          <div className="admin-streamers-header">
-            <h3 id="admin-streamers-title">Current roster</h3>
-            <button
-              type="button"
-              className="secondary-button"
-              onClick={() => setIsCreateOpen((value) => !value)}
-              disabled={!token}
-            >
-              {isCreateOpen ? "Cancel new streamer" : "Add streamer"}
-            </button>
-          </div>
+            {isCreateOpen ? (
+              <AdminCreateStreamer
+                onSubmit={async (payload) => {
+                  await createStreamer(payload);
+                  setIsCreateOpen(false);
+                }}
+              />
+            ) : null}
 
-          {isCreateOpen && token ? (
-            <AdminCreateStreamer
-              onSubmit={async (payload) => {
-                await createStreamer(payload);
-                setIsCreateOpen(false);
-              }}
-            />
-          ) : null}
-
-          {streamers.length ? (
-            <div className="admin-streamers">
-              {streamers.map((streamer) => (
-                <AdminStreamerCard
-                  key={streamer.id}
-                  streamer={streamer}
-                  onUpdate={updateStreamer}
-                  onDelete={removeStreamer}
-                />
-              ))}
-            </div>
-          ) : (
-            <div className="admin-empty">No streamers found. Add one to get started.</div>
-          )}
-        </section>
-      </div>
+            {streamers.length ? (
+              <div className="admin-streamers">
+                {streamers.map((streamer) => (
+                  <AdminStreamerCard
+                    key={streamer.id}
+                    streamer={streamer}
+                    onUpdate={updateStreamer}
+                    onDelete={removeStreamer}
+                  />
+                ))}
+              </div>
+            ) : (
+              <div className="admin-empty">No streamers found. Add one to get started.</div>
+            )}
+          </section>
+        </div>
       ) : (
         <div className="admin-empty">
           Log in with your admin credentials to review submissions.
@@ -449,12 +439,7 @@ function SubmissionCard({ submission, onApprove, onReject, disabled }: Submissio
         <button type="button" data-variant="approve" onClick={onApprove} disabled={disabled}>
           Approve
         </button>
-        <button
-          type="button"
-          data-variant="reject"
-          onClick={onReject}
-          disabled={disabled}
-        >
+        <button type="button" data-variant="reject" onClick={onReject} disabled={disabled}>
           Reject
         </button>
       </div>
@@ -556,8 +541,7 @@ function AdminStreamerCard({ streamer, onUpdate, onDelete }: AdminStreamerCardPr
         <div>
           <h4>{streamer.name}</h4>
           <span className="admin-card-meta">
-            Status: {STATUS_DEFAULT_LABELS[streamer.status]} · Languages:{" "}
-            {streamer.languages.join(" · ")}
+            Status: {STATUS_DEFAULT_LABELS[streamer.status]} · Languages: {streamer.languages.join(" · ")}
           </span>
         </div>
         <div className="admin-card-actions">
@@ -886,7 +870,9 @@ function AdminCreateStreamer({ onSubmit }: AdminCreateStreamerProps) {
                     setState((current) => ({
                       ...current,
                       platforms: current.platforms.map((row) =>
-                        row.id === platform.id ? { ...row, liveUrl: event.target.value } : row
+                        row.id === platform.id
+                          ? { ...row, liveUrl: event.target.value }
+                          : row
                       )
                     }))
                   }

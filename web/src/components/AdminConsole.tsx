@@ -1,0 +1,935 @@
+import {
+  FormEvent,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState
+} from "react";
+import {
+  createAdminStreamer,
+  deleteAdminStreamer,
+  getAdminStreamers,
+  getSubmissions,
+  loginAdmin,
+  moderateSubmission,
+  updateAdminStreamer
+} from "../api";
+import type {
+  Streamer,
+  StreamerStatus,
+  Submission,
+  SubmissionPayload
+} from "../types";
+import { STATUS_DEFAULT_LABELS } from "../types";
+import {
+  createPlatformRow,
+  defaultStatusLabel,
+  normalizeLanguagesInput,
+  PlatformFormRow,
+  sanitizePlatforms
+} from "../utils/formHelpers";
+
+interface AdminConsoleProps {
+  token: string;
+  setToken: (value: string) => void;
+  clearToken: () => void;
+  onStreamersUpdated: () => Promise<void> | void;
+}
+
+interface StatusState {
+  message: string;
+  tone: "idle" | "info" | "success" | "error";
+}
+
+interface StreamerFormState {
+  name: string;
+  description: string;
+  status: StreamerStatus;
+  statusLabel: string;
+  languagesInput: string;
+  platforms: PlatformFormRow[];
+  statusLabelEdited: boolean;
+}
+
+const defaultStatus: StatusState = { message: "", tone: "idle" };
+const DEV_EMAIL = "admin@sharpen.live";
+const DEV_PASSWORD = "changeme123";
+
+function toFormState(streamer?: Streamer): StreamerFormState {
+  const status = streamer?.status ?? "online";
+  const defaultLabel = defaultStatusLabel(status);
+  const currentLabel = streamer?.statusLabel ?? defaultLabel;
+  return {
+    name: streamer?.name ?? "",
+    description: streamer?.description ?? "",
+    status,
+    statusLabel: currentLabel,
+    languagesInput: streamer?.languages?.join(", ") ?? "",
+    platforms:
+      streamer?.platforms?.length
+        ? streamer.platforms.map((platform) => createPlatformRow(platform))
+        : [createPlatformRow()],
+    statusLabelEdited: currentLabel.trim() !== defaultLabel.trim()
+  };
+}
+
+function toPayload(state: StreamerFormState): SubmissionPayload {
+  return {
+    name: state.name.trim(),
+    description: state.description.trim(),
+    status: state.status,
+    statusLabel: state.statusLabel.trim() || defaultStatusLabel(state.status),
+    languages: normalizeLanguagesInput(state.languagesInput),
+    platforms: sanitizePlatforms(state.platforms)
+  };
+}
+
+function formIsValid(state: StreamerFormState): boolean {
+  return (
+    Boolean(state.name.trim()) &&
+    Boolean(state.description.trim()) &&
+    normalizeLanguagesInput(state.languagesInput).length > 0 &&
+    sanitizePlatforms(state.platforms).length > 0
+  );
+}
+
+export function AdminConsole({
+  token,
+  setToken,
+  clearToken,
+  onStreamersUpdated
+}: AdminConsoleProps) {
+  const defaultEmail = import.meta.env.DEV ? DEV_EMAIL : "";
+  const defaultPassword = import.meta.env.DEV ? DEV_PASSWORD : "";
+  const [email, setEmail] = useState(defaultEmail);
+  const [password, setPassword] = useState(defaultPassword);
+  const [status, setStatus] = useState<StatusState>(defaultStatus);
+  const [loading, setLoading] = useState(false);
+  const [submissions, setSubmissions] = useState<Submission[]>([]);
+  const [streamers, setStreamers] = useState<Streamer[]>([]);
+  const [isCreateOpen, setIsCreateOpen] = useState(false);
+  const isAuthenticated = Boolean(token);
+
+  const loadAdminData = useCallback(
+    async (currentToken: string) => {
+      setLoading(true);
+      setStatus({ message: "Loading admin data…", tone: "info" });
+      try {
+        const [subData, streamerData] = await Promise.all([
+          getSubmissions(currentToken),
+          getAdminStreamers(currentToken)
+        ]);
+        setSubmissions(subData);
+        setStreamers(streamerData);
+        setStatus({ message: "Admin data updated.", tone: "success" });
+      } catch (error) {
+        setStatus({
+          message: error instanceof Error ? error.message : "Unable to load admin data.",
+          tone: "error"
+        });
+      } finally {
+        setLoading(false);
+      }
+    },
+    []
+  );
+
+  useEffect(() => {
+    if (!token) {
+      setSubmissions([]);
+      setStreamers([]);
+      return;
+    }
+    void loadAdminData(token);
+  }, [token, loadAdminData]);
+
+  const sortedSubmissions = useMemo(
+    () =>
+      submissions
+        .slice()
+        .sort(
+          (a, b) =>
+            new Date(b.submittedAt).getTime() - new Date(a.submittedAt).getTime()
+        ),
+    [submissions]
+  );
+
+  const handleLoginSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const trimmedEmail = email.trim();
+    const trimmedPassword = password;
+
+    if (!trimmedEmail || !trimmedPassword) {
+      setStatus({ message: "Email and password are required.", tone: "error" });
+      return;
+    }
+
+    try {
+      setLoading(true);
+      setStatus({ message: "Logging in…", tone: "info" });
+      const response = await loginAdmin(trimmedEmail, trimmedPassword);
+      setToken(response.token);
+      setStatus({ message: "Login successful.", tone: "success" });
+      await loadAdminData(response.token);
+    } catch (error) {
+      setStatus({
+        message: error instanceof Error ? error.message : "Unable to log in.",
+        tone: "error"
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleLogout = () => {
+    clearToken();
+    setSubmissions([]);
+    setStreamers([]);
+    setIsCreateOpen(false);
+    setEmail(defaultEmail);
+    setPassword(defaultPassword);
+    setStatus({ message: "Logged out of admin console.", tone: "info" });
+  };
+
+  const refreshAll = async () => {
+    if (!token) {
+      setStatus({ message: "Log in to load submissions.", tone: "error" });
+      return;
+    }
+    await loadAdminData(token);
+    await onStreamersUpdated();
+  };
+
+  const moderate = async (action: "approve" | "reject", id: string) => {
+    if (!token) {
+      setStatus({ message: "Log in to manage submissions.", tone: "error" });
+      return;
+    }
+    try {
+      setStatus({ message: `${action === "approve" ? "Approving" : "Rejecting"} submission…`, tone: "info" });
+      await moderateSubmission(token, action, id);
+      await refreshAll();
+      setStatus({
+        message: `Submission ${action === "approve" ? "approved" : "rejected"}.`,
+        tone: "success"
+      });
+    } catch (error) {
+      setStatus({
+        message: error instanceof Error ? error.message : "Unable to update submission.",
+        tone: "error"
+      });
+    }
+  };
+
+  const updateStreamer = async (id: string, payload: SubmissionPayload) => {
+    if (!token) {
+      setStatus({ message: "Log in to manage the roster.", tone: "error" });
+      return;
+    }
+    try {
+      await updateAdminStreamer(token, id, payload);
+      await refreshAll();
+      setStatus({ message: "Streamer updated.", tone: "success" });
+    } catch (error) {
+      setStatus({
+        message: error instanceof Error ? error.message : "Unable to update streamer.",
+        tone: "error"
+      });
+      throw error;
+    }
+  };
+
+  const removeStreamer = async (id: string) => {
+    if (!token) {
+      setStatus({ message: "Log in to manage the roster.", tone: "error" });
+      return;
+    }
+    try {
+      await deleteAdminStreamer(token, id);
+      await refreshAll();
+      setStatus({ message: "Streamer removed from roster.", tone: "success" });
+    } catch (error) {
+      setStatus({
+        message: error instanceof Error ? error.message : "Unable to delete streamer.",
+        tone: "error"
+      });
+      throw error;
+    }
+  };
+
+  const createStreamer = async (payload: SubmissionPayload) => {
+    if (!token) {
+      setStatus({ message: "Log in to manage the roster.", tone: "error" });
+      return;
+    }
+    try {
+      await createAdminStreamer(token, payload);
+      await refreshAll();
+      setStatus({ message: "Streamer created.", tone: "success" });
+    } catch (error) {
+      setStatus({
+        message: error instanceof Error ? error.message : "Unable to create streamer.",
+        tone: "error"
+      });
+      throw error;
+    }
+  };
+
+  return (
+    <section className="admin-panel" aria-labelledby="admin-title">
+      <div className="admin-header">
+        <div>
+          <h2 id="admin-title">Admin Dashboard</h2>
+          <p className="admin-help">
+            Review incoming submissions, approve qualified streamers, or update the roster.
+          </p>
+        </div>
+      </div>
+
+      {!isAuthenticated ? (
+        <form className="admin-auth" onSubmit={handleLoginSubmit}>
+          <label className="form-field form-field-wide">
+            <span>Email</span>
+            <input
+              type="email"
+              name="admin-email"
+              placeholder="you@example.com"
+              value={email}
+              onChange={(event) => setEmail(event.target.value)}
+              required
+            />
+          </label>
+          <label className="form-field form-field-wide">
+            <span>Password</span>
+            <div className="admin-auth-controls">
+              <input
+                type="password"
+                name="admin-password"
+                placeholder="Enter your password"
+                value={password}
+                onChange={(event) => setPassword(event.target.value)}
+                required
+              />
+              <button type="submit" className="admin-auth-submit" disabled={loading}>
+                {loading ? "Logging in…" : "Log in"}
+              </button>
+            </div>
+          </label>
+        </form>
+      ) : (
+        <div className="admin-actions">
+          <button type="button" className="secondary-button" onClick={refreshAll} disabled={loading}>
+            Refresh data
+          </button>
+          <button type="button" className="secondary-button" onClick={handleLogout} disabled={loading}>
+            Log out
+          </button>
+        </div>
+      )}
+
+      <div className="admin-status" role="status" aria-live="polite" data-state={status.tone}>
+        {status.message}
+      </div>
+
+      {isAuthenticated ? (
+        <div className="admin-grid">
+          <section aria-labelledby="admin-submissions-title">
+            <h3 id="admin-submissions-title">Pending submissions</h3>
+            {loading && !submissions.length ? (
+              <div className="admin-empty">Loading submissions…</div>
+            ) : sortedSubmissions.length ? (
+              <div className="admin-submissions">
+                {sortedSubmissions.map((submission) => (
+                  <SubmissionCard
+                    key={submission.id}
+                    submission={submission}
+                    onApprove={() => moderate("approve", submission.id)}
+                    onReject={() => moderate("reject", submission.id)}
+                    disabled={loading}
+                  />
+                ))}
+              </div>
+            ) : (
+              <div className="admin-empty">No pending submissions at the moment.</div>
+            )}
+          </section>
+
+          <section aria-labelledby="admin-streamers-title">
+            <div className="admin-streamers-header">
+              <h3 id="admin-streamers-title">Current roster</h3>
+              <button
+                type="button"
+                className="secondary-button"
+                onClick={() => setIsCreateOpen((value) => !value)}
+                disabled={loading}
+              >
+                {isCreateOpen ? "Cancel new streamer" : "Add streamer"}
+              </button>
+            </div>
+
+            {isCreateOpen ? (
+              <AdminCreateStreamer
+                onSubmit={async (payload) => {
+                  await createStreamer(payload);
+                  setIsCreateOpen(false);
+                }}
+              />
+            ) : null}
+
+            {streamers.length ? (
+              <div className="admin-streamers">
+                {streamers.map((streamer) => (
+                  <AdminStreamerCard
+                    key={streamer.id}
+                    streamer={streamer}
+                    onUpdate={updateStreamer}
+                    onDelete={removeStreamer}
+                  />
+                ))}
+              </div>
+            ) : (
+              <div className="admin-empty">No streamers found. Add one to get started.</div>
+            )}
+          </section>
+        </div>
+      ) : (
+        <div className="admin-empty">
+          Log in with your admin credentials to review submissions.
+        </div>
+      )}
+    </section>
+  );
+}
+
+interface SubmissionCardProps {
+  submission: Submission;
+  onApprove: () => void;
+  onReject: () => void;
+  disabled?: boolean;
+}
+
+function SubmissionCard({ submission, onApprove, onReject, disabled }: SubmissionCardProps) {
+  return (
+    <article className="admin-card" data-submission-id={submission.id}>
+      <div className="admin-card-header">
+        <h4>{submission.payload.name}</h4>
+        <span className="admin-card-meta">
+          Submitted {new Date(submission.submittedAt).toLocaleString()}
+        </span>
+      </div>
+      <section>
+        <strong>Description</strong>
+        <p>{submission.payload.description}</p>
+      </section>
+      <section>
+        <strong>Languages</strong>
+        <p>{submission.payload.languages.join(" · ")}</p>
+      </section>
+      <section>
+        <strong>Platforms</strong>
+        <ul className="platform-list">
+          {submission.payload.platforms.map((platform, index) => (
+            <li key={`${platform.name}-${index}`}>
+              {platform.name} · {platform.channelUrl}
+            </li>
+          ))}
+        </ul>
+      </section>
+      <div className="admin-card-actions">
+        <button type="button" data-variant="approve" onClick={onApprove} disabled={disabled}>
+          Approve
+        </button>
+        <button type="button" data-variant="reject" onClick={onReject} disabled={disabled}>
+          Reject
+        </button>
+      </div>
+    </article>
+  );
+}
+
+interface AdminStreamerCardProps {
+  streamer: Streamer;
+  onUpdate: (id: string, payload: SubmissionPayload) => Promise<void>;
+  onDelete: (id: string) => Promise<void>;
+}
+
+function AdminStreamerCard({ streamer, onUpdate, onDelete }: AdminStreamerCardProps) {
+  const [isEditing, setIsEditing] = useState(false);
+  const [state, setState] = useState<StreamerFormState>(() => toFormState(streamer));
+  const [isSaving, setIsSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    setState(toFormState(streamer));
+  }, [streamer]);
+
+  const canSave = formIsValid(state) && !isSaving;
+
+  const handleStatusChange = (value: StreamerStatus) => {
+    setState((current) => {
+      const nextStatus = value;
+      const defaultLabel = defaultStatusLabel(nextStatus);
+      const shouldUpdateLabel = !current.statusLabelEdited;
+      return {
+        ...current,
+        status: nextStatus,
+        statusLabel: shouldUpdateLabel ? defaultLabel : current.statusLabel
+      };
+    });
+  };
+
+  const handlePlatformChange = (id: string, key: "name" | "channelUrl" | "liveUrl", value: string) => {
+    setState((current) => ({
+      ...current,
+      platforms: current.platforms.map((platform) =>
+        platform.id === id ? { ...platform, [key]: value } : platform
+      )
+    }));
+  };
+
+  const handleRemovePlatform = (id: string) => {
+    setState((current) => {
+      if (current.platforms.length === 1) {
+        return { ...current, platforms: [createPlatformRow()] };
+      }
+      return {
+        ...current,
+        platforms: current.platforms.filter((platform) => platform.id !== id)
+      };
+    });
+  };
+
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (!formIsValid(state)) {
+      setError("Provide a name, description, at least one language, and valid platforms.");
+      return;
+    }
+    setIsSaving(true);
+    setError(null);
+    try {
+      await onUpdate(streamer.id, toPayload(state));
+      setIsEditing(false);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Unable to update streamer.");
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const handleDelete = async () => {
+    const confirmed = window.confirm(
+      `Remove ${streamer.name} from the roster? This action cannot be undone.`
+    );
+    if (!confirmed) {
+      return;
+    }
+    setIsSaving(true);
+    setError(null);
+    try {
+      await onDelete(streamer.id);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Unable to delete streamer.");
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  return (
+    <article className="admin-card" data-streamer-id={streamer.id}>
+      <div className="admin-card-header">
+        <div>
+          <h4>{streamer.name}</h4>
+          <span className="admin-card-meta">
+            Status: {STATUS_DEFAULT_LABELS[streamer.status]} · Languages: {streamer.languages.join(" · ")}
+          </span>
+        </div>
+        <div className="admin-card-actions">
+          <button type="button" onClick={() => setIsEditing((value) => !value)}>
+            {isEditing ? "Cancel edit" : "Edit"}
+          </button>
+          <button type="button" className="secondary-button" onClick={handleDelete} disabled={isSaving}>
+            Delete
+          </button>
+        </div>
+      </div>
+
+      {isEditing ? (
+        <form className="admin-streamer-form" onSubmit={handleSubmit}>
+          <div className="form-grid">
+            <label className="form-field">
+              <span>Name</span>
+              <input
+                type="text"
+                value={state.name}
+                onChange={(event) =>
+                  setState((current) => ({ ...current, name: event.target.value }))
+                }
+                required
+              />
+            </label>
+            <label className="form-field">
+              <span>Status</span>
+              <select
+                value={state.status}
+                onChange={(event) => handleStatusChange(event.target.value as StreamerStatus)}
+              >
+                <option value="online">Online</option>
+                <option value="busy">Workshop</option>
+                <option value="offline">Offline</option>
+              </select>
+            </label>
+            <label className="form-field">
+              <span>Status label</span>
+              <input
+                type="text"
+                value={state.statusLabel}
+                onChange={(event) =>
+                  setState((current) => ({
+                    ...current,
+                    statusLabel: event.target.value,
+                    statusLabelEdited: event.target.value.trim().length > 0
+                  }))
+                }
+              />
+            </label>
+            <label className="form-field form-field-wide">
+              <span>Description</span>
+              <textarea
+                rows={3}
+                value={state.description}
+                onChange={(event) =>
+                  setState((current) => ({ ...current, description: event.target.value }))
+                }
+              />
+            </label>
+            <label className="form-field form-field-wide">
+              <span>Languages</span>
+              <input
+                type="text"
+                value={state.languagesInput}
+                onChange={(event) =>
+                  setState((current) => ({ ...current, languagesInput: event.target.value }))
+                }
+                placeholder="Example: English, Japanese"
+              />
+            </label>
+          </div>
+
+          <fieldset className="platform-fieldset">
+            <legend>Platforms</legend>
+            <div className="platform-rows">
+              {state.platforms.map((platform) => (
+                <div className="platform-row" key={platform.id}>
+                  <label className="form-field form-field-inline">
+                    <span>Platform name</span>
+                    <input
+                      type="text"
+                      value={platform.name}
+                      onChange={(event) =>
+                        handlePlatformChange(platform.id, "name", event.target.value)
+                      }
+                      required
+                    />
+                  </label>
+                  <label className="form-field form-field-inline">
+                    <span>Channel URL</span>
+                    <input
+                      type="url"
+                      value={platform.channelUrl}
+                      onChange={(event) =>
+                        handlePlatformChange(platform.id, "channelUrl", event.target.value)
+                      }
+                      required
+                    />
+                  </label>
+                  <label className="form-field form-field-inline">
+                    <span>Live URL</span>
+                    <input
+                      type="url"
+                      value={platform.liveUrl}
+                      onChange={(event) =>
+                        handlePlatformChange(platform.id, "liveUrl", event.target.value)
+                      }
+                      required
+                    />
+                  </label>
+                  <button
+                    type="button"
+                    className="remove-platform-button"
+                    onClick={() => handleRemovePlatform(platform.id)}
+                  >
+                    Remove
+                  </button>
+                </div>
+              ))}
+            </div>
+            <button
+              type="button"
+              className="add-platform-button"
+              onClick={() =>
+                setState((current) => ({
+                  ...current,
+                  platforms: [...current.platforms, createPlatformRow()]
+                }))
+              }
+            >
+              + Add another platform
+            </button>
+          </fieldset>
+
+          {error ? <div className="form-error">{error}</div> : null}
+
+          <div className="submit-streamer-actions">
+            <button type="submit" className="submit-streamer-submit" disabled={!canSave}>
+              {isSaving ? "Saving…" : "Save changes"}
+            </button>
+            <button
+              type="button"
+              className="submit-streamer-cancel"
+              onClick={() => {
+                setState(toFormState(streamer));
+                setIsEditing(false);
+                setError(null);
+              }}
+            >
+              Cancel
+            </button>
+          </div>
+        </form>
+      ) : (
+        <div className="admin-card-body">
+          <p>{streamer.description}</p>
+          <div className="admin-card-meta">
+            <strong>Platforms</strong>
+            <ul className="platform-list">
+              {streamer.platforms.map((platform, index) => (
+                <li key={`${platform.name}-${index}`}>
+                  {platform.name} · {platform.channelUrl}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      )}
+    </article>
+  );
+}
+
+interface AdminCreateStreamerProps {
+  onSubmit: (payload: SubmissionPayload) => Promise<void>;
+}
+
+function AdminCreateStreamer({ onSubmit }: AdminCreateStreamerProps) {
+  const [state, setState] = useState<StreamerFormState>(() => toFormState());
+  const [isSaving, setIsSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const canSave = formIsValid(state) && !isSaving;
+
+  const handleStatusChange = (value: StreamerStatus) => {
+    setState((current) => {
+      const nextStatus = value;
+      const defaultLabel = defaultStatusLabel(nextStatus);
+      const shouldUpdateLabel = !current.statusLabelEdited;
+      return {
+        ...current,
+        status: nextStatus,
+        statusLabel: shouldUpdateLabel ? defaultLabel : current.statusLabel
+      };
+    });
+  };
+
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (!formIsValid(state)) {
+      setError("Provide a name, description, at least one language, and valid platforms.");
+      return;
+    }
+    setIsSaving(true);
+    setError(null);
+    try {
+      await onSubmit(toPayload(state));
+      setState(toFormState());
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Unable to create streamer.");
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  return (
+    <form className="admin-streamer-form" onSubmit={handleSubmit}>
+      <h4>Add new streamer</h4>
+      <div className="form-grid">
+        <label className="form-field">
+          <span>Name</span>
+          <input
+            type="text"
+            value={state.name}
+            onChange={(event) =>
+              setState((current) => ({ ...current, name: event.target.value }))
+            }
+            required
+          />
+        </label>
+        <label className="form-field">
+          <span>Status</span>
+          <select
+            value={state.status}
+            onChange={(event) => handleStatusChange(event.target.value as StreamerStatus)}
+          >
+            <option value="online">Online</option>
+            <option value="busy">Workshop</option>
+            <option value="offline">Offline</option>
+          </select>
+        </label>
+        <label className="form-field">
+          <span>Status label</span>
+          <input
+            type="text"
+            value={state.statusLabel}
+            onChange={(event) =>
+              setState((current) => ({
+                ...current,
+                statusLabel: event.target.value,
+                statusLabelEdited: event.target.value.trim().length > 0
+              }))
+            }
+            placeholder="Defaults to the selected status"
+          />
+        </label>
+        <label className="form-field form-field-wide">
+          <span>Description</span>
+          <textarea
+            rows={3}
+            value={state.description}
+            onChange={(event) =>
+              setState((current) => ({ ...current, description: event.target.value }))
+            }
+          />
+        </label>
+        <label className="form-field form-field-wide">
+          <span>Languages</span>
+          <input
+            type="text"
+            value={state.languagesInput}
+            onChange={(event) =>
+              setState((current) => ({ ...current, languagesInput: event.target.value }))
+            }
+            placeholder="Example: English, Japanese"
+          />
+        </label>
+      </div>
+
+      <fieldset className="platform-fieldset">
+        <legend>Platforms</legend>
+        <div className="platform-rows">
+          {state.platforms.map((platform) => (
+            <div className="platform-row" key={platform.id}>
+              <label className="form-field form-field-inline">
+                <span>Platform name</span>
+                <input
+                  type="text"
+                  value={platform.name}
+                  onChange={(event) =>
+                    setState((current) => ({
+                      ...current,
+                      platforms: current.platforms.map((row) =>
+                        row.id === platform.id ? { ...row, name: event.target.value } : row
+                      )
+                    }))
+                  }
+                  required
+                />
+              </label>
+              <label className="form-field form-field-inline">
+                <span>Channel URL</span>
+                <input
+                  type="url"
+                  value={platform.channelUrl}
+                  onChange={(event) =>
+                    setState((current) => ({
+                      ...current,
+                      platforms: current.platforms.map((row) =>
+                        row.id === platform.id
+                          ? { ...row, channelUrl: event.target.value }
+                          : row
+                      )
+                    }))
+                  }
+                  required
+                />
+              </label>
+              <label className="form-field form-field-inline">
+                <span>Live URL</span>
+                <input
+                  type="url"
+                  value={platform.liveUrl}
+                  onChange={(event) =>
+                    setState((current) => ({
+                      ...current,
+                      platforms: current.platforms.map((row) =>
+                        row.id === platform.id
+                          ? { ...row, liveUrl: event.target.value }
+                          : row
+                      )
+                    }))
+                  }
+                  required
+                />
+              </label>
+              <button
+                type="button"
+                className="remove-platform-button"
+                onClick={() =>
+                  setState((current) => {
+                    if (current.platforms.length === 1) {
+                      return { ...current, platforms: [createPlatformRow()] };
+                    }
+                    return {
+                      ...current,
+                      platforms: current.platforms.filter((row) => row.id !== platform.id)
+                    };
+                  })
+                }
+              >
+                Remove
+              </button>
+            </div>
+          ))}
+        </div>
+        <button
+          type="button"
+          className="add-platform-button"
+          onClick={() =>
+            setState((current) => ({
+              ...current,
+              platforms: [...current.platforms, createPlatformRow()]
+            }))
+          }
+        >
+          + Add another platform
+        </button>
+      </fieldset>
+
+      {error ? <div className="form-error">{error}</div> : null}
+
+      <div className="submit-streamer-actions">
+        <button type="submit" className="submit-streamer-submit" disabled={!canSave}>
+          {isSaving ? "Creating…" : "Create streamer"}
+        </button>
+        <button
+          type="button"
+          className="submit-streamer-cancel"
+          onClick={() => {
+            setState(toFormState());
+            setError(null);
+          }}
+        >
+          Reset form
+        </button>
+      </div>
+    </form>
+  );
+}

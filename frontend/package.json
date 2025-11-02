@@ -20,6 +20,6 @@
     "autoprefixer": "^10.4.19",
     "postcss": "^8.4.39",
     "typescript": "^5.4.5",
-    "vite": "^7.1.12"
+    "vite": "^5.3.2"
   }
 }

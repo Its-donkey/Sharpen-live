@@ -7,12 +7,13 @@ import (
 	"strings"
 )
 
+
 const (
 	defaultListenAddr      = ":8880"
-	defaultDataDir         = "api/data"
+	defaultDataDir         = "backend/data"
 	defaultStreamersFile   = "streamers.json"
 	defaultSubmissionsFile = "submissions.json"
-	defaultStaticDir       = "web/dist"
+	defaultStaticDir       = "frontend/dist"
 
 	envListenAddr      = "LISTEN_ADDR"
 	envPort            = "PORT"
@@ -105,15 +106,33 @@ func (c Config) Validate() error {
 
 func detectDataDir() string {
 	candidates := []string{
-		filepath.Join("api", "data"),
 		"data",
+		filepath.Join("api", "data"),
 	}
 
-	for _, candidate := range candidates {
-		if info, err := os.Stat(candidate); err == nil && info.IsDir() {
-			return candidate
+	wd, err := os.Getwd()
+	if err != nil {
+		wd = "."
+	}
+
+	var roots []string
+	for dir := wd; dir != ""; dir = filepath.Dir(dir) {
+		roots = append(roots, dir)
+		parent := filepath.Dir(dir)
+		if parent == dir {
+			break
 		}
 	}
 
-	return candidates[0]
+	for _, base := range roots {
+		for _, candidate := range candidates {
+			path := filepath.Join(base, candidate)
+			if info, err := os.Stat(path); err == nil && info.IsDir() {
+				return path
+			}
+		}
+	}
+
+	// Fallback to first candidate relative to working directory.
+	return filepath.Join(wd, candidates[0])
 }

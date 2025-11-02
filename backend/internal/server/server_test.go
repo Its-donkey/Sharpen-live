@@ -8,8 +8,8 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/Its-donkey/Sharpen-live/api/internal/server"
-	"github.com/Its-donkey/Sharpen-live/api/internal/storage"
+	"github.com/Its-donkey/Sharpen-live/backend/internal/server"
+	"github.com/Its-donkey/Sharpen-live/backend/internal/storage"
 )
 
 const (

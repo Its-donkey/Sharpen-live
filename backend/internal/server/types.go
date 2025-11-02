@@ -1,6 +1,6 @@
 package server
 
-import "github.com/Its-donkey/Sharpen-live/api/internal/storage"
+import "github.com/Its-donkey/Sharpen-live/backend/internal/storage"
 
 type streamerRequest struct {
 	ID          string             `json:"id,omitempty"`

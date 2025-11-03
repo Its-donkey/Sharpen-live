@@ -413,6 +413,51 @@ tbody tr:hover {
   font-size: 0.9rem;
 }
 
+.admin-tabs {
+  display: flex;
+  gap: 0.75rem;
+  margin: 1.5rem 0;
+}
+
+.admin-tab {
+  padding: 0.85rem 2.2rem;
+  border-radius: 999px;
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  background: rgba(15, 23, 42, 0.45);
+  color: var(--fg-muted);
+  font-weight: 600;
+  font-size: medium;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease, border 0.2s ease;
+}
+
+.admin-tab:hover,
+.admin-tab:focus-visible {
+  color: var(--fg-primary);
+  border-color: rgba(148, 163, 184, 0.35);
+}
+
+.admin-tab.active {
+  background: rgba(56, 189, 248, 0.22);
+  border-color: rgba(56, 189, 248, 0.45);
+  color: var(--fg-primary);
+}
+
+.admin-settings {
+  display: grid;
+  gap: 1.5rem;
+  width: 100%;
+}
+
+.admin-settings-form {
+  display: grid;
+  gap: 1.25rem;
+}
+
+.admin-grid[role="tabpanel"] {
+  width: 100%;
+}
+
 .form-field {
   display: flex;
   flex-direction: column;

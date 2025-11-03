@@ -19,5 +19,7 @@
 - Provide default admin token in dev launcher so backend starts without extra env vars.
 - Refresh submission form to auto-set status and manage languages via curated dropdown with removable chips.
 - Display language names as “English / français”-style labels in the submission picker.
+- Add admin dashboard tabs for streamers and settings, including editable environment values.
+- Guard admin login against concurrent settings updates to avoid race conditions.
 - Support PubSubHubbub verification callbacks for `/alerts`.
 - Ensure PubSubHubbub verification replies echo `hub.challenge` with a `200 OK` status and log successful confirmations.

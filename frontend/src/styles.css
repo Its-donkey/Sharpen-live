@@ -420,12 +420,13 @@ tbody tr:hover {
 }
 
 .admin-tab {
-  padding: 0.55rem 1.2rem;
+  padding: 0.85rem 2.2rem;
   border-radius: 999px;
-  border: 1px solid transparent;
+  border: 1px solid rgba(148, 163, 184, 0.35);
   background: rgba(15, 23, 42, 0.45);
   color: var(--fg-muted);
   font-weight: 600;
+  font-size: medium;
   cursor: pointer;
   transition: background 0.2s ease, color 0.2s ease, border 0.2s ease;
 }
@@ -445,11 +446,16 @@ tbody tr:hover {
 .admin-settings {
   display: grid;
   gap: 1.5rem;
+  width: 100%;
 }
 
 .admin-settings-form {
   display: grid;
   gap: 1.25rem;
+}
+
+.admin-grid[role="tabpanel"] {
+  width: 100%;
 }
 
 .form-field {

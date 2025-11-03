@@ -15,6 +15,7 @@
 - Modularize YouTube alert application with dedicated packages and automated tests.
 - Add `frontend/streamers.json` to track streamer metadata.
 - Restructure repository into `backend/` and `frontend/` applications with shared tooling paths and remove the legacy `web/` duplicate.
+- Update API default static directory to `frontend/dist` so the merged bundle serves by default.
 - Add Go unit tests covering configuration, middleware, and SPA handler utilities.
 - Provide default admin token in dev launcher so backend starts without extra env vars.
 - Fix admin console build error by defining `import.meta.env` typing for Vite.

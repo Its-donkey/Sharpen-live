@@ -12,7 +12,7 @@ const (
 	defaultDataDir         = "api/data"
 	defaultStreamersFile   = "streamers.json"
 	defaultSubmissionsFile = "submissions.json"
-	defaultStaticDir       = "web/dist"
+	defaultStaticDir       = "frontend/dist"
 
 	envListenAddr      = "LISTEN_ADDR"
 	envPort            = "PORT"

@@ -84,12 +84,18 @@ func (s *Server) handleAdminLogin(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if !constantTimeEquals(email, s.adminEmail) || !constantTimeEquals(password, s.adminPassword) {
+	s.mu.RLock()
+	adminEmail := s.adminEmail
+	adminPassword := s.adminPassword
+	adminToken := s.adminToken
+	s.mu.RUnlock()
+
+	if !constantTimeEquals(email, adminEmail) || !constantTimeEquals(password, adminPassword) {
 		respondJSON(w, http.StatusUnauthorized, errorPayload{Message: "Invalid credentials."})
 		return
 	}
 
-	respondJSON(w, http.StatusOK, loginResponse{Token: s.adminToken})
+	respondJSON(w, http.StatusOK, loginResponse{Token: adminToken})
 }
 
 func (s *Server) handleAdminStreamers(w http.ResponseWriter, r *http.Request) {

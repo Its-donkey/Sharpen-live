@@ -14,9 +14,10 @@
 - Add YouTube alert listener service that polls live status every five minutes.
 - Modularize YouTube alert application with dedicated packages and automated tests.
 - Add `frontend/streamers.json` to track streamer metadata.
-- Restructure repository into `backend/` and `frontend/` applications with shared tooling paths.
+- Restructure repository into `backend/` and `frontend/` applications with shared tooling paths and remove the legacy `web/` duplicate.
 - Add Go unit tests covering configuration, middleware, and SPA handler utilities.
 - Provide default admin token in dev launcher so backend starts without extra env vars.
+- Fix admin console build error by defining `import.meta.env` typing for Vite.
 - Refresh submission form to auto-set status and manage languages via curated dropdown with removable chips.
 - Display language names as “English / français”-style labels in the submission picker.
 - Add admin dashboard tabs for streamers and settings, including editable environment values.

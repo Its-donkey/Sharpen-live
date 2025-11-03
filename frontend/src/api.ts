@@ -1,4 +1,6 @@
 import type {
+  AdminSettings,
+  AdminSettingsUpdate,
   LoginResponse,
   Streamer,
   Submission,
@@ -161,6 +163,24 @@ export async function moderateSubmission(
     {
       method: "POST",
       body: JSON.stringify({ action, id })
+    },
+    token
+  );
+}
+
+export async function getAdminSettings(token: string): Promise<AdminSettings> {
+  return request<AdminSettings>("/api/admin/settings", { method: "GET" }, token);
+}
+
+export async function updateAdminSettings(
+  token: string,
+  payload: AdminSettingsUpdate
+): Promise<SuccessPayload> {
+  return request<SuccessPayload>(
+    "/api/admin/settings",
+    {
+      method: "PUT",
+      body: JSON.stringify(payload)
     },
     token
   );

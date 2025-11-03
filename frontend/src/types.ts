@@ -44,6 +44,19 @@ export interface ErrorPayload {
   message: string;
 }
 
+export interface AdminSettings {
+  listenAddr: string;
+  adminToken: string;
+  adminEmail: string;
+  adminPassword: string;
+  dataDir: string;
+  staticDir: string;
+  streamersFile: string;
+  submissionsFile: string;
+}
+
+export type AdminSettingsUpdate = Partial<AdminSettings>;
+
 export const STATUS_DEFAULT_LABELS: Record<StreamerStatus, string> = {
   online: "Online",
   busy: "Workshop",

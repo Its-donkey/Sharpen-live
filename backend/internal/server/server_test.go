@@ -21,6 +21,7 @@ const (
 type testEnv struct {
 	store   *storage.JSONStore
 	handler http.Handler
+	server  *server.Server
 }
 
 func newTestEnv(t *testing.T) testEnv {
@@ -35,7 +36,7 @@ func newTestEnv(t *testing.T) testEnv {
 	}
 	srv := server.New(store, adminToken, adminEmail, adminPassword)
 	handler := srv.Handler(http.NotFoundHandler())
-	return testEnv{store: store, handler: handler}
+	return testEnv{store: store, handler: handler, server: srv}
 }
 
 func performRequest(handler http.Handler, method, target string, body any, headers map[string]string) *httptest.ResponseRecorder {
@@ -188,5 +189,44 @@ func TestRejectAndDeleteStreamers(t *testing.T) {
 	del := performRequest(env.handler, http.MethodDelete, "/api/admin/streamers/"+created.ID, nil, headers)
 	if del.Code != http.StatusNoContent {
 		t.Fatalf("expected 204 deleting streamer, got %d", del.Code)
+	}
+}
+
+func TestAdminSettingsHandlers(t *testing.T) {
+	env := newTestEnv(t)
+	headers := map[string]string{"Authorization": "Bearer " + adminToken}
+
+	t.Setenv("LISTEN_ADDR", ":9000")
+	t.Setenv("SHARPEN_DATA_DIR", "/tmp/data")
+	t.Setenv("SHARPEN_STATIC_DIR", "/tmp/static")
+	t.Setenv("SHARPEN_STREAMERS_FILE", "/tmp/streamers.json")
+	t.Setenv("SHARPEN_SUBMISSIONS_FILE", "/tmp/submissions.json")
+
+	resp := performRequest(env.handler, http.MethodGet, "/api/admin/settings", nil, headers)
+	if resp.Code != http.StatusOK {
+		t.Fatalf("expected 200 from settings get, got %d", resp.Code)
+	}
+
+	var payload map[string]string
+	if err := json.Unmarshal(resp.Body.Bytes(), &payload); err != nil {
+		t.Fatalf("unmarshal settings: %v", err)
+	}
+	if payload["adminEmail"] != adminEmail {
+		t.Fatalf("expected admin email %q, got %q", adminEmail, payload["adminEmail"])
+	}
+
+	newToken := "updated-token"
+	updateResp := performRequest(env.handler, http.MethodPut, "/api/admin/settings", map[string]string{
+		"adminToken": newToken,
+	}, headers)
+	if updateResp.Code != http.StatusOK {
+		t.Fatalf("expected 200 updating settings, got %d", updateResp.Code)
+	}
+
+	// verify token updated
+	testHeaders := map[string]string{"Authorization": "Bearer " + newToken}
+	okResp := performRequest(env.handler, http.MethodGet, "/api/admin/settings", nil, testHeaders)
+	if okResp.Code != http.StatusOK {
+		t.Fatalf("expected authorized with new token, got %d", okResp.Code)
 	}
 }

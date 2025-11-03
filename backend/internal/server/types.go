@@ -43,3 +43,25 @@ type successPayload struct {
 type loginResponse struct {
 	Token string `json:"token"`
 }
+
+type settingsResponse struct {
+	ListenAddr      string `json:"listenAddr"`
+	AdminToken      string `json:"adminToken"`
+	AdminEmail      string `json:"adminEmail"`
+	AdminPassword   string `json:"adminPassword"`
+	DataDir         string `json:"dataDir"`
+	StaticDir       string `json:"staticDir"`
+	StreamersFile   string `json:"streamersFile"`
+	SubmissionsFile string `json:"submissionsFile"`
+}
+
+type settingsUpdateRequest struct {
+	ListenAddr      *string `json:"listenAddr"`
+	AdminToken      *string `json:"adminToken"`
+	AdminEmail      *string `json:"adminEmail"`
+	AdminPassword   *string `json:"adminPassword"`
+	DataDir         *string `json:"dataDir"`
+	StaticDir       *string `json:"staticDir"`
+	StreamersFile   *string `json:"streamersFile"`
+	SubmissionsFile *string `json:"submissionsFile"`
+}

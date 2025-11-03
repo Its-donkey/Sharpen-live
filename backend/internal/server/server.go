@@ -5,8 +5,10 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"os"
 	"path"
 	"strings"
+	"sync"
 
 	"github.com/Its-donkey/Sharpen-live/backend/internal/storage"
 )
@@ -17,6 +19,7 @@ type Server struct {
 	adminToken    string
 	adminEmail    string
 	adminPassword string
+	mu            sync.RWMutex
 }
 
 // New constructs a Server with the provided dependencies.
@@ -39,6 +42,7 @@ func (s *Server) Handler(static http.Handler) http.Handler {
 	mux.Handle("/api/admin/streamers/", http.HandlerFunc(s.handleAdminStreamerByID))
 	mux.Handle("/api/submit-streamer", http.HandlerFunc(s.handleSubmitStreamer))
 	mux.Handle("/api/admin/submissions", http.HandlerFunc(s.handleAdminSubmissions))
+	mux.Handle("/api/admin/settings", http.HandlerFunc(s.handleAdminSettings))
 
 	// Mount the static handler as a catch-all for everything else.
 	mux.Handle("/", static)
@@ -285,6 +289,97 @@ func (s *Server) handleAdminSubmissions(w http.ResponseWriter, r *http.Request) 
 	}
 }
 
+func (s *Server) handleAdminSettings(w http.ResponseWriter, r *http.Request) {
+	if !s.authorizeAdmin(w, r) {
+		return
+	}
+
+	switch r.Method {
+	case http.MethodGet:
+		respondJSON(w, http.StatusOK, s.currentSettingsPayload())
+	case http.MethodPut:
+		var payload settingsUpdateRequest
+		if err := decodeJSON(r, &payload); err != nil {
+			respondError(w, http.StatusBadRequest, err)
+			return
+		}
+		if err := s.applySettings(payload); err != nil {
+			respondError(w, http.StatusBadRequest, err)
+			return
+		}
+		respondJSON(w, http.StatusOK, successPayload{Message: "Settings updated."})
+	default:
+		methodNotAllowed(w, http.MethodGet, http.MethodPut)
+	}
+}
+
+func (s *Server) currentSettingsPayload() settingsResponse {
+	s.mu.RLock()
+	defer s.mu.RUnlock()
+
+	return settingsResponse{
+		ListenAddr:      strings.TrimSpace(os.Getenv("LISTEN_ADDR")),
+		AdminToken:      s.adminToken,
+		AdminEmail:      s.adminEmail,
+		AdminPassword:   s.adminPassword,
+		DataDir:         strings.TrimSpace(os.Getenv("SHARPEN_DATA_DIR")),
+		StaticDir:       strings.TrimSpace(os.Getenv("SHARPEN_STATIC_DIR")),
+		StreamersFile:   strings.TrimSpace(os.Getenv("SHARPEN_STREAMERS_FILE")),
+		SubmissionsFile: strings.TrimSpace(os.Getenv("SHARPEN_SUBMISSIONS_FILE")),
+	}
+}
+
+func (s *Server) applySettings(payload settingsUpdateRequest) error {
+	if payload.AdminToken != nil {
+		if strings.TrimSpace(*payload.AdminToken) == "" {
+			return errors.New("admin token cannot be empty")
+		}
+	}
+	if payload.AdminEmail != nil {
+		if strings.TrimSpace(*payload.AdminEmail) == "" {
+			return errors.New("admin email cannot be empty")
+		}
+	}
+	if payload.AdminPassword != nil {
+		if strings.TrimSpace(*payload.AdminPassword) == "" {
+			return errors.New("admin password cannot be empty")
+		}
+	}
+
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
+	if payload.AdminToken != nil {
+		s.adminToken = strings.TrimSpace(*payload.AdminToken)
+		_ = os.Setenv("ADMIN_TOKEN", s.adminToken)
+	}
+	if payload.AdminEmail != nil {
+		s.adminEmail = strings.TrimSpace(*payload.AdminEmail)
+		_ = os.Setenv("ADMIN_EMAIL", s.adminEmail)
+	}
+	if payload.AdminPassword != nil {
+		s.adminPassword = strings.TrimSpace(*payload.AdminPassword)
+		_ = os.Setenv("ADMIN_PASSWORD", s.adminPassword)
+	}
+	if payload.ListenAddr != nil {
+		_ = os.Setenv("LISTEN_ADDR", strings.TrimSpace(*payload.ListenAddr))
+	}
+	if payload.DataDir != nil {
+		_ = os.Setenv("SHARPEN_DATA_DIR", strings.TrimSpace(*payload.DataDir))
+	}
+	if payload.StaticDir != nil {
+		_ = os.Setenv("SHARPEN_STATIC_DIR", strings.TrimSpace(*payload.StaticDir))
+	}
+	if payload.StreamersFile != nil {
+		_ = os.Setenv("SHARPEN_STREAMERS_FILE", strings.TrimSpace(*payload.StreamersFile))
+	}
+	if payload.SubmissionsFile != nil {
+		_ = os.Setenv("SHARPEN_SUBMISSIONS_FILE", strings.TrimSpace(*payload.SubmissionsFile))
+	}
+
+	return nil
+}
+
 func (s *Server) authorizeAdmin(w http.ResponseWriter, r *http.Request) bool {
 	header := strings.TrimSpace(r.Header.Get("Authorization"))
 	if header == "" {
@@ -299,7 +394,11 @@ func (s *Server) authorizeAdmin(w http.ResponseWriter, r *http.Request) bool {
 	}
 
 	token := strings.TrimSpace(strings.TrimPrefix(header, bearer))
-	if token == "" || !constantTimeEquals(token, s.adminToken) {
+	s.mu.RLock()
+	expected := s.adminToken
+	s.mu.RUnlock()
+
+	if token == "" || !constantTimeEquals(token, expected) {
 		respondJSON(w, http.StatusUnauthorized, errorPayload{Message: "Invalid admin token."})
 		return false
 	}

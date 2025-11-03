@@ -9,12 +9,16 @@ import {
   createAdminStreamer,
   deleteAdminStreamer,
   getAdminStreamers,
+  getAdminSettings,
   getSubmissions,
   loginAdmin,
   moderateSubmission,
+  updateAdminSettings,
   updateAdminStreamer
 } from "../api";
 import type {
+  AdminSettings,
+  AdminSettingsUpdate,
   Streamer,
   StreamerStatus,
   Submission,
@@ -108,6 +112,11 @@ export function AdminConsole({
   const [submissions, setSubmissions] = useState<Submission[]>([]);
   const [streamers, setStreamers] = useState<Streamer[]>([]);
   const [isCreateOpen, setIsCreateOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState<"streamers" | "settings">("streamers");
+  const [settings, setSettings] = useState<AdminSettings | null>(null);
+  const [settingsDraft, setSettingsDraft] = useState<AdminSettings | null>(null);
+  const [settingsLoading, setSettingsLoading] = useState(false);
+  const [settingsSaving, setSettingsSaving] = useState(false);
   const isAuthenticated = Boolean(token);
 
   const loadAdminData = useCallback(
@@ -134,14 +143,43 @@ export function AdminConsole({
     []
   );
 
+  const loadSettings = useCallback(
+    async (currentToken: string) => {
+      setSettingsLoading(true);
+      try {
+        const result = await getAdminSettings(currentToken);
+        setSettings(result);
+        setSettingsDraft(result);
+      } catch (error) {
+        setStatus({
+          message: error instanceof Error ? error.message : "Unable to load settings.",
+          tone: "error"
+        });
+      } finally {
+        setSettingsLoading(false);
+      }
+    },
+    []
+  );
+
   useEffect(() => {
     if (!token) {
       setSubmissions([]);
       setStreamers([]);
+      setSettings(null);
       return;
     }
     void loadAdminData(token);
   }, [token, loadAdminData]);
+
+  useEffect(() => {
+    if (!isAuthenticated || activeTab !== "settings") {
+      return;
+    }
+    if (!settings && !settingsLoading) {
+      void loadSettings(token);
+    }
+  }, [isAuthenticated, activeTab, settings, settingsLoading, loadSettings, token]);
 
   const sortedSubmissions = useMemo(
     () =>
@@ -188,6 +226,9 @@ export function AdminConsole({
     setIsCreateOpen(false);
     setEmail(defaultEmail);
     setPassword(defaultPassword);
+    setSettings(null);
+    setSettingsDraft(null);
+    setActiveTab("streamers");
     setStatus({ message: "Logged out of admin console.", tone: "info" });
   };
 
@@ -275,6 +316,48 @@ export function AdminConsole({
     }
   };
 
+  const handleSettingsFieldChange = (field: keyof AdminSettings, value: string) => {
+    if (!settingsDraft) {
+      return;
+    }
+    setSettingsDraft({ ...settingsDraft, [field]: value });
+  };
+
+  const handleSettingsSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (!token || !settings || !settingsDraft) {
+      return;
+    }
+
+    const updates: AdminSettingsUpdate = {};
+    (Object.keys(settingsDraft) as Array<keyof AdminSettings>).forEach((key) => {
+      if (settingsDraft[key] !== settings[key]) {
+        updates[key] = settingsDraft[key];
+      }
+    });
+
+    if (Object.keys(updates).length === 0) {
+      setStatus({ message: "No changes to update.", tone: "info" });
+      return;
+    }
+
+    try {
+      setSettingsSaving(true);
+      const response = await updateAdminSettings(token, updates);
+      setStatus({ message: response.message || "Settings updated.", tone: "success" });
+      const nextSettings = { ...settings, ...updates } as AdminSettings;
+      setSettings(nextSettings);
+      setSettingsDraft(nextSettings);
+    } catch (error) {
+      setStatus({
+        message: error instanceof Error ? error.message : "Unable to update settings.",
+        tone: "error"
+      });
+    } finally {
+      setSettingsSaving(false);
+    }
+  };
+
   return (
     <section className="admin-panel" aria-labelledby="admin-title">
       <div className="admin-header">
@@ -332,7 +415,27 @@ export function AdminConsole({
       </div>
 
       {isAuthenticated ? (
-        <div className="admin-grid">
+        <div className="admin-tabs" role="tablist">
+          <button
+            type="button"
+            className={activeTab === "streamers" ? "admin-tab active" : "admin-tab"}
+            onClick={() => setActiveTab("streamers")}
+          >
+            Streamers
+          </button>
+          <button
+            type="button"
+            className={activeTab === "settings" ? "admin-tab active" : "admin-tab"}
+            onClick={() => setActiveTab("settings")}
+          >
+            Settings
+          </button>
+        </div>
+      ) : null}
+
+      {isAuthenticated ? (
+        activeTab === "streamers" ? (
+          <div className="admin-grid" role="tabpanel">
           <section aria-labelledby="admin-submissions-title">
             <h3 id="admin-submissions-title">Pending submissions</h3>
             {loading && !submissions.length ? (
@@ -392,6 +495,113 @@ export function AdminConsole({
             )}
           </section>
         </div>
+        ) : (
+          <section className="admin-settings" role="tabpanel">
+            <h3>Environment settings</h3>
+            <p className="admin-help">
+              Update runtime environment values. Some changes may require restarting the server to
+              take effect.
+            </p>
+            {settingsLoading && !settingsDraft ? (
+              <div className="admin-empty">Loading settings…</div>
+            ) : settingsDraft ? (
+              <form className="admin-settings-form" onSubmit={handleSettingsSubmit}>
+                <div className="form-grid">
+                  <label className="form-field">
+                    <span>Admin email</span>
+                    <input
+                      type="email"
+                      value={settingsDraft.adminEmail}
+                      onChange={(event) =>
+                        handleSettingsFieldChange("adminEmail", event.target.value)
+                      }
+                      required
+                    />
+                  </label>
+                  <label className="form-field">
+                    <span>Admin password</span>
+                    <input
+                      type="password"
+                      value={settingsDraft.adminPassword}
+                      onChange={(event) =>
+                        handleSettingsFieldChange("adminPassword", event.target.value)
+                      }
+                      required
+                    />
+                  </label>
+                  <label className="form-field">
+                    <span>Admin token</span>
+                    <input
+                      type="text"
+                      value={settingsDraft.adminToken}
+                      onChange={(event) =>
+                        handleSettingsFieldChange("adminToken", event.target.value)
+                      }
+                      required
+                    />
+                  </label>
+                  <label className="form-field">
+                    <span>Listen address</span>
+                    <input
+                      type="text"
+                      value={settingsDraft.listenAddr}
+                      onChange={(event) =>
+                        handleSettingsFieldChange("listenAddr", event.target.value)
+                      }
+                    />
+                  </label>
+                  <label className="form-field">
+                    <span>Data directory</span>
+                    <input
+                      type="text"
+                      value={settingsDraft.dataDir}
+                      onChange={(event) =>
+                        handleSettingsFieldChange("dataDir", event.target.value)
+                      }
+                    />
+                  </label>
+                  <label className="form-field">
+                    <span>Static directory</span>
+                    <input
+                      type="text"
+                      value={settingsDraft.staticDir}
+                      onChange={(event) =>
+                        handleSettingsFieldChange("staticDir", event.target.value)
+                      }
+                    />
+                  </label>
+                  <label className="form-field">
+                    <span>Streamers file</span>
+                    <input
+                      type="text"
+                      value={settingsDraft.streamersFile}
+                      onChange={(event) =>
+                        handleSettingsFieldChange("streamersFile", event.target.value)
+                      }
+                    />
+                  </label>
+                  <label className="form-field">
+                    <span>Submissions file</span>
+                    <input
+                      type="text"
+                      value={settingsDraft.submissionsFile}
+                      onChange={(event) =>
+                        handleSettingsFieldChange("submissionsFile", event.target.value)
+                      }
+                    />
+                  </label>
+                </div>
+                <div className="submit-streamer-actions">
+                  <button type="submit" className="submit-streamer-submit" disabled={settingsSaving}>
+                    {settingsSaving ? "Saving…" : "Save settings"}
+                  </button>
+                </div>
+              </form>
+            ) : (
+              <div className="admin-empty">Settings unavailable.</div>
+            )}
+          </section>
+        )
       ) : (
         <div className="admin-empty">
           Log in with your admin credentials to review submissions.

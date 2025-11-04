@@ -713,7 +713,7 @@ function AdminStreamerCard({ streamer, onUpdate, onDelete }: AdminStreamerCardPr
         if (key === "name") {
           const presetMatch = PLATFORM_PRESETS.some((option) => option.value === value);
           nextPlatform.preset = presetMatch ? value : "";
-          nextPlatform.name = presetMatch ? value : "";
+          nextPlatform.name = value;
           nextPlatform.id = undefined;
         }
         return nextPlatform;
@@ -994,7 +994,7 @@ function AdminCreateStreamer({ onSubmit }: AdminCreateStreamerProps) {
         if (key === "name") {
           const presetMatch = PLATFORM_PRESETS.some((option) => option.value === value);
           nextRow.preset = presetMatch ? value : "";
-          nextRow.name = presetMatch ? value : "";
+          nextRow.name = value;
           nextRow.id = undefined;
         }
         return nextRow;

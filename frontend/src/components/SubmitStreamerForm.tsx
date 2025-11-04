@@ -201,7 +201,7 @@ export function SubmitStreamerForm({ isOpen, onToggle }: SubmitStreamerFormProps
         if (key === "name") {
           const presetMatch = PLATFORM_PRESETS.some((platform) => platform.value === value);
           nextRow.preset = presetMatch ? value : "";
-          nextRow.name = presetMatch ? value : "";
+          nextRow.name = value;
           nextRow.id = undefined;
         }
         return nextRow;

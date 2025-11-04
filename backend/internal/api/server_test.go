@@ -3,10 +3,13 @@ package api_test
 import (
 	"bytes"
 	"encoding/json"
+	"io"
 	"net/http"
 	"net/http/httptest"
+	"net/url"
 	"os"
 	"path/filepath"
+	"sync"
 	"testing"
 
 	"github.com/Its-donkey/Sharpen-live/backend/internal/api"
@@ -27,7 +30,7 @@ type testEnv struct {
 	server  *api.Server
 }
 
-func newTestEnv(t *testing.T) testEnv {
+func newTestEnv(t *testing.T, opts ...api.Option) testEnv {
 	t.Helper()
 	dir := t.TempDir()
 	store, err := storage.NewJSONStore(
@@ -37,7 +40,7 @@ func newTestEnv(t *testing.T) testEnv {
 	if err != nil {
 		t.Fatalf("create store: %v", err)
 	}
-	srv := api.New(store, adminToken, adminEmail, adminPassword, "")
+	srv := api.New(store, adminToken, adminEmail, adminPassword, "", opts...)
 	handler := srv.Handler(http.NotFoundHandler())
 	return testEnv{store: store, handler: handler, server: srv}
 }
@@ -192,6 +195,89 @@ func TestRejectAndDeleteStreamers(t *testing.T) {
 	del := performRequest(env.handler, http.MethodDelete, "/api/admin/streamers/"+created.ID, nil, headers)
 	if del.Code != http.StatusNoContent {
 		t.Fatalf("expected 204 deleting streamer, got %d", del.Code)
+	}
+}
+
+func TestDeleteStreamerUnsubscribesYouTube(t *testing.T) {
+	var (
+		mu      sync.Mutex
+		modes   []string
+		topics  []string
+		tokens  []string
+		secrets []string
+	)
+
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		data, err := io.ReadAll(r.Body)
+		if err != nil {
+			t.Fatalf("read body: %v", err)
+		}
+		values, err := url.ParseQuery(string(data))
+		if err != nil {
+			t.Fatalf("parse body: %v", err)
+		}
+		mu.Lock()
+		modes = append(modes, values.Get("hub.mode"))
+		topics = append(topics, values.Get("hub.topic"))
+		tokens = append(tokens, values.Get("hub.verify_token"))
+		secrets = append(secrets, values.Get("hub.secret"))
+		mu.Unlock()
+		w.WriteHeader(http.StatusAccepted)
+	}))
+	defer ts.Close()
+
+	env := newTestEnv(t,
+		api.WithYouTubeAlerts(api.YouTubeAlertsConfig{
+			HubURL:            ts.URL,
+			CallbackURL:       "https://alerts.sharpen.live/callback",
+			Secret:            "secret-456",
+			VerifyTokenPrefix: "prefix-",
+			VerifyTokenSuffix: "-suffix",
+		}),
+		api.WithHTTPClient(ts.Client()),
+	)
+
+	headers := map[string]string{"Authorization": "Bearer " + adminToken}
+
+	created, err := env.store.CreateStreamer(storage.Streamer{
+		Name:        "YouTuber",
+		Description: "Streaming",
+		Status:      "online",
+		StatusLabel: "Online",
+		Languages:   []string{"English"},
+		Platforms: []storage.Platform{
+			{
+				Name:       "YouTube",
+				ChannelURL: "https://www.youtube.com/channel/UC999",
+				ID:         "UC999",
+			},
+		},
+	})
+	if err != nil {
+		t.Fatalf("seed streamer: %v", err)
+	}
+
+	resp := performRequest(env.handler, http.MethodDelete, "/api/admin/streamers/"+created.ID, nil, headers)
+	if resp.Code != http.StatusNoContent {
+		t.Fatalf("expected 204 deleting streamer, got %d", resp.Code)
+	}
+
+	mu.Lock()
+	defer mu.Unlock()
+	if len(modes) != 1 {
+		t.Fatalf("expected 1 request, got %d", len(modes))
+	}
+	if modes[0] != "unsubscribe" {
+		t.Fatalf("expected unsubscribe mode, got %s", modes[0])
+	}
+	if topics[0] != "https://www.youtube.com/xml/feeds/videos.xml?channel_id=UC999" {
+		t.Fatalf("unexpected topic: %s", topics[0])
+	}
+	if tokens[0] != "prefix-UC999-suffix" {
+		t.Fatalf("unexpected verify token: %s", tokens[0])
+	}
+	if secrets[0] != "secret-456" {
+		t.Fatalf("unexpected secret: %s", secrets[0])
 	}
 }
 

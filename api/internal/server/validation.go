@@ -59,7 +59,7 @@ func validateSubmission(req submissionRequest) []string {
 	}
 
 	if len(req.Platforms) == 0 {
-		errs = append(errs, "At least one platform with channel and live URLs is required.")
+		errs = append(errs, "At least one platform with a channel URL is required.")
 	}
 
 	return errs
@@ -105,7 +105,7 @@ func validateStreamer(req streamerRequest) []string {
 	}
 
 	if len(req.Platforms) == 0 {
-		errs = append(errs, "At least one platform with channel and live URLs is required.")
+		errs = append(errs, "At least one platform with a channel URL is required.")
 	}
 
 	return errs

@@ -537,167 +537,269 @@ func (s *Server) currentSettingsPayload() settingsResponse {
 }
 
 func (s *Server) applySettings(payload settingsUpdateRequest) error {
+	var (
+		listenAddrProvided      bool
+		listenAddrVal           string
+		adminTokenProvided      bool
+		adminTokenVal           string
+		adminEmailProvided      bool
+		adminEmailVal           string
+		adminPasswordProvided   bool
+		adminPasswordVal        string
+		youtubeAPIKeyProvided   bool
+		youtubeAPIKeyVal        string
+		dataDirProvided         bool
+		dataDirVal              string
+		staticDirProvided       bool
+		staticDirVal            string
+		streamersFileProvided   bool
+		streamersFileVal        string
+		submissionsFileProvided bool
+		submissionsFileVal      string
+		callbackProvided        bool
+		callbackVal             string
+		secretProvided          bool
+		secretVal               string
+		prefixProvided          bool
+		prefixVal               string
+		suffixProvided          bool
+		suffixVal               string
+		hubProvided             bool
+		hubVal                  string
+	)
+
+	if payload.ListenAddr != nil {
+		listenAddrProvided = true
+		listenAddrVal = strings.TrimSpace(*payload.ListenAddr)
+	}
 	if payload.AdminToken != nil {
-		if strings.TrimSpace(*payload.AdminToken) == "" {
+		adminTokenProvided = true
+		adminTokenVal = strings.TrimSpace(*payload.AdminToken)
+		if adminTokenVal == "" {
 			return validationError("admin token cannot be empty")
 		}
 	}
 	if payload.AdminEmail != nil {
-		if strings.TrimSpace(*payload.AdminEmail) == "" {
+		adminEmailProvided = true
+		adminEmailVal = strings.TrimSpace(*payload.AdminEmail)
+		if adminEmailVal == "" {
 			return validationError("admin email cannot be empty")
 		}
 	}
 	if payload.AdminPassword != nil {
-		if strings.TrimSpace(*payload.AdminPassword) == "" {
+		adminPasswordProvided = true
+		adminPasswordVal = strings.TrimSpace(*payload.AdminPassword)
+		if adminPasswordVal == "" {
 			return validationError("admin password cannot be empty")
 		}
 	}
 	if payload.YouTubeAPIKey != nil {
-		trimmed := strings.TrimSpace(*payload.YouTubeAPIKey)
-		*payload.YouTubeAPIKey = trimmed
-	}
-	if payload.YouTubeAlertsCallback != nil {
-		trimmed := strings.TrimSpace(*payload.YouTubeAlertsCallback)
-		*payload.YouTubeAlertsCallback = trimmed
-	}
-	if payload.YouTubeAlertsSecret != nil {
-		trimmed := strings.TrimSpace(*payload.YouTubeAlertsSecret)
-		*payload.YouTubeAlertsSecret = trimmed
-	}
-	if payload.YouTubeAlertsVerifyPrefix != nil {
-		trimmed := strings.TrimSpace(*payload.YouTubeAlertsVerifyPrefix)
-		*payload.YouTubeAlertsVerifyPrefix = trimmed
-	}
-	if payload.YouTubeAlertsVerifySuffix != nil {
-		trimmed := strings.TrimSpace(*payload.YouTubeAlertsVerifySuffix)
-		*payload.YouTubeAlertsVerifySuffix = trimmed
-	}
-	if payload.YouTubeAlertsHubURL != nil {
-		trimmed := strings.TrimSpace(*payload.YouTubeAlertsHubURL)
-		*payload.YouTubeAlertsHubURL = trimmed
-	}
-
-	s.mu.Lock()
-	defer s.mu.Unlock()
-
-	if payload.AdminToken != nil {
-		s.adminToken = strings.TrimSpace(*payload.AdminToken)
-		_ = os.Setenv("ADMIN_TOKEN", s.adminToken)
-	}
-	if payload.AdminEmail != nil {
-		s.adminEmail = strings.TrimSpace(*payload.AdminEmail)
-		_ = os.Setenv("ADMIN_EMAIL", s.adminEmail)
-	}
-	if payload.AdminPassword != nil {
-		s.adminPassword = strings.TrimSpace(*payload.AdminPassword)
-		_ = os.Setenv("ADMIN_PASSWORD", s.adminPassword)
-	}
-	if payload.YouTubeAPIKey != nil {
-		s.youtubeAPIKey = strings.TrimSpace(*payload.YouTubeAPIKey)
-		_ = os.Setenv("YOUTUBE_API_KEY", s.youtubeAPIKey)
-	}
-	if payload.ListenAddr != nil {
-		s.listenAddr = strings.TrimSpace(*payload.ListenAddr)
-		_ = os.Setenv("LISTEN_ADDR", s.listenAddr)
+		youtubeAPIKeyProvided = true
+		youtubeAPIKeyVal = strings.TrimSpace(*payload.YouTubeAPIKey)
 	}
 	if payload.DataDir != nil {
-		s.dataDir = strings.TrimSpace(*payload.DataDir)
-		_ = os.Setenv("SHARPEN_DATA_DIR", s.dataDir)
+		dataDirProvided = true
+		dataDirVal = strings.TrimSpace(*payload.DataDir)
 	}
 	if payload.StaticDir != nil {
-		s.staticDir = strings.TrimSpace(*payload.StaticDir)
-		_ = os.Setenv("SHARPEN_STATIC_DIR", s.staticDir)
+		staticDirProvided = true
+		staticDirVal = strings.TrimSpace(*payload.StaticDir)
 	}
 	if payload.StreamersFile != nil {
-		s.streamersFile = strings.TrimSpace(*payload.StreamersFile)
-		_ = os.Setenv("SHARPEN_STREAMERS_FILE", s.streamersFile)
+		streamersFileProvided = true
+		streamersFileVal = strings.TrimSpace(*payload.StreamersFile)
 	}
 	if payload.SubmissionsFile != nil {
-		s.submissionsFile = strings.TrimSpace(*payload.SubmissionsFile)
-		_ = os.Setenv("SHARPEN_SUBMISSIONS_FILE", s.submissionsFile)
+		submissionsFileProvided = true
+		submissionsFileVal = strings.TrimSpace(*payload.SubmissionsFile)
 	}
-	callbackUpdated := payload.YouTubeAlertsCallback != nil
-	secretUpdated := payload.YouTubeAlertsSecret != nil
-	prefixUpdated := payload.YouTubeAlertsVerifyPrefix != nil
-	suffixUpdated := payload.YouTubeAlertsVerifySuffix != nil
-	hubUpdated := payload.YouTubeAlertsHubURL != nil
-
-	callback := s.youtubeAlerts.callbackURL
 	if payload.YouTubeAlertsCallback != nil {
-		callback = *payload.YouTubeAlertsCallback
+		callbackProvided = true
+		callbackVal = strings.TrimSpace(*payload.YouTubeAlertsCallback)
 	}
-
-	secret := s.youtubeAlerts.secret
 	if payload.YouTubeAlertsSecret != nil {
-		secret = *payload.YouTubeAlertsSecret
+		secretProvided = true
+		secretVal = strings.TrimSpace(*payload.YouTubeAlertsSecret)
 	}
-
-	verifyPrefix := s.youtubeAlerts.verifyPref
 	if payload.YouTubeAlertsVerifyPrefix != nil {
-		verifyPrefix = *payload.YouTubeAlertsVerifyPrefix
+		prefixProvided = true
+		prefixVal = strings.TrimSpace(*payload.YouTubeAlertsVerifyPrefix)
 	}
-
-	verifySuffix := s.youtubeAlerts.verifySuff
 	if payload.YouTubeAlertsVerifySuffix != nil {
-		verifySuffix = *payload.YouTubeAlertsVerifySuffix
+		suffixProvided = true
+		suffixVal = strings.TrimSpace(*payload.YouTubeAlertsVerifySuffix)
 	}
-
-	hub := s.youtubeHubURL
-	hubEnvValue := ""
 	if payload.YouTubeAlertsHubURL != nil {
-		hubEnvValue = *payload.YouTubeAlertsHubURL
-		if hubEnvValue == "" {
-			hub = defaultYouTubeHubURL
+		hubProvided = true
+		hubVal = strings.TrimSpace(*payload.YouTubeAlertsHubURL)
+	}
+
+	s.mu.RLock()
+	current := settings.Settings{
+		AdminToken:                s.adminToken,
+		AdminEmail:                s.adminEmail,
+		AdminPassword:             s.adminPassword,
+		YouTubeAPIKey:             s.youtubeAPIKey,
+		YouTubeAlertsCallback:     s.youtubeAlerts.callbackURL,
+		YouTubeAlertsSecret:       s.youtubeAlerts.secret,
+		YouTubeAlertsVerifyPrefix: s.youtubeAlerts.verifyPref,
+		YouTubeAlertsVerifySuffix: s.youtubeAlerts.verifySuff,
+		YouTubeAlertsHubURL:       s.youtubeHubURL,
+		ListenAddr:                s.listenAddr,
+		DataDir:                   s.dataDir,
+		StaticDir:                 s.staticDir,
+		StreamersFile:             s.streamersFile,
+		SubmissionsFile:           s.submissionsFile,
+	}
+	s.mu.RUnlock()
+
+	next := current
+
+	if listenAddrProvided {
+		next.ListenAddr = listenAddrVal
+	}
+	if adminTokenProvided {
+		next.AdminToken = adminTokenVal
+	}
+	if adminEmailProvided {
+		next.AdminEmail = adminEmailVal
+	}
+	if adminPasswordProvided {
+		next.AdminPassword = adminPasswordVal
+	}
+	if youtubeAPIKeyProvided {
+		next.YouTubeAPIKey = youtubeAPIKeyVal
+	}
+	if dataDirProvided {
+		next.DataDir = dataDirVal
+	}
+	if staticDirProvided {
+		next.StaticDir = staticDirVal
+	}
+	if streamersFileProvided {
+		next.StreamersFile = streamersFileVal
+	}
+	if submissionsFileProvided {
+		next.SubmissionsFile = submissionsFileVal
+	}
+	if callbackProvided {
+		next.YouTubeAlertsCallback = callbackVal
+	}
+	if secretProvided {
+		next.YouTubeAlertsSecret = secretVal
+	}
+	if prefixProvided {
+		next.YouTubeAlertsVerifyPrefix = prefixVal
+	}
+	if suffixProvided {
+		next.YouTubeAlertsVerifySuffix = suffixVal
+	}
+	if hubProvided {
+		if hubVal == "" {
+			next.YouTubeAlertsHubURL = defaultYouTubeHubURL
 		} else {
-			hub = hubEnvValue
+			next.YouTubeAlertsHubURL = hubVal
 		}
 	}
 
-	if callback == "" {
-		if secret != "" {
-			secret = ""
-			secretUpdated = true
+	if next.YouTubeAlertsCallback == "" {
+		if next.YouTubeAlertsSecret != "" {
+			next.YouTubeAlertsSecret = ""
 		}
-		if verifyPrefix != "" {
-			verifyPrefix = ""
-			prefixUpdated = true
+		if next.YouTubeAlertsVerifyPrefix != "" {
+			next.YouTubeAlertsVerifyPrefix = ""
 		}
-		if verifySuffix != "" {
-			verifySuffix = ""
-			suffixUpdated = true
+		if next.YouTubeAlertsVerifySuffix != "" {
+			next.YouTubeAlertsVerifySuffix = ""
 		}
-		if !hubUpdated && hub != defaultYouTubeHubURL {
-			hub = defaultYouTubeHubURL
-			hubEnvValue = ""
-			hubUpdated = true
+		if next.YouTubeAlertsHubURL != defaultYouTubeHubURL {
+			next.YouTubeAlertsHubURL = defaultYouTubeHubURL
 		}
 	}
 
-	s.youtubeAlerts.callbackURL = callback
-	s.youtubeAlerts.secret = secret
-	s.youtubeAlerts.verifyPref = verifyPrefix
-	s.youtubeAlerts.verifySuff = verifySuffix
-	s.youtubeAlerts.enabled = callback != ""
-	s.youtubeHubURL = hub
-
-	if callbackUpdated {
-		_ = os.Setenv("YOUTUBE_ALERTS_CALLBACK", callback)
-	}
-	if secretUpdated {
-		_ = os.Setenv("YOUTUBE_ALERTS_SECRET", secret)
-	}
-	if prefixUpdated {
-		_ = os.Setenv("YOUTUBE_ALERTS_VERIFY_PREFIX", verifyPrefix)
-	}
-	if suffixUpdated {
-		_ = os.Setenv("YOUTUBE_ALERTS_VERIFY_SUFFIX", verifySuffix)
-	}
-	if hubUpdated {
-		_ = os.Setenv("YOUTUBE_ALERTS_HUB_URL", hubEnvValue)
-	}
-
-	if err := s.persistSettings(); err != nil {
+	if err := s.persistSettings(next); err != nil {
 		return fmt.Errorf("persist settings: %w", err)
+	}
+
+	hubEnvValue := ""
+	if next.YouTubeAlertsHubURL != defaultYouTubeHubURL {
+		hubEnvValue = next.YouTubeAlertsHubURL
+	}
+
+	adminTokenEnv := adminTokenProvided || current.AdminToken != next.AdminToken
+	adminEmailEnv := adminEmailProvided || current.AdminEmail != next.AdminEmail
+	adminPasswordEnv := adminPasswordProvided || current.AdminPassword != next.AdminPassword
+	youtubeAPIKeyEnv := youtubeAPIKeyProvided || current.YouTubeAPIKey != next.YouTubeAPIKey
+	listenEnv := listenAddrProvided || current.ListenAddr != next.ListenAddr
+	dataDirEnv := dataDirProvided || current.DataDir != next.DataDir
+	staticDirEnv := staticDirProvided || current.StaticDir != next.StaticDir
+	streamersEnv := streamersFileProvided || current.StreamersFile != next.StreamersFile
+	submissionsEnv := submissionsFileProvided || current.SubmissionsFile != next.SubmissionsFile
+	callbackEnv := callbackProvided || current.YouTubeAlertsCallback != next.YouTubeAlertsCallback
+	secretEnv := secretProvided || current.YouTubeAlertsSecret != next.YouTubeAlertsSecret
+	prefixEnv := prefixProvided || current.YouTubeAlertsVerifyPrefix != next.YouTubeAlertsVerifyPrefix
+	suffixEnv := suffixProvided || current.YouTubeAlertsVerifySuffix != next.YouTubeAlertsVerifySuffix
+	hubEnv := hubProvided || current.YouTubeAlertsHubURL != next.YouTubeAlertsHubURL
+
+	s.mu.Lock()
+	s.adminToken = next.AdminToken
+	s.adminEmail = next.AdminEmail
+	s.adminPassword = next.AdminPassword
+	s.youtubeAPIKey = next.YouTubeAPIKey
+	s.listenAddr = next.ListenAddr
+	s.dataDir = next.DataDir
+	s.staticDir = next.StaticDir
+	s.streamersFile = next.StreamersFile
+	s.submissionsFile = next.SubmissionsFile
+	s.youtubeAlerts.callbackURL = next.YouTubeAlertsCallback
+	s.youtubeAlerts.secret = next.YouTubeAlertsSecret
+	s.youtubeAlerts.verifyPref = next.YouTubeAlertsVerifyPrefix
+	s.youtubeAlerts.verifySuff = next.YouTubeAlertsVerifySuffix
+	s.youtubeAlerts.enabled = next.YouTubeAlertsCallback != ""
+	s.youtubeHubURL = next.YouTubeAlertsHubURL
+	s.mu.Unlock()
+
+	if adminTokenEnv {
+		_ = os.Setenv("ADMIN_TOKEN", next.AdminToken)
+	}
+	if adminEmailEnv {
+		_ = os.Setenv("ADMIN_EMAIL", next.AdminEmail)
+	}
+	if adminPasswordEnv {
+		_ = os.Setenv("ADMIN_PASSWORD", next.AdminPassword)
+	}
+	if youtubeAPIKeyEnv {
+		_ = os.Setenv("YOUTUBE_API_KEY", next.YouTubeAPIKey)
+	}
+	if listenEnv {
+		_ = os.Setenv("LISTEN_ADDR", next.ListenAddr)
+	}
+	if dataDirEnv {
+		_ = os.Setenv("SHARPEN_DATA_DIR", next.DataDir)
+	}
+	if staticDirEnv {
+		_ = os.Setenv("SHARPEN_STATIC_DIR", next.StaticDir)
+	}
+	if streamersEnv {
+		_ = os.Setenv("SHARPEN_STREAMERS_FILE", next.StreamersFile)
+	}
+	if submissionsEnv {
+		_ = os.Setenv("SHARPEN_SUBMISSIONS_FILE", next.SubmissionsFile)
+	}
+	if callbackEnv {
+		_ = os.Setenv("YOUTUBE_ALERTS_CALLBACK", next.YouTubeAlertsCallback)
+	}
+	if secretEnv {
+		_ = os.Setenv("YOUTUBE_ALERTS_SECRET", next.YouTubeAlertsSecret)
+	}
+	if prefixEnv {
+		_ = os.Setenv("YOUTUBE_ALERTS_VERIFY_PREFIX", next.YouTubeAlertsVerifyPrefix)
+	}
+	if suffixEnv {
+		_ = os.Setenv("YOUTUBE_ALERTS_VERIFY_SUFFIX", next.YouTubeAlertsVerifySuffix)
+	}
+	if hubEnv {
+		_ = os.Setenv("YOUTUBE_ALERTS_HUB_URL", hubEnvValue)
 	}
 
 	return nil
@@ -821,27 +923,11 @@ func normalizeSettings(value settings.Settings) settings.Settings {
 	return value
 }
 
-func (s *Server) persistSettings() error {
+func (s *Server) persistSettings(value settings.Settings) error {
 	if s.settingsStore == nil {
 		return nil
 	}
-	settingsPayload := settings.Settings{
-		AdminToken:                s.adminToken,
-		AdminEmail:                s.adminEmail,
-		AdminPassword:             s.adminPassword,
-		YouTubeAPIKey:             s.youtubeAPIKey,
-		YouTubeAlertsCallback:     s.youtubeAlerts.callbackURL,
-		YouTubeAlertsSecret:       s.youtubeAlerts.secret,
-		YouTubeAlertsVerifyPrefix: s.youtubeAlerts.verifyPref,
-		YouTubeAlertsVerifySuffix: s.youtubeAlerts.verifySuff,
-		YouTubeAlertsHubURL:       s.youtubeHubURL,
-		ListenAddr:                s.listenAddr,
-		DataDir:                   s.dataDir,
-		StaticDir:                 s.staticDir,
-		StreamersFile:             s.streamersFile,
-		SubmissionsFile:           s.submissionsFile,
-	}
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
 	defer cancel()
-	return s.settingsStore.Save(ctx, settingsPayload)
+	return s.settingsStore.Save(ctx, value)
 }

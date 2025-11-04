@@ -288,8 +288,9 @@ func (s *Server) manageYouTubeSubscription(ctx context.Context, channelID, mode 
 	defer resp.Body.Close()
 
 	status := resp.Status
+	body, _ := io.ReadAll(io.LimitReader(resp.Body, 512))
+	message := strings.TrimSpace(string(body))
 	if resp.StatusCode >= http.StatusOK && resp.StatusCode < http.StatusMultipleChoices {
-		_, _ = io.Copy(io.Discard, resp.Body)
 		s.appendYouTubeEvent(youtubeEvent{
 			Timestamp:   timestamp,
 			Mode:        mode,
@@ -297,14 +298,25 @@ func (s *Server) manageYouTubeSubscription(ctx context.Context, channelID, mode 
 			Topic:       topic,
 			Callback:    callback,
 			Status:      status,
+			Error:       message,
 			VerifyToken: verifyToken,
 			HasSecret:   hasSecret,
 		})
 		return
 	}
 
-	body, _ := io.ReadAll(io.LimitReader(resp.Body, 512))
-	fmt.Printf("youtube subscription %s failed: %s: %s\n", mode, resp.Status, strings.TrimSpace(string(body)))
+	s.appendYouTubeEvent(youtubeEvent{
+		Timestamp:   timestamp,
+		Mode:        mode,
+		ChannelID:   channelID,
+		Topic:       topic,
+		Callback:    callback,
+		Status:      status,
+		Error:       message,
+		VerifyToken: verifyToken,
+		HasSecret:   hasSecret,
+	})
+	fmt.Printf("youtube subscription %s failed: %s: %s\n", mode, status, message)
 }
 
 func (s *Server) unsubscribeYouTubePlatforms(ctx context.Context, platforms []storage.Platform) {

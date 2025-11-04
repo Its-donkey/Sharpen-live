@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"errors"
+	"io"
 	"log"
 	"net/http"
 	"os"
@@ -12,8 +13,10 @@ import (
 
 	"github.com/Its-donkey/Sharpen-live/backend/platforms/youtube/internal/alerts"
 	"github.com/Its-donkey/Sharpen-live/backend/platforms/youtube/internal/config"
+	"github.com/Its-donkey/Sharpen-live/backend/platforms/youtube/internal/logstore"
 	"github.com/Its-donkey/Sharpen-live/backend/platforms/youtube/internal/server"
 	"github.com/Its-donkey/Sharpen-live/backend/platforms/youtube/internal/youtube"
+	"github.com/jackc/pgx/v5/pgxpool"
 )
 
 func main() {
@@ -26,20 +29,37 @@ func main() {
 		log.Fatalf("configuration invalid: %v", err)
 	}
 
-	rootCtx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
+	baseCtx := context.Background()
+	pool, err := pgxpool.New(baseCtx, cfg.DatabaseURL)
+	if err != nil {
+		log.Fatalf("connect database: %v", err)
+	}
+	defer pool.Close()
+
+	store := logstore.New(pool)
+	if err := store.EnsureSchema(baseCtx); err != nil {
+		log.Fatalf("ensure log schema: %v", err)
+	}
+
+	logWriter := logstore.NewWriter(store)
+	combinedWriter := io.MultiWriter(os.Stdout, logWriter)
+	log.SetOutput(combinedWriter)
+	logger := log.New(combinedWriter, "", log.LstdFlags)
+
+	rootCtx, stop := signal.NotifyContext(baseCtx, os.Interrupt, syscall.SIGTERM)
 	defer stop()
 
 	checker := youtube.NewChecker(cfg.APIKey)
 	monitor := alerts.NewMonitor(alerts.MonitorConfig{
 		Checker:     checker,
 		Interval:    cfg.PollInterval,
-		Logger:      log.Default(),
+		Logger:      logger,
 		RootContext: rootCtx,
 	})
 
 	srv := server.New(server.Config{
 		Processor: monitor,
-		Logger:    log.Default(),
+		Logger:    logger,
 	})
 
 	httpServer := &http.Server{
@@ -53,18 +73,18 @@ func main() {
 		defer cancel()
 
 		if err := httpServer.Shutdown(shutdownCtx); err != nil {
-			log.Printf("graceful shutdown failed: %v", err)
+			logger.Printf("graceful shutdown failed: %v", err)
 		}
 		monitor.StopAll()
 	}()
 
-	log.Printf("Sharpen Live YouTube alert listener listening on %s", cfg.ListenAddr)
+	logger.Printf("Sharpen Live YouTube alert listener listening on %s", cfg.ListenAddr)
 	if cfg.APIKey == "" {
-		log.Println("warning: YOUTUBE_API_KEY not provided; live checks will fail until configured")
+		logger.Println("warning: YOUTUBE_API_KEY not provided; live checks will fail until configured")
 	}
 
 	if err := httpServer.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
-		log.Fatalf("server error: %v", err)
+		logger.Fatalf("server error: %v", err)
 	}
 
 	// Give background goroutines time to shut down cleanly.

@@ -1,13 +1,16 @@
 package main
 
 import (
+	"bufio"
 	"context"
 	"errors"
+	"fmt"
 	"io"
 	"log"
 	"net/http"
 	"os"
 	"os/signal"
+	"strings"
 	"syscall"
 	"time"
 
@@ -24,6 +27,8 @@ func main() {
 	if err != nil {
 		log.Fatalf("configuration error: %v", err)
 	}
+
+	cfg = promptForRuntimeConfig(cfg)
 
 	if err := cfg.Validate(); err != nil {
 		log.Fatalf("configuration invalid: %v", err)
@@ -89,4 +94,57 @@ func main() {
 
 	// Give background goroutines time to shut down cleanly.
 	time.Sleep(100 * time.Millisecond)
+}
+
+func promptForRuntimeConfig(cfg config.Config) config.Config {
+	if !isInteractiveTerminal() {
+		return cfg
+	}
+
+	reader := bufio.NewReader(os.Stdin)
+
+	defaultPortDisplay := cfg.ListenAddr
+	if strings.HasPrefix(defaultPortDisplay, ":") && len(defaultPortDisplay) > 1 {
+		defaultPortDisplay = defaultPortDisplay[1:]
+	}
+
+	fmt.Printf("Enter port to listen on [%s]: ", defaultPortDisplay)
+	portInput, _ := reader.ReadString('\n')
+	portInput = strings.TrimSpace(portInput)
+	if portInput != "" {
+		if strings.HasPrefix(portInput, ":") || strings.Contains(portInput, ":") {
+			cfg.ListenAddr = portInput
+		} else {
+			cfg.ListenAddr = fmt.Sprintf(":%s", portInput)
+		}
+	}
+
+	maskedKey := maskSecret(cfg.APIKey)
+	fmt.Printf("Enter YouTube API key [%s]: ", maskedKey)
+	apiKeyInput, _ := reader.ReadString('\n')
+	apiKeyInput = strings.TrimSpace(apiKeyInput)
+	if apiKeyInput != "" {
+		cfg.APIKey = apiKeyInput
+	}
+
+	return cfg
+}
+
+func isInteractiveTerminal() bool {
+	info, err := os.Stdin.Stat()
+	if err != nil {
+		return false
+	}
+	return (info.Mode() & os.ModeCharDevice) == os.ModeCharDevice
+}
+
+func maskSecret(value string) string {
+	trimmed := strings.TrimSpace(value)
+	if trimmed == "" {
+		return "unset"
+	}
+	if len(trimmed) <= 4 {
+		return strings.Repeat("*", len(trimmed))
+	}
+	return trimmed[:2] + strings.Repeat("*", len(trimmed)-4) + trimmed[len(trimmed)-2:]
 }

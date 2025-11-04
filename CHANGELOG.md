@@ -25,6 +25,7 @@
 - Record YouTube alert listener logs in PostgreSQL for the Admin monitor view.
 - Modularize YouTube alert application with dedicated packages and automated tests.
 - Add `frontend/streamers.json` to track streamer metadata.
+- Prompt for the YouTube alerts listener port and API key when the service starts to simplify local configuration.
 - Restructure repository into `backend/` and `frontend/` applications with shared tooling paths and remove the legacy `web/` duplicate.
 - Merge the legacy `api/` module into `backend/` so there is a single Go service.
 - Update API default static directory to `frontend/dist` so the merged bundle serves by default.

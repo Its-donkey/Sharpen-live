@@ -65,6 +65,7 @@ func main() {
 	srv := server.New(server.Config{
 		Processor: monitor,
 		Logger:    logger,
+		ChannelID: cfg.ChannelID,
 	})
 
 	httpServer := &http.Server{

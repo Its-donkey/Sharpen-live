@@ -13,6 +13,7 @@ const (
 	defaultPollInterval      = 5 * time.Minute
 	defaultShutdownGrace     = 10 * time.Second
 	envYouTubeAPIKey         = "YOUTUBE_API_KEY"
+	envYouTubeChannelID      = "YOUTUBE_CHANNEL_ID"
 	envListenAddr            = "LISTEN_ADDR"
 	envPort                  = "YTPORT"
 	envPollInterval          = "POLL_INTERVAL"
@@ -24,6 +25,7 @@ const (
 type Config struct {
 	ListenAddr          string
 	APIKey              string
+	ChannelID           string
 	DatabaseURL         string
 	PollInterval        time.Duration
 	ShutdownGracePeriod time.Duration
@@ -36,6 +38,7 @@ func FromEnv() (Config, error) {
 		PollInterval:        defaultPollInterval,
 		ShutdownGracePeriod: defaultShutdownGrace,
 		APIKey:              os.Getenv(envYouTubeAPIKey),
+		ChannelID:           strings.TrimSpace(os.Getenv(envYouTubeChannelID)),
 		DatabaseURL:         strings.TrimSpace(os.Getenv(envDatabaseURL)),
 	}
 
@@ -74,6 +77,10 @@ func FromEnv() (Config, error) {
 func (c Config) Validate() error {
 	if strings.TrimSpace(c.ListenAddr) == "" {
 		return errors.New("config: listen address is required")
+	}
+
+	if strings.TrimSpace(c.ChannelID) == "" {
+		return errors.New("config: youtube channel id is required")
 	}
 
 	if c.PollInterval <= 0 {

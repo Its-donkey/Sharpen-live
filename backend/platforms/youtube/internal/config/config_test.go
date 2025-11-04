@@ -9,9 +9,10 @@ import (
 func TestFromEnvDefaults(t *testing.T) {
 	t.Setenv("YOUTUBE_API_KEY", "")
 	t.Setenv("LISTEN_ADDR", "")
-	t.Setenv("PORT", "")
+	t.Setenv("YTPORT", "")
 	t.Setenv("POLL_INTERVAL", "")
 	t.Setenv("SHUTDOWN_GRACE_PERIOD", "")
+	t.Setenv("DATABASE_URL", "postgres://localhost/test?sslmode=disable")
 
 	cfg, err := FromEnv()
 	if err != nil {
@@ -36,6 +37,7 @@ func TestFromEnvOverrides(t *testing.T) {
 	t.Setenv("LISTEN_ADDR", "127.0.0.1:9090")
 	t.Setenv("POLL_INTERVAL", "1m30s")
 	t.Setenv("SHUTDOWN_GRACE_PERIOD", "5s")
+	t.Setenv("DATABASE_URL", "postgres://localhost/alerts?sslmode=disable")
 
 	cfg, err := FromEnv()
 	if err != nil {
@@ -61,7 +63,8 @@ func TestFromEnvOverrides(t *testing.T) {
 
 func TestFromEnvPortFallback(t *testing.T) {
 	t.Setenv("LISTEN_ADDR", ":5050")
-	t.Setenv("PORT", "")
+	t.Setenv("YTPORT", "")
+	t.Setenv("DATABASE_URL", "postgres://localhost/test?sslmode=disable")
 
 	cfg, err := FromEnv()
 	if err != nil {
@@ -74,6 +77,7 @@ func TestFromEnvPortFallback(t *testing.T) {
 }
 
 func TestFromEnvInvalidDurations(t *testing.T) {
+	t.Setenv("DATABASE_URL", "postgres://localhost/test?sslmode=disable")
 	t.Setenv("POLL_INTERVAL", "abc")
 	if _, err := FromEnv(); err == nil {
 		t.Fatal("expected error for invalid poll interval")
@@ -91,6 +95,7 @@ func TestValidate(t *testing.T) {
 		ListenAddr:          "",
 		PollInterval:        time.Minute,
 		ShutdownGracePeriod: time.Second,
+		DatabaseURL:         "postgres://localhost/test?sslmode=disable",
 	}
 
 	if err := cfg.Validate(); err == nil {
@@ -110,6 +115,12 @@ func TestValidate(t *testing.T) {
 	}
 
 	cfg.ShutdownGracePeriod = time.Second
+	cfg.DatabaseURL = ""
+	if err := cfg.Validate(); err == nil {
+		t.Fatal("expected error for missing database url")
+	}
+
+	cfg.DatabaseURL = "postgres://localhost/test?sslmode=disable"
 	if err := cfg.Validate(); err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}

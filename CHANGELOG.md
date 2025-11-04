@@ -21,6 +21,7 @@
 - Design Sharpen Live landing page with custom logo and live streamer status table.
 - Relocate static site assets from `doc/` to `frontend/`.
 - Add YouTube alert listener service that polls live status every five minutes.
+- Record YouTube alert listener logs in PostgreSQL for the Admin monitor view.
 - Modularize YouTube alert application with dedicated packages and automated tests.
 - Add `frontend/streamers.json` to track streamer metadata.
 - Restructure repository into `backend/` and `frontend/` applications with shared tooling paths and remove the legacy `web/` duplicate.

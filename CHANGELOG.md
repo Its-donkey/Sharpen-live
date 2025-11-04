@@ -1,6 +1,7 @@
 # Changelog
 
 ## [Unreleased]
+- Unsubscribe YouTube alerts automatically when a streamer is removed.
 - Expose YouTube alert subscription settings in the admin UI for runtime configuration.
 - Automatically subscribe resolved YouTube channels to PubSubHubbub using the configured callback and secret.
 - Restore `/docs` Jekyll site scaffold so GitHub Pages builds succeed and highlight current repo layout.

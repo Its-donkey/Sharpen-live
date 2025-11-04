@@ -6,7 +6,8 @@ import type {
   Streamer,
   Submission,
   SubmissionPayload,
-  SuccessPayload
+  SuccessPayload,
+  YouTubeMonitorEvent
 } from "./types";
 
 const DEFAULT_DEV_BASE = "http://localhost:8880";
@@ -187,11 +188,11 @@ export async function updateAdminSettings(
   );
 }
 
-export async function getYouTubeMonitor(token: string): Promise<AdminYouTubeEvent[]> {
-  const response = await request<{ events: AdminYouTubeEvent[] }>(
+export async function getAdminYouTubeMonitor(token: string): Promise<YouTubeMonitorEvent[]> {
+  const response = await request<{ events?: YouTubeMonitorEvent[] }>(
     "/api/admin/monitor/youtube",
     { method: "GET" },
     token
   );
-  return response.events;
+  return response.events ?? [];
 }

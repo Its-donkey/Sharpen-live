@@ -168,6 +168,8 @@ export function AdminConsole({
   const [monitorEvents, setMonitorEvents] = useState<YouTubeMonitorEvent[]>([]);
   const [monitorLoading, setMonitorLoading] = useState(false);
   const [platformFilters, setPlatformFilters] = useState<Record<string, boolean>>({});
+  const [monitorPageSize, setMonitorPageSize] = useState(30);
+  const [monitorPage, setMonitorPage] = useState(1);
   const isAuthenticated = Boolean(token);
 
   const loadAdminData = useCallback(
@@ -248,6 +250,7 @@ export function AdminConsole({
       setMonitorEvents([]);
       setMonitorLoading(false);
       setPlatformFilters({});
+      setMonitorPage(1);
       return;
     }
     void loadAdminData(token);
@@ -305,6 +308,7 @@ export function AdminConsole({
       }
       return changed ? next : prev;
     });
+    setMonitorPage(1);
   }, [monitorEvents]);
 
   const sortedSubmissions = useMemo(
@@ -336,6 +340,32 @@ export function AdminConsole({
       return active.includes(key);
     });
   }, [monitorEvents, platformFilters]);
+
+  useEffect(() => {
+    setMonitorPage(1);
+  }, [monitorPageSize]);
+
+  const totalMonitorPages = useMemo(() => {
+    if (!filteredMonitorEvents.length) {
+      return 1;
+    }
+    return Math.max(1, Math.ceil(filteredMonitorEvents.length / monitorPageSize));
+  }, [filteredMonitorEvents, monitorPageSize]);
+
+  useEffect(() => {
+    if (monitorPage > totalMonitorPages) {
+      setMonitorPage(totalMonitorPages);
+    }
+  }, [monitorPage, totalMonitorPages]);
+
+  const paginatedMonitorEvents = useMemo(() => {
+    if (!filteredMonitorEvents.length) {
+      return [];
+    }
+    const start = (monitorPage - 1) * monitorPageSize;
+    const end = start + monitorPageSize;
+    return filteredMonitorEvents.slice(start, end);
+  }, [filteredMonitorEvents, monitorPage, monitorPageSize]);
 
   const handleLoginSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -404,6 +434,7 @@ export function AdminConsole({
       }
       return { ...prev, [platform]: !prev[platform] };
     });
+    setMonitorPage(1);
   };
 
   const moderate = async (action: "approve" | "reject", id: string) => {
@@ -712,9 +743,46 @@ export function AdminConsole({
                     </div>
                   </fieldset>
                 ) : null}
-                {filteredMonitorEvents.length ? (
-                  <div className="admin-monitor-events">
-                    {filteredMonitorEvents.map((event) => (
+                <div className="admin-monitor-controls">
+                  <label className="admin-monitor-page-size">
+                    Show
+                    <select
+                      value={monitorPageSize}
+                      onChange={(event) => setMonitorPageSize(Number(event.target.value))}
+                    >
+                      <option value={30}>30</option>
+                      <option value={50}>50</option>
+                      <option value={100}>100</option>
+                    </select>
+                    entries
+                  </label>
+                  <div className="admin-monitor-pagination">
+                    <button
+                      type="button"
+                      className="secondary-button"
+                      onClick={() => setMonitorPage((value) => Math.max(1, value - 1))}
+                      disabled={monitorPage <= 1}
+                    >
+                      Previous
+                    </button>
+                    <span>
+                      Page {Math.min(monitorPage, totalMonitorPages)} of {totalMonitorPages}
+                    </span>
+                    <button
+                      type="button"
+                      className="secondary-button"
+                      onClick={() =>
+                        setMonitorPage((value) => Math.min(totalMonitorPages, value + 1))
+                      }
+                      disabled={monitorPage >= totalMonitorPages}
+                    >
+                      Next
+                    </button>
+                  </div>
+                </div>
+                {paginatedMonitorEvents.length ? (
+                  <div className="admin-monitor-log">
+                    {paginatedMonitorEvents.map((event) => (
                       <AdminMonitorEventCard
                         key={`${event.id}-${event.timestamp}`}
                         event={event}
@@ -722,7 +790,9 @@ export function AdminConsole({
                     ))}
                   </div>
                 ) : (
-                  <div className="admin-empty">No monitor entries for selected platforms.</div>
+                  <div className="admin-empty">
+                    No monitor entries for selected platforms and page selection.
+                  </div>
                 )}
               </>
             ) : (

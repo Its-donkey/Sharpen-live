@@ -324,7 +324,16 @@ export function AdminConsole({
     if (!settingsDraft) {
       return;
     }
-    setSettingsDraft({ ...settingsDraft, [field]: value });
+    const nextSettings = { ...settingsDraft, [field]: value };
+
+    if (field === "youtubeAlertsCallback" && value.trim() === "") {
+      nextSettings.youtubeAlertsSecret = "";
+      nextSettings.youtubeAlertsVerifyPrefix = "";
+      nextSettings.youtubeAlertsVerifySuffix = "";
+      nextSettings.youtubeAlertsHubUrl = "";
+    }
+
+    setSettingsDraft(nextSettings);
   };
 
   const handleSettingsSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -349,9 +358,7 @@ export function AdminConsole({
       setSettingsSaving(true);
       const response = await updateAdminSettings(token, updates);
       setStatus({ message: response.message || "Settings updated.", tone: "success" });
-      const nextSettings = { ...settings, ...updates } as AdminSettings;
-      setSettings(nextSettings);
-      setSettingsDraft(nextSettings);
+      await loadSettings();
     } catch (error) {
       setStatus({
         message: error instanceof Error ? error.message : "Unable to update settings.",

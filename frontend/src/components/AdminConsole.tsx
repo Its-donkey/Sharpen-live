@@ -63,6 +63,46 @@ type PlatformField = "name" | "channelUrl";
 const defaultStatus: StatusState = { message: "", tone: "idle" };
 const DEV_EMAIL = "admin@sharpen.live";
 const DEV_PASSWORD = "changeme123";
+const UNKNOWN_PLATFORM = "unknown";
+
+function normalizePlatformKey(value: string | null | undefined): string {
+  const trimmed = (value ?? "").trim();
+  return trimmed ? trimmed.toLowerCase() : UNKNOWN_PLATFORM;
+}
+
+function platformLabelFromKey(key: string): string {
+  const normalized = (key ?? "").trim().toLowerCase();
+  if (!normalized || normalized === UNKNOWN_PLATFORM) {
+    return "Unknown";
+  }
+  switch (normalized) {
+    case "youtube":
+      return "YouTube";
+    case "twitch":
+      return "Twitch";
+    case "kick":
+      return "Kick";
+    default:
+      return normalized.charAt(0).toUpperCase() + normalized.slice(1);
+  }
+}
+
+function formatMonitorTimestamp(value: string): string {
+  if (!value) {
+    return "Unknown time";
+  }
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) {
+    return "Unknown time";
+  }
+  const hours = String(date.getHours()).padStart(2, "0");
+  const minutes = String(date.getMinutes()).padStart(2, "0");
+  const seconds = String(date.getSeconds()).padStart(2, "0");
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${hours}:${minutes}:${seconds} ${year}/${month}/${day}`;
+}
 
 function toFormState(streamer?: Streamer): StreamerFormState {
   const status = streamer?.status ?? "online";
@@ -129,11 +169,6 @@ export function AdminConsole({
   const [monitorLoading, setMonitorLoading] = useState(false);
   const [platformFilters, setPlatformFilters] = useState<Record<string, boolean>>({});
   const isAuthenticated = Boolean(token);
-
-  const normalizePlatformKey = (value: string | null | undefined) => {
-    const trimmed = (value ?? "").trim();
-    return trimmed ? trimmed.toLowerCase() : "unknown";
-  };
 
   const loadAdminData = useCallback(
     async (currentToken: string) => {
@@ -369,23 +404,6 @@ export function AdminConsole({
       }
       return { ...prev, [platform]: !prev[platform] };
     });
-  };
-
-  const platformLabel = (value: string) => {
-    const key = value.trim().toLowerCase();
-    if (!key || key === "unknown") {
-      return "Unknown";
-    }
-    switch (key) {
-      case "youtube":
-        return "YouTube";
-      case "twitch":
-        return "Twitch";
-      case "kick":
-        return "Kick";
-      default:
-        return key.charAt(0).toUpperCase() + key.slice(1);
-    }
   };
 
   const moderate = async (action: "approve" | "reject", id: string) => {
@@ -688,7 +706,7 @@ export function AdminConsole({
                             checked={Boolean(platformFilters[platform])}
                             onChange={() => togglePlatformFilter(platform)}
                           />
-                          <span>{platformLabel(platform)}</span>
+                          <span>{platformLabelFromKey(platform)}</span>
                         </label>
                       ))}
                     </div>
@@ -1249,39 +1267,20 @@ interface AdminMonitorEventCardProps {
 }
 
 function AdminMonitorEventCard({ event }: AdminMonitorEventCardProps) {
-  const eventDate = event.timestamp ? new Date(event.timestamp) : null;
-  const formattedTimestamp =
-    eventDate && !Number.isNaN(eventDate.getTime())
-      ? eventDate.toLocaleString()
-      : "Unknown time";
-  const platformKey = (event.platform ?? "").trim().toLowerCase();
-  let platformTitle = "Log";
-  if (platformKey) {
-    switch (platformKey) {
-      case "youtube":
-        platformTitle = "YouTube";
-        break;
-      case "twitch":
-        platformTitle = "Twitch";
-        break;
-      case "kick":
-        platformTitle = "Kick";
-        break;
-      default:
-        platformTitle = platformKey.charAt(0).toUpperCase() + platformKey.slice(1);
-    }
-  }
+  const formattedTimestamp = formatMonitorTimestamp(event.timestamp);
+  const platformKey = normalizePlatformKey(event.platform);
+  const platformTitle = platformLabelFromKey(platformKey);
+  const message = event.message && event.message.length > 0 ? event.message : "—";
 
   return (
-    <article className="admin-card" data-platform={platformKey || "unknown"}>
-      <div className="admin-card-header">
-        <h4>{platformTitle}</h4>
-        <span className="admin-card-meta">{formattedTimestamp}</span>
-      </div>
-      <section>
-        <strong>Message</strong>
-        <p className="admin-monitor-message">{event.message || "—"}</p>
-      </section>
+    <article className="admin-monitor-entry" data-platform={platformKey || "unknown"}>
+      <p>
+        <strong>{platformTitle}</strong>
+        {" - "}
+        {formattedTimestamp}
+        {" - "}
+        {message}
+      </p>
     </article>
   );
 }

@@ -1019,15 +1019,19 @@ footer a {
   gap: 1rem;
 }
 
-.admin-monitor-message {
-  font-family: Menlo, Consolas, "Liberation Mono", monospace;
-  font-size: 0.9rem;
-  background: rgba(15, 23, 42, 0.06);
-  padding: 0.75rem;
-  border-radius: 0.5rem;
-  word-break: break-word;
-  white-space: pre-wrap;
+.admin-monitor-entry {
+  padding: 0.85rem 1rem;
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  border-radius: 0.75rem;
+  background: rgba(15, 23, 42, 0.04);
   color: var(--fg-muted);
+  font-size: 0.95rem;
+  line-height: 1.5;
+  word-break: break-word;
+}
+
+.admin-monitor-entry strong {
+  color: var(--fg-primary);
 }
 
 .admin-card-body {

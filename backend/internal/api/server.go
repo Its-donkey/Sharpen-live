@@ -1,6 +1,7 @@
 package api
 
 import (
+	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -11,12 +12,14 @@ import (
 	"sync"
 	"time"
 
+	"github.com/Its-donkey/Sharpen-live/backend/internal/settings"
 	"github.com/Its-donkey/Sharpen-live/backend/internal/storage"
 )
 
 // Server exposes HTTP handlers backed by the storage layer.
 type Server struct {
 	store         *storage.JSONStore
+	settingsStore settings.Store
 	adminToken    string
 	adminEmail    string
 	adminPassword string
@@ -30,7 +33,13 @@ type Server struct {
 		verifySuff  string
 		enabled     bool
 	}
-	mu sync.RWMutex
+	youtubeEvents   []youtubeEvent
+	listenAddr      string
+	dataDir         string
+	staticDir       string
+	streamersFile   string
+	submissionsFile string
+	mu              sync.RWMutex
 }
 
 // Option mutates server configuration during construction.
@@ -45,20 +54,50 @@ type YouTubeAlertsConfig struct {
 	VerifyTokenSuffix string
 }
 
+type youtubeEvent struct {
+	Timestamp   time.Time `json:"timestamp"`
+	Mode        string    `json:"mode"`
+	ChannelID   string    `json:"channelId"`
+	Topic       string    `json:"topic"`
+	Callback    string    `json:"callback"`
+	Status      string    `json:"status"`
+	Error       string    `json:"error,omitempty"`
+	VerifyToken string    `json:"verifyToken,omitempty"`
+	HasSecret   bool      `json:"hasSecret"`
+}
+
 const defaultYouTubeHubURL = "https://pubsubhubbub.appspot.com/subscribe"
+const youtubeEventLogLimit = 100
 
 // New constructs a Server with the provided dependencies.
-func New(store *storage.JSONStore, adminToken, adminEmail, adminPassword, youtubeAPIKey string, opts ...Option) *Server {
+func New(store *storage.JSONStore, settingsStore settings.Store, initial settings.Settings, opts ...Option) *Server {
+	normalized := normalizeSettings(initial)
+
 	s := &Server{
-		store:         store,
-		adminToken:    strings.TrimSpace(adminToken),
-		adminEmail:    strings.ToLower(strings.TrimSpace(adminEmail)),
-		adminPassword: strings.TrimSpace(adminPassword),
-		youtubeAPIKey: strings.TrimSpace(youtubeAPIKey),
-		httpClient:    &http.Client{Timeout: 10 * time.Second},
+		store:           store,
+		settingsStore:   settingsStore,
+		adminToken:      normalized.AdminToken,
+		adminEmail:      strings.ToLower(normalized.AdminEmail),
+		adminPassword:   normalized.AdminPassword,
+		youtubeAPIKey:   normalized.YouTubeAPIKey,
+		httpClient:      &http.Client{Timeout: 10 * time.Second},
+		youtubeHubURL:   normalized.YouTubeAlertsHubURL,
+		listenAddr:      normalized.ListenAddr,
+		dataDir:         normalized.DataDir,
+		staticDir:       normalized.StaticDir,
+		streamersFile:   normalized.StreamersFile,
+		submissionsFile: normalized.SubmissionsFile,
 	}
 
-	s.youtubeHubURL = defaultYouTubeHubURL
+	s.youtubeAlerts.callbackURL = normalized.YouTubeAlertsCallback
+	s.youtubeAlerts.secret = normalized.YouTubeAlertsSecret
+	s.youtubeAlerts.verifyPref = normalized.YouTubeAlertsVerifyPrefix
+	s.youtubeAlerts.verifySuff = normalized.YouTubeAlertsVerifySuffix
+	s.youtubeAlerts.enabled = s.youtubeAlerts.callbackURL != ""
+
+	if s.youtubeHubURL == "" {
+		s.youtubeHubURL = defaultYouTubeHubURL
+	}
 
 	for _, opt := range opts {
 		if opt != nil {
@@ -80,6 +119,7 @@ func (s *Server) Handler(static http.Handler) http.Handler {
 	mux.Handle("/api/submit-streamer", http.HandlerFunc(s.handleSubmitStreamer))
 	mux.Handle("/api/admin/submissions", http.HandlerFunc(s.handleAdminSubmissions))
 	mux.Handle("/api/admin/settings", http.HandlerFunc(s.handleAdminSettings))
+	mux.Handle("/api/admin/monitor/youtube", http.HandlerFunc(s.handleAdminYouTubeMonitor))
 
 	// Mount the static handler as a catch-all for everything else.
 	mux.Handle("/", static)
@@ -123,6 +163,15 @@ func WithYouTubeAlerts(cfg YouTubeAlertsConfig) Option {
 		s.youtubeAlerts.secret = strings.TrimSpace(cfg.Secret)
 		s.youtubeAlerts.verifyPref = strings.TrimSpace(cfg.VerifyTokenPrefix)
 		s.youtubeAlerts.verifySuff = strings.TrimSpace(cfg.VerifyTokenSuffix)
+	}
+}
+
+// WithHTTPClient overrides the HTTP client used for outbound HTTP requests.
+func WithHTTPClient(client *http.Client) Option {
+	return func(s *Server) {
+		if client != nil {
+			s.httpClient = client
+		}
 	}
 }
 
@@ -248,7 +297,7 @@ func (s *Server) handleAdminStreamerByID(w http.ResponseWriter, r *http.Request)
 		result.Platforms = entry.Platforms
 		respondJSON(w, http.StatusOK, result)
 	case http.MethodDelete:
-		err := s.store.DeleteStreamer(id)
+		streamer, err := s.streamerByID(id)
 		if errors.Is(err, storage.ErrNotFound) {
 			respondJSON(w, http.StatusNotFound, errorPayload{Message: "Streamer not found."})
 			return
@@ -257,6 +306,17 @@ func (s *Server) handleAdminStreamerByID(w http.ResponseWriter, r *http.Request)
 			respondError(w, http.StatusInternalServerError, err)
 			return
 		}
+
+		err = s.store.DeleteStreamer(id)
+		if errors.Is(err, storage.ErrNotFound) {
+			respondJSON(w, http.StatusNotFound, errorPayload{Message: "Streamer not found."})
+			return
+		}
+		if err != nil {
+			respondError(w, http.StatusInternalServerError, err)
+			return
+		}
+		s.unsubscribeYouTubePlatforms(r.Context(), streamer.Platforms)
 		w.WriteHeader(http.StatusNoContent)
 	default:
 		methodNotAllowed(w, http.MethodPut, http.MethodDelete)
@@ -388,6 +448,22 @@ func (s *Server) handleAdminSettings(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func (s *Server) handleAdminYouTubeMonitor(w http.ResponseWriter, r *http.Request) {
+	if !s.authorizeAdmin(w, r) {
+		return
+	}
+	if r.Method != http.MethodGet {
+		methodNotAllowed(w, http.MethodGet)
+		return
+	}
+	events := s.youtubeEventsSnapshot()
+	respondJSON(w, http.StatusOK, struct {
+		Events []youtubeEvent `json:"events"`
+	}{
+		Events: events,
+	})
+}
+
 func (s *Server) currentSettingsPayload() settingsResponse {
 	s.mu.RLock()
 	defer s.mu.RUnlock()
@@ -398,15 +474,15 @@ func (s *Server) currentSettingsPayload() settingsResponse {
 	}
 
 	return settingsResponse{
-		ListenAddr:                strings.TrimSpace(os.Getenv("LISTEN_ADDR")),
+		ListenAddr:                strings.TrimSpace(s.listenAddr),
 		AdminToken:                s.adminToken,
 		AdminEmail:                s.adminEmail,
 		AdminPassword:             s.adminPassword,
 		YouTubeAPIKey:             s.youtubeAPIKey,
-		DataDir:                   strings.TrimSpace(os.Getenv("SHARPEN_DATA_DIR")),
-		StaticDir:                 strings.TrimSpace(os.Getenv("SHARPEN_STATIC_DIR")),
-		StreamersFile:             strings.TrimSpace(os.Getenv("SHARPEN_STREAMERS_FILE")),
-		SubmissionsFile:           strings.TrimSpace(os.Getenv("SHARPEN_SUBMISSIONS_FILE")),
+		DataDir:                   strings.TrimSpace(s.dataDir),
+		StaticDir:                 strings.TrimSpace(s.staticDir),
+		StreamersFile:             strings.TrimSpace(s.streamersFile),
+		SubmissionsFile:           strings.TrimSpace(s.submissionsFile),
 		YouTubeAlertsCallback:     s.youtubeAlerts.callbackURL,
 		YouTubeAlertsSecret:       s.youtubeAlerts.secret,
 		YouTubeAlertsVerifyPrefix: s.youtubeAlerts.verifyPref,
@@ -476,19 +552,24 @@ func (s *Server) applySettings(payload settingsUpdateRequest) error {
 		_ = os.Setenv("YOUTUBE_API_KEY", s.youtubeAPIKey)
 	}
 	if payload.ListenAddr != nil {
-		_ = os.Setenv("LISTEN_ADDR", strings.TrimSpace(*payload.ListenAddr))
+		s.listenAddr = strings.TrimSpace(*payload.ListenAddr)
+		_ = os.Setenv("LISTEN_ADDR", s.listenAddr)
 	}
 	if payload.DataDir != nil {
-		_ = os.Setenv("SHARPEN_DATA_DIR", strings.TrimSpace(*payload.DataDir))
+		s.dataDir = strings.TrimSpace(*payload.DataDir)
+		_ = os.Setenv("SHARPEN_DATA_DIR", s.dataDir)
 	}
 	if payload.StaticDir != nil {
-		_ = os.Setenv("SHARPEN_STATIC_DIR", strings.TrimSpace(*payload.StaticDir))
+		s.staticDir = strings.TrimSpace(*payload.StaticDir)
+		_ = os.Setenv("SHARPEN_STATIC_DIR", s.staticDir)
 	}
 	if payload.StreamersFile != nil {
-		_ = os.Setenv("SHARPEN_STREAMERS_FILE", strings.TrimSpace(*payload.StreamersFile))
+		s.streamersFile = strings.TrimSpace(*payload.StreamersFile)
+		_ = os.Setenv("SHARPEN_STREAMERS_FILE", s.streamersFile)
 	}
 	if payload.SubmissionsFile != nil {
-		_ = os.Setenv("SHARPEN_SUBMISSIONS_FILE", strings.TrimSpace(*payload.SubmissionsFile))
+		s.submissionsFile = strings.TrimSpace(*payload.SubmissionsFile)
+		_ = os.Setenv("SHARPEN_SUBMISSIONS_FILE", s.submissionsFile)
 	}
 	callbackUpdated := payload.YouTubeAlertsCallback != nil
 	secretUpdated := payload.YouTubeAlertsSecret != nil
@@ -570,6 +651,8 @@ func (s *Server) applySettings(payload settingsUpdateRequest) error {
 		_ = os.Setenv("YOUTUBE_ALERTS_HUB_URL", hubEnvValue)
 	}
 
+	s.persistSettings()
+
 	return nil
 }
 
@@ -635,4 +718,85 @@ func constantTimeEquals(a, b string) bool {
 		result |= a[i] ^ b[i]
 	}
 	return result == 0
+}
+
+func (s *Server) streamerByID(id string) (storage.Streamer, error) {
+	trimmed := strings.TrimSpace(id)
+	if trimmed == "" {
+		return storage.Streamer{}, storage.ErrNotFound
+	}
+	streamers, err := s.store.ListStreamers()
+	if err != nil {
+		return storage.Streamer{}, err
+	}
+	for _, streamer := range streamers {
+		if streamer.ID == trimmed {
+			return streamer, nil
+		}
+	}
+	return storage.Streamer{}, storage.ErrNotFound
+}
+
+func (s *Server) youtubeEventsSnapshot() []youtubeEvent {
+	s.mu.RLock()
+	defer s.mu.RUnlock()
+	events := make([]youtubeEvent, len(s.youtubeEvents))
+	copy(events, s.youtubeEvents)
+	return events
+}
+
+func (s *Server) appendYouTubeEvent(event youtubeEvent) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	if len(s.youtubeEvents) >= youtubeEventLogLimit {
+		copy(s.youtubeEvents, s.youtubeEvents[1:])
+		s.youtubeEvents[len(s.youtubeEvents)-1] = event
+		return
+	}
+	s.youtubeEvents = append(s.youtubeEvents, event)
+}
+
+func normalizeSettings(value settings.Settings) settings.Settings {
+	value.AdminToken = strings.TrimSpace(value.AdminToken)
+	value.AdminEmail = strings.TrimSpace(value.AdminEmail)
+	value.AdminPassword = strings.TrimSpace(value.AdminPassword)
+	value.YouTubeAPIKey = strings.TrimSpace(value.YouTubeAPIKey)
+	value.YouTubeAlertsCallback = strings.TrimSpace(value.YouTubeAlertsCallback)
+	value.YouTubeAlertsSecret = strings.TrimSpace(value.YouTubeAlertsSecret)
+	value.YouTubeAlertsVerifyPrefix = strings.TrimSpace(value.YouTubeAlertsVerifyPrefix)
+	value.YouTubeAlertsVerifySuffix = strings.TrimSpace(value.YouTubeAlertsVerifySuffix)
+	value.YouTubeAlertsHubURL = strings.TrimSpace(value.YouTubeAlertsHubURL)
+	value.ListenAddr = strings.TrimSpace(value.ListenAddr)
+	value.DataDir = strings.TrimSpace(value.DataDir)
+	value.StaticDir = strings.TrimSpace(value.StaticDir)
+	value.StreamersFile = strings.TrimSpace(value.StreamersFile)
+	value.SubmissionsFile = strings.TrimSpace(value.SubmissionsFile)
+	return value
+}
+
+func (s *Server) persistSettings() {
+	if s.settingsStore == nil {
+		return
+	}
+	settingsPayload := settings.Settings{
+		AdminToken:                s.adminToken,
+		AdminEmail:                s.adminEmail,
+		AdminPassword:             s.adminPassword,
+		YouTubeAPIKey:             s.youtubeAPIKey,
+		YouTubeAlertsCallback:     s.youtubeAlerts.callbackURL,
+		YouTubeAlertsSecret:       s.youtubeAlerts.secret,
+		YouTubeAlertsVerifyPrefix: s.youtubeAlerts.verifyPref,
+		YouTubeAlertsVerifySuffix: s.youtubeAlerts.verifySuff,
+		YouTubeAlertsHubURL:       s.youtubeHubURL,
+		ListenAddr:                s.listenAddr,
+		DataDir:                   s.dataDir,
+		StaticDir:                 s.staticDir,
+		StreamersFile:             s.streamersFile,
+		SubmissionsFile:           s.submissionsFile,
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
+	defer cancel()
+	if err := s.settingsStore.Save(ctx, settingsPayload); err != nil {
+		fmt.Printf("settings persist failed: %v\n", err)
+	}
 }

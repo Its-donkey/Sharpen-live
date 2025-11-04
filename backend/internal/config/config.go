@@ -25,6 +25,7 @@ const (
 	envYouTubeAlertsVerifyPrefix = "YOUTUBE_ALERTS_VERIFY_PREFIX"
 	envYouTubeAlertsVerifySuffix = "YOUTUBE_ALERTS_VERIFY_SUFFIX"
 	envYouTubeAlertsHubURL       = "YOUTUBE_ALERTS_HUB_URL"
+	envDatabaseURL               = "DATABASE_URL"
 	envDataDir                   = "SHARPEN_DATA_DIR"
 	envStreamersFile             = "SHARPEN_STREAMERS_FILE"
 	envSubmissionsFile           = "SHARPEN_SUBMISSIONS_FILE"
@@ -43,6 +44,8 @@ type Config struct {
 	YouTubeAlertsVerifyPrefix string
 	YouTubeAlertsVerifySuffix string
 	YouTubeAlertsHubURL       string
+	DatabaseURL               string
+	DataDir                   string
 	StreamersPath             string
 	SubmissionsPath           string
 	StaticDir                 string
@@ -70,11 +73,13 @@ func FromEnv() (Config, error) {
 	cfg.YouTubeAlertsVerifyPrefix = strings.TrimSpace(os.Getenv(envYouTubeAlertsVerifyPrefix))
 	cfg.YouTubeAlertsVerifySuffix = strings.TrimSpace(os.Getenv(envYouTubeAlertsVerifySuffix))
 	cfg.YouTubeAlertsHubURL = strings.TrimSpace(os.Getenv(envYouTubeAlertsHubURL))
+	cfg.DatabaseURL = strings.TrimSpace(os.Getenv(envDatabaseURL))
 
 	dataDir := strings.TrimSpace(os.Getenv(envDataDir))
 	if dataDir == "" {
 		dataDir = detectDataDir()
 	}
+	cfg.DataDir = dataDir
 
 	streamersPath := strings.TrimSpace(os.Getenv(envStreamersFile))
 	if streamersPath == "" {
@@ -109,6 +114,9 @@ func (c Config) Validate() error {
 	if strings.TrimSpace(c.StaticDir) == "" {
 		return fmt.Errorf("config: static directory is required")
 	}
+	if strings.TrimSpace(c.DataDir) == "" {
+		return fmt.Errorf("config: data directory is required")
+	}
 	if c.AdminToken == "" {
 		return fmt.Errorf("config: admin token is required")
 	}
@@ -117,6 +125,9 @@ func (c Config) Validate() error {
 	}
 	if c.AdminPassword == "" {
 		return fmt.Errorf("config: admin password is required")
+	}
+	if c.DatabaseURL == "" {
+		return fmt.Errorf("config: database url is required")
 	}
 	if c.YouTubeAlertsCallback == "" && (c.YouTubeAlertsSecret != "" || c.YouTubeAlertsVerifyPrefix != "" || c.YouTubeAlertsVerifySuffix != "" || c.YouTubeAlertsHubURL != "") {
 		return fmt.Errorf("config: youtube alerts callback must be set when additional alert settings are provided")

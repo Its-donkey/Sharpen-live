@@ -1,6 +1,9 @@
 # Changelog
 
 ## [Unreleased]
+- Persist admin and YouTube alert configuration in PostgreSQL via a dedicated settings store and API bootstrap flow.
+- Surface recent YouTube subscription activity through an admin monitor endpoint for troubleshooting PubSub workflows.
+- Store site settings as individual key/value rows in PostgreSQL for easier inspection and manual edits.
 - Expose YouTube alert subscription settings in the admin UI for runtime configuration.
 - Automatically subscribe resolved YouTube channels to PubSubHubbub using the configured callback and secret.
 - Restore `/docs` Jekyll site scaffold so GitHub Pages builds succeed and highlight current repo layout.

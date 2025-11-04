@@ -52,7 +52,7 @@ VITE_PID=$!
 echo "Starting Sharpen Live API server on ${LISTEN_ADDR}..."
 (
   cd "${BACKEND_DIR}"
-  go run ./cmd/server
+  go run ./cmd/api-server
 ) &
 API_PID=$!
 

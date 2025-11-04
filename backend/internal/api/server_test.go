@@ -1,4 +1,4 @@
-package server_test
+package api_test
 
 import (
 	"bytes"
@@ -8,7 +8,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/Its-donkey/Sharpen-live/backend/internal/server"
+	"github.com/Its-donkey/Sharpen-live/backend/internal/api"
 	"github.com/Its-donkey/Sharpen-live/backend/internal/storage"
 )
 
@@ -21,7 +21,7 @@ const (
 type testEnv struct {
 	store   *storage.JSONStore
 	handler http.Handler
-	server  *server.Server
+	server  *api.Server
 }
 
 func newTestEnv(t *testing.T) testEnv {

@@ -14,8 +14,8 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/Its-donkey/Sharpen-live/backend/internal/api"
 	"github.com/Its-donkey/Sharpen-live/backend/internal/config"
-	"github.com/Its-donkey/Sharpen-live/backend/internal/server"
 	"github.com/Its-donkey/Sharpen-live/backend/internal/storage"
 )
 

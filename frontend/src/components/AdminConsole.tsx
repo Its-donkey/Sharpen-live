@@ -676,10 +676,10 @@ export function AdminConsole({
               <div className="admin-streamers">
                 {streamers.map((streamer) => (
                   <AdminStreamerCard
+					onUpdate={updateStreamer}
+                    onDelete={removeStreamer}
                     key={streamer.id}
                     streamer={streamer}
-                    onUpdate={updateStreamer}
-                    onDelete={removeStreamer}
                   />
                 ))}
               </div>
@@ -1127,21 +1127,25 @@ function AdminStreamerCard({ streamer, onUpdate, onDelete }: AdminStreamerCardPr
 
   return (
     <article className="admin-card" data-streamer-id={streamer.id}>
+      <div className="admin-card-actions admin-card-actions--streamer">
+        <button type="button" onClick={() => setIsEditing((value) => !value)}>
+          {isEditing ? "Cancel edit" : "Edit"}
+        </button>
+        <button
+          type="button"
+          className="remove-platform-button"
+          onClick={handleDelete}
+          disabled={isSaving}
+        >
+          Delete
+        </button>
+      </div>
       <div className="admin-card-header">
-        <div>
-          <h4>{streamer.name}</h4>
-          <span className="admin-card-meta">
-            Status: {STATUS_DEFAULT_LABELS[streamer.status]} · Languages: {streamer.languages.join(" · ")}
-          </span>
-        </div>
-        <div className="admin-card-actions">
-          <button type="button" onClick={() => setIsEditing((value) => !value)}>
-            {isEditing ? "Cancel edit" : "Edit"}
-          </button>
-          <button type="button" className="secondary-button" onClick={handleDelete} disabled={isSaving}>
-            Delete
-          </button>
-        </div>
+        <h4>{streamer.name}</h4>
+        <span className="admin-card-meta">
+          Status: {STATUS_DEFAULT_LABELS[streamer.status]} · Languages:{" "}
+          {streamer.languages.join(" · ")}
+        </span>
       </div>
 
       {isEditing ? (

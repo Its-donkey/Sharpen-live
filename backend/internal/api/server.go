@@ -82,6 +82,12 @@ const defaultYouTubeHubURL = "https://pubsubhubbub.appspot.com/subscribe"
 const youtubeEventLogLimit = 100
 const youtubeEventLogLimit = 100
 
+type validationError string
+
+func (e validationError) Error() string {
+	return string(e)
+}
+
 // New constructs a Server with the provided dependencies.
 func New(store *storage.JSONStore, settingsStore settings.Store, initial settings.Settings, opts ...Option) *Server {
 	normalized := normalizeSettings(initial)
@@ -473,7 +479,12 @@ func (s *Server) handleAdminSettings(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		if err := s.applySettings(payload); err != nil {
-			respondError(w, http.StatusBadRequest, err)
+			var vErr validationError
+			if errors.As(err, &vErr) {
+				respondError(w, http.StatusBadRequest, err)
+				return
+			}
+			respondError(w, http.StatusInternalServerError, err)
 			return
 		}
 		respondJSON(w, http.StatusOK, successPayload{Message: "Settings updated."})
@@ -528,17 +539,17 @@ func (s *Server) currentSettingsPayload() settingsResponse {
 func (s *Server) applySettings(payload settingsUpdateRequest) error {
 	if payload.AdminToken != nil {
 		if strings.TrimSpace(*payload.AdminToken) == "" {
-			return errors.New("admin token cannot be empty")
+			return validationError("admin token cannot be empty")
 		}
 	}
 	if payload.AdminEmail != nil {
 		if strings.TrimSpace(*payload.AdminEmail) == "" {
-			return errors.New("admin email cannot be empty")
+			return validationError("admin email cannot be empty")
 		}
 	}
 	if payload.AdminPassword != nil {
 		if strings.TrimSpace(*payload.AdminPassword) == "" {
-			return errors.New("admin password cannot be empty")
+			return validationError("admin password cannot be empty")
 		}
 	}
 	if payload.YouTubeAPIKey != nil {
@@ -685,7 +696,9 @@ func (s *Server) applySettings(payload settingsUpdateRequest) error {
 		_ = os.Setenv("YOUTUBE_ALERTS_HUB_URL", hubEnvValue)
 	}
 
-	s.persistSettings()
+	if err := s.persistSettings(); err != nil {
+		return fmt.Errorf("persist settings: %w", err)
+	}
 
 	return nil
 }
@@ -808,9 +821,9 @@ func normalizeSettings(value settings.Settings) settings.Settings {
 	return value
 }
 
-func (s *Server) persistSettings() {
+func (s *Server) persistSettings() error {
 	if s.settingsStore == nil {
-		return
+		return nil
 	}
 	settingsPayload := settings.Settings{
 		AdminToken:                s.adminToken,
@@ -830,7 +843,5 @@ func (s *Server) persistSettings() {
 	}
 	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
 	defer cancel()
-	if err := s.settingsStore.Save(ctx, settingsPayload); err != nil {
-		fmt.Printf("settings persist failed: %v\n", err)
-	}
+	return s.settingsStore.Save(ctx, settingsPayload)
 }

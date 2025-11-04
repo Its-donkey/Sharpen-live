@@ -4,6 +4,7 @@
 - Persist admin and YouTube alert configuration in PostgreSQL via a dedicated settings store and API bootstrap flow.
 - Surface recent YouTube subscription activity through an admin monitor endpoint for troubleshooting PubSub workflows.
 - Store site settings as individual key/value rows in PostgreSQL for easier inspection and manual edits.
+- Fail admin settings updates when the settings store cannot persist changes so operators see database outages immediately.
 - Add an admin monitor tab that visualizes recent YouTube subscription activity.
 - Unsubscribe YouTube alerts automatically when a streamer is removed.
 - Expose YouTube alert subscription settings in the admin UI for runtime configuration.

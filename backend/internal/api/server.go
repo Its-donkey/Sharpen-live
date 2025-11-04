@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"net"
 	"net/http"
 	"os"
 	"path"
@@ -52,6 +53,18 @@ type YouTubeAlertsConfig struct {
 	Secret            string
 	VerifyTokenPrefix string
 	VerifyTokenSuffix string
+}
+
+type youtubeEvent struct {
+	Timestamp   time.Time `json:"timestamp"`
+	Mode        string    `json:"mode"`
+	ChannelID   string    `json:"channelId"`
+	Topic       string    `json:"topic"`
+	Callback    string    `json:"callback"`
+	Status      string    `json:"status"`
+	Error       string    `json:"error,omitempty"`
+	VerifyToken string    `json:"verifyToken,omitempty"`
+	HasSecret   bool      `json:"hasSecret"`
 }
 
 type youtubeEvent struct {
@@ -125,6 +138,7 @@ func (s *Server) Handler(static http.Handler) http.Handler {
 	mux.Handle("/api/submit-streamer", http.HandlerFunc(s.handleSubmitStreamer))
 	mux.Handle("/api/admin/submissions", http.HandlerFunc(s.handleAdminSubmissions))
 	mux.Handle("/api/admin/settings", http.HandlerFunc(s.handleAdminSettings))
+	mux.Handle("/api/admin/monitor/youtube", http.HandlerFunc(s.handleAdminYouTubeMonitor))
 	mux.Handle("/api/admin/monitor/youtube", http.HandlerFunc(s.handleAdminYouTubeMonitor))
 
 	// Mount the static handler as a catch-all for everything else.
@@ -303,6 +317,17 @@ func (s *Server) handleAdminStreamerByID(w http.ResponseWriter, r *http.Request)
 		result.Platforms = entry.Platforms
 		respondJSON(w, http.StatusOK, result)
 	case http.MethodDelete:
+		streamer, err := s.streamerByID(id)
+		if errors.Is(err, storage.ErrNotFound) {
+			respondJSON(w, http.StatusNotFound, errorPayload{Message: "Streamer not found."})
+			return
+		}
+		if err != nil {
+			respondError(w, http.StatusInternalServerError, err)
+			return
+		}
+
+		err = s.store.DeleteStreamer(id)
 		streamer, err := s.streamerByID(id)
 		if errors.Is(err, storage.ErrNotFound) {
 			respondJSON(w, http.StatusNotFound, errorPayload{Message: "Streamer not found."})
@@ -623,7 +648,7 @@ func (s *Server) applySettings(payload settingsUpdateRequest) error {
 	next := current
 
 	if listenAddrProvided {
-		next.ListenAddr = listenAddrVal
+		next.ListenAddr = normalizeListenAddr(listenAddrVal, current.ListenAddr)
 	}
 	if adminTokenProvided {
 		next.AdminToken = adminTokenVal
@@ -886,6 +911,28 @@ func normalizeSettings(value settings.Settings) settings.Settings {
 	value.StreamersFile = strings.TrimSpace(value.StreamersFile)
 	value.SubmissionsFile = strings.TrimSpace(value.SubmissionsFile)
 	return value
+}
+
+func normalizeListenAddr(input, existing string) string {
+	trimmed := strings.TrimSpace(input)
+	if trimmed == "" {
+		return trimmed
+	}
+	if strings.Contains(trimmed, ":") {
+		return trimmed
+	}
+
+	host := ""
+	if existing != "" && strings.Contains(existing, ":") {
+		if h, _, err := net.SplitHostPort(existing); err == nil {
+			host = h
+		}
+	}
+
+	if host == "" {
+		return ":" + trimmed
+	}
+	return host + ":" + trimmed
 }
 
 func (s *Server) persistSettings(value settings.Settings) error {

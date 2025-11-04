@@ -226,6 +226,25 @@ func (s *Server) manageYouTubeSubscription(ctx context.Context, channelID, mode 
 	}
 
 	if mode == "subscribe" && !s.youtubeAlerts.enabled {
+	s.manageYouTubeSubscription(ctx, channelID, "subscribe")
+}
+
+func (s *Server) cancelYouTubeSubscription(ctx context.Context, channelID string) {
+	s.manageYouTubeSubscription(ctx, channelID, "unsubscribe")
+}
+
+func (s *Server) manageYouTubeSubscription(ctx context.Context, channelID, mode string) {
+	channelID = strings.TrimSpace(channelID)
+	if channelID == "" || s.httpClient == nil {
+		return
+	}
+
+	callback := strings.TrimSpace(s.youtubeAlerts.callbackURL)
+	if callback == "" {
+		return
+	}
+
+	if mode == "subscribe" && !s.youtubeAlerts.enabled {
 		return
 	}
 
@@ -235,7 +254,9 @@ func (s *Server) manageYouTubeSubscription(ctx context.Context, channelID, mode 
 
 	params := url.Values{
 		"hub.mode":     []string{mode},
+		"hub.mode":     []string{mode},
 		"hub.topic":    []string{fmt.Sprintf("https://www.youtube.com/xml/feeds/videos.xml?channel_id=%s", channelID)},
+		"hub.callback": []string{callback},
 		"hub.callback": []string{callback},
 		"hub.verify":   []string{"async"},
 	}
@@ -247,6 +268,11 @@ func (s *Server) manageYouTubeSubscription(ctx context.Context, channelID, mode 
 	if s.youtubeAlerts.secret != "" {
 		params.Set("hub.secret", s.youtubeAlerts.secret)
 	}
+
+	topic := params.Get("hub.topic")
+	verifyToken := params.Get("hub.verify_token")
+	hasSecret := s.youtubeAlerts.secret != ""
+	timestamp := time.Now().UTC()
 
 	topic := params.Get("hub.topic")
 	verifyToken := params.Get("hub.verify_token")
@@ -266,12 +292,34 @@ func (s *Server) manageYouTubeSubscription(ctx context.Context, channelID, mode 
 			VerifyToken: verifyToken,
 			HasSecret:   hasSecret,
 		})
+		s.appendYouTubeEvent(youtubeEvent{
+			Timestamp:   timestamp,
+			Mode:        mode,
+			ChannelID:   channelID,
+			Topic:       topic,
+			Callback:    callback,
+			Status:      "request_failed",
+			Error:       err.Error(),
+			VerifyToken: verifyToken,
+			HasSecret:   hasSecret,
+		})
 		return
 	}
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 
 	resp, err := s.httpClient.Do(req)
 	if err != nil {
+		s.appendYouTubeEvent(youtubeEvent{
+			Timestamp:   timestamp,
+			Mode:        mode,
+			ChannelID:   channelID,
+			Topic:       topic,
+			Callback:    callback,
+			Status:      "request_error",
+			Error:       err.Error(),
+			VerifyToken: verifyToken,
+			HasSecret:   hasSecret,
+		})
 		s.appendYouTubeEvent(youtubeEvent{
 			Timestamp:   timestamp,
 			Mode:        mode,

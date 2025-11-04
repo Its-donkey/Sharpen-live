@@ -1,6 +1,7 @@
 # Changelog
 
 ## [Unreleased]
+- Restore `/docs` Jekyll site scaffold so GitHub Pages builds succeed and highlight current repo layout.
 - Implement Sharpen Live API service with JSON-backed storage, admin endpoints, and accompanying tests plus local Go module packaging.
 - Rebuild the Sharpen Live frontend as a React application with submission workflow, admin dashboard, and Vite toolchain.
 - Add `scripts/online.sh`/`make online` dev launcher, default API port 8880, and updated client configuration to target the new endpoints.

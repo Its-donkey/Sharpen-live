@@ -713,30 +713,38 @@ export function AdminConsole({
                   <fieldset className="admin-monitor-filters">
                     <legend>Platforms</legend>
                     <div className="admin-monitor-filters-options">
-                      {platformOptions.map((platform) => (
-                        <label key={platform} className="admin-monitor-filter-option">
-                          <input
-                            type="checkbox"
-                            checked={Boolean(platformFilters[platform])}
-                            onChange={() => togglePlatformFilter(platform)}
-                          />
-                          <span>{platformLabelFromKey(platform)}</span>
-                        </label>
-                      ))}
+                      {platformOptions.map((platform) => {
+                        const isActive = Boolean(platformFilters[platform]);
+                        return (
+                          <button
+                            key={platform}
+                            type="button"
+                            className={`admin-monitor-filter-toggle admin-tab${
+                              isActive ? " active" : ""
+                            }`}
+                            onClick={() => togglePlatformFilter(platform)}
+                          >
+                            {platformLabelFromKey(platform)}
+                          </button>
+                        );
+                      })}
                     </div>
                   </fieldset>
                 ) : null}
                 <div className="admin-monitor-controls">
                   <label className="admin-monitor-page-size">
                     Show
-                    <select
-                      value={monitorPageSize}
-                      onChange={(event) => setMonitorPageSize(Number(event.target.value))}
-                    >
-                      <option value={30}>30</option>
-                      <option value={50}>50</option>
-                      <option value={100}>100</option>
-                    </select>
+                    <div className="platform-picker admin-monitor-picker">
+                      <select
+                        className="platform-select admin-monitor-select"
+                        value={monitorPageSize}
+                        onChange={(event) => setMonitorPageSize(Number(event.target.value))}
+                      >
+                        <option value={30}>30</option>
+                        <option value={50}>50</option>
+                        <option value={100}>100</option>
+                      </select>
+                    </div>
                     entries
                   </label>
                   <div className="admin-monitor-pagination">

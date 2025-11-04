@@ -2,7 +2,7 @@
   {
     "id": "67b0b3ff-af0c-4a27-b08e-6deeeacf4f3e",
     "name": "EdgeCrafter",
-    "description": "Specializes in chef knives \u00b7 Est. wait time 10 min",
+    "description": "Specializes in chef knives · Est. wait time 10 min",
     "status": "online",
     "statusLabel": "Online",
     "languages": [
@@ -22,7 +22,7 @@
   {
     "id": "2abf66a6-411d-47de-a006-833e86fb40d2",
     "name": "Zen Edge Studio",
-    "description": "Waterstone specialist \u00b7 Accepting rush orders",
+    "description": "Waterstone specialist · Accepting rush orders",
     "status": "busy",
     "statusLabel": "Workshop",
     "languages": [
@@ -38,8 +38,8 @@
   },
   {
     "id": "b662b624-f58b-400c-be5c-a6882ac53c60",
-    "name": "Forge & Feather",
-    "description": "Damascus patterns \u00b7 Next stream 19:00 UTC",
+    "name": "Forge \u0026 Feather",
+    "description": "Damascus patterns · Next stream 19:00 UTC",
     "status": "offline",
     "statusLabel": "Offline",
     "languages": [
@@ -59,7 +59,7 @@
   {
     "id": "c57f3629-97e9-472e-bd53-48ff9ab1d6dc",
     "name": "Honbazuke Pro",
-    "description": "Premium partners \u00b7 Bookings open",
+    "description": "Premium partners · Bookings open",
     "status": "online",
     "statusLabel": "Online",
     "languages": [
@@ -79,8 +79,8 @@
   },
   {
     "id": "0a89a855-e146-44de-ae02-9219f941e5a2",
-    "name": "Sharp & True",
-    "description": "Mobile service \u00b7 On-site events available",
+    "name": "Sharp \u0026 True",
+    "description": "Mobile service · On-site events available",
     "status": "offline",
     "statusLabel": "Offline",
     "languages": [
@@ -111,6 +111,22 @@
         "name": "YouTube",
         "channelUrl": "https://www.youtube.com/@sharpenrightservicesllc",
         "id": "UC7d6BuAfHKTLR1l2SSg6HkA"
+      }
+    ]
+  },
+  {
+    "id": "5d012ecc-d9d2-4c6b-9921-53a7f94a83d1",
+    "name": "Ship Shape Sharpening",
+    "description": "jsfsdkjsfda",
+    "status": "offline",
+    "statusLabel": "Offline",
+    "languages": [
+      "English"
+    ],
+    "platforms": [
+      {
+        "name": "YouTube",
+        "channelUrl": "https://www.youtube.com/@Ship-Shape-Sharpening"
       }
     ]
   }

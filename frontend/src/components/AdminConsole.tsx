@@ -556,6 +556,61 @@ export function AdminConsole({
                     />
                   </label>
                   <label className="form-field">
+                    <span>YouTube alerts callback URL</span>
+                    <input
+                      type="url"
+                      value={settingsDraft.youtubeAlertsCallback}
+                      onChange={(event) =>
+                        handleSettingsFieldChange("youtubeAlertsCallback", event.target.value)
+                      }
+                      placeholder="https://example.com/alerts"
+                    />
+                  </label>
+                  <label className="form-field">
+                    <span>YouTube alerts secret</span>
+                    <input
+                      type="password"
+                      value={settingsDraft.youtubeAlertsSecret}
+                      onChange={(event) =>
+                        handleSettingsFieldChange("youtubeAlertsSecret", event.target.value)
+                      }
+                      placeholder="Optional signing secret"
+                    />
+                  </label>
+                  <label className="form-field">
+                    <span>YouTube alerts verify prefix</span>
+                    <input
+                      type="text"
+                      value={settingsDraft.youtubeAlertsVerifyPrefix}
+                      onChange={(event) =>
+                        handleSettingsFieldChange("youtubeAlertsVerifyPrefix", event.target.value)
+                      }
+                      placeholder="Prefix for hub.verify_token"
+                    />
+                  </label>
+                  <label className="form-field">
+                    <span>YouTube alerts verify suffix</span>
+                    <input
+                      type="text"
+                      value={settingsDraft.youtubeAlertsVerifySuffix}
+                      onChange={(event) =>
+                        handleSettingsFieldChange("youtubeAlertsVerifySuffix", event.target.value)
+                      }
+                      placeholder="Suffix for hub.verify_token"
+                    />
+                  </label>
+                  <label className="form-field">
+                    <span>YouTube alerts hub URL</span>
+                    <input
+                      type="url"
+                      value={settingsDraft.youtubeAlertsHubUrl}
+                      onChange={(event) =>
+                        handleSettingsFieldChange("youtubeAlertsHubUrl", event.target.value)
+                      }
+                      placeholder="Defaults to Google's PubSubHubbub hub"
+                    />
+                  </label>
+                  <label className="form-field">
                     <span>Listen address</span>
                     <input
                       type="text"

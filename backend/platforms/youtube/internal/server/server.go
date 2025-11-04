@@ -4,7 +4,9 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"io"
 	"net/http"
+	"strings"
 
 	"github.com/Its-donkey/Sharpen-live/backend/platforms/youtube/internal/alerts"
 )
@@ -50,24 +52,43 @@ func (s *Server) Routes() http.Handler {
 
 func (s *Server) handleAlerts() http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if r.Method == http.MethodGet {
-			s.handleVerification(w, r)
-			return
-		}
-
-		if r.Method != http.MethodPost {
+		if r.Method != http.MethodPost && r.Method != http.MethodGet {
 			w.Header().Set("Allow", http.MethodPost+", "+http.MethodGet)
 			w.WriteHeader(http.StatusMethodNotAllowed)
 			return
 		}
 
-		var alert alerts.StreamAlert
-		if err := json.NewDecoder(r.Body).Decode(&alert); err != nil {
-			s.logger.Printf("invalid payload: %v", err)
-			http.Error(w, "invalid payload", http.StatusBadRequest)
+		if r.Method == http.MethodGet {
+			s.handleVerification(w, r)
+			return
+		}
+
+		body, err := io.ReadAll(io.LimitReader(r.Body, 1<<20))
+		if err != nil {
+			s.logger.Printf("failed reading alert body: %v", err)
+			http.Error(w, "read error", http.StatusBadRequest)
 			return
 		}
 		defer r.Body.Close()
+
+		contentType := strings.TrimSpace(r.Header.Get("Content-Type"))
+		bodyPreview := strings.TrimSpace(string(body))
+		if len(bodyPreview) > 2048 {
+			bodyPreview = bodyPreview[:2048] + "...(truncated)"
+		}
+		s.logger.Printf(
+			"alert received: content_type=%q content_length=%d body=%q",
+			contentType,
+			len(body),
+			bodyPreview,
+		)
+
+		var alert alerts.StreamAlert
+		if err := json.Unmarshal(body, &alert); err != nil {
+			s.logger.Printf("unable to decode payload: %v", err)
+			w.WriteHeader(http.StatusAccepted)
+			return
+		}
 
 		if s.processor == nil {
 			http.Error(w, "alert processor unavailable", http.StatusServiceUnavailable)

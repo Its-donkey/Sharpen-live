@@ -4,6 +4,7 @@
 - Stack admin dashboard submissions and roster panels vertically for full-width review.
 - Move roster card actions above streamer names and match delete styling with submission removal buttons.
 - Load YouTube alert monitor events from PostgreSQL, add tab-styled platform filters, inline log formatting, and pagination controls with refreshed spacing/select styling in the admin console.
+- Log raw PubSub alert payloads from the YouTube alert server before attempting JSON parsing to aid troubleshooting.
 - Deduplicate YouTube PubSub handlers to avoid double registration and duplicate event logging in the admin monitor.
 - Ignore local IDE workspace directories and VS Code workspace files to prevent accidental commits.
 - Persist admin and YouTube alert configuration in PostgreSQL via a dedicated settings store and API bootstrap flow.

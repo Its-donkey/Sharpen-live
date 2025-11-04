@@ -3,9 +3,11 @@ package server
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	"net/url"
 	"os"
 	"path"
+	"path/filepath"
 	"strings"
 
 	"github.com/Its-donkey/Sharpen-live/backend/internal/storage"
@@ -16,12 +18,12 @@ type StreamerDirectory map[string]string
 
 // LoadStreamerDirectory loads streamer records from a JSON file and returns a lookup map.
 func LoadStreamerDirectory(streamersPath string) (StreamerDirectory, error) {
-	trimmed := strings.TrimSpace(streamersPath)
-	if trimmed == "" {
-		return nil, errors.New("server: streamers path is required")
+	resolved, err := resolveStreamersPath(streamersPath)
+	if err != nil {
+		return nil, err
 	}
 
-	data, err := os.ReadFile(trimmed)
+	data, err := os.ReadFile(resolved)
 	if err != nil {
 		return nil, err
 	}
@@ -101,4 +103,48 @@ func (d StreamerDirectory) Contains(channelID string) bool {
 
 func DefaultStreamersPath() string {
 	return path.Join("backend", "data", "streamers.json")
+}
+
+func resolveStreamersPath(streamersPath string) (string, error) {
+	trimmed := strings.TrimSpace(streamersPath)
+	if trimmed == "" {
+		return "", errors.New("server: streamers path is required")
+	}
+
+	candidates := []string{trimmed}
+	if !filepath.IsAbs(trimmed) {
+		if abs, err := filepath.Abs(trimmed); err == nil {
+			candidates = append(candidates, abs)
+		}
+
+		if wd, err := os.Getwd(); err == nil {
+			dir := wd
+			for {
+				candidate := filepath.Join(dir, trimmed)
+				candidates = append(candidates, candidate)
+				parent := filepath.Dir(dir)
+				if parent == dir {
+					break
+				}
+				dir = parent
+			}
+		}
+	}
+
+	seen := make(map[string]struct{})
+	for _, candidate := range candidates {
+		if candidate == "" {
+			continue
+		}
+		if _, ok := seen[candidate]; ok {
+			continue
+		}
+		seen[candidate] = struct{}{}
+
+		if info, err := os.Stat(candidate); err == nil && !info.IsDir() {
+			return candidate, nil
+		}
+	}
+
+	return "", fmt.Errorf("server: streamers file not found: %s", streamersPath)
 }

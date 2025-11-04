@@ -634,7 +634,9 @@ func (s *Server) applySettings(payload settingsUpdateRequest) error {
 		hubVal = strings.TrimSpace(*payload.YouTubeAlertsHubURL)
 	}
 
-	s.mu.RLock()
+	s.mu.Lock()
+	defer s.mu.Unlock()
+
 	current := settings.Settings{
 		AdminToken:                s.adminToken,
 		AdminEmail:                s.adminEmail,
@@ -651,7 +653,6 @@ func (s *Server) applySettings(payload settingsUpdateRequest) error {
 		StreamersFile:             s.streamersFile,
 		SubmissionsFile:           s.submissionsFile,
 	}
-	s.mu.RUnlock()
 
 	next := current
 
@@ -741,7 +742,6 @@ func (s *Server) applySettings(payload settingsUpdateRequest) error {
 	suffixEnv := suffixProvided || current.YouTubeAlertsVerifySuffix != next.YouTubeAlertsVerifySuffix
 	hubEnv := hubProvided || current.YouTubeAlertsHubURL != next.YouTubeAlertsHubURL
 
-	s.mu.Lock()
 	s.adminToken = next.AdminToken
 	s.adminEmail = next.AdminEmail
 	s.adminPassword = next.AdminPassword
@@ -757,7 +757,6 @@ func (s *Server) applySettings(payload settingsUpdateRequest) error {
 	s.youtubeAlerts.verifySuff = next.YouTubeAlertsVerifySuffix
 	s.youtubeAlerts.enabled = next.YouTubeAlertsCallback != ""
 	s.youtubeHubURL = next.YouTubeAlertsHubURL
-	s.mu.Unlock()
 
 	if adminTokenEnv {
 		_ = os.Setenv("ADMIN_TOKEN", next.AdminToken)

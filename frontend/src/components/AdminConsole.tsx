@@ -358,7 +358,7 @@ export function AdminConsole({
       setSettingsSaving(true);
       const response = await updateAdminSettings(token, updates);
       setStatus({ message: response.message || "Settings updated.", tone: "success" });
-      await loadSettings();
+      await loadSettings(token);
     } catch (error) {
       setStatus({
         message: error instanceof Error ? error.message : "Unable to update settings.",

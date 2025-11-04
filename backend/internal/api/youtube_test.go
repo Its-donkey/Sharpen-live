@@ -91,3 +91,37 @@ func TestEnsureYouTubeSubscription_SkipsWhenDisabled(t *testing.T) {
 
 	srv.ensureYouTubeSubscription(context.Background(), "UC123")
 }
+
+func TestCancelYouTubeSubscription_SendsRequest(t *testing.T) {
+	var requestBody string
+
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		data, err := io.ReadAll(r.Body)
+		if err != nil {
+			t.Fatalf("read body: %v", err)
+		}
+		requestBody = string(data)
+		w.WriteHeader(http.StatusAccepted)
+	}))
+	defer ts.Close()
+
+	srv := New(nil, "", "", "", "", WithYouTubeAlerts(YouTubeAlertsConfig{
+		HubURL:      ts.URL,
+		CallbackURL: "https://sharpen.live/alerts",
+	}))
+	srv.httpClient = ts.Client()
+
+	srv.cancelYouTubeSubscription(context.Background(), "UC456")
+
+	values, err := url.ParseQuery(requestBody)
+	if err != nil {
+		t.Fatalf("parse body: %v", err)
+	}
+
+	if got := values.Get("hub.mode"); got != "unsubscribe" {
+		t.Fatalf("unexpected hub.mode: %s", got)
+	}
+	if got := values.Get("hub.topic"); got != "https://www.youtube.com/xml/feeds/videos.xml?channel_id=UC456" {
+		t.Fatalf("unexpected hub.topic: %s", got)
+	}
+}

@@ -69,6 +69,15 @@ func New(store *storage.JSONStore, adminToken, adminEmail, adminPassword, youtub
 	return s
 }
 
+// WithHTTPClient overrides the HTTP client used for API operations.
+func WithHTTPClient(client *http.Client) Option {
+	return func(s *Server) {
+		if client != nil {
+			s.httpClient = client
+		}
+	}
+}
+
 // Handler returns the HTTP handler that serves the Sharpen Live API and static assets.
 func (s *Server) Handler(static http.Handler) http.Handler {
 	mux := http.NewServeMux()
@@ -248,7 +257,7 @@ func (s *Server) handleAdminStreamerByID(w http.ResponseWriter, r *http.Request)
 		result.Platforms = entry.Platforms
 		respondJSON(w, http.StatusOK, result)
 	case http.MethodDelete:
-		err := s.store.DeleteStreamer(id)
+		streamer, err := s.streamerByID(id)
 		if errors.Is(err, storage.ErrNotFound) {
 			respondJSON(w, http.StatusNotFound, errorPayload{Message: "Streamer not found."})
 			return
@@ -257,6 +266,17 @@ func (s *Server) handleAdminStreamerByID(w http.ResponseWriter, r *http.Request)
 			respondError(w, http.StatusInternalServerError, err)
 			return
 		}
+
+		err = s.store.DeleteStreamer(id)
+		if errors.Is(err, storage.ErrNotFound) {
+			respondJSON(w, http.StatusNotFound, errorPayload{Message: "Streamer not found."})
+			return
+		}
+		if err != nil {
+			respondError(w, http.StatusInternalServerError, err)
+			return
+		}
+		s.unsubscribeYouTubePlatforms(r.Context(), streamer.Platforms)
 		w.WriteHeader(http.StatusNoContent)
 	default:
 		methodNotAllowed(w, http.MethodPut, http.MethodDelete)
@@ -635,4 +655,20 @@ func constantTimeEquals(a, b string) bool {
 		result |= a[i] ^ b[i]
 	}
 	return result == 0
+}
+
+func (s *Server) streamerByID(id string) (storage.Streamer, error) {
+	if strings.TrimSpace(id) == "" {
+		return storage.Streamer{}, storage.ErrNotFound
+	}
+	streamers, err := s.store.ListStreamers()
+	if err != nil {
+		return storage.Streamer{}, err
+	}
+	for _, streamer := range streamers {
+		if streamer.ID == id {
+			return streamer, nil
+		}
+	}
+	return storage.Streamer{}, storage.ErrNotFound
 }

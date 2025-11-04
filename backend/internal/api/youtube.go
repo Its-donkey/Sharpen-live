@@ -32,6 +32,7 @@ func (s *Server) enrichPlatforms(ctx context.Context, platforms []storage.Platfo
 		parts := parseYouTubeChannelURL(platforms[i].ChannelURL)
 		if parts.channelID != "" {
 			platforms[i].ID = parts.channelID
+			s.ensureYouTubeSubscription(ctx, platforms[i].ID)
 			continue
 		}
 
@@ -44,6 +45,7 @@ func (s *Server) enrichPlatforms(ctx context.Context, platforms []storage.Platfo
 			continue
 		}
 		platforms[i].ID = id
+		s.ensureYouTubeSubscription(ctx, id)
 	}
 
 	return platforms
@@ -201,4 +203,59 @@ func decodeSearchResponse(data []byte) (string, error) {
 		return "", nil
 	}
 	return strings.TrimSpace(payload.Items[0].ID.ChannelID), nil
+}
+
+func (s *Server) ensureYouTubeSubscription(ctx context.Context, channelID string) {
+	if !s.youtubeAlerts.enabled || channelID == "" || s.httpClient == nil {
+		return
+	}
+
+	if ctx == nil {
+		ctx = context.Background()
+	}
+
+	params := url.Values{
+		"hub.mode":     []string{"subscribe"},
+		"hub.topic":    []string{fmt.Sprintf("https://www.youtube.com/xml/feeds/videos.xml?channel_id=%s", channelID)},
+		"hub.callback": []string{s.youtubeAlerts.callbackURL},
+		"hub.verify":   []string{"async"},
+	}
+
+	if token := s.youtubeVerifyToken(channelID); token != "" {
+		params.Set("hub.verify_token", token)
+	}
+
+	if s.youtubeAlerts.secret != "" {
+		params.Set("hub.secret", s.youtubeAlerts.secret)
+	}
+
+	req, err := http.NewRequestWithContext(ctx, http.MethodPost, s.youtubeHubURL, strings.NewReader(params.Encode()))
+	if err != nil {
+		return
+	}
+	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+
+	resp, err := s.httpClient.Do(req)
+	if err != nil {
+		return
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode >= http.StatusOK && resp.StatusCode < http.StatusMultipleChoices {
+		_, _ = io.Copy(io.Discard, resp.Body)
+		return
+	}
+
+	body, _ := io.ReadAll(io.LimitReader(resp.Body, 512))
+	fmt.Printf("youtube subscription failed: %s: %s\n", resp.Status, strings.TrimSpace(string(body)))
+}
+
+func (s *Server) youtubeVerifyToken(channelID string) string {
+	if channelID == "" {
+		return ""
+	}
+	if s.youtubeAlerts.verifyPref == "" && s.youtubeAlerts.verifySuff == "" {
+		return ""
+	}
+	return s.youtubeAlerts.verifyPref + channelID + s.youtubeAlerts.verifySuff
 }

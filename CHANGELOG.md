@@ -1,6 +1,7 @@
 # Changelog
 
 ## [Unreleased]
+- Automatically subscribe resolved YouTube channels to PubSubHubbub using the configured callback and secret.
 - Restore `/docs` Jekyll site scaffold so GitHub Pages builds succeed and highlight current repo layout.
 - Implement Sharpen Live API service with JSON-backed storage, admin endpoints, and accompanying tests plus local Go module packaging.
 - Rebuild the Sharpen Live frontend as a React application with submission workflow, admin dashboard, and Vite toolchain.

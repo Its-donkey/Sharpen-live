@@ -34,7 +34,7 @@ func newTestEnv(t *testing.T) testEnv {
 	if err != nil {
 		t.Fatalf("create store: %v", err)
 	}
-	srv := server.New(store, adminToken, adminEmail, adminPassword, "")
+	srv := api.New(store, adminToken, adminEmail, adminPassword, "")
 	handler := srv.Handler(http.NotFoundHandler())
 	return testEnv{store: store, handler: handler, server: srv}
 }

@@ -540,6 +540,11 @@ func (s *Server) applySettings(payload settingsUpdateRequest) error {
 			verifySuffix = ""
 			suffixUpdated = true
 		}
+		if !hubUpdated && hub != defaultYouTubeHubURL {
+			hub = defaultYouTubeHubURL
+			hubEnvValue = ""
+			hubUpdated = true
+		}
 	}
 
 	s.youtubeAlerts.callbackURL = callback

@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
+	"os"
 	"path/filepath"
 	"testing"
 
@@ -311,5 +312,11 @@ func TestAdminSettingsHandlers(t *testing.T) {
 	}
 	if disabledPayload["youtubeAlertsVerifySuffix"] != "" {
 		t.Fatalf("expected suffix cleared after disable, got %q", disabledPayload["youtubeAlertsVerifySuffix"])
+	}
+	if disabledPayload["youtubeAlertsHubUrl"] != defaultHubURL {
+		t.Fatalf("expected hub url reset to default %q, got %q", defaultHubURL, disabledPayload["youtubeAlertsHubUrl"])
+	}
+	if value := os.Getenv("YOUTUBE_ALERTS_HUB_URL"); value != "" {
+		t.Fatalf("expected hub env cleared, got %q", value)
 	}
 }

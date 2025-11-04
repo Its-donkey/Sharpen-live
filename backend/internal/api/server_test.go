@@ -536,6 +536,17 @@ func TestAdminSettingsPersistFailure(t *testing.T) {
 	if resp.Code != http.StatusInternalServerError {
 		t.Fatalf("expected 500 when persistence fails, got %d", resp.Code)
 	}
+
+	getResp := performRequest(handler, http.MethodGet, "/api/admin/settings", nil, headers)
+	if getResp.Code != http.StatusOK {
+		t.Fatalf("expected original token to remain valid, got %d", getResp.Code)
+	}
+
+	newHeaders := map[string]string{"Authorization": "Bearer new-token"}
+	unauth := performRequest(handler, http.MethodGet, "/api/admin/settings", nil, newHeaders)
+	if unauth.Code != http.StatusUnauthorized {
+		t.Fatalf("expected new token to be unauthorized after failed update, got %d", unauth.Code)
+	}
 }
 
 type failingSettingsStore struct {

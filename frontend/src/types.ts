@@ -82,13 +82,8 @@ export const STATUS_DEFAULT_LABELS: Record<StreamerStatus, string> = {
 };
 
 export interface YouTubeMonitorEvent {
+  id: number;
+  platform: string;
   timestamp: string;
-  mode: string;
-  channelId: string;
-  topic: string;
-  callback: string;
-  status: string;
-  error?: string;
-  verifyToken?: string;
-  hasSecret: boolean;
+  message: string;
 }

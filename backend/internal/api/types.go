@@ -79,5 +79,5 @@ type settingsUpdateRequest struct {
 }
 
 type youtubeMonitorResponse struct {
-	Events []youtubeEvent `json:"events"`
+	Events []youtubeMonitorEntry `json:"events"`
 }

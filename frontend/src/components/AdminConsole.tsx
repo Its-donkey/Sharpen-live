@@ -127,7 +127,13 @@ export function AdminConsole({
   const [settingsSaving, setSettingsSaving] = useState(false);
   const [monitorEvents, setMonitorEvents] = useState<YouTubeMonitorEvent[]>([]);
   const [monitorLoading, setMonitorLoading] = useState(false);
+  const [platformFilters, setPlatformFilters] = useState<Record<string, boolean>>({});
   const isAuthenticated = Boolean(token);
+
+  const normalizePlatformKey = (value: string | null | undefined) => {
+    const trimmed = (value ?? "").trim();
+    return trimmed ? trimmed.toLowerCase() : "unknown";
+  };
 
   const loadAdminData = useCallback(
     async (currentToken: string) => {
@@ -180,7 +186,13 @@ export function AdminConsole({
       setMonitorLoading(true);
       try {
         const events = await getAdminYouTubeMonitor(currentToken);
-        setMonitorEvents(events);
+        const ordered = events
+          .slice()
+          .sort(
+            (a, b) =>
+              new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
+          );
+        setMonitorEvents(ordered);
       } catch (error) {
         setStatus({
           message: error instanceof Error ? error.message : "Unable to load YouTube monitor.",
@@ -200,6 +212,7 @@ export function AdminConsole({
       setSettings(null);
       setMonitorEvents([]);
       setMonitorLoading(false);
+      setPlatformFilters({});
       return;
     }
     void loadAdminData(token);
@@ -221,6 +234,44 @@ export function AdminConsole({
     void loadMonitor(token);
   }, [isAuthenticated, activeTab, token, loadMonitor]);
 
+  useEffect(() => {
+    if (!monitorEvents.length) {
+      setPlatformFilters((prev) => (Object.keys(prev).length ? {} : prev));
+      return;
+    }
+    setPlatformFilters((prev) => {
+      const next: Record<string, boolean> = {};
+      let changed = false;
+      for (const event of monitorEvents) {
+        const key = normalizePlatformKey(event.platform);
+        if (Object.prototype.hasOwnProperty.call(next, key)) {
+          continue;
+        }
+        if (Object.prototype.hasOwnProperty.call(prev, key)) {
+          next[key] = prev[key];
+        } else {
+          next[key] = true;
+          changed = true;
+        }
+      }
+
+      const prevKeys = Object.keys(prev);
+      const nextKeys = Object.keys(next);
+      if (prevKeys.length != nextKeys.length) {
+        changed = true;
+      }
+      if (!changed) {
+        for (const key of nextKeys) {
+          if (prev[key] !== next[key]) {
+            changed = true;
+            break;
+          }
+        }
+      }
+      return changed ? next : prev;
+    });
+  }, [monitorEvents]);
+
   const sortedSubmissions = useMemo(
     () =>
       submissions
@@ -231,6 +282,25 @@ export function AdminConsole({
         ),
     [submissions]
   );
+
+  const platformOptions = useMemo(() => {
+    return Object.keys(platformFilters).sort((a, b) => a.localeCompare(b));
+  }, [platformFilters]);
+
+  const filteredMonitorEvents = useMemo(() => {
+    const filterKeys = Object.keys(platformFilters);
+    if (!filterKeys.length) {
+      return monitorEvents;
+    }
+    const active = filterKeys.filter((key) => platformFilters[key]);
+    if (!active.length) {
+      return [];
+    }
+    return monitorEvents.filter((event) => {
+      const key = normalizePlatformKey(event.platform);
+      return active.includes(key);
+    });
+  }, [monitorEvents, platformFilters]);
 
   const handleLoginSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -268,8 +338,9 @@ export function AdminConsole({
     setPassword(defaultPassword);
     setSettings(null);
     setSettingsDraft(null);
-     setMonitorEvents([]);
-     setMonitorLoading(false);
+    setMonitorEvents([]);
+    setMonitorLoading(false);
+    setPlatformFilters({});
     setActiveTab("streamers");
     setStatus({ message: "Logged out of admin console.", tone: "info" });
   };
@@ -289,6 +360,32 @@ export function AdminConsole({
       return;
     }
     await loadMonitor(token);
+  };
+
+  const togglePlatformFilter = (platform: string) => {
+    setPlatformFilters((prev) => {
+      if (!Object.prototype.hasOwnProperty.call(prev, platform)) {
+        return prev;
+      }
+      return { ...prev, [platform]: !prev[platform] };
+    });
+  };
+
+  const platformLabel = (value: string) => {
+    const key = value.trim().toLowerCase();
+    if (!key || key === "unknown") {
+      return "Unknown";
+    }
+    switch (key) {
+      case "youtube":
+        return "YouTube";
+      case "twitch":
+        return "Twitch";
+      case "kick":
+        return "Kick";
+      default:
+        return key.charAt(0).toUpperCase() + key.slice(1);
+    }
   };
 
   const moderate = async (action: "approve" | "reject", id: string) => {
@@ -579,14 +676,37 @@ export function AdminConsole({
             {monitorLoading && !monitorEvents.length ? (
               <div className="admin-empty">Loading YouTube subscription activity…</div>
             ) : monitorEvents.length ? (
-              <div className="admin-monitor-events">
-                {monitorEvents.map((event) => (
-                  <AdminMonitorEventCard
-                    key={`${event.timestamp}-${event.mode}-${event.channelId}`}
-                    event={event}
-                  />
-                ))}
-              </div>
+              <>
+                {platformOptions.length ? (
+                  <fieldset className="admin-monitor-filters">
+                    <legend>Platforms</legend>
+                    <div className="admin-monitor-filters-options">
+                      {platformOptions.map((platform) => (
+                        <label key={platform} className="admin-monitor-filter-option">
+                          <input
+                            type="checkbox"
+                            checked={Boolean(platformFilters[platform])}
+                            onChange={() => togglePlatformFilter(platform)}
+                          />
+                          <span>{platformLabel(platform)}</span>
+                        </label>
+                      ))}
+                    </div>
+                  </fieldset>
+                ) : null}
+                {filteredMonitorEvents.length ? (
+                  <div className="admin-monitor-events">
+                    {filteredMonitorEvents.map((event) => (
+                      <AdminMonitorEventCard
+                        key={`${event.id}-${event.timestamp}`}
+                        event={event}
+                      />
+                    ))}
+                  </div>
+                ) : (
+                  <div className="admin-empty">No monitor entries for selected platforms.</div>
+                )}
+              </>
             ) : (
               <div className="admin-empty">No YouTube PubSub events recorded yet.</div>
             )}
@@ -1134,41 +1254,33 @@ function AdminMonitorEventCard({ event }: AdminMonitorEventCardProps) {
     eventDate && !Number.isNaN(eventDate.getTime())
       ? eventDate.toLocaleString()
       : "Unknown time";
-  const modeLabel =
-    event.mode && event.mode.length > 0
-      ? event.mode.charAt(0).toUpperCase() + event.mode.slice(1)
-      : "Event";
-  const statusLine = event.error ? `${event.status} — ${event.error}` : event.status;
+  const platformKey = (event.platform ?? "").trim().toLowerCase();
+  let platformTitle = "Log";
+  if (platformKey) {
+    switch (platformKey) {
+      case "youtube":
+        platformTitle = "YouTube";
+        break;
+      case "twitch":
+        platformTitle = "Twitch";
+        break;
+      case "kick":
+        platformTitle = "Kick";
+        break;
+      default:
+        platformTitle = platformKey.charAt(0).toUpperCase() + platformKey.slice(1);
+    }
+  }
 
   return (
-    <article className="admin-card" data-mode={event.mode}>
+    <article className="admin-card" data-platform={platformKey || "unknown"}>
       <div className="admin-card-header">
-        <h4>{modeLabel}</h4>
+        <h4>{platformTitle}</h4>
         <span className="admin-card-meta">{formattedTimestamp}</span>
       </div>
       <section>
-        <strong>Channel</strong>
-        <p>{event.channelId || "—"}</p>
-      </section>
-      <section>
-        <strong>Status</strong>
-        <p>{statusLine || "—"}</p>
-      </section>
-      <section>
-        <strong>Callback</strong>
-        <p>{event.callback || "—"}</p>
-      </section>
-      <section>
-        <strong>Topic</strong>
-        <p>{event.topic || "—"}</p>
-      </section>
-      <section>
-        <strong>Verify token</strong>
-        <p>{event.verifyToken || "—"}</p>
-      </section>
-      <section>
-        <strong>Secret included</strong>
-        <p>{event.hasSecret ? "Yes" : "No"}</p>
+        <strong>Message</strong>
+        <p className="admin-monitor-message">{event.message || "—"}</p>
       </section>
     </article>
   );

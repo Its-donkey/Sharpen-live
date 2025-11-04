@@ -13,6 +13,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/Its-donkey/Sharpen-live/backend/internal/monitor"
 	"github.com/Its-donkey/Sharpen-live/backend/internal/settings"
 	"github.com/Its-donkey/Sharpen-live/backend/internal/storage"
 )
@@ -40,6 +41,7 @@ type Server struct {
 	staticDir       string
 	streamersFile   string
 	submissionsFile string
+	monitorStore    monitorLogReader
 	mu              sync.RWMutex
 }
 
@@ -69,6 +71,18 @@ type youtubeEvent struct {
 
 const defaultYouTubeHubURL = "https://pubsubhubbub.appspot.com/subscribe"
 const youtubeEventLogLimit = 100
+const monitorLogFetchLimit = 200
+
+type monitorLogReader interface {
+	RecentEntries(ctx context.Context, limit int) ([]monitor.Entry, error)
+}
+
+type youtubeMonitorEntry struct {
+	ID        int64     `json:"id"`
+	Platform  string    `json:"platform"`
+	Timestamp time.Time `json:"timestamp"`
+	Message   string    `json:"message"`
+}
 
 type validationError string
 
@@ -170,6 +184,13 @@ func WithYouTubeAlerts(cfg YouTubeAlertsConfig) Option {
 		s.youtubeAlerts.secret = strings.TrimSpace(cfg.Secret)
 		s.youtubeAlerts.verifyPref = strings.TrimSpace(cfg.VerifyTokenPrefix)
 		s.youtubeAlerts.verifySuff = strings.TrimSpace(cfg.VerifyTokenSuffix)
+	}
+}
+
+// WithMonitorStore wires a monitor log reader into the server for admin tooling.
+func WithMonitorStore(store monitorLogReader) Option {
+	return func(s *Server) {
+		s.monitorStore = store
 	}
 }
 
@@ -468,12 +489,118 @@ func (s *Server) handleAdminYouTubeMonitor(w http.ResponseWriter, r *http.Reques
 		methodNotAllowed(w, http.MethodGet)
 		return
 	}
+	if s.monitorStore != nil {
+		entries, err := s.monitorStore.RecentEntries(r.Context(), monitorLogFetchLimit)
+		if err != nil {
+			respondError(w, http.StatusInternalServerError, err)
+			return
+		}
+		respondJSON(w, http.StatusOK, youtubeMonitorResponse{
+			Events: monitorEntriesToPayload(entries),
+		})
+		return
+	}
+
 	events := s.youtubeEventsSnapshot()
-	respondJSON(w, http.StatusOK, struct {
-		Events []youtubeEvent `json:"events"`
-	}{
-		Events: events,
+	respondJSON(w, http.StatusOK, youtubeMonitorResponse{
+		Events: legacyEventsToPayload(events),
 	})
+}
+
+func monitorEntriesToPayload(entries []monitor.Entry) []youtubeMonitorEntry {
+	if len(entries) == 0 {
+		return nil
+	}
+	result := make([]youtubeMonitorEntry, 0, len(entries))
+	for _, entry := range entries {
+		result = append(result, youtubeMonitorEntry{
+			ID:        entry.ID,
+			Platform:  entry.Platform,
+			Timestamp: entry.Timestamp,
+			Message:   entry.Message,
+		})
+	}
+	return result
+}
+
+func legacyEventsToPayload(events []youtubeEvent) []youtubeMonitorEntry {
+	if len(events) == 0 {
+		return nil
+	}
+	result := make([]youtubeMonitorEntry, 0, len(events))
+	for index, event := range events {
+		timestamp := event.Timestamp
+		if timestamp.IsZero() {
+			timestamp = time.Now()
+		}
+		result = append(result, youtubeMonitorEntry{
+			ID:        int64(index + 1),
+			Platform:  "youtube",
+			Timestamp: timestamp,
+			Message:   legacyMonitorMessage(event),
+		})
+	}
+	return result
+}
+
+func legacyMonitorMessage(event youtubeEvent) string {
+	var builder strings.Builder
+	if event.Mode != "" {
+		builder.WriteString("mode=")
+		builder.WriteString(event.Mode)
+	}
+	if event.ChannelID != "" {
+		if builder.Len() > 0 {
+			builder.WriteString(" ")
+		}
+		builder.WriteString("channel=")
+		builder.WriteString(event.ChannelID)
+	}
+	if event.Status != "" {
+		if builder.Len() > 0 {
+			builder.WriteString(" ")
+		}
+		builder.WriteString("status=")
+		builder.WriteString(event.Status)
+	}
+	if event.Error != "" {
+		if builder.Len() > 0 {
+			builder.WriteString(" ")
+		}
+		builder.WriteString("error=")
+		builder.WriteString(event.Error)
+	}
+	if event.Callback != "" {
+		if builder.Len() > 0 {
+			builder.WriteString(" ")
+		}
+		builder.WriteString("callback=")
+		builder.WriteString(event.Callback)
+	}
+	if event.Topic != "" {
+		if builder.Len() > 0 {
+			builder.WriteString(" ")
+		}
+		builder.WriteString("topic=")
+		builder.WriteString(event.Topic)
+	}
+	if event.VerifyToken != "" {
+		if builder.Len() > 0 {
+			builder.WriteString(" ")
+		}
+		builder.WriteString("verifyToken=")
+		builder.WriteString(event.VerifyToken)
+	}
+	if builder.Len() > 0 {
+		builder.WriteString(" ")
+	}
+	builder.WriteString("hasSecret=")
+	if event.HasSecret {
+		builder.WriteString("true")
+	} else {
+		builder.WriteString("false")
+	}
+	return builder.String()
 }
 
 func (s *Server) currentSettingsPayload() settingsResponse {

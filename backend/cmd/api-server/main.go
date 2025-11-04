@@ -16,6 +16,7 @@ import (
 
 	"github.com/Its-donkey/Sharpen-live/backend/internal/api"
 	"github.com/Its-donkey/Sharpen-live/backend/internal/config"
+	"github.com/Its-donkey/Sharpen-live/backend/internal/monitor"
 	"github.com/Its-donkey/Sharpen-live/backend/internal/settings"
 	"github.com/Its-donkey/Sharpen-live/backend/internal/storage"
 	"github.com/jackc/pgx/v5/pgxpool"
@@ -115,7 +116,9 @@ func main() {
 		os.Exit(1)
 	}
 
-	srv := api.New(store, settingsStore, initialSettings)
+	monitorStore := monitor.NewStore(pool)
+
+	srv := api.New(store, settingsStore, initialSettings, api.WithMonitorStore(monitorStore))
 	staticHandler := spaHandler(staticDir, listenAddr)
 
 	// Ensure downstream code sees the effective listen address.

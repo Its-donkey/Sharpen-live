@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"net"
 	"net/http"
 	"os"
 	"path"
@@ -657,7 +658,7 @@ func (s *Server) applySettings(payload settingsUpdateRequest) error {
 	next := current
 
 	if listenAddrProvided {
-		next.ListenAddr = listenAddrVal
+		next.ListenAddr = normalizeListenAddr(listenAddrVal, current.ListenAddr)
 	}
 	if adminTokenProvided {
 		next.AdminToken = adminTokenVal
@@ -920,6 +921,28 @@ func normalizeSettings(value settings.Settings) settings.Settings {
 	value.StreamersFile = strings.TrimSpace(value.StreamersFile)
 	value.SubmissionsFile = strings.TrimSpace(value.SubmissionsFile)
 	return value
+}
+
+func normalizeListenAddr(input, existing string) string {
+	trimmed := strings.TrimSpace(input)
+	if trimmed == "" {
+		return trimmed
+	}
+	if strings.Contains(trimmed, ":") {
+		return trimmed
+	}
+
+	host := ""
+	if existing != "" && strings.Contains(existing, ":") {
+		if h, _, err := net.SplitHostPort(existing); err == nil {
+			host = h
+		}
+	}
+
+	if host == "" {
+		return ":" + trimmed
+	}
+	return host + ":" + trimmed
 }
 
 func (s *Server) persistSettings(value settings.Settings) error {

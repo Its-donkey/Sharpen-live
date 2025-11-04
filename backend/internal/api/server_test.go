@@ -351,7 +351,7 @@ func TestAdminSettingsHandlers(t *testing.T) {
 		AdminToken:      adminToken,
 		AdminEmail:      adminEmail,
 		AdminPassword:   adminPassword,
-		ListenAddr:      ":9000",
+		ListenAddr:      "127.0.0.1:9000",
 		DataDir:         "/tmp/data",
 		StaticDir:       "/tmp/static",
 		StreamersFile:   "/tmp/streamers.json",
@@ -440,6 +440,28 @@ func TestAdminSettingsHandlers(t *testing.T) {
 	}
 	if updated["youtubeAlertsHubUrl"] != customHub {
 		t.Fatalf("expected hub url %q, got %q", customHub, updated["youtubeAlertsHubUrl"])
+	}
+
+	portOnly := performRequest(env.handler, http.MethodPut, "/api/admin/settings", map[string]string{
+		"listenAddr": "4242",
+	}, testHeaders)
+	if portOnly.Code != http.StatusOK {
+		t.Fatalf("expected 200 updating port, got %d", portOnly.Code)
+	}
+
+	reloaded := performRequest(env.handler, http.MethodGet, "/api/admin/settings", nil, testHeaders)
+	if reloaded.Code != http.StatusOK {
+		t.Fatalf("expected 200 fetching settings, got %d", reloaded.Code)
+	}
+	var reloadedPayload map[string]string
+	if err := json.Unmarshal(reloaded.Body.Bytes(), &reloadedPayload); err != nil {
+		t.Fatalf("unmarshal reloaded settings: %v", err)
+	}
+	if reloadedPayload["listenAddr"] != "127.0.0.1:4242" {
+		t.Fatalf("expected listen addr 127.0.0.1:4242, got %s", reloadedPayload["listenAddr"])
+	}
+	if value := os.Getenv("LISTEN_ADDR"); value != "127.0.0.1:4242" {
+		t.Fatalf("expected LISTEN_ADDR env to update, got %q", value)
 	}
 
 	disableResp := performRequest(env.handler, http.MethodPut, "/api/admin/settings", map[string]string{

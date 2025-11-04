@@ -14,7 +14,7 @@ const (
 	defaultShutdownGrace     = 10 * time.Second
 	envYouTubeAPIKey         = "YOUTUBE_API_KEY"
 	envListenAddr            = "LISTEN_ADDR"
-	envPort                  = "PORT"
+	envPort                  = "YTPORT"
 	envPollInterval          = "POLL_INTERVAL"
 	envShutdownGraceDuration = "SHUTDOWN_GRACE_PERIOD"
 )

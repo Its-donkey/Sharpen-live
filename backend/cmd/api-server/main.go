@@ -116,7 +116,7 @@ func main() {
 	}
 
 	srv := api.New(store, settingsStore, initialSettings)
-	staticHandler := spaHandler(staticDir)
+	staticHandler := spaHandler(staticDir, listenAddr)
 
 	// Ensure downstream code sees the effective listen address.
 	_ = os.Setenv("LISTEN_ADDR", listenAddr)
@@ -202,7 +202,7 @@ func mergeSettingsWithConfig(current settings.Settings, cfg config.Config) setti
 	return current
 }
 
-func spaHandler(staticDir string) http.Handler {
+func spaHandler(staticDir string, listenAddr string) http.Handler {
 	fileServer := http.FileServer(http.Dir(staticDir))
 
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -226,7 +226,22 @@ func spaHandler(staticDir string) http.Handler {
 			return
 		}
 
+		data = injectFrontendConfig(data, listenAddr)
+
 		w.Header().Set("Content-Type", "text/html; charset=utf-8")
 		_, _ = w.Write(data)
 	})
+}
+
+func injectFrontendConfig(data []byte, listenAddr string) []byte {
+	script := fmt.Sprintf(
+		"<script>window.__SHARPEN_CONFIG__=Object.assign({},window.__SHARPEN_CONFIG__,{listenAddr:%q});</script>",
+		strings.TrimSpace(listenAddr),
+	)
+	markup := string(data)
+	const headTag = "</head>"
+	if idx := strings.Index(strings.ToLower(markup), strings.ToLower(headTag)); idx != -1 {
+		return []byte(markup[:idx] + script + markup[idx:])
+	}
+	return append([]byte(script), data...)
 }

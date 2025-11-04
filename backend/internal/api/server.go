@@ -67,18 +67,6 @@ type youtubeEvent struct {
 	HasSecret   bool      `json:"hasSecret"`
 }
 
-type youtubeEvent struct {
-	Timestamp   time.Time `json:"timestamp"`
-	Mode        string    `json:"mode"`
-	ChannelID   string    `json:"channelId"`
-	Topic       string    `json:"topic"`
-	Callback    string    `json:"callback"`
-	Status      string    `json:"status"`
-	Error       string    `json:"error,omitempty"`
-	VerifyToken string    `json:"verifyToken,omitempty"`
-	HasSecret   bool      `json:"hasSecret"`
-}
-
 const defaultYouTubeHubURL = "https://pubsubhubbub.appspot.com/subscribe"
 const youtubeEventLogLimit = 100
 
@@ -138,7 +126,6 @@ func (s *Server) Handler(static http.Handler) http.Handler {
 	mux.Handle("/api/submit-streamer", http.HandlerFunc(s.handleSubmitStreamer))
 	mux.Handle("/api/admin/submissions", http.HandlerFunc(s.handleAdminSubmissions))
 	mux.Handle("/api/admin/settings", http.HandlerFunc(s.handleAdminSettings))
-	mux.Handle("/api/admin/monitor/youtube", http.HandlerFunc(s.handleAdminYouTubeMonitor))
 	mux.Handle("/api/admin/monitor/youtube", http.HandlerFunc(s.handleAdminYouTubeMonitor))
 
 	// Mount the static handler as a catch-all for everything else.
@@ -317,17 +304,6 @@ func (s *Server) handleAdminStreamerByID(w http.ResponseWriter, r *http.Request)
 		result.Platforms = entry.Platforms
 		respondJSON(w, http.StatusOK, result)
 	case http.MethodDelete:
-		streamer, err := s.streamerByID(id)
-		if errors.Is(err, storage.ErrNotFound) {
-			respondJSON(w, http.StatusNotFound, errorPayload{Message: "Streamer not found."})
-			return
-		}
-		if err != nil {
-			respondError(w, http.StatusInternalServerError, err)
-			return
-		}
-
-		err = s.store.DeleteStreamer(id)
 		streamer, err := s.streamerByID(id)
 		if errors.Is(err, storage.ErrNotFound) {
 			respondJSON(w, http.StatusNotFound, errorPayload{Message: "Streamer not found."})

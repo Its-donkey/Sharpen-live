@@ -18,13 +18,12 @@ import {
   updateAdminStreamer
 } from "../api";
 import type {
-	AdminSettings,
-	AdminSettingsUpdate,
-	AdminYouTubeEvent,
-	Streamer,
-	StreamerStatus,
-	Submission,
-	SubmissionPayload,
+  AdminSettings,
+  AdminSettingsUpdate,
+  Streamer,
+  StreamerStatus,
+  Submission,
+  SubmissionPayload,
   YouTubeMonitorEvent
 } from "../types";
 import { STATUS_DEFAULT_LABELS } from "../types";
@@ -180,46 +179,6 @@ export function AdminConsole({
     async (currentToken: string) => {
       setMonitorLoading(true);
       try {
-        const result = await getAdminSettings(currentToken);
-        setSettings(result);
-        setSettingsDraft(result);
-        if (result.adminToken && result.adminToken !== currentToken) {
-          setToken(result.adminToken);
-        }
-      } catch (error) {
-        setStatus({
-          message: error instanceof Error ? error.message : "Unable to load YouTube monitor.",
-          tone: "error"
-        });
-      } finally {
-        setSettingsLoading(false);
-      }
-    },
-    [setToken]
-  );
-
-  const loadMonitor = useCallback(
-    async (currentToken: string) => {
-      setMonitorLoading(true);
-      try {
-        const events = await getAdminYouTubeMonitor(currentToken);
-        setMonitorEvents(events);
-      } catch (error) {
-        setStatus({
-          message: error instanceof Error ? error.message : "Unable to load YouTube monitor.",
-          tone: "error"
-        });
-      } finally {
-        setMonitorLoading(false);
-      }
-    },
-    [setToken]
-  );
-
-  const loadMonitor = useCallback(
-    async (currentToken: string) => {
-      setMonitorLoading(true);
-      try {
         const events = await getAdminYouTubeMonitor(currentToken);
         setMonitorEvents(events);
       } catch (error) {
@@ -241,9 +200,6 @@ export function AdminConsole({
       setSettings(null);
       setMonitorEvents([]);
       setMonitorLoading(false);
-      setSettingsDraft(null);
-      setMonitorEvents([]);
-      setMonitorLoading(false);
       return;
     }
     void loadAdminData(token);
@@ -257,15 +213,6 @@ export function AdminConsole({
       void loadSettings(token);
     }
   }, [isAuthenticated, activeTab, settings, settingsLoading, loadSettings, token]);
-
-  useEffect(() => {
-    if (!isAuthenticated || activeTab !== "monitor" || !token) {
-      return;
-    }
-    if (!monitorEvents.length && !monitorLoading) {
-      void loadMonitorData(token);
-    }
-  }, [isAuthenticated, activeTab, monitorEvents.length, monitorLoading, loadMonitorData, token]);
 
   useEffect(() => {
     if (!isAuthenticated || activeTab !== "monitor" || !token) {
@@ -542,20 +489,6 @@ export function AdminConsole({
           </button>
           <button
             type="button"
-            className={activeTab === "monitor" ? "admin-tab active" : "admin-tab"}
-            onClick={() => setActiveTab("monitor")}
-          >
-            Monitor
-          </button>
-          <button
-            type="button"
-            className={activeTab === "monitor" ? "admin-tab active" : "admin-tab"}
-            onClick={() => setActiveTab("monitor")}
-          >
-            Monitor
-          </button>
-          <button
-            type="button"
             className={activeTab === "settings" ? "admin-tab active" : "admin-tab"}
             onClick={() => setActiveTab("settings")}
           >
@@ -610,22 +543,22 @@ export function AdminConsole({
               />
             ) : null}
 
-              {streamers.length ? (
-                <div className="admin-streamers">
-                  {streamers.map((streamer) => (
-                    <AdminStreamerCard
-                      key={streamer.id}
-                      streamer={streamer}
-                      onUpdate={updateStreamer}
-                      onDelete={removeStreamer}
-                    />
-                  ))}
-                </div>
-              ) : (
-                <div className="admin-empty">No streamers found. Add one to get started.</div>
-              )}
-            </section>
-          </div>
+            {streamers.length ? (
+              <div className="admin-streamers">
+                {streamers.map((streamer) => (
+                  <AdminStreamerCard
+                    key={streamer.id}
+                    streamer={streamer}
+                    onUpdate={updateStreamer}
+                    onDelete={removeStreamer}
+                  />
+                ))}
+              </div>
+            ) : (
+              <div className="admin-empty">No streamers found. Add one to get started.</div>
+            )}
+          </section>
+        </div>
         ) : activeTab === "monitor" ? (
           <section className="admin-monitor" role="tabpanel">
             <div className="admin-streamers-header">
@@ -658,7 +591,7 @@ export function AdminConsole({
               <div className="admin-empty">No YouTube PubSub events recorded yet.</div>
             )}
           </section>
-        ) : activeTab === "settings" ? (
+        ) : (
           <section className="admin-settings" role="tabpanel">
             <h3>Environment settings</h3>
             <p className="admin-help">

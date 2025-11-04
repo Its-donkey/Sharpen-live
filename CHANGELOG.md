@@ -15,6 +15,7 @@
 - Modularize YouTube alert application with dedicated packages and automated tests.
 - Add `frontend/streamers.json` to track streamer metadata.
 - Restructure repository into `backend/` and `frontend/` applications with shared tooling paths.
+- Rename the Go API binary to `cmd/api-server` and group HTTP handlers under `internal/api` for clarity.
 - Add Go unit tests covering configuration, middleware, and SPA handler utilities.
 - Provide default admin token in dev launcher so backend starts without extra env vars.
 - Refresh submission form to auto-set status and manage languages via curated dropdown with removable chips.

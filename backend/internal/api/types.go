@@ -1,4 +1,4 @@
-package server
+package api
 
 import "github.com/Its-donkey/Sharpen-live/backend/internal/storage"
 

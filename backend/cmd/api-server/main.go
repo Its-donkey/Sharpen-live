@@ -14,8 +14,8 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/Its-donkey/Sharpen-live/backend/internal/api"
 	"github.com/Its-donkey/Sharpen-live/backend/internal/config"
-	"github.com/Its-donkey/Sharpen-live/backend/internal/server"
 	"github.com/Its-donkey/Sharpen-live/backend/internal/storage"
 )
 
@@ -38,7 +38,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	srv := server.New(store, cfg.AdminToken, cfg.AdminEmail, cfg.AdminPassword)
+	srv := api.New(store, cfg.AdminToken, cfg.AdminEmail, cfg.AdminPassword)
 	staticHandler := spaHandler(cfg.StaticDir)
 
 	httpServer := &http.Server{

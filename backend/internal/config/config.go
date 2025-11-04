@@ -14,28 +14,38 @@ const (
 	defaultSubmissionsFile = "submissions.json"
 	defaultStaticDir       = "frontend/dist"
 
-	envListenAddr      = "LISTEN_ADDR"
-	envPort            = "PORT"
-	envAdminToken      = "ADMIN_TOKEN"
-	envAdminEmail      = "ADMIN_EMAIL"
-	envAdminPassword   = "ADMIN_PASSWORD"
-	envYouTubeAPIKey   = "YOUTUBE_API_KEY"
-	envDataDir         = "SHARPEN_DATA_DIR"
-	envStreamersFile   = "SHARPEN_STREAMERS_FILE"
-	envSubmissionsFile = "SHARPEN_SUBMISSIONS_FILE"
-	envStaticDir       = "SHARPEN_STATIC_DIR"
+	envListenAddr                = "LISTEN_ADDR"
+	envPort                      = "PORT"
+	envAdminToken                = "ADMIN_TOKEN"
+	envAdminEmail                = "ADMIN_EMAIL"
+	envAdminPassword             = "ADMIN_PASSWORD"
+	envYouTubeAPIKey             = "YOUTUBE_API_KEY"
+	envYouTubeAlertsCallback     = "YOUTUBE_ALERTS_CALLBACK"
+	envYouTubeAlertsSecret       = "YOUTUBE_ALERTS_SECRET"
+	envYouTubeAlertsVerifyPrefix = "YOUTUBE_ALERTS_VERIFY_PREFIX"
+	envYouTubeAlertsVerifySuffix = "YOUTUBE_ALERTS_VERIFY_SUFFIX"
+	envYouTubeAlertsHubURL       = "YOUTUBE_ALERTS_HUB_URL"
+	envDataDir                   = "SHARPEN_DATA_DIR"
+	envStreamersFile             = "SHARPEN_STREAMERS_FILE"
+	envSubmissionsFile           = "SHARPEN_SUBMISSIONS_FILE"
+	envStaticDir                 = "SHARPEN_STATIC_DIR"
 )
 
 // Config captures runtime settings for the Sharpen Live API server.
 type Config struct {
-	ListenAddr      string
-	AdminToken      string
-	AdminEmail      string
-	AdminPassword   string
-	YouTubeAPIKey   string
-	StreamersPath   string
-	SubmissionsPath string
-	StaticDir       string
+	ListenAddr                string
+	AdminToken                string
+	AdminEmail                string
+	AdminPassword             string
+	YouTubeAPIKey             string
+	YouTubeAlertsCallback     string
+	YouTubeAlertsSecret       string
+	YouTubeAlertsVerifyPrefix string
+	YouTubeAlertsVerifySuffix string
+	YouTubeAlertsHubURL       string
+	StreamersPath             string
+	SubmissionsPath           string
+	StaticDir                 string
 }
 
 // FromEnv constructs a Config by reading environment variables with defaults.
@@ -55,6 +65,11 @@ func FromEnv() (Config, error) {
 	cfg.AdminEmail = strings.TrimSpace(os.Getenv(envAdminEmail))
 	cfg.AdminPassword = strings.TrimSpace(os.Getenv(envAdminPassword))
 	cfg.YouTubeAPIKey = strings.TrimSpace(os.Getenv(envYouTubeAPIKey))
+	cfg.YouTubeAlertsCallback = strings.TrimSpace(os.Getenv(envYouTubeAlertsCallback))
+	cfg.YouTubeAlertsSecret = strings.TrimSpace(os.Getenv(envYouTubeAlertsSecret))
+	cfg.YouTubeAlertsVerifyPrefix = strings.TrimSpace(os.Getenv(envYouTubeAlertsVerifyPrefix))
+	cfg.YouTubeAlertsVerifySuffix = strings.TrimSpace(os.Getenv(envYouTubeAlertsVerifySuffix))
+	cfg.YouTubeAlertsHubURL = strings.TrimSpace(os.Getenv(envYouTubeAlertsHubURL))
 
 	dataDir := strings.TrimSpace(os.Getenv(envDataDir))
 	if dataDir == "" {
@@ -102,6 +117,9 @@ func (c Config) Validate() error {
 	}
 	if c.AdminPassword == "" {
 		return fmt.Errorf("config: admin password is required")
+	}
+	if c.YouTubeAlertsCallback == "" && (c.YouTubeAlertsSecret != "" || c.YouTubeAlertsVerifyPrefix != "" || c.YouTubeAlertsVerifySuffix != "" || c.YouTubeAlertsHubURL != "") {
+		return fmt.Errorf("config: youtube alerts callback must be set when additional alert settings are provided")
 	}
 	return nil
 }

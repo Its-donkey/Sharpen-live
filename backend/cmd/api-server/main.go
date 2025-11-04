@@ -38,7 +38,18 @@ func main() {
 		os.Exit(1)
 	}
 
-	srv := server.New(store, cfg.AdminToken, cfg.AdminEmail, cfg.AdminPassword, cfg.YouTubeAPIKey)
+	var opts []api.Option
+	if cfg.YouTubeAlertsCallback != "" {
+		opts = append(opts, api.WithYouTubeAlerts(api.YouTubeAlertsConfig{
+			HubURL:            cfg.YouTubeAlertsHubURL,
+			CallbackURL:       cfg.YouTubeAlertsCallback,
+			Secret:            cfg.YouTubeAlertsSecret,
+			VerifyTokenPrefix: cfg.YouTubeAlertsVerifyPrefix,
+			VerifyTokenSuffix: cfg.YouTubeAlertsVerifySuffix,
+		}))
+	}
+
+	srv := api.New(store, cfg.AdminToken, cfg.AdminEmail, cfg.AdminPassword, cfg.YouTubeAPIKey, opts...)
 	staticHandler := spaHandler(cfg.StaticDir)
 
 	httpServer := &http.Server{

@@ -22,12 +22,34 @@ type Server struct {
 	adminPassword string
 	youtubeAPIKey string
 	httpClient    *http.Client
-	mu            sync.RWMutex
+	youtubeHubURL string
+	youtubeAlerts struct {
+		callbackURL string
+		secret      string
+		verifyPref  string
+		verifySuff  string
+		enabled     bool
+	}
+	mu sync.RWMutex
 }
 
+// Option mutates server configuration during construction.
+type Option func(*Server)
+
+// YouTubeAlertsConfig controls PubSub subscriptions for YouTube channel alerts.
+type YouTubeAlertsConfig struct {
+	HubURL            string
+	CallbackURL       string
+	Secret            string
+	VerifyTokenPrefix string
+	VerifyTokenSuffix string
+}
+
+const defaultYouTubeHubURL = "https://pubsubhubbub.appspot.com/subscribe"
+
 // New constructs a Server with the provided dependencies.
-func New(store *storage.JSONStore, adminToken, adminEmail, adminPassword, youtubeAPIKey string) *Server {
-	return &Server{
+func New(store *storage.JSONStore, adminToken, adminEmail, adminPassword, youtubeAPIKey string, opts ...Option) *Server {
+	s := &Server{
 		store:         store,
 		adminToken:    strings.TrimSpace(adminToken),
 		adminEmail:    strings.ToLower(strings.TrimSpace(adminEmail)),
@@ -35,6 +57,16 @@ func New(store *storage.JSONStore, adminToken, adminEmail, adminPassword, youtub
 		youtubeAPIKey: strings.TrimSpace(youtubeAPIKey),
 		httpClient:    &http.Client{Timeout: 10 * time.Second},
 	}
+
+	s.youtubeHubURL = defaultYouTubeHubURL
+
+	for _, opt := range opts {
+		if opt != nil {
+			opt(s)
+		}
+	}
+
+	return s
 }
 
 // Handler returns the HTTP handler that serves the Sharpen Live API and static assets.
@@ -66,6 +98,31 @@ func (s *Server) handleStreamers(w http.ResponseWriter, r *http.Request) {
 		respondJSON(w, http.StatusOK, streamers)
 	default:
 		methodNotAllowed(w, http.MethodGet)
+	}
+}
+
+// WithYouTubeAlerts configures automatic PubSub subscriptions for YouTube channels.
+func WithYouTubeAlerts(cfg YouTubeAlertsConfig) Option {
+	return func(s *Server) {
+		if cfg.HubURL != "" {
+			s.youtubeHubURL = strings.TrimSpace(cfg.HubURL)
+		}
+
+		callback := strings.TrimSpace(cfg.CallbackURL)
+		if callback == "" {
+			s.youtubeAlerts.enabled = false
+			s.youtubeAlerts.callbackURL = ""
+			s.youtubeAlerts.secret = ""
+			s.youtubeAlerts.verifyPref = ""
+			s.youtubeAlerts.verifySuff = ""
+			return
+		}
+
+		s.youtubeAlerts.enabled = true
+		s.youtubeAlerts.callbackURL = callback
+		s.youtubeAlerts.secret = strings.TrimSpace(cfg.Secret)
+		s.youtubeAlerts.verifyPref = strings.TrimSpace(cfg.VerifyTokenPrefix)
+		s.youtubeAlerts.verifySuff = strings.TrimSpace(cfg.VerifyTokenSuffix)
 	}
 }
 

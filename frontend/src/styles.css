@@ -1015,6 +1015,11 @@ footer a {
   font-size: 0.95rem;
 }
 
+.admin-monitor-select {
+  min-width: 110px;
+  padding: 0.5rem 0.8rem;
+}
+
 .admin-monitor-controls {
   display: flex;
   flex-wrap: wrap;
@@ -1032,7 +1037,7 @@ footer a {
 }
 
 .admin-monitor-page-size .platform-picker {
-  min-width: 140px;
+  min-width: 110px;
 }
 
 .admin-monitor-pagination {
@@ -1051,13 +1056,12 @@ footer a {
   background: rgba(15, 23, 42, 0.05);
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 0;
 }
 
 .admin-monitor-entry {
   color: var(--fg-muted);
   font-size: 0.95rem;
-  line-height: 1.6;
   word-break: break-word;
 }
 

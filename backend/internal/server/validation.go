@@ -131,6 +131,7 @@ func filterPlatforms(values []storage.Platform, max int) []storage.Platform {
 			Name:       strings.TrimSpace(v.Name),
 			ChannelURL: strings.TrimSpace(v.ChannelURL),
 			LiveURL:    strings.TrimSpace(v.LiveURL),
+			ID:         strings.TrimSpace(v.ID),
 		}
 		if entry.Name == "" || entry.ChannelURL == "" || entry.LiveURL == "" {
 			continue

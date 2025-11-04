@@ -3,7 +3,6 @@ import { submitStreamer } from "../api";
 import type { StreamerStatus, SubmissionPayload } from "../types";
 import { STATUS_DEFAULT_LABELS } from "../types";
 import {
-  CUSTOM_PLATFORM_VALUE,
   PLATFORM_PRESETS,
   createPlatformRow,
   PlatformFormRow,
@@ -144,50 +143,46 @@ export function SubmitStreamerForm({ isOpen, onToggle }: SubmitStreamerFormProps
     setPlatforms([createPlatformRow()]);
   };
 
-  const handlePlatformChange = (id: string, key: PlatformField, value: string): void => {
+  const handlePlatformChange = (rowId: string, key: PlatformField, value: string): void => {
     setPlatforms((current) =>
       current.map((row) => {
-        if (row.id !== id) {
+        if (row.rowId !== rowId) {
           return row;
         }
         const nextRow: PlatformFormRow = { ...row, [key]: value };
         if (key === "name") {
           const presetMatch = PLATFORM_PRESETS.some((platform) => platform.value === value);
-          nextRow.preset = presetMatch ? value : CUSTOM_PLATFORM_VALUE;
+          nextRow.preset = presetMatch ? value : "";
+          nextRow.name = presetMatch ? value : "";
+          nextRow.id = undefined;
         }
         return nextRow;
       })
     );
   };
 
-  const handlePlatformNameSelect = (id: string, value: string) => {
+  const handlePlatformNameSelect = (rowId: string, value: string) => {
     setPlatforms((current) =>
       current.map((row) => {
-        if (row.id !== id) {
+        if (row.rowId !== rowId) {
           return row;
-        }
-        if (value === CUSTOM_PLATFORM_VALUE) {
-          return {
-            ...row,
-            preset: CUSTOM_PLATFORM_VALUE,
-            name: row.preset === CUSTOM_PLATFORM_VALUE ? row.name : ""
-          };
         }
         return {
           ...row,
           preset: value,
-          name: value
+          name: value,
+          id: undefined
         };
       })
     );
   };
 
-  const handleRemovePlatform = (id: string) => {
+  const handleRemovePlatform = (rowId: string) => {
     setPlatforms((current) => {
       if (current.length === 1) {
         return [createPlatformRow()];
       }
-      return current.filter((row) => row.id !== id);
+      return current.filter((row) => row.rowId !== rowId);
     });
   };
 
@@ -330,7 +325,7 @@ export function SubmitStreamerForm({ isOpen, onToggle }: SubmitStreamerFormProps
 
             <div className="platform-rows">
               {platforms.map((platform) => (
-                <div className="platform-row" key={platform.id} data-platform-row>
+                <div className="platform-row" key={platform.rowId} data-platform-row>
                   <label className="form-field form-field-inline">
                     <span>Platform name</span>
                     <div className="platform-picker">
@@ -338,16 +333,13 @@ export function SubmitStreamerForm({ isOpen, onToggle }: SubmitStreamerFormProps
                         className="platform-select"
                         name="platform-name"
                         value={
-                          platform.preset
-                            ? platform.preset
-                            : PLATFORM_PRESETS.some((option) => option.value === platform.name)
-                              ? platform.name
-                              : platform.name
-                                ? CUSTOM_PLATFORM_VALUE
-                                : ""
+                          platform.preset ||
+                          (PLATFORM_PRESETS.some((option) => option.value === platform.name)
+                            ? platform.name
+                            : "")
                         }
                         onChange={(event) =>
-                          handlePlatformNameSelect(platform.id, event.currentTarget.value)
+                          handlePlatformNameSelect(platform.rowId, event.currentTarget.value)
                         }
                         required
                       >
@@ -359,21 +351,8 @@ export function SubmitStreamerForm({ isOpen, onToggle }: SubmitStreamerFormProps
                             {platformOption.label}
                           </option>
                         ))}
-                        <option value={CUSTOM_PLATFORM_VALUE}>Other</option>
                       </select>
                     </div>
-                    {platform.preset === CUSTOM_PLATFORM_VALUE && (
-                      <input
-                        type="text"
-                        name="platform-name-custom"
-                        placeholder="Platform name"
-                        value={platform.name}
-                        onChange={(event) =>
-                          handlePlatformChange(platform.id, "name", event.target.value)
-                        }
-                        required
-                      />
-                    )}
                   </label>
                   <label className="form-field form-field-inline">
                     <span>Channel URL</span>
@@ -383,7 +362,7 @@ export function SubmitStreamerForm({ isOpen, onToggle }: SubmitStreamerFormProps
                       placeholder="https://"
                       value={platform.channelUrl}
                       onChange={(event) =>
-                        handlePlatformChange(platform.id, "channelUrl", event.target.value)
+                        handlePlatformChange(platform.rowId, "channelUrl", event.target.value)
                       }
                       required
                     />
@@ -392,7 +371,7 @@ export function SubmitStreamerForm({ isOpen, onToggle }: SubmitStreamerFormProps
                   <button
                     type="button"
                     className="remove-platform-button"
-                    onClick={() => handleRemovePlatform(platform.id)}
+                    onClick={() => handleRemovePlatform(platform.rowId)}
                   >
                     Remove
                   </button>

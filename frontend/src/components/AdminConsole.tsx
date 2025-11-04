@@ -26,7 +26,6 @@ import type {
 } from "../types";
 import { STATUS_DEFAULT_LABELS } from "../types";
 import {
-  CUSTOM_PLATFORM_VALUE,
   PLATFORM_PRESETS,
   createPlatformRow,
   defaultStatusLabel,
@@ -545,6 +544,17 @@ export function AdminConsole({
                     />
                   </label>
                   <label className="form-field">
+                    <span>YouTube API key</span>
+                    <input
+                      type="password"
+                      value={settingsDraft.youtubeApiKey}
+                      onChange={(event) =>
+                        handleSettingsFieldChange("youtubeApiKey", event.target.value)
+                      }
+                      placeholder="Only used for YouTube lookups"
+                    />
+                  </label>
+                  <label className="form-field">
                     <span>Listen address</span>
                     <input
                       type="text"
@@ -692,56 +702,50 @@ function AdminStreamerCard({ streamer, onUpdate, onDelete }: AdminStreamerCardPr
     });
   };
 
-  const handlePlatformChange = (id: string, key: PlatformField, value: string) => {
+  const handlePlatformChange = (rowId: string, key: PlatformField, value: string) => {
     setState((current) => ({
       ...current,
       platforms: current.platforms.map((platform) => {
-        if (platform.id !== id) {
+        if (platform.rowId !== rowId) {
           return platform;
         }
         const nextPlatform: PlatformFormRow = { ...platform, [key]: value };
         if (key === "name") {
-          const presetMatch = PLATFORM_PRESETS.some(
-            (option) => option.value === value
-          );
-          nextPlatform.preset = presetMatch ? value : CUSTOM_PLATFORM_VALUE;
+          const presetMatch = PLATFORM_PRESETS.some((option) => option.value === value);
+          nextPlatform.preset = presetMatch ? value : "";
+          nextPlatform.name = presetMatch ? value : "";
+          nextPlatform.id = undefined;
         }
         return nextPlatform;
       })
     }));
   };
 
-  const handlePlatformPresetSelect = (id: string, value: string) => {
+  const handlePlatformPresetSelect = (rowId: string, value: string) => {
     setState((current) => ({
       ...current,
       platforms: current.platforms.map((platform) => {
-        if (platform.id !== id) {
+        if (platform.rowId !== rowId) {
           return platform;
-        }
-        if (value === CUSTOM_PLATFORM_VALUE) {
-          return {
-            ...platform,
-            preset: CUSTOM_PLATFORM_VALUE,
-            name: platform.preset === CUSTOM_PLATFORM_VALUE ? platform.name : ""
-          };
         }
         return {
           ...platform,
           preset: value,
-          name: value
+          name: value,
+          id: undefined
         };
       })
     }));
   };
 
-  const handleRemovePlatform = (id: string) => {
+  const handleRemovePlatform = (rowId: string) => {
     setState((current) => {
       if (current.platforms.length === 1) {
         return { ...current, platforms: [createPlatformRow()] };
       }
       return {
         ...current,
-        platforms: current.platforms.filter((platform) => platform.id !== id)
+        platforms: current.platforms.filter((platform) => platform.rowId !== rowId)
       };
     });
   };
@@ -867,7 +871,7 @@ function AdminStreamerCard({ streamer, onUpdate, onDelete }: AdminStreamerCardPr
             <legend>Platforms</legend>
             <div className="platform-rows">
               {state.platforms.map((platform) => (
-                <div className="platform-row" key={platform.id}>
+                <div className="platform-row" key={platform.rowId}>
                   <label className="form-field form-field-inline">
                     <span>Platform name</span>
                     <div className="platform-picker">
@@ -877,12 +881,10 @@ function AdminStreamerCard({ streamer, onUpdate, onDelete }: AdminStreamerCardPr
                           platform.preset ||
                           (PLATFORM_PRESETS.some((option) => option.value === platform.name)
                             ? platform.name
-                            : platform.name
-                            ? CUSTOM_PLATFORM_VALUE
                             : "")
                         }
                         onChange={(event) =>
-                          handlePlatformPresetSelect(platform.id, event.currentTarget.value)
+                          handlePlatformPresetSelect(platform.rowId, event.currentTarget.value)
                         }
                         required
                       >
@@ -894,20 +896,8 @@ function AdminStreamerCard({ streamer, onUpdate, onDelete }: AdminStreamerCardPr
                             {platformOption.label}
                           </option>
                         ))}
-                        <option value={CUSTOM_PLATFORM_VALUE}>Other</option>
                       </select>
                     </div>
-                    {platform.preset === CUSTOM_PLATFORM_VALUE && (
-                      <input
-                        type="text"
-                        value={platform.name}
-                        placeholder="Platform name"
-                        onChange={(event) =>
-                          handlePlatformChange(platform.id, "name", event.target.value)
-                        }
-                        required
-                      />
-                    )}
                   </label>
                   <label className="form-field form-field-inline">
                     <span>Channel URL</span>
@@ -915,7 +905,7 @@ function AdminStreamerCard({ streamer, onUpdate, onDelete }: AdminStreamerCardPr
                       type="url"
                       value={platform.channelUrl}
                       onChange={(event) =>
-                        handlePlatformChange(platform.id, "channelUrl", event.target.value)
+                        handlePlatformChange(platform.rowId, "channelUrl", event.target.value)
                       }
                       required
                     />
@@ -926,7 +916,7 @@ function AdminStreamerCard({ streamer, onUpdate, onDelete }: AdminStreamerCardPr
                       type="url"
                       value={platform.liveUrl}
                       onChange={(event) =>
-                        handlePlatformChange(platform.id, "liveUrl", event.target.value)
+                        handlePlatformChange(platform.rowId, "liveUrl", event.target.value)
                       }
                       required
                     />
@@ -934,7 +924,7 @@ function AdminStreamerCard({ streamer, onUpdate, onDelete }: AdminStreamerCardPr
                   <button
                     type="button"
                     className="remove-platform-button"
-                    onClick={() => handleRemovePlatform(platform.id)}
+                    onClick={() => handleRemovePlatform(platform.rowId)}
                   >
                     Remove
                   </button>
@@ -1004,41 +994,37 @@ function AdminCreateStreamer({ onSubmit }: AdminCreateStreamerProps) {
 
   const canSave = formIsValid(state) && !isSaving;
 
-  const handlePlatformFieldChange = (id: string, key: PlatformField, value: string) => {
+  const handlePlatformFieldChange = (rowId: string, key: PlatformField, value: string) => {
     setState((current) => ({
       ...current,
       platforms: current.platforms.map((row) => {
-        if (row.id !== id) {
+        if (row.rowId !== rowId) {
           return row;
         }
         const nextRow: PlatformFormRow = { ...row, [key]: value };
         if (key === "name") {
           const presetMatch = PLATFORM_PRESETS.some((option) => option.value === value);
-          nextRow.preset = presetMatch ? value : CUSTOM_PLATFORM_VALUE;
+          nextRow.preset = presetMatch ? value : "";
+          nextRow.name = presetMatch ? value : "";
+          nextRow.id = undefined;
         }
         return nextRow;
       })
     }));
   };
 
-  const handlePlatformPresetSelect = (id: string, value: string) => {
+  const handlePlatformPresetSelect = (rowId: string, value: string) => {
     setState((current) => ({
       ...current,
       platforms: current.platforms.map((row) => {
-        if (row.id !== id) {
+        if (row.rowId !== rowId) {
           return row;
-        }
-        if (value === CUSTOM_PLATFORM_VALUE) {
-          return {
-            ...row,
-            preset: CUSTOM_PLATFORM_VALUE,
-            name: row.preset === CUSTOM_PLATFORM_VALUE ? row.name : ""
-          };
         }
         return {
           ...row,
           preset: value,
-          name: value
+          name: value,
+          id: undefined
         };
       })
     }));
@@ -1143,7 +1129,7 @@ function AdminCreateStreamer({ onSubmit }: AdminCreateStreamerProps) {
         <legend>Platforms</legend>
         <div className="platform-rows">
           {state.platforms.map((platform) => (
-            <div className="platform-row" key={platform.id}>
+            <div className="platform-row" key={platform.rowId}>
               <label className="form-field form-field-inline">
                 <span>Platform name</span>
                 <div className="platform-picker">
@@ -1153,12 +1139,10 @@ function AdminCreateStreamer({ onSubmit }: AdminCreateStreamerProps) {
                       platform.preset ||
                       (PLATFORM_PRESETS.some((option) => option.value === platform.name)
                         ? platform.name
-                        : platform.name
-                        ? CUSTOM_PLATFORM_VALUE
                         : "")
                     }
                     onChange={(event) =>
-                      handlePlatformPresetSelect(platform.id, event.currentTarget.value)
+                      handlePlatformPresetSelect(platform.rowId, event.currentTarget.value)
                     }
                     required
                   >
@@ -1170,20 +1154,8 @@ function AdminCreateStreamer({ onSubmit }: AdminCreateStreamerProps) {
                         {platformOption.label}
                       </option>
                     ))}
-                    <option value={CUSTOM_PLATFORM_VALUE}>Other</option>
                   </select>
                 </div>
-                {platform.preset === CUSTOM_PLATFORM_VALUE && (
-                  <input
-                    type="text"
-                    value={platform.name}
-                    placeholder="Platform name"
-                    onChange={(event) =>
-                      handlePlatformFieldChange(platform.id, "name", event.target.value)
-                    }
-                    required
-                  />
-                )}
               </label>
               <label className="form-field form-field-inline">
                 <span>Channel URL</span>
@@ -1191,7 +1163,7 @@ function AdminCreateStreamer({ onSubmit }: AdminCreateStreamerProps) {
                   type="url"
                   value={platform.channelUrl}
                   onChange={(event) =>
-                    handlePlatformFieldChange(platform.id, "channelUrl", event.target.value)
+                    handlePlatformFieldChange(platform.rowId, "channelUrl", event.target.value)
                   }
                   required
                 />
@@ -1202,7 +1174,7 @@ function AdminCreateStreamer({ onSubmit }: AdminCreateStreamerProps) {
                   type="url"
                   value={platform.liveUrl}
                   onChange={(event) =>
-                    handlePlatformFieldChange(platform.id, "liveUrl", event.target.value)
+                    handlePlatformFieldChange(platform.rowId, "liveUrl", event.target.value)
                   }
                   required
                 />
@@ -1217,7 +1189,7 @@ function AdminCreateStreamer({ onSubmit }: AdminCreateStreamerProps) {
                     }
                     return {
                       ...current,
-                      platforms: current.platforms.filter((row) => row.id !== platform.id)
+                      platforms: current.platforms.filter((row) => row.rowId !== platform.rowId)
                     };
                   })
                 }

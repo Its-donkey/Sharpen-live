@@ -2,14 +2,12 @@ import type { Platform, StreamerStatus } from "../types";
 import { STATUS_DEFAULT_LABELS } from "../types";
 
 export interface PlatformFormRow extends Platform {
-  id: string;
+  rowId: string;
   preset: string;
 }
 
 export const MAX_LANGUAGES = 8;
 export const MAX_PLATFORMS = 8;
-
-export const CUSTOM_PLATFORM_VALUE = "__custom";
 
 export const PLATFORM_PRESETS = [
   { label: "YouTube", value: "YouTube" },
@@ -33,17 +31,13 @@ export function randomId(): string {
 export function createPlatformRow(initial?: Partial<Platform>): PlatformFormRow {
   const initialName = initial?.name ?? "";
   const presetMatch = PLATFORM_PRESETS.some((platform) => platform.value === initialName);
-  const preset = initialName
-    ? presetMatch
-      ? initialName
-      : CUSTOM_PLATFORM_VALUE
-    : "";
   return {
-    id: randomId(),
+    rowId: randomId(),
     name: initialName,
+    id: initial?.id,
     channelUrl: initial?.channelUrl ?? "",
     liveUrl: initial?.liveUrl ?? "",
-    preset
+    preset: presetMatch ? initialName : ""
   };
 }
 
@@ -60,7 +54,8 @@ export function sanitizePlatforms(rows: PlatformFormRow[]): Platform[] {
     .map((row) => ({
       name: row.name.trim(),
       channelUrl: row.channelUrl.trim(),
-      liveUrl: row.liveUrl.trim()
+      liveUrl: row.liveUrl.trim(),
+      id: row.id?.trim() || undefined
     }))
     .filter((row) => row.name && row.channelUrl && row.liveUrl)
     .slice(0, MAX_PLATFORMS);

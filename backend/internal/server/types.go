@@ -49,6 +49,7 @@ type settingsResponse struct {
 	AdminToken      string `json:"adminToken"`
 	AdminEmail      string `json:"adminEmail"`
 	AdminPassword   string `json:"adminPassword"`
+	YouTubeAPIKey   string `json:"youtubeApiKey"`
 	DataDir         string `json:"dataDir"`
 	StaticDir       string `json:"staticDir"`
 	StreamersFile   string `json:"streamersFile"`
@@ -60,6 +61,7 @@ type settingsUpdateRequest struct {
 	AdminToken      *string `json:"adminToken"`
 	AdminEmail      *string `json:"adminEmail"`
 	AdminPassword   *string `json:"adminPassword"`
+	YouTubeAPIKey   *string `json:"youtubeApiKey"`
 	DataDir         *string `json:"dataDir"`
 	StaticDir       *string `json:"staticDir"`
 	StreamersFile   *string `json:"streamersFile"`

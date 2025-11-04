@@ -19,6 +19,7 @@ const (
 	envAdminToken      = "ADMIN_TOKEN"
 	envAdminEmail      = "ADMIN_EMAIL"
 	envAdminPassword   = "ADMIN_PASSWORD"
+	envYouTubeAPIKey   = "YOUTUBE_API_KEY"
 	envDataDir         = "SHARPEN_DATA_DIR"
 	envStreamersFile   = "SHARPEN_STREAMERS_FILE"
 	envSubmissionsFile = "SHARPEN_SUBMISSIONS_FILE"
@@ -31,6 +32,7 @@ type Config struct {
 	AdminToken      string
 	AdminEmail      string
 	AdminPassword   string
+	YouTubeAPIKey   string
 	StreamersPath   string
 	SubmissionsPath string
 	StaticDir       string
@@ -52,6 +54,7 @@ func FromEnv() (Config, error) {
 	cfg.AdminToken = strings.TrimSpace(os.Getenv(envAdminToken))
 	cfg.AdminEmail = strings.TrimSpace(os.Getenv(envAdminEmail))
 	cfg.AdminPassword = strings.TrimSpace(os.Getenv(envAdminPassword))
+	cfg.YouTubeAPIKey = strings.TrimSpace(os.Getenv(envYouTubeAPIKey))
 
 	dataDir := strings.TrimSpace(os.Getenv(envDataDir))
 	if dataDir == "" {

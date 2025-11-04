@@ -21,6 +21,7 @@ const (
 type testEnv struct {
 	store   *storage.JSONStore
 	handler http.Handler
+	server  *server.Server
 }
 
 func newTestEnv(t *testing.T) testEnv {
@@ -33,9 +34,9 @@ func newTestEnv(t *testing.T) testEnv {
 	if err != nil {
 		t.Fatalf("create store: %v", err)
 	}
-	srv := server.New(store, adminToken, adminEmail, adminPassword)
+	srv := server.New(store, adminToken, adminEmail, adminPassword, "")
 	handler := srv.Handler(http.NotFoundHandler())
-	return testEnv{store: store, handler: handler}
+	return testEnv{store: store, handler: handler, server: srv}
 }
 
 func performRequest(handler http.Handler, method, target string, body any, headers map[string]string) *httptest.ResponseRecorder {

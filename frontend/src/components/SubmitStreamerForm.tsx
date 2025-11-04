@@ -15,6 +15,14 @@ interface SubmitStreamerFormProps {
 }
 
 type PlatformField = "name" | "channelUrl" | "liveUrl";
+type PlatformErrorState = Record<PlatformField, boolean>;
+
+interface ValidationErrors {
+  name: boolean;
+  description: boolean;
+  languages: boolean;
+  platforms: Record<string, PlatformErrorState>;
+}
 
 const DEFAULT_STATUS: StreamerStatus = "offline";
 const TOP_LANGUAGES = [{ label: "English", value: "English" }];
@@ -110,12 +118,49 @@ export function SubmitStreamerForm({ isOpen, onToggle }: SubmitStreamerFormProps
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [resultMessage, setResultMessage] = useState("");
   const [resultState, setResultState] = useState<"idle" | "success" | "error">("idle");
+  const [validationErrors, setValidationErrors] = useState<ValidationErrors>({
+    name: false,
+    description: false,
+    languages: false,
+    platforms: {}
+  });
 
   const availableLanguages = useMemo(() => {
     return LANGUAGE_ORDER.filter((language) =>
       !selectedLanguages.includes(language.label)
     );
   }, [selectedLanguages]);
+
+  const clearFieldError = (field: keyof Omit<ValidationErrors, "platforms">, hasValue: boolean) => {
+    if (!hasValue || !validationErrors[field]) {
+      return;
+    }
+    setValidationErrors((current) => ({ ...current, [field]: false }));
+  };
+
+  const clearPlatformError = (rowId: string, key: PlatformField, hasValue: boolean) => {
+    if (!hasValue) {
+      return;
+    }
+    setValidationErrors((current) => {
+      const rowErrors = current.platforms[rowId];
+      if (!rowErrors || !rowErrors[key]) {
+        return current;
+      }
+      const nextRow = { ...rowErrors, [key]: false };
+      const hasAnyError = nextRow.name || nextRow.channelUrl || nextRow.liveUrl;
+      const nextPlatforms = { ...current.platforms };
+      if (hasAnyError) {
+        nextPlatforms[rowId] = nextRow;
+      } else {
+        delete nextPlatforms[rowId];
+      }
+      return {
+        ...current,
+        platforms: nextPlatforms
+      };
+    });
+  };
 
   const canSubmit = useMemo(() => {
     if (!name.trim() || !description.trim()) {
@@ -141,6 +186,12 @@ export function SubmitStreamerForm({ isOpen, onToggle }: SubmitStreamerFormProps
     setSelectedLanguages([]);
     setLanguageSelection("");
     setPlatforms([createPlatformRow()]);
+    setValidationErrors({
+      name: false,
+      description: false,
+      languages: false,
+      platforms: {}
+    });
   };
 
   const handlePlatformChange = (rowId: string, key: PlatformField, value: string): void => {
@@ -159,6 +210,7 @@ export function SubmitStreamerForm({ isOpen, onToggle }: SubmitStreamerFormProps
         return nextRow;
       })
     );
+    clearPlatformError(rowId, key, value.trim().length > 0);
   };
 
   const handlePlatformNameSelect = (rowId: string, value: string) => {
@@ -175,6 +227,7 @@ export function SubmitStreamerForm({ isOpen, onToggle }: SubmitStreamerFormProps
         };
       })
     );
+    clearPlatformError(rowId, "name", value.trim().length > 0);
   };
 
   const handleRemovePlatform = (rowId: string) => {
@@ -183,6 +236,17 @@ export function SubmitStreamerForm({ isOpen, onToggle }: SubmitStreamerFormProps
         return [createPlatformRow()];
       }
       return current.filter((row) => row.rowId !== rowId);
+    });
+    setValidationErrors((current) => {
+      if (!current.platforms[rowId]) {
+        return current;
+      }
+      const nextPlatforms = { ...current.platforms };
+      delete nextPlatforms[rowId];
+      return {
+        ...current,
+        platforms: nextPlatforms
+      };
     });
   };
 
@@ -194,10 +258,17 @@ export function SubmitStreamerForm({ isOpen, onToggle }: SubmitStreamerFormProps
     const displayLabel = LANGUAGE_ORDER.find((language) => language.value === value)?.label ?? value;
     setSelectedLanguages((current) => [...current, displayLabel]);
     setLanguageSelection("");
+    clearFieldError("languages", true);
   };
 
   const handleLanguageRemove = (language: string) => {
-    setSelectedLanguages((current) => current.filter((item) => item !== language));
+    setSelectedLanguages((current) => {
+      const next = current.filter((item) => item !== language);
+      if (next.length > 0) {
+        clearFieldError("languages", true);
+      }
+      return next;
+    });
   };
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -206,9 +277,39 @@ export function SubmitStreamerForm({ isOpen, onToggle }: SubmitStreamerFormProps
     setResultState("idle");
     setResultMessage("");
 
+    const trimmedName = name.trim();
+    const trimmedDescription = description.trim();
+
+    const nextErrors: ValidationErrors = {
+      name: trimmedName === "",
+      description: trimmedDescription === "",
+      languages: selectedLanguages.length === 0,
+      platforms: {}
+    };
+
+    platforms.forEach((row) => {
+      const rowErrors: PlatformErrorState = {
+        name: row.name.trim() === "",
+        channelUrl: row.channelUrl.trim() === "",
+        liveUrl: row.liveUrl.trim() === ""
+      };
+      if (rowErrors.name || rowErrors.channelUrl || rowErrors.liveUrl) {
+        nextErrors.platforms[row.rowId] = rowErrors;
+      }
+    });
+
+    const hasPlatformErrors = Object.keys(nextErrors.platforms).length > 0;
+    if (nextErrors.name || nextErrors.description || nextErrors.languages || hasPlatformErrors) {
+      setValidationErrors(nextErrors);
+      setIsSubmitting(false);
+      setResultState("error");
+      setResultMessage("Please correct the highlighted fields.");
+      return;
+    }
+
     const submission: SubmissionPayload = {
-      name: name.trim(),
-      description: description.trim(),
+      name: trimmedName,
+      description: trimmedDescription,
       status: DEFAULT_STATUS,
       statusLabel: STATUS_DEFAULT_LABELS[DEFAULT_STATUS],
       languages: selectedLanguages,
@@ -249,36 +350,41 @@ export function SubmitStreamerForm({ isOpen, onToggle }: SubmitStreamerFormProps
           </p>
 
           <div className="form-grid">
-            <label className="form-field">
+            <label className={`form-field${validationErrors.name ? " form-field-error" : ""}`}>
               <span>Streamer name *</span>
               <input
                 type="text"
                 name="streamer-name"
                 value={name}
-                onChange={(event) => setName(event.target.value)}
+                onChange={(event) => {
+                  const value = event.target.value;
+                  setName(value);
+                  clearFieldError("name", value.trim().length > 0);
+                }}
                 required
               />
             </label>
 
-            <label className="form-field form-field-wide">
+            <label className={`form-field form-field-wide${validationErrors.description ? " form-field-error" : ""}`}>
               <span>Description *</span>
-			  <p className="submit-streamer-help">What does the streamer do and methods do they use? Be sure to include anything unique about them.</p>
+              <p className="submit-streamer-help">What does the streamer do and what makes their streams unique?</p>
               <textarea
                 name="description"
                 rows={3}
-                placeholder=""
                 value={description}
-                onChange={(event) => setDescription(event.target.value)}
+                onChange={(event) => {
+                  const value = event.target.value;
+                  setDescription(value);
+                  clearFieldError("description", value.trim().length > 0);
+                }}
                 required
               />
             </label>
 
-            <label className="form-field form-field-wide">
+            <label className={`form-field form-field-wide${validationErrors.languages ? " form-field-error" : ""}`}>
               <span>Languages *</span>
-			  <p className="submit-streamer-help">Select the languages the streamer speaks</p>
-			  </label>
-			  <label className="form-field form-field-inline">
-              <div className="language-picker">
+              <p className="submit-streamer-help">Select every language the streamer uses on their channel.</p>
+              <div className="language-picker" data-invalid={validationErrors.languages}>
                 <select
                   className="language-select"
                   value={languageSelection}
@@ -313,6 +419,9 @@ export function SubmitStreamerForm({ isOpen, onToggle }: SubmitStreamerFormProps
                   )}
                 </div>
               </div>
+              {validationErrors.languages ? (
+                <p className="field-error-text">Select at least one language.</p>
+              ) : null}
             </label>
           </div>
 
@@ -324,59 +433,96 @@ export function SubmitStreamerForm({ isOpen, onToggle }: SubmitStreamerFormProps
             </p>
 
             <div className="platform-rows">
-              {platforms.map((platform) => (
-                <div className="platform-row" key={platform.rowId} data-platform-row>
-                  <label className="form-field form-field-inline">
-                    <span>Platform name</span>
-                    <div className="platform-picker">
-                      <select
-                        className="platform-select"
-                        name="platform-name"
-                        value={
-                          platform.preset ||
-                          (PLATFORM_PRESETS.some((option) => option.value === platform.name)
-                            ? platform.name
-                            : "")
-                        }
+              {platforms.map((platform) => {
+                const platformErrors = validationErrors.platforms[platform.rowId] ?? {
+                  name: false,
+                  channelUrl: false,
+                  liveUrl: false
+                };
+                const rowHasError =
+                  platformErrors.name || platformErrors.channelUrl || platformErrors.liveUrl;
+                return (
+                  <div className="platform-row" key={platform.rowId} data-platform-row>
+                    <label
+                      className={`form-field form-field-inline${
+                        platformErrors.name ? " form-field-error" : ""
+                      }`}
+                    >
+                      <span>Platform name</span>
+                      <div className="platform-picker">
+                        <select
+                          className="platform-select"
+                          name="platform-name"
+                          value={
+                            platform.preset ||
+                            (PLATFORM_PRESETS.some((option) => option.value === platform.name)
+                              ? platform.name
+                              : "")
+                          }
+                          onChange={(event) =>
+                            handlePlatformNameSelect(platform.rowId, event.currentTarget.value)
+                          }
+                          required
+                        >
+                          <option value="" disabled>
+                            Choose platform
+                          </option>
+                          {PLATFORM_PRESETS.map((platformOption) => (
+                            <option key={platformOption.value} value={platformOption.value}>
+                              {platformOption.label}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                    </label>
+                    <label
+                      className={`form-field form-field-inline${
+                        platformErrors.channelUrl ? " form-field-error" : ""
+                      }`}
+                    >
+                      <span>Channel URL</span>
+                      <input
+                        type="url"
+                        name="platform-channel"
+                        placeholder="https://"
+                        value={platform.channelUrl}
                         onChange={(event) =>
-                          handlePlatformNameSelect(platform.rowId, event.currentTarget.value)
+                          handlePlatformChange(platform.rowId, "channelUrl", event.target.value)
                         }
                         required
-                      >
-                        <option value="" disabled>
-                          Choose platform
-                        </option>
-                        {PLATFORM_PRESETS.map((platformOption) => (
-                          <option key={platformOption.value} value={platformOption.value}>
-                            {platformOption.label}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                  </label>
-                  <label className="form-field form-field-inline">
-                    <span>Channel URL</span>
-                    <input
-                      type="url"
-                      name="platform-channel"
-                      placeholder="https://"
-                      value={platform.channelUrl}
-                      onChange={(event) =>
-                        handlePlatformChange(platform.rowId, "channelUrl", event.target.value)
-                      }
-                      required
-                    />
-                  </label>
+                      />
+                    </label>
+                    <label
+                      className={`form-field form-field-inline${
+                        platformErrors.liveUrl ? " form-field-error" : ""
+                      }`}
+                    >
+                      <span>Live URL</span>
+                      <input
+                        type="url"
+                        name="platform-live"
+                        placeholder="https://"
+                        value={platform.liveUrl}
+                        onChange={(event) =>
+                          handlePlatformChange(platform.rowId, "liveUrl", event.target.value)
+                        }
+                        required
+                      />
+                    </label>
 
-                  <button
-                    type="button"
-                    className="remove-platform-button"
-                    onClick={() => handleRemovePlatform(platform.rowId)}
-                  >
-                    Remove
-                  </button>
-                </div>
-              ))}
+                    <button
+                      type="button"
+                      className="remove-platform-button"
+                      onClick={() => handleRemovePlatform(platform.rowId)}
+                    >
+                      Remove
+                    </button>
+                    {rowHasError ? (
+                      <p className="field-error-text">Provide the platform name and both URLs.</p>
+                    ) : null}
+                  </div>
+                );
+              })}
             </div>
 
             <button

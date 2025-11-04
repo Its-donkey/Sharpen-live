@@ -484,6 +484,13 @@ tbody tr:hover {
   transition: border 0.2s ease, box-shadow 0.2s ease;
 }
 
+.form-field-error input,
+.form-field-error select,
+.form-field-error textarea {
+  border-color: rgba(248, 113, 113, 0.65);
+  box-shadow: 0 0 0 3px rgba(248, 113, 113, 0.15);
+}
+
 .form-field input:focus-visible,
 .form-field select:focus-visible,
 .form-field textarea:focus-visible {
@@ -519,6 +526,12 @@ tbody tr:hover {
   text-transform: uppercase;
   letter-spacing: 0.1em;
   color: var(--fg-muted);
+}
+
+.field-error-text {
+  margin: 0.25rem 0 0;
+  color: #fca5a5;
+  font-size: 0.82rem;
 }
 
 .platform-rows {

@@ -192,6 +192,8 @@ func (s *Server) handleNotification(w http.ResponseWriter, r *http.Request) {
 		bodyPreview = bodyPreview[:2048] + "...(truncated)"
 	}
 
+	s.logger.Printf("notification raw body (request_id=%q):\n%s", requestID, string(body))
+
 	if !isAtomPayload(contentType, body) {
 		s.logger.Printf(
 			"notification rejected: request_id=%q user_agent=%q content_type=%q body_preview=%q",

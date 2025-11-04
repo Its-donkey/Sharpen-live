@@ -5,7 +5,7 @@
 - Move roster card actions above streamer names and match delete styling with submission removal buttons.
 - Load YouTube alert monitor events from PostgreSQL, add tab-styled platform filters, inline log formatting, and pagination controls with refreshed spacing/select styling in the admin console.
 - Log raw PubSub alert payloads from the YouTube alert server before attempting JSON parsing to aid troubleshooting.
-- Implement PubSubHubbub verification and Atom XML notification parsing with asynchronous queueing in the YouTube alerts server, mapping channel IDs from `streamers.json` to streamer names and resolving roster paths automatically for logging and downstream processing.
+- Implement PubSubHubbub verification and Atom XML notification parsing with asynchronous queueing in the YouTube alerts server, mapping channel IDs from `streamers.json` to streamer names, resolving roster paths automatically, and logging the full raw notification payload for troubleshooting.
 - Deduplicate YouTube PubSub handlers to avoid double registration and duplicate event logging in the admin monitor.
 - Ignore local IDE workspace directories and VS Code workspace files to prevent accidental commits.
 - Persist admin and YouTube alert configuration in PostgreSQL via a dedicated settings store and API bootstrap flow.

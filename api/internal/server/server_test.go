@@ -21,6 +21,7 @@ const (
 type testEnv struct {
 	store   *storage.JSONStore
 	handler http.Handler
+	server  *server.Server
 }
 
 func newTestEnv(t *testing.T) testEnv {
@@ -33,9 +34,9 @@ func newTestEnv(t *testing.T) testEnv {
 	if err != nil {
 		t.Fatalf("create store: %v", err)
 	}
-	srv := server.New(store, adminToken, adminEmail, adminPassword)
+	srv := server.New(store, adminToken, adminEmail, adminPassword, "")
 	handler := srv.Handler(http.NotFoundHandler())
-	return testEnv{store: store, handler: handler}
+	return testEnv{store: store, handler: handler, server: srv}
 }
 
 func performRequest(handler http.Handler, method, target string, body any, headers map[string]string) *httptest.ResponseRecorder {
@@ -88,7 +89,7 @@ func TestSubmitAndApproveFlow(t *testing.T) {
 		"statusLabel": "Online",
 		"languages":   []string{"English"},
 		"platforms": []map[string]string{
-			{"name": "Twitch", "channelUrl": "https://example.com", "liveUrl": "https://example.com/live"},
+			{"name": "Twitch", "channelUrl": "https://example.com"},
 		},
 	}
 
@@ -153,7 +154,7 @@ func TestRejectAndDeleteStreamers(t *testing.T) {
 		StatusLabel: "Offline",
 		Languages:   []string{"English"},
 		Platforms: []storage.Platform{
-			{Name: "YouTube", ChannelURL: "https://example.com", LiveURL: "https://example.com/live"},
+			{Name: "YouTube", ChannelURL: "https://example.com"},
 		},
 	})
 	if err != nil {
@@ -177,7 +178,7 @@ func TestRejectAndDeleteStreamers(t *testing.T) {
 		"statusLabel": "Workshop",
 		"languages":   []string{"English", "German"},
 		"platforms": []map[string]string{
-			{"name": "YouTube", "channelUrl": "https://example.com", "liveUrl": "https://example.com/live"},
+			{"name": "YouTube", "channelUrl": "https://example.com"},
 		},
 	}, headers)
 	if update.Code != http.StatusOK {

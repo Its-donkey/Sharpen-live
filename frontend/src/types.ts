@@ -3,7 +3,7 @@ export type StreamerStatus = "online" | "busy" | "offline";
 export interface Platform {
   name: string;
   channelUrl: string;
-  liveUrl: string;
+  id?: string;
 }
 
 export interface Streamer {
@@ -49,6 +49,7 @@ export interface AdminSettings {
   adminToken: string;
   adminEmail: string;
   adminPassword: string;
+  youtubeApiKey: string;
   dataDir: string;
   staticDir: string;
   streamersFile: string;

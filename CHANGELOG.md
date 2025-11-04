@@ -18,6 +18,9 @@
 - Update API default static directory to `frontend/dist` so the merged bundle serves by default.
 - Add Go unit tests covering configuration, middleware, and SPA handler utilities.
 - Provide default admin token in dev launcher so backend starts without extra env vars.
+- Convert platform name inputs to curated dropdowns of supported services across submission and admin forms.
+- Store YouTube API keys in admin settings and automatically resolve YouTube channel IDs into streamer platforms.
+- Remove handled stream live URLs from submissions/platform data and only surface platform links when a streamer is online.
 - Fix admin console build error by defining `import.meta.env` typing for Vite.
 - Refresh submission form to auto-set status and manage languages via curated dropdown with removable chips.
 - Display language names as “English / français”-style labels in the submission picker.

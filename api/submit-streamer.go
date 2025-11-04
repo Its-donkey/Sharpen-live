@@ -41,7 +41,6 @@ type submissionRequest struct {
 type platformEntry struct {
 	Name       string `json:"name"`
 	ChannelURL string `json:"channelUrl"`
-	LiveURL    string `json:"liveUrl"`
 }
 
 type storedSubmission struct {
@@ -152,7 +151,7 @@ func validateSubmission(req submissionRequest) []string {
 	}
 
 	if len(req.Platforms) == 0 {
-		errs = append(errs, "At least one platform with channel and live URLs is required.")
+		errs = append(errs, "At least one platform with a channel URL is required.")
 	}
 
 	return errs
@@ -177,9 +176,8 @@ func filterPlatforms(values []platformEntry, max int) []platformEntry {
 		entry := platformEntry{
 			Name:       strings.TrimSpace(v.Name),
 			ChannelURL: strings.TrimSpace(v.ChannelURL),
-			LiveURL:    strings.TrimSpace(v.LiveURL),
 		}
-		if entry.Name == "" || entry.ChannelURL == "" || entry.LiveURL == "" {
+		if entry.Name == "" || entry.ChannelURL == "" {
 			continue
 		}
 		result = append(result, entry)

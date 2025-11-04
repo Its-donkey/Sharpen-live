@@ -83,6 +83,15 @@ func New(store *storage.JSONStore, adminToken, adminEmail, adminPassword, youtub
 	return s
 }
 
+// WithHTTPClient overrides the HTTP client used for API operations.
+func WithHTTPClient(client *http.Client) Option {
+	return func(s *Server) {
+		if client != nil {
+			s.httpClient = client
+		}
+	}
+}
+
 // Handler returns the HTTP handler that serves the Sharpen Live API and static assets.
 func (s *Server) Handler(static http.Handler) http.Handler {
 	mux := http.NewServeMux()
@@ -687,8 +696,7 @@ func constantTimeEquals(a, b string) bool {
 }
 
 func (s *Server) streamerByID(id string) (storage.Streamer, error) {
-	trimmed := strings.TrimSpace(id)
-	if trimmed == "" {
+	if strings.TrimSpace(id) == "" {
 		return storage.Streamer{}, storage.ErrNotFound
 	}
 	streamers, err := s.store.ListStreamers()
@@ -696,28 +704,9 @@ func (s *Server) streamerByID(id string) (storage.Streamer, error) {
 		return storage.Streamer{}, err
 	}
 	for _, streamer := range streamers {
-		if streamer.ID == trimmed {
+		if streamer.ID == id {
 			return streamer, nil
 		}
 	}
 	return storage.Streamer{}, storage.ErrNotFound
-}
-
-func (s *Server) youtubeEventsSnapshot() []youtubeEvent {
-	s.mu.RLock()
-	defer s.mu.RUnlock()
-	events := make([]youtubeEvent, len(s.youtubeEvents))
-	copy(events, s.youtubeEvents)
-	return events
-}
-
-func (s *Server) appendYouTubeEvent(event youtubeEvent) {
-	s.mu.Lock()
-	defer s.mu.Unlock()
-	if len(s.youtubeEvents) >= youtubeEventLogLimit {
-		copy(s.youtubeEvents, s.youtubeEvents[1:])
-		s.youtubeEvents[len(s.youtubeEvents)-1] = event
-		return
-	}
-	s.youtubeEvents = append(s.youtubeEvents, event)
 }

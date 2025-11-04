@@ -70,7 +70,7 @@ func TestHandleMissingChannel(t *testing.T) {
 
 func TestHandleStartsAndStopsWatcher(t *testing.T) {
 	ticker := newFakeTicker()
-    checker := &fakeChecker{responses: []bool{true, false}}
+	checker := &fakeChecker{responses: []bool{true, false}}
 	monitor := NewMonitor(MonitorConfig{
 		Checker:       checker,
 		Interval:      time.Hour,

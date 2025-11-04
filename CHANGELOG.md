@@ -1,6 +1,7 @@
 # Changelog
 
 ## [Unreleased]
+- Add an admin monitor tab that visualizes recent YouTube subscription activity.
 - Unsubscribe YouTube alerts automatically when a streamer is removed.
 - Expose YouTube alert subscription settings in the admin UI for runtime configuration.
 - Automatically subscribe resolved YouTube channels to PubSubHubbub using the configured callback and secret.

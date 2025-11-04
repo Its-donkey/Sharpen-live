@@ -77,3 +77,7 @@ type settingsUpdateRequest struct {
 	YouTubeAlertsVerifySuffix *string `json:"youtubeAlertsVerifySuffix"`
 	YouTubeAlertsHubURL       *string `json:"youtubeAlertsHubUrl"`
 }
+
+type youtubeMonitorResponse struct {
+	Events []youtubeEvent `json:"events"`
+}

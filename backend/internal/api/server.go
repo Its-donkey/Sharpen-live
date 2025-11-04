@@ -30,7 +30,8 @@ type Server struct {
 		verifySuff  string
 		enabled     bool
 	}
-	mu sync.RWMutex
+	youtubeEvents []youtubeEvent
+	mu            sync.RWMutex
 }
 
 // Option mutates server configuration during construction.
@@ -45,7 +46,20 @@ type YouTubeAlertsConfig struct {
 	VerifyTokenSuffix string
 }
 
+type youtubeEvent struct {
+	Timestamp   time.Time `json:"timestamp"`
+	Mode        string    `json:"mode"`
+	ChannelID   string    `json:"channelId"`
+	Topic       string    `json:"topic"`
+	Callback    string    `json:"callback"`
+	Status      string    `json:"status"`
+	Error       string    `json:"error,omitempty"`
+	VerifyToken string    `json:"verifyToken,omitempty"`
+	HasSecret   bool      `json:"hasSecret"`
+}
+
 const defaultYouTubeHubURL = "https://pubsubhubbub.appspot.com/subscribe"
+const youtubeEventLogLimit = 100
 
 // New constructs a Server with the provided dependencies.
 func New(store *storage.JSONStore, adminToken, adminEmail, adminPassword, youtubeAPIKey string, opts ...Option) *Server {
@@ -89,6 +103,7 @@ func (s *Server) Handler(static http.Handler) http.Handler {
 	mux.Handle("/api/submit-streamer", http.HandlerFunc(s.handleSubmitStreamer))
 	mux.Handle("/api/admin/submissions", http.HandlerFunc(s.handleAdminSubmissions))
 	mux.Handle("/api/admin/settings", http.HandlerFunc(s.handleAdminSettings))
+	mux.Handle("/api/admin/monitor/youtube", http.HandlerFunc(s.handleAdminYouTubeMonitor))
 
 	// Mount the static handler as a catch-all for everything else.
 	mux.Handle("/", static)
@@ -132,6 +147,15 @@ func WithYouTubeAlerts(cfg YouTubeAlertsConfig) Option {
 		s.youtubeAlerts.secret = strings.TrimSpace(cfg.Secret)
 		s.youtubeAlerts.verifyPref = strings.TrimSpace(cfg.VerifyTokenPrefix)
 		s.youtubeAlerts.verifySuff = strings.TrimSpace(cfg.VerifyTokenSuffix)
+	}
+}
+
+// WithHTTPClient overrides the HTTP client used for outbound requests. Primarily used for testing.
+func WithHTTPClient(client *http.Client) Option {
+	return func(s *Server) {
+		if client != nil {
+			s.httpClient = client
+		}
 	}
 }
 
@@ -406,6 +430,20 @@ func (s *Server) handleAdminSettings(w http.ResponseWriter, r *http.Request) {
 	default:
 		methodNotAllowed(w, http.MethodGet, http.MethodPut)
 	}
+}
+
+func (s *Server) handleAdminYouTubeMonitor(w http.ResponseWriter, r *http.Request) {
+	if !s.authorizeAdmin(w, r) {
+		return
+	}
+
+	if r.Method != http.MethodGet {
+		methodNotAllowed(w, http.MethodGet)
+		return
+	}
+
+	events := s.youtubeEventsSnapshot()
+	respondJSON(w, http.StatusOK, youtubeMonitorResponse{Events: events})
 }
 
 func (s *Server) currentSettingsPayload() settingsResponse {

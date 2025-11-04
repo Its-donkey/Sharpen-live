@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"net/url"
 	"strings"
+	"time"
 
 	"github.com/Its-donkey/Sharpen-live/backend/internal/storage"
 )
@@ -247,20 +248,58 @@ func (s *Server) manageYouTubeSubscription(ctx context.Context, channelID, mode 
 		params.Set("hub.secret", s.youtubeAlerts.secret)
 	}
 
+	topic := params.Get("hub.topic")
+	verifyToken := params.Get("hub.verify_token")
+	hasSecret := s.youtubeAlerts.secret != ""
+	timestamp := time.Now().UTC()
+
 	req, err := http.NewRequestWithContext(ctx, http.MethodPost, s.youtubeHubURL, strings.NewReader(params.Encode()))
 	if err != nil {
+		s.appendYouTubeEvent(youtubeEvent{
+			Timestamp:   timestamp,
+			Mode:        mode,
+			ChannelID:   channelID,
+			Topic:       topic,
+			Callback:    callback,
+			Status:      "request_failed",
+			Error:       err.Error(),
+			VerifyToken: verifyToken,
+			HasSecret:   hasSecret,
+		})
 		return
 	}
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 
 	resp, err := s.httpClient.Do(req)
 	if err != nil {
+		s.appendYouTubeEvent(youtubeEvent{
+			Timestamp:   timestamp,
+			Mode:        mode,
+			ChannelID:   channelID,
+			Topic:       topic,
+			Callback:    callback,
+			Status:      "request_error",
+			Error:       err.Error(),
+			VerifyToken: verifyToken,
+			HasSecret:   hasSecret,
+		})
 		return
 	}
 	defer resp.Body.Close()
 
+	status := resp.Status
 	if resp.StatusCode >= http.StatusOK && resp.StatusCode < http.StatusMultipleChoices {
 		_, _ = io.Copy(io.Discard, resp.Body)
+		s.appendYouTubeEvent(youtubeEvent{
+			Timestamp:   timestamp,
+			Mode:        mode,
+			ChannelID:   channelID,
+			Topic:       topic,
+			Callback:    callback,
+			Status:      status,
+			VerifyToken: verifyToken,
+			HasSecret:   hasSecret,
+		})
 		return
 	}
 

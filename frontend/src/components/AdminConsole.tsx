@@ -10,6 +10,7 @@ import {
   deleteAdminStreamer,
   getAdminStreamers,
   getAdminSettings,
+  getYouTubeMonitor,
   getSubmissions,
   loginAdmin,
   moderateSubmission,
@@ -17,12 +18,13 @@ import {
   updateAdminStreamer
 } from "../api";
 import type {
-  AdminSettings,
-  AdminSettingsUpdate,
-  Streamer,
-  StreamerStatus,
-  Submission,
-  SubmissionPayload
+	AdminSettings,
+	AdminSettingsUpdate,
+	AdminYouTubeEvent,
+	Streamer,
+	StreamerStatus,
+	Submission,
+	SubmissionPayload
 } from "../types";
 import { STATUS_DEFAULT_LABELS } from "../types";
 import {
@@ -116,11 +118,13 @@ export function AdminConsole({
   const [submissions, setSubmissions] = useState<Submission[]>([]);
   const [streamers, setStreamers] = useState<Streamer[]>([]);
   const [isCreateOpen, setIsCreateOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState<"streamers" | "settings">("streamers");
+  const [activeTab, setActiveTab] = useState<"streamers" | "settings" | "monitor">("streamers");
   const [settings, setSettings] = useState<AdminSettings | null>(null);
   const [settingsDraft, setSettingsDraft] = useState<AdminSettings | null>(null);
   const [settingsLoading, setSettingsLoading] = useState(false);
   const [settingsSaving, setSettingsSaving] = useState(false);
+  const [monitorEvents, setMonitorEvents] = useState<AdminYouTubeEvent[]>([]);
+  const [monitorLoading, setMonitorLoading] = useState(false);
   const isAuthenticated = Boolean(token);
 
   const loadAdminData = useCallback(
@@ -142,6 +146,24 @@ export function AdminConsole({
         });
       } finally {
         setLoading(false);
+      }
+    },
+    []
+  );
+
+  const loadMonitorData = useCallback(
+    async (currentToken: string) => {
+      setMonitorLoading(true);
+      try {
+        const events = await getYouTubeMonitor(currentToken);
+        setMonitorEvents(events);
+      } catch (error) {
+        setStatus({
+          message: error instanceof Error ? error.message : "Unable to load monitor data.",
+          tone: "error"
+        });
+      } finally {
+        setMonitorLoading(false);
       }
     },
     []
@@ -171,10 +193,13 @@ export function AdminConsole({
       setSubmissions([]);
       setStreamers([]);
       setSettings(null);
+      setSettingsDraft(null);
+      setMonitorEvents([]);
       return;
     }
     void loadAdminData(token);
-  }, [token, loadAdminData]);
+    void loadMonitorData(token);
+  }, [token, loadAdminData, loadMonitorData]);
 
   useEffect(() => {
     if (!isAuthenticated || activeTab !== "settings") {
@@ -184,6 +209,15 @@ export function AdminConsole({
       void loadSettings(token);
     }
   }, [isAuthenticated, activeTab, settings, settingsLoading, loadSettings, token]);
+
+  useEffect(() => {
+    if (!isAuthenticated || activeTab !== "monitor") {
+      return;
+    }
+    if (!monitorEvents.length && !monitorLoading) {
+      void loadMonitorData(token);
+    }
+  }, [isAuthenticated, activeTab, monitorEvents.length, monitorLoading, loadMonitorData, token]);
 
   const sortedSubmissions = useMemo(
     () =>
@@ -232,6 +266,8 @@ export function AdminConsole({
     setPassword(defaultPassword);
     setSettings(null);
     setSettingsDraft(null);
+    setMonitorEvents([]);
+    setMonitorLoading(false);
     setActiveTab("streamers");
     setStatus({ message: "Logged out of admin console.", tone: "info" });
   };
@@ -242,6 +278,7 @@ export function AdminConsole({
       return;
     }
     await loadAdminData(token);
+    await loadMonitorData(token);
     await onStreamersUpdated();
   };
 
@@ -441,72 +478,79 @@ export function AdminConsole({
           >
             Settings
           </button>
+          <button
+            type="button"
+            className={activeTab === "monitor" ? "admin-tab active" : "admin-tab"}
+            onClick={() => setActiveTab("monitor")}
+          >
+            Monitor
+          </button>
         </div>
       ) : null}
 
       {isAuthenticated ? (
         activeTab === "streamers" ? (
           <div className="admin-grid" role="tabpanel">
-          <section aria-labelledby="admin-submissions-title">
-            <h3 id="admin-submissions-title">Pending submissions</h3>
-            {loading && !submissions.length ? (
-              <div className="admin-empty">Loading submissions…</div>
-            ) : sortedSubmissions.length ? (
-              <div className="admin-submissions">
-                {sortedSubmissions.map((submission) => (
-                  <SubmissionCard
-                    key={submission.id}
-                    submission={submission}
-                    onApprove={() => moderate("approve", submission.id)}
-                    onReject={() => moderate("reject", submission.id)}
-                    disabled={loading}
-                  />
-                ))}
+            <section aria-labelledby="admin-submissions-title">
+              <h3 id="admin-submissions-title">Pending submissions</h3>
+              {loading && !submissions.length ? (
+                <div className="admin-empty">Loading submissions…</div>
+              ) : sortedSubmissions.length ? (
+                <div className="admin-submissions">
+                  {sortedSubmissions.map((submission) => (
+                    <SubmissionCard
+                      key={submission.id}
+                      submission={submission}
+                      onApprove={() => moderate("approve", submission.id)}
+                      onReject={() => moderate("reject", submission.id)}
+                      disabled={loading}
+                    />
+                  ))}
+                </div>
+              ) : (
+                <div className="admin-empty">No pending submissions at the moment.</div>
+              )}
+            </section>
+
+            <section aria-labelledby="admin-streamers-title">
+              <div className="admin-streamers-header">
+                <h3 id="admin-streamers-title">Current roster</h3>
+                <button
+                  type="button"
+                  className="secondary-button"
+                  onClick={() => setIsCreateOpen((value) => !value)}
+                  disabled={loading}
+                >
+                  {isCreateOpen ? "Cancel new streamer" : "Add streamer"}
+                </button>
               </div>
-            ) : (
-              <div className="admin-empty">No pending submissions at the moment.</div>
-            )}
-          </section>
 
-          <section aria-labelledby="admin-streamers-title">
-            <div className="admin-streamers-header">
-              <h3 id="admin-streamers-title">Current roster</h3>
-              <button
-                type="button"
-                className="secondary-button"
-                onClick={() => setIsCreateOpen((value) => !value)}
-                disabled={loading}
-              >
-                {isCreateOpen ? "Cancel new streamer" : "Add streamer"}
-              </button>
-            </div>
+              {isCreateOpen ? (
+                <AdminCreateStreamer
+                  onSubmit={async (payload) => {
+                    await createStreamer(payload);
+                    setIsCreateOpen(false);
+                  }}
+                />
+              ) : null}
 
-            {isCreateOpen ? (
-              <AdminCreateStreamer
-                onSubmit={async (payload) => {
-                  await createStreamer(payload);
-                  setIsCreateOpen(false);
-                }}
-              />
-            ) : null}
-
-            {streamers.length ? (
-              <div className="admin-streamers">
-                {streamers.map((streamer) => (
-                  <AdminStreamerCard
-                    key={streamer.id}
-                    streamer={streamer}
-                    onUpdate={updateStreamer}
-                    onDelete={removeStreamer}
-                  />
-                ))}
-              </div>
-            ) : (
-              <div className="admin-empty">No streamers found. Add one to get started.</div>
-            )}
-          </section>
-        </div>
-        ) : (
+              {streamers.length ? (
+                <div className="admin-streamers">
+                  {streamers.map((streamer) => (
+                    <AdminStreamerCard
+                      key={streamer.id}
+                      streamer={streamer}
+                      onUpdate={updateStreamer}
+                      onDelete={removeStreamer}
+                    />
+                  ))}
+                </div>
+              ) : (
+                <div className="admin-empty">No streamers found. Add one to get started.</div>
+              )}
+            </section>
+          </div>
+        ) : activeTab === "settings" ? (
           <section className="admin-settings" role="tabpanel">
             <h3>Environment settings</h3>
             <p className="admin-help">
@@ -676,6 +720,65 @@ export function AdminConsole({
               </form>
             ) : (
               <div className="admin-empty">Settings unavailable.</div>
+            )}
+          </section>
+        ) : (
+          <section className="admin-monitor" role="tabpanel">
+            <h3>YouTube alerts monitor</h3>
+            <p className="admin-help">
+              Recent subscribe and unsubscribe requests sent to YouTube&apos;s PubSubHubbub hub.
+            </p>
+            {monitorLoading && !monitorEvents.length ? (
+              <div className="admin-empty">Loading monitor activity…</div>
+            ) : monitorEvents.length ? (
+              <div className="admin-monitor-table-wrapper">
+                <table className="admin-monitor-table">
+                  <thead>
+                    <tr>
+                      <th scope="col">Time</th>
+                      <th scope="col">Action</th>
+                      <th scope="col">Channel ID</th>
+                      <th scope="col">Status</th>
+                      <th scope="col">Details</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {monitorEvents
+                      .slice()
+                      .reverse()
+                      .map((event, index) => {
+                        const timestamp = new Date(event.timestamp);
+                        const formatted = Number.isNaN(timestamp.valueOf())
+                          ? event.timestamp
+                          : timestamp.toLocaleString();
+                        const detailLines = [
+                          `Topic: ${event.topic}`,
+                          `Callback: ${event.callback}`,
+                          event.verifyToken ? `Verify token: ${event.verifyToken}` : null,
+                          event.hasSecret ? "Secret attached" : null,
+                          event.error ? `Error: ${event.error}` : null
+                        ].filter(Boolean) as string[];
+                        return (
+                          <tr key={`${event.timestamp}-${index}`}>
+                            <td>{formatted}</td>
+                            <td className={`admin-monitor-mode admin-monitor-mode-${event.mode}`}>
+                              {event.mode}
+                            </td>
+                            <td>{event.channelId}</td>
+                            <td>{event.status}</td>
+                            <td>
+                              {detailLines.map((line, lineIndex) => (
+                                <div key={lineIndex}>{line}</div>
+                              ))}
+                            </td>
+                          </tr>
+                        );
+                      })}
+                  </tbody>
+                </table>
+              </div>
+            ) : (
+              <div className="admin-empty">No YouTube activity recorded yet.</div>
             )}
           </section>
         )

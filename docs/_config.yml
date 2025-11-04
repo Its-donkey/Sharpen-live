@@ -1,0 +1,22 @@
+title: Sharpen Live
+description: >
+  Documentation and resources for the Sharpen Live project.
+remote_theme: pages-themes/minimal@v0.2.0
+plugins:
+  - jekyll-remote-theme
+
+  bugfix/items/github-json-content-type
+  bugfix/items/github-json-header
+  bugfix/items/import-meta-env
+  design/streamers/streamer-table
+  feature/items/admin-dashboard-layout
+  feature/items/admin-settings
+  feature/items/admin-tabs
+  feature/items/api-react-overhaul
+  feature/items/dynamic-streamer-table
+  feature/items/streamer-submission-link
+* main
+  main-upstream
+  merge-everything-backup
+  refactor/items/backend-consolidation
+  refactor/items/backend-structure

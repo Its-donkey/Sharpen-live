@@ -38,7 +38,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	srv := api.New(store, cfg.AdminToken, cfg.AdminEmail, cfg.AdminPassword)
+	srv := server.New(store, cfg.AdminToken, cfg.AdminEmail, cfg.AdminPassword, cfg.YouTubeAPIKey)
 	staticHandler := spaHandler(cfg.StaticDir)
 
 	httpServer := &http.Server{

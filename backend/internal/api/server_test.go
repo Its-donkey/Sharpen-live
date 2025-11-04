@@ -34,7 +34,7 @@ func newTestEnv(t *testing.T) testEnv {
 	if err != nil {
 		t.Fatalf("create store: %v", err)
 	}
-	srv := api.New(store, adminToken, adminEmail, adminPassword)
+	srv := server.New(store, adminToken, adminEmail, adminPassword, "")
 	handler := srv.Handler(http.NotFoundHandler())
 	return testEnv{store: store, handler: handler, server: srv}
 }
@@ -89,7 +89,7 @@ func TestSubmitAndApproveFlow(t *testing.T) {
 		"statusLabel": "Online",
 		"languages":   []string{"English"},
 		"platforms": []map[string]string{
-			{"name": "Twitch", "channelUrl": "https://example.com", "liveUrl": "https://example.com/live"},
+			{"name": "Twitch", "channelUrl": "https://example.com"},
 		},
 	}
 
@@ -154,7 +154,7 @@ func TestRejectAndDeleteStreamers(t *testing.T) {
 		StatusLabel: "Offline",
 		Languages:   []string{"English"},
 		Platforms: []storage.Platform{
-			{Name: "YouTube", ChannelURL: "https://example.com", LiveURL: "https://example.com/live"},
+			{Name: "YouTube", ChannelURL: "https://example.com"},
 		},
 	})
 	if err != nil {
@@ -178,7 +178,7 @@ func TestRejectAndDeleteStreamers(t *testing.T) {
 		"statusLabel": "Workshop",
 		"languages":   []string{"English", "German"},
 		"platforms": []map[string]string{
-			{"name": "YouTube", "channelUrl": "https://example.com", "liveUrl": "https://example.com/live"},
+			{"name": "YouTube", "channelUrl": "https://example.com"},
 		},
 	}, headers)
 	if update.Code != http.StatusOK {
@@ -214,10 +214,15 @@ func TestAdminSettingsHandlers(t *testing.T) {
 	if payload["adminEmail"] != adminEmail {
 		t.Fatalf("expected admin email %q, got %q", adminEmail, payload["adminEmail"])
 	}
+	if payload["youtubeApiKey"] != "" {
+		t.Fatalf("expected blank youtube key, got %q", payload["youtubeApiKey"])
+	}
 
 	newToken := "updated-token"
+	newYouTubeKey := "api-key-123"
 	updateResp := performRequest(env.handler, http.MethodPut, "/api/admin/settings", map[string]string{
-		"adminToken": newToken,
+		"adminToken":    newToken,
+		"youtubeApiKey": newYouTubeKey,
 	}, headers)
 	if updateResp.Code != http.StatusOK {
 		t.Fatalf("expected 200 updating settings, got %d", updateResp.Code)
@@ -228,5 +233,13 @@ func TestAdminSettingsHandlers(t *testing.T) {
 	okResp := performRequest(env.handler, http.MethodGet, "/api/admin/settings", nil, testHeaders)
 	if okResp.Code != http.StatusOK {
 		t.Fatalf("expected authorized with new token, got %d", okResp.Code)
+	}
+
+	var updated map[string]string
+	if err := json.Unmarshal(okResp.Body.Bytes(), &updated); err != nil {
+		t.Fatalf("unmarshal updated settings: %v", err)
+	}
+	if updated["youtubeApiKey"] != newYouTubeKey {
+		t.Fatalf("expected youtube key %q, got %q", newYouTubeKey, updated["youtubeApiKey"])
 	}
 }

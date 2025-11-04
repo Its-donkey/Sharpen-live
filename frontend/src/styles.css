@@ -334,13 +334,16 @@ tbody tr:hover {
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
 }
 
-.language-picker {
+.language-picker,
+.platform-picker {
   display: grid;
   gap: 0.75rem;
   position: relative;
 }
 
-.language-select {
+.language-select,
+.platform-select {
+  width: 100%;
   min-width: 220px;
   padding: 0.75rem 0.9rem;
   border-radius: 12px;
@@ -355,13 +358,15 @@ tbody tr:hover {
   padding-right: 2.5rem;
 }
 
-.language-select:focus-visible {
+.language-select:focus-visible,
+.platform-select:focus-visible {
   outline: none;
   border-color: rgba(56, 189, 248, 0.75);
   box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.25);
 }
 
-.language-picker::after {
+.language-picker::after,
+.platform-picker::after {
   content: "";
   position: absolute;
   top: 18px;
@@ -446,11 +451,16 @@ tbody tr:hover {
 .admin-settings {
   display: grid;
   gap: 1.5rem;
+  width: 100%;
 }
 
 .admin-settings-form {
   display: grid;
   gap: 1.25rem;
+}
+
+.admin-grid[role="tabpanel"] {
+  width: 100%;
 }
 
 .form-field {
@@ -477,6 +487,13 @@ tbody tr:hover {
   color: var(--fg-primary);
   font: inherit;
   transition: border 0.2s ease, box-shadow 0.2s ease;
+}
+
+.form-field-error input,
+.form-field-error select,
+.form-field-error textarea {
+  border-color: rgba(248, 113, 113, 0.65);
+  box-shadow: 0 0 0 3px rgba(248, 113, 113, 0.15);
 }
 
 .form-field input:focus-visible,
@@ -514,6 +531,12 @@ tbody tr:hover {
   text-transform: uppercase;
   letter-spacing: 0.1em;
   color: var(--fg-muted);
+}
+
+.field-error-text {
+  margin: 0.25rem 0 0;
+  color: #fca5a5;
+  font-size: 0.82rem;
 }
 
 .platform-rows {

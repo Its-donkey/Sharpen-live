@@ -5,17 +5,17 @@
     "description": "Specializes in chef knives · Est. wait time 10 min",
     "status": "online",
     "statusLabel": "Online",
-    "languages": ["English"],
+    "languages": [
+      "English"
+    ],
     "platforms": [
       {
         "name": "Twitch",
-        "channelUrl": "https://www.twitch.tv/edgecrafter",
-        "liveUrl": "https://www.twitch.tv/edgecrafter"
+        "channelUrl": "https://www.twitch.tv/edgecrafter"
       },
       {
         "name": "YouTube",
-        "channelUrl": "https://www.youtube.com/@edgecrafter",
-        "liveUrl": "https://www.youtube.com/watch?v=edgecrafter-live"
+        "channelUrl": "https://www.youtube.com/@edgecrafter"
       }
     ]
   },
@@ -25,32 +25,34 @@
     "description": "Waterstone specialist · Accepting rush orders",
     "status": "busy",
     "statusLabel": "Workshop",
-    "languages": ["English", "Japanese"],
+    "languages": [
+      "English",
+      "Japanese"
+    ],
     "platforms": [
       {
         "name": "YouTube",
-        "channelUrl": "https://www.youtube.com/@zenedgestudio",
-        "liveUrl": "https://www.youtube.com/watch?v=zenedgestudio-live"
+        "channelUrl": "https://www.youtube.com/@zenedgestudio"
       }
     ]
   },
   {
     "id": "b662b624-f58b-400c-be5c-a6882ac53c60",
-    "name": "Forge & Feather",
+    "name": "Forge \u0026 Feather",
     "description": "Damascus patterns · Next stream 19:00 UTC",
     "status": "offline",
     "statusLabel": "Offline",
-    "languages": ["French"],
+    "languages": [
+      "French"
+    ],
     "platforms": [
       {
         "name": "Kick",
-        "channelUrl": "https://kick.com/forgeandfeather",
-        "liveUrl": "https://kick.com/forgeandfeather/live"
+        "channelUrl": "https://kick.com/forgeandfeather"
       },
       {
         "name": "Twitch",
-        "channelUrl": "https://www.twitch.tv/forgeandfeather",
-        "liveUrl": "https://www.twitch.tv/forgeandfeather"
+        "channelUrl": "https://www.twitch.tv/forgeandfeather"
       }
     ]
   },
@@ -60,37 +62,71 @@
     "description": "Premium partners · Bookings open",
     "status": "online",
     "statusLabel": "Online",
-    "languages": ["English", "German"],
+    "languages": [
+      "English",
+      "German"
+    ],
     "platforms": [
       {
         "name": "Twitch",
-        "channelUrl": "https://www.twitch.tv/honbazukepro",
-        "liveUrl": "https://www.twitch.tv/honbazukepro"
+        "channelUrl": "https://www.twitch.tv/honbazukepro"
       },
       {
         "name": "Instagram Live",
-        "channelUrl": "https://www.instagram.com/honbazukepro/",
-        "liveUrl": "https://www.instagram.com/honbazukepro/live/"
+        "channelUrl": "https://www.instagram.com/honbazukepro/"
       }
     ]
   },
   {
     "id": "0a89a855-e146-44de-ae02-9219f941e5a2",
-    "name": "Sharp & True",
+    "name": "Sharp \u0026 True",
     "description": "Mobile service · On-site events available",
     "status": "offline",
     "statusLabel": "Offline",
-    "languages": ["Spanish"],
+    "languages": [
+      "Spanish"
+    ],
     "platforms": [
       {
         "name": "YouTube",
-        "channelUrl": "https://www.youtube.com/@sharpandtrue",
-        "liveUrl": "https://www.youtube.com/watch?v=sharpandtrue-live"
+        "channelUrl": "https://www.youtube.com/@sharpandtrue"
       },
       {
         "name": "Facebook Live",
-        "channelUrl": "https://www.facebook.com/sharpandtrue/live",
-        "liveUrl": "https://www.facebook.com/sharpandtrue/live"
+        "channelUrl": "https://www.facebook.com/sharpandtrue/live"
+      }
+    ]
+  },
+  {
+    "id": "8d5c1c62-7158-4b83-abfd-e3b943df1a7e",
+    "name": "Sharpen Right Services LLC - Mike White",
+    "description": "Sharpen Right Services LLC - Mike White located in League City, Texas.  We are a home based, mobile and mail order sharpening service; specializing in sharpening high-end salon shears, clipper blades, sewing and utility scissors and just about any knife. \n\nThis channel showcases our services and tools we use to sharpen different tools. If you are interested in having your tools sharpened; we offer mail in sharpening services within the US. Contact us for details.",
+    "status": "offline",
+    "statusLabel": "Offline",
+    "languages": [
+      "English"
+    ],
+    "platforms": [
+      {
+        "name": "YouTube",
+        "channelUrl": "https://www.youtube.com/@sharpenrightservicesllc",
+        "id": "UC7d6BuAfHKTLR1l2SSg6HkA"
+      }
+    ]
+  },
+  {
+    "id": "5d012ecc-d9d2-4c6b-9921-53a7f94a83d1",
+    "name": "Ship Shape Sharpening",
+    "description": "jsfsdkjsfda",
+    "status": "offline",
+    "statusLabel": "Offline",
+    "languages": [
+      "English"
+    ],
+    "platforms": [
+      {
+        "name": "YouTube",
+        "channelUrl": "https://www.youtube.com/@Ship-Shape-Sharpening"
       }
     ]
   }

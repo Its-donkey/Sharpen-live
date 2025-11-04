@@ -33,6 +33,12 @@ body {
   gap: 3rem;
 }
 
+#root {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
 .surface {
   width: min(1120px, 100%);
   background: var(--bg-surface);

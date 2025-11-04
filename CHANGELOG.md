@@ -14,12 +14,18 @@
 - Add YouTube alert listener service that polls live status every five minutes.
 - Modularize YouTube alert application with dedicated packages and automated tests.
 - Add `frontend/streamers.json` to track streamer metadata.
-- Restructure repository into `backend/` and `frontend/` applications with shared tooling paths.
-- Rename the Go API binary to `cmd/api-server` and group HTTP handlers under `internal/api` for clarity.
+- Restructure repository into `backend/` and `frontend/` applications with shared tooling paths and remove the legacy `web/` duplicate.
+- Merge the legacy `api/` module into `backend/` so there is a single Go service.
+- Update API default static directory to `frontend/dist` so the merged bundle serves by default.
 - Add Go unit tests covering configuration, middleware, and SPA handler utilities.
 - Provide default admin token in dev launcher so backend starts without extra env vars.
+- Convert platform name inputs to curated dropdowns of supported services across submission and admin forms.
+- Store YouTube API keys in admin settings and automatically resolve YouTube channel IDs into streamer platforms.
+- Remove handled stream live URLs from submissions/platform data and only surface platform links when a streamer is online.
+- Fix admin console build error by defining `import.meta.env` typing for Vite.
 - Refresh submission form to auto-set status and manage languages via curated dropdown with removable chips.
 - Display language names as “English / français”-style labels in the submission picker.
 - Add admin dashboard tabs for streamers and settings, including editable environment values.
+- Guard admin login against concurrent settings updates to avoid race conditions.
 - Support PubSubHubbub verification callbacks for `/alerts`.
 - Ensure PubSubHubbub verification replies echo `hub.challenge` with a `200 OK` status and log successful confirmations.

@@ -19,7 +19,7 @@ var ErrNotFound = errors.New("storage: not found")
 type Platform struct {
 	Name       string `json:"name"`
 	ChannelURL string `json:"channelUrl"`
-	LiveURL    string `json:"liveUrl"`
+	ID         string `json:"id,omitempty"`
 }
 
 // Streamer models a featured streamer entry rendered on the roster.

@@ -9,6 +9,7 @@ import (
 	"path"
 	"strings"
 	"sync"
+	"time"
 
 	"github.com/Its-donkey/Sharpen-live/backend/internal/storage"
 )
@@ -19,16 +20,20 @@ type Server struct {
 	adminToken    string
 	adminEmail    string
 	adminPassword string
+	youtubeAPIKey string
+	httpClient    *http.Client
 	mu            sync.RWMutex
 }
 
 // New constructs a Server with the provided dependencies.
-func New(store *storage.JSONStore, adminToken, adminEmail, adminPassword string) *Server {
+func New(store *storage.JSONStore, adminToken, adminEmail, adminPassword, youtubeAPIKey string) *Server {
 	return &Server{
 		store:         store,
 		adminToken:    strings.TrimSpace(adminToken),
 		adminEmail:    strings.ToLower(strings.TrimSpace(adminEmail)),
 		adminPassword: strings.TrimSpace(adminPassword),
+		youtubeAPIKey: strings.TrimSpace(youtubeAPIKey),
+		httpClient:    &http.Client{Timeout: 10 * time.Second},
 	}
 }
 
@@ -84,12 +89,18 @@ func (s *Server) handleAdminLogin(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if !constantTimeEquals(email, s.adminEmail) || !constantTimeEquals(password, s.adminPassword) {
+	s.mu.RLock()
+	adminEmail := s.adminEmail
+	adminPassword := s.adminPassword
+	adminToken := s.adminToken
+	s.mu.RUnlock()
+
+	if !constantTimeEquals(email, adminEmail) || !constantTimeEquals(password, adminPassword) {
 		respondJSON(w, http.StatusUnauthorized, errorPayload{Message: "Invalid credentials."})
 		return
 	}
 
-	respondJSON(w, http.StatusOK, loginResponse{Token: s.adminToken})
+	respondJSON(w, http.StatusOK, loginResponse{Token: adminToken})
 }
 
 func (s *Server) handleAdminStreamers(w http.ResponseWriter, r *http.Request) {
@@ -121,13 +132,14 @@ func (s *Server) handleAdminStreamers(w http.ResponseWriter, r *http.Request) {
 			Status:      payload.Status,
 			StatusLabel: payload.StatusLabel,
 			Languages:   payload.Languages,
-			Platforms:   payload.Platforms,
+			Platforms:   s.enrichPlatforms(r.Context(), payload.Platforms),
 		}
 		result, err := s.store.CreateStreamer(entry)
 		if err != nil {
 			respondError(w, http.StatusInternalServerError, err)
 			return
 		}
+		result.Platforms = entry.Platforms
 		respondJSON(w, http.StatusCreated, result)
 	default:
 		methodNotAllowed(w, http.MethodGet, http.MethodPost)
@@ -165,7 +177,7 @@ func (s *Server) handleAdminStreamerByID(w http.ResponseWriter, r *http.Request)
 			Status:      payload.Status,
 			StatusLabel: payload.StatusLabel,
 			Languages:   payload.Languages,
-			Platforms:   payload.Platforms,
+			Platforms:   s.enrichPlatforms(r.Context(), payload.Platforms),
 		}
 		result, err := s.store.UpdateStreamer(entry)
 		if errors.Is(err, storage.ErrNotFound) {
@@ -176,6 +188,7 @@ func (s *Server) handleAdminStreamerByID(w http.ResponseWriter, r *http.Request)
 			respondError(w, http.StatusInternalServerError, err)
 			return
 		}
+		result.Platforms = entry.Platforms
 		respondJSON(w, http.StatusOK, result)
 	case http.MethodDelete:
 		err := s.store.DeleteStreamer(id)
@@ -263,6 +276,11 @@ func (s *Server) handleAdminSubmissions(w http.ResponseWriter, r *http.Request) 
 				respondError(w, http.StatusInternalServerError, err)
 				return
 			}
+			streamer.Platforms = s.enrichPlatforms(r.Context(), streamer.Platforms)
+			if streamer, err = s.store.UpdateStreamer(streamer); err != nil {
+				respondError(w, http.StatusInternalServerError, err)
+				return
+			}
 			respondJSON(w, http.StatusOK, successPayload{
 				Message: "Submission approved and added to roster.",
 				ID:      streamer.ID,
@@ -322,6 +340,7 @@ func (s *Server) currentSettingsPayload() settingsResponse {
 		AdminToken:      s.adminToken,
 		AdminEmail:      s.adminEmail,
 		AdminPassword:   s.adminPassword,
+		YouTubeAPIKey:   s.youtubeAPIKey,
 		DataDir:         strings.TrimSpace(os.Getenv("SHARPEN_DATA_DIR")),
 		StaticDir:       strings.TrimSpace(os.Getenv("SHARPEN_STATIC_DIR")),
 		StreamersFile:   strings.TrimSpace(os.Getenv("SHARPEN_STREAMERS_FILE")),
@@ -345,6 +364,10 @@ func (s *Server) applySettings(payload settingsUpdateRequest) error {
 			return errors.New("admin password cannot be empty")
 		}
 	}
+	if payload.YouTubeAPIKey != nil {
+		trimmed := strings.TrimSpace(*payload.YouTubeAPIKey)
+		*payload.YouTubeAPIKey = trimmed
+	}
 
 	s.mu.Lock()
 	defer s.mu.Unlock()
@@ -360,6 +383,10 @@ func (s *Server) applySettings(payload settingsUpdateRequest) error {
 	if payload.AdminPassword != nil {
 		s.adminPassword = strings.TrimSpace(*payload.AdminPassword)
 		_ = os.Setenv("ADMIN_PASSWORD", s.adminPassword)
+	}
+	if payload.YouTubeAPIKey != nil {
+		s.youtubeAPIKey = strings.TrimSpace(*payload.YouTubeAPIKey)
+		_ = os.Setenv("YOUTUBE_API_KEY", s.youtubeAPIKey)
 	}
 	if payload.ListenAddr != nil {
 		_ = os.Setenv("LISTEN_ADDR", strings.TrimSpace(*payload.ListenAddr))

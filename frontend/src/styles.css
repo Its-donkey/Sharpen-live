@@ -451,11 +451,16 @@ tbody tr:hover {
 .admin-settings {
   display: grid;
   gap: 1.5rem;
+  width: 100%;
 }
 
 .admin-settings-form {
   display: grid;
   gap: 1.25rem;
+}
+
+.admin-grid[role="tabpanel"] {
+  width: 100%;
 }
 
 .form-field {

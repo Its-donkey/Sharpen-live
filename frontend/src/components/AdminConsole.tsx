@@ -106,8 +106,9 @@ export function AdminConsole({
   clearToken,
   onStreamersUpdated
 }: AdminConsoleProps) {
-  const defaultEmail = import.meta.env.DEV ? DEV_EMAIL : "";
-  const defaultPassword = import.meta.env.DEV ? DEV_PASSWORD : "";
+  const isDev = import.meta.env.DEV;
+  const defaultEmail = isDev ? DEV_EMAIL : "";
+  const defaultPassword = isDev ? DEV_PASSWORD : "";
   const [email, setEmail] = useState(defaultEmail);
   const [password, setPassword] = useState(defaultPassword);
   const [status, setStatus] = useState<StatusState>(defaultStatus);

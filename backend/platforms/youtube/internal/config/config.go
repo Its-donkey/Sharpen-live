@@ -17,12 +17,14 @@ const (
 	envPort                  = "YTPORT"
 	envPollInterval          = "POLL_INTERVAL"
 	envShutdownGraceDuration = "SHUTDOWN_GRACE_PERIOD"
+	envDatabaseURL           = "DATABASE_URL"
 )
 
 // Config captures runtime settings for the YouTube alert listener.
 type Config struct {
 	ListenAddr          string
 	APIKey              string
+	DatabaseURL         string
 	PollInterval        time.Duration
 	ShutdownGracePeriod time.Duration
 }
@@ -34,6 +36,7 @@ func FromEnv() (Config, error) {
 		PollInterval:        defaultPollInterval,
 		ShutdownGracePeriod: defaultShutdownGrace,
 		APIKey:              os.Getenv(envYouTubeAPIKey),
+		DatabaseURL:         strings.TrimSpace(os.Getenv(envDatabaseURL)),
 	}
 
 	if v := strings.TrimSpace(os.Getenv(envListenAddr)); v != "" {
@@ -79,6 +82,10 @@ func (c Config) Validate() error {
 
 	if c.ShutdownGracePeriod <= 0 {
 		return errors.New("config: shutdown grace period must be positive")
+	}
+
+	if strings.TrimSpace(c.DatabaseURL) == "" {
+		return errors.New("config: database url is required")
 	}
 
 	return nil

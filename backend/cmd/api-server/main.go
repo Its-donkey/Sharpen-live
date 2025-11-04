@@ -118,6 +118,9 @@ func main() {
 	srv := api.New(store, settingsStore, initialSettings)
 	staticHandler := spaHandler(staticDir)
 
+	// Ensure downstream code sees the effective listen address.
+	_ = os.Setenv("LISTEN_ADDR", listenAddr)
+
 	httpServer := &http.Server{
 		Addr:    listenAddr,
 		Handler: srv.Handler(staticHandler),
@@ -130,7 +133,7 @@ func main() {
 	}
 
 	go func() {
-		logger.Info("server.started", "addr", cfg.ListenAddr)
+		logger.Info("server.started", "addr", listenAddr)
 		if err := httpServer.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
 			logger.Error("server.failed", "error", err)
 			os.Exit(1)

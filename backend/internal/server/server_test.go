@@ -89,7 +89,7 @@ func TestSubmitAndApproveFlow(t *testing.T) {
 		"statusLabel": "Online",
 		"languages":   []string{"English"},
 		"platforms": []map[string]string{
-			{"name": "Twitch", "channelUrl": "https://example.com", "liveUrl": "https://example.com/live"},
+			{"name": "Twitch", "channelUrl": "https://example.com"},
 		},
 	}
 
@@ -154,7 +154,7 @@ func TestRejectAndDeleteStreamers(t *testing.T) {
 		StatusLabel: "Offline",
 		Languages:   []string{"English"},
 		Platforms: []storage.Platform{
-			{Name: "YouTube", ChannelURL: "https://example.com", LiveURL: "https://example.com/live"},
+			{Name: "YouTube", ChannelURL: "https://example.com"},
 		},
 	})
 	if err != nil {
@@ -178,7 +178,7 @@ func TestRejectAndDeleteStreamers(t *testing.T) {
 		"statusLabel": "Workshop",
 		"languages":   []string{"English", "German"},
 		"platforms": []map[string]string{
-			{"name": "YouTube", "channelUrl": "https://example.com", "liveUrl": "https://example.com/live"},
+			{"name": "YouTube", "channelUrl": "https://example.com"},
 		},
 	}, headers)
 	if update.Code != http.StatusOK {

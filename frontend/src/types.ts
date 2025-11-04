@@ -3,7 +3,6 @@ export type StreamerStatus = "online" | "busy" | "offline";
 export interface Platform {
   name: string;
   channelUrl: string;
-  liveUrl: string;
   id?: string;
 }
 

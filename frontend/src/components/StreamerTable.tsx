@@ -77,16 +77,14 @@ export function StreamerTable({
             {streamer.platforms?.length ? (
               <ul className="platform-list">
                 {streamer.platforms.map((platform, index) => {
-                  const liveUrl = platform.liveUrl || platform.channelUrl;
-                  const channelUrl = platform.channelUrl || platform.liveUrl;
-                  const targetUrl = isLive ? liveUrl : channelUrl;
+                  const canLink = isLive && platform.channelUrl;
 
                   return (
                     <li key={`${platform.name}-${index}`}>
-                      {targetUrl ? (
+                      {canLink ? (
                         <a
                           className="platform-link"
-                          href={targetUrl}
+                          href={platform.channelUrl}
                           target="_blank"
                           rel="noopener noreferrer"
                         >

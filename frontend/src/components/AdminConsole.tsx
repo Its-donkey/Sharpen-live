@@ -56,7 +56,7 @@ interface StreamerFormState {
   statusLabelEdited: boolean;
 }
 
-type PlatformField = "name" | "channelUrl" | "liveUrl";
+type PlatformField = "name" | "channelUrl";
 
 const defaultStatus: StatusState = { message: "", tone: "idle" };
 const DEV_EMAIL = "admin@sharpen.live";
@@ -910,17 +910,6 @@ function AdminStreamerCard({ streamer, onUpdate, onDelete }: AdminStreamerCardPr
                       required
                     />
                   </label>
-                  <label className="form-field form-field-inline">
-                    <span>Live URL</span>
-                    <input
-                      type="url"
-                      value={platform.liveUrl}
-                      onChange={(event) =>
-                        handlePlatformChange(platform.rowId, "liveUrl", event.target.value)
-                      }
-                      required
-                    />
-                  </label>
                   <button
                     type="button"
                     className="remove-platform-button"
@@ -1164,17 +1153,6 @@ function AdminCreateStreamer({ onSubmit }: AdminCreateStreamerProps) {
                   value={platform.channelUrl}
                   onChange={(event) =>
                     handlePlatformFieldChange(platform.rowId, "channelUrl", event.target.value)
-                  }
-                  required
-                />
-              </label>
-              <label className="form-field form-field-inline">
-                <span>Live URL</span>
-                <input
-                  type="url"
-                  value={platform.liveUrl}
-                  onChange={(event) =>
-                    handlePlatformFieldChange(platform.rowId, "liveUrl", event.target.value)
                   }
                   required
                 />

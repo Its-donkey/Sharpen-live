@@ -38,7 +38,7 @@ func TestJSONStoreStreamersLifecycle(t *testing.T) {
 		StatusLabel: "Online",
 		Languages:   []string{"English"},
 		Platforms: []storage.Platform{
-			{Name: "Twitch", ChannelURL: "https://example.com", LiveURL: "https://example.com/live"},
+			{Name: "Twitch", ChannelURL: "https://example.com"},
 		},
 	})
 	if err != nil {
@@ -84,7 +84,7 @@ func TestJSONStoreSubmissionsLifecycle(t *testing.T) {
 		StatusLabel: "Workshop",
 		Languages:   []string{"English", "German"},
 		Platforms: []storage.Platform{
-			{Name: "YouTube", ChannelURL: "https://youtube.com/demo", LiveURL: "https://youtube.com/live"},
+			{Name: "YouTube", ChannelURL: "https://youtube.com/demo"},
 		},
 	})
 	if err != nil {
@@ -136,7 +136,7 @@ func TestJSONStoreSubmissionsLifecycle(t *testing.T) {
 		StatusLabel: "Offline",
 		Languages:   []string{"English"},
 		Platforms: []storage.Platform{
-			{Name: "Kick", ChannelURL: "https://kick.com/demo", LiveURL: "https://kick.com/demo/live"},
+			{Name: "Kick", ChannelURL: "https://kick.com/demo"},
 		},
 	})
 	if err != nil {

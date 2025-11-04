@@ -14,7 +14,7 @@ interface SubmitStreamerFormProps {
   onToggle: () => void;
 }
 
-type PlatformField = "name" | "channelUrl" | "liveUrl";
+type PlatformField = "name" | "channelUrl";
 type PlatformErrorState = Record<PlatformField, boolean>;
 
 interface ValidationErrors {
@@ -148,7 +148,7 @@ export function SubmitStreamerForm({ isOpen, onToggle }: SubmitStreamerFormProps
         return current;
       }
       const nextRow = { ...rowErrors, [key]: false };
-      const hasAnyError = nextRow.name || nextRow.channelUrl || nextRow.liveUrl;
+      const hasAnyError = nextRow.name || nextRow.channelUrl;
       const nextPlatforms = { ...current.platforms };
       if (hasAnyError) {
         nextPlatforms[rowId] = nextRow;
@@ -170,10 +170,7 @@ export function SubmitStreamerForm({ isOpen, onToggle }: SubmitStreamerFormProps
       return false;
     }
     if (
-      !platforms.some(
-        (platform) =>
-          platform.name.trim() && platform.channelUrl.trim() && platform.liveUrl.trim()
-      )
+      !platforms.some((platform) => platform.name.trim() && platform.channelUrl.trim())
     ) {
       return false;
     }
@@ -290,10 +287,9 @@ export function SubmitStreamerForm({ isOpen, onToggle }: SubmitStreamerFormProps
     platforms.forEach((row) => {
       const rowErrors: PlatformErrorState = {
         name: row.name.trim() === "",
-        channelUrl: row.channelUrl.trim() === "",
-        liveUrl: row.liveUrl.trim() === ""
+        channelUrl: row.channelUrl.trim() === ""
       };
-      if (rowErrors.name || rowErrors.channelUrl || rowErrors.liveUrl) {
+      if (rowErrors.name || rowErrors.channelUrl) {
         nextErrors.platforms[row.rowId] = rowErrors;
       }
     });
@@ -436,11 +432,9 @@ export function SubmitStreamerForm({ isOpen, onToggle }: SubmitStreamerFormProps
               {platforms.map((platform) => {
                 const platformErrors = validationErrors.platforms[platform.rowId] ?? {
                   name: false,
-                  channelUrl: false,
-                  liveUrl: false
+                  channelUrl: false
                 };
-                const rowHasError =
-                  platformErrors.name || platformErrors.channelUrl || platformErrors.liveUrl;
+                const rowHasError = platformErrors.name || platformErrors.channelUrl;
                 return (
                   <div className="platform-row" key={platform.rowId} data-platform-row>
                     <label
@@ -492,23 +486,6 @@ export function SubmitStreamerForm({ isOpen, onToggle }: SubmitStreamerFormProps
                         required
                       />
                     </label>
-                    <label
-                      className={`form-field form-field-inline${
-                        platformErrors.liveUrl ? " form-field-error" : ""
-                      }`}
-                    >
-                      <span>Live URL</span>
-                      <input
-                        type="url"
-                        name="platform-live"
-                        placeholder="https://"
-                        value={platform.liveUrl}
-                        onChange={(event) =>
-                          handlePlatformChange(platform.rowId, "liveUrl", event.target.value)
-                        }
-                        required
-                      />
-                    </label>
 
                     <button
                       type="button"
@@ -518,7 +495,7 @@ export function SubmitStreamerForm({ isOpen, onToggle }: SubmitStreamerFormProps
                       Remove
                     </button>
                     {rowHasError ? (
-                      <p className="field-error-text">Provide the platform name and both URLs.</p>
+                      <p className="field-error-text">Provide the platform name and channel URL.</p>
                     ) : null}
                   </div>
                 );

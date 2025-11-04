@@ -36,7 +36,6 @@ export function createPlatformRow(initial?: Partial<Platform>): PlatformFormRow 
     name: initialName,
     id: initial?.id,
     channelUrl: initial?.channelUrl ?? "",
-    liveUrl: initial?.liveUrl ?? "",
     preset: presetMatch ? initialName : ""
   };
 }
@@ -54,10 +53,9 @@ export function sanitizePlatforms(rows: PlatformFormRow[]): Platform[] {
     .map((row) => ({
       name: row.name.trim(),
       channelUrl: row.channelUrl.trim(),
-      liveUrl: row.liveUrl.trim(),
       id: row.id?.trim() || undefined
     }))
-    .filter((row) => row.name && row.channelUrl && row.liveUrl)
+    .filter((row) => row.name && row.channelUrl)
     .slice(0, MAX_PLATFORMS);
 }
 

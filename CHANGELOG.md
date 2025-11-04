@@ -1,7 +1,7 @@
 # Changelog
 
 ## [Unreleased]
-- Load YouTube alert monitor events from PostgreSQL, add live platform filters, inline timestamped log formatting, and pagination controls in the admin console.
+- Load YouTube alert monitor events from PostgreSQL, add live platform filters, inline log formatting, and pagination controls in the admin console.
 - Deduplicate YouTube PubSub handlers to avoid double registration and duplicate event logging in the admin monitor.
 - Ignore local IDE workspace directories and VS Code workspace files to prevent accidental commits.
 - Persist admin and YouTube alert configuration in PostgreSQL via a dedicated settings store and API bootstrap flow.

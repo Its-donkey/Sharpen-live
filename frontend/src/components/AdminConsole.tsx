@@ -87,23 +87,6 @@ function platformLabelFromKey(key: string): string {
   }
 }
 
-function formatMonitorTimestamp(value: string): string {
-  if (!value) {
-    return "Unknown time";
-  }
-  const date = new Date(value);
-  if (Number.isNaN(date.getTime())) {
-    return "Unknown time";
-  }
-  const hours = String(date.getHours()).padStart(2, "0");
-  const minutes = String(date.getMinutes()).padStart(2, "0");
-  const seconds = String(date.getSeconds()).padStart(2, "0");
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
-  return `${hours}:${minutes}:${seconds} ${year}/${month}/${day}`;
-}
-
 function toFormState(streamer?: Streamer): StreamerFormState {
   const status = streamer?.status ?? "online";
   const defaultLabel = defaultStatusLabel(status);
@@ -1337,7 +1320,6 @@ interface AdminMonitorEventCardProps {
 }
 
 function AdminMonitorEventCard({ event }: AdminMonitorEventCardProps) {
-  const formattedTimestamp = formatMonitorTimestamp(event.timestamp);
   const platformKey = normalizePlatformKey(event.platform);
   const platformTitle = platformLabelFromKey(platformKey);
   const message = event.message && event.message.length > 0 ? event.message : "—";
@@ -1346,8 +1328,6 @@ function AdminMonitorEventCard({ event }: AdminMonitorEventCardProps) {
     <article className="admin-monitor-entry" data-platform={platformKey || "unknown"}>
       <p>
         <strong>{platformTitle}</strong>
-        {" - "}
-        {formattedTimestamp}
         {" - "}
         {message}
       </p>

@@ -3,10 +3,25 @@ import { STATUS_DEFAULT_LABELS } from "../types";
 
 export interface PlatformFormRow extends Platform {
   id: string;
+  preset: string;
 }
 
 export const MAX_LANGUAGES = 8;
 export const MAX_PLATFORMS = 8;
+
+export const CUSTOM_PLATFORM_VALUE = "__custom";
+
+export const PLATFORM_PRESETS = [
+  { label: "YouTube", value: "YouTube" },
+  { label: "Twitch", value: "Twitch" },
+  { label: "Facebook Live", value: "Facebook Live" },
+  { label: "Instagram Live", value: "Instagram Live" },
+  { label: "Kick", value: "Kick" },
+  { label: "TikTok Live", value: "TikTok Live" },
+  { label: "Trovo", value: "Trovo" },
+  { label: "Rumble", value: "Rumble" },
+  { label: "Discord", value: "Discord" }
+] as const;
 
 export function randomId(): string {
   if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
@@ -16,11 +31,19 @@ export function randomId(): string {
 }
 
 export function createPlatformRow(initial?: Partial<Platform>): PlatformFormRow {
+  const initialName = initial?.name ?? "";
+  const presetMatch = PLATFORM_PRESETS.some((platform) => platform.value === initialName);
+  const preset = initialName
+    ? presetMatch
+      ? initialName
+      : CUSTOM_PLATFORM_VALUE
+    : "";
   return {
     id: randomId(),
-    name: initial?.name ?? "",
+    name: initialName,
     channelUrl: initial?.channelUrl ?? "",
-    liveUrl: initial?.liveUrl ?? ""
+    liveUrl: initial?.liveUrl ?? "",
+    preset
   };
 }
 

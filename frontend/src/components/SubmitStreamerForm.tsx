@@ -3,6 +3,8 @@ import { submitStreamer } from "../api";
 import type { StreamerStatus, SubmissionPayload } from "../types";
 import { STATUS_DEFAULT_LABELS } from "../types";
 import {
+  CUSTOM_PLATFORM_VALUE,
+  PLATFORM_PRESETS,
   createPlatformRow,
   PlatformFormRow,
   sanitizePlatforms
@@ -144,7 +146,39 @@ export function SubmitStreamerForm({ isOpen, onToggle }: SubmitStreamerFormProps
 
   const handlePlatformChange = (id: string, key: PlatformField, value: string): void => {
     setPlatforms((current) =>
-      current.map((row) => (row.id === id ? { ...row, [key]: value } : row))
+      current.map((row) => {
+        if (row.id !== id) {
+          return row;
+        }
+        const nextRow: PlatformFormRow = { ...row, [key]: value };
+        if (key === "name") {
+          const presetMatch = PLATFORM_PRESETS.some((platform) => platform.value === value);
+          nextRow.preset = presetMatch ? value : CUSTOM_PLATFORM_VALUE;
+        }
+        return nextRow;
+      })
+    );
+  };
+
+  const handlePlatformNameSelect = (id: string, value: string) => {
+    setPlatforms((current) =>
+      current.map((row) => {
+        if (row.id !== id) {
+          return row;
+        }
+        if (value === CUSTOM_PLATFORM_VALUE) {
+          return {
+            ...row,
+            preset: CUSTOM_PLATFORM_VALUE,
+            name: row.preset === CUSTOM_PLATFORM_VALUE ? row.name : ""
+          };
+        }
+        return {
+          ...row,
+          preset: value,
+          name: value
+        };
+      })
     );
   };
 
@@ -233,10 +267,11 @@ export function SubmitStreamerForm({ isOpen, onToggle }: SubmitStreamerFormProps
 
             <label className="form-field form-field-wide">
               <span>Description *</span>
+			  <p className="submit-streamer-help">What does the streamer do and methods do they use? Be sure to include anything unique about them.</p>
               <textarea
                 name="description"
                 rows={3}
-                placeholder="What makes this streamer unique?"
+                placeholder=""
                 value={description}
                 onChange={(event) => setDescription(event.target.value)}
                 required
@@ -245,6 +280,9 @@ export function SubmitStreamerForm({ isOpen, onToggle }: SubmitStreamerFormProps
 
             <label className="form-field form-field-wide">
               <span>Languages *</span>
+			  <p className="submit-streamer-help">Select the languages the streamer speaks</p>
+			  </label>
+			  <label className="form-field form-field-inline">
               <div className="language-picker">
                 <select
                   className="language-select"
@@ -253,7 +291,7 @@ export function SubmitStreamerForm({ isOpen, onToggle }: SubmitStreamerFormProps
                   required={!selectedLanguages.length}
                 >
                   <option value="" disabled>
-                    Select the languages the streamer speaks
+                    Languages
                   </option>
                   {availableLanguages.map((language) => (
                     <option key={language.value} value={language.value}>
@@ -295,15 +333,47 @@ export function SubmitStreamerForm({ isOpen, onToggle }: SubmitStreamerFormProps
                 <div className="platform-row" key={platform.id} data-platform-row>
                   <label className="form-field form-field-inline">
                     <span>Platform name</span>
-                    <input
-                      type="text"
-                      name="platform-name"
-                      value={platform.name}
-                      onChange={(event) =>
-                        handlePlatformChange(platform.id, "name", event.target.value)
-                      }
-                      required
-                    />
+                    <div className="platform-picker">
+                      <select
+                        className="platform-select"
+                        name="platform-name"
+                        value={
+                          platform.preset
+                            ? platform.preset
+                            : PLATFORM_PRESETS.some((option) => option.value === platform.name)
+                              ? platform.name
+                              : platform.name
+                                ? CUSTOM_PLATFORM_VALUE
+                                : ""
+                        }
+                        onChange={(event) =>
+                          handlePlatformNameSelect(platform.id, event.currentTarget.value)
+                        }
+                        required
+                      >
+                        <option value="" disabled>
+                          Choose platform
+                        </option>
+                        {PLATFORM_PRESETS.map((platformOption) => (
+                          <option key={platformOption.value} value={platformOption.value}>
+                            {platformOption.label}
+                          </option>
+                        ))}
+                        <option value={CUSTOM_PLATFORM_VALUE}>Other</option>
+                      </select>
+                    </div>
+                    {platform.preset === CUSTOM_PLATFORM_VALUE && (
+                      <input
+                        type="text"
+                        name="platform-name-custom"
+                        placeholder="Platform name"
+                        value={platform.name}
+                        onChange={(event) =>
+                          handlePlatformChange(platform.id, "name", event.target.value)
+                        }
+                        required
+                      />
+                    )}
                   </label>
                   <label className="form-field form-field-inline">
                     <span>Channel URL</span>
@@ -318,19 +388,7 @@ export function SubmitStreamerForm({ isOpen, onToggle }: SubmitStreamerFormProps
                       required
                     />
                   </label>
-                  <label className="form-field form-field-inline">
-                    <span>Live stream URL</span>
-                    <input
-                      type="url"
-                      name="platform-live"
-                      placeholder="https://"
-                      value={platform.liveUrl}
-                      onChange={(event) =>
-                        handlePlatformChange(platform.id, "liveUrl", event.target.value)
-                      }
-                      required
-                    />
-                  </label>
+
                   <button
                     type="button"
                     className="remove-platform-button"

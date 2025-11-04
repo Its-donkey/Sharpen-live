@@ -26,6 +26,8 @@ import type {
 } from "../types";
 import { STATUS_DEFAULT_LABELS } from "../types";
 import {
+  CUSTOM_PLATFORM_VALUE,
+  PLATFORM_PRESETS,
   createPlatformRow,
   defaultStatusLabel,
   normalizeLanguagesInput,
@@ -54,6 +56,8 @@ interface StreamerFormState {
   platforms: PlatformFormRow[];
   statusLabelEdited: boolean;
 }
+
+type PlatformField = "name" | "channelUrl" | "liveUrl";
 
 const defaultStatus: StatusState = { message: "", tone: "idle" };
 const DEV_EMAIL = "admin@sharpen.live";
@@ -688,12 +692,45 @@ function AdminStreamerCard({ streamer, onUpdate, onDelete }: AdminStreamerCardPr
     });
   };
 
-  const handlePlatformChange = (id: string, key: "name" | "channelUrl" | "liveUrl", value: string) => {
+  const handlePlatformChange = (id: string, key: PlatformField, value: string) => {
     setState((current) => ({
       ...current,
-      platforms: current.platforms.map((platform) =>
-        platform.id === id ? { ...platform, [key]: value } : platform
-      )
+      platforms: current.platforms.map((platform) => {
+        if (platform.id !== id) {
+          return platform;
+        }
+        const nextPlatform: PlatformFormRow = { ...platform, [key]: value };
+        if (key === "name") {
+          const presetMatch = PLATFORM_PRESETS.some(
+            (option) => option.value === value
+          );
+          nextPlatform.preset = presetMatch ? value : CUSTOM_PLATFORM_VALUE;
+        }
+        return nextPlatform;
+      })
+    }));
+  };
+
+  const handlePlatformPresetSelect = (id: string, value: string) => {
+    setState((current) => ({
+      ...current,
+      platforms: current.platforms.map((platform) => {
+        if (platform.id !== id) {
+          return platform;
+        }
+        if (value === CUSTOM_PLATFORM_VALUE) {
+          return {
+            ...platform,
+            preset: CUSTOM_PLATFORM_VALUE,
+            name: platform.preset === CUSTOM_PLATFORM_VALUE ? platform.name : ""
+          };
+        }
+        return {
+          ...platform,
+          preset: value,
+          name: value
+        };
+      })
     }));
   };
 
@@ -833,14 +870,44 @@ function AdminStreamerCard({ streamer, onUpdate, onDelete }: AdminStreamerCardPr
                 <div className="platform-row" key={platform.id}>
                   <label className="form-field form-field-inline">
                     <span>Platform name</span>
-                    <input
-                      type="text"
-                      value={platform.name}
-                      onChange={(event) =>
-                        handlePlatformChange(platform.id, "name", event.target.value)
-                      }
-                      required
-                    />
+                    <div className="platform-picker">
+                      <select
+                        className="platform-select"
+                        value={
+                          platform.preset ||
+                          (PLATFORM_PRESETS.some((option) => option.value === platform.name)
+                            ? platform.name
+                            : platform.name
+                            ? CUSTOM_PLATFORM_VALUE
+                            : "")
+                        }
+                        onChange={(event) =>
+                          handlePlatformPresetSelect(platform.id, event.currentTarget.value)
+                        }
+                        required
+                      >
+                        <option value="" disabled>
+                          Choose platform
+                        </option>
+                        {PLATFORM_PRESETS.map((platformOption) => (
+                          <option key={platformOption.value} value={platformOption.value}>
+                            {platformOption.label}
+                          </option>
+                        ))}
+                        <option value={CUSTOM_PLATFORM_VALUE}>Other</option>
+                      </select>
+                    </div>
+                    {platform.preset === CUSTOM_PLATFORM_VALUE && (
+                      <input
+                        type="text"
+                        value={platform.name}
+                        placeholder="Platform name"
+                        onChange={(event) =>
+                          handlePlatformChange(platform.id, "name", event.target.value)
+                        }
+                        required
+                      />
+                    )}
                   </label>
                   <label className="form-field form-field-inline">
                     <span>Channel URL</span>
@@ -936,6 +1003,46 @@ function AdminCreateStreamer({ onSubmit }: AdminCreateStreamerProps) {
   const [error, setError] = useState<string | null>(null);
 
   const canSave = formIsValid(state) && !isSaving;
+
+  const handlePlatformFieldChange = (id: string, key: PlatformField, value: string) => {
+    setState((current) => ({
+      ...current,
+      platforms: current.platforms.map((row) => {
+        if (row.id !== id) {
+          return row;
+        }
+        const nextRow: PlatformFormRow = { ...row, [key]: value };
+        if (key === "name") {
+          const presetMatch = PLATFORM_PRESETS.some((option) => option.value === value);
+          nextRow.preset = presetMatch ? value : CUSTOM_PLATFORM_VALUE;
+        }
+        return nextRow;
+      })
+    }));
+  };
+
+  const handlePlatformPresetSelect = (id: string, value: string) => {
+    setState((current) => ({
+      ...current,
+      platforms: current.platforms.map((row) => {
+        if (row.id !== id) {
+          return row;
+        }
+        if (value === CUSTOM_PLATFORM_VALUE) {
+          return {
+            ...row,
+            preset: CUSTOM_PLATFORM_VALUE,
+            name: row.preset === CUSTOM_PLATFORM_VALUE ? row.name : ""
+          };
+        }
+        return {
+          ...row,
+          preset: value,
+          name: value
+        };
+      })
+    }));
+  };
 
   const handleStatusChange = (value: StreamerStatus) => {
     setState((current) => {
@@ -1039,19 +1146,44 @@ function AdminCreateStreamer({ onSubmit }: AdminCreateStreamerProps) {
             <div className="platform-row" key={platform.id}>
               <label className="form-field form-field-inline">
                 <span>Platform name</span>
-                <input
-                  type="text"
-                  value={platform.name}
-                  onChange={(event) =>
-                    setState((current) => ({
-                      ...current,
-                      platforms: current.platforms.map((row) =>
-                        row.id === platform.id ? { ...row, name: event.target.value } : row
-                      )
-                    }))
-                  }
-                  required
-                />
+                <div className="platform-picker">
+                  <select
+                    className="platform-select"
+                    value={
+                      platform.preset ||
+                      (PLATFORM_PRESETS.some((option) => option.value === platform.name)
+                        ? platform.name
+                        : platform.name
+                        ? CUSTOM_PLATFORM_VALUE
+                        : "")
+                    }
+                    onChange={(event) =>
+                      handlePlatformPresetSelect(platform.id, event.currentTarget.value)
+                    }
+                    required
+                  >
+                    <option value="" disabled>
+                      Choose platform
+                    </option>
+                    {PLATFORM_PRESETS.map((platformOption) => (
+                      <option key={platformOption.value} value={platformOption.value}>
+                        {platformOption.label}
+                      </option>
+                    ))}
+                    <option value={CUSTOM_PLATFORM_VALUE}>Other</option>
+                  </select>
+                </div>
+                {platform.preset === CUSTOM_PLATFORM_VALUE && (
+                  <input
+                    type="text"
+                    value={platform.name}
+                    placeholder="Platform name"
+                    onChange={(event) =>
+                      handlePlatformFieldChange(platform.id, "name", event.target.value)
+                    }
+                    required
+                  />
+                )}
               </label>
               <label className="form-field form-field-inline">
                 <span>Channel URL</span>
@@ -1059,14 +1191,7 @@ function AdminCreateStreamer({ onSubmit }: AdminCreateStreamerProps) {
                   type="url"
                   value={platform.channelUrl}
                   onChange={(event) =>
-                    setState((current) => ({
-                      ...current,
-                      platforms: current.platforms.map((row) =>
-                        row.id === platform.id
-                          ? { ...row, channelUrl: event.target.value }
-                          : row
-                      )
-                    }))
+                    handlePlatformFieldChange(platform.id, "channelUrl", event.target.value)
                   }
                   required
                 />
@@ -1077,14 +1202,7 @@ function AdminCreateStreamer({ onSubmit }: AdminCreateStreamerProps) {
                   type="url"
                   value={platform.liveUrl}
                   onChange={(event) =>
-                    setState((current) => ({
-                      ...current,
-                      platforms: current.platforms.map((row) =>
-                        row.id === platform.id
-                          ? { ...row, liveUrl: event.target.value }
-                          : row
-                      )
-                    }))
+                    handlePlatformFieldChange(platform.id, "liveUrl", event.target.value)
                   }
                   required
                 />

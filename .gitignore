@@ -29,8 +29,9 @@ go.work.sum
 NOTES
 
 # Editor/IDE
-# .idea/
-# .vscode/
+.idea/
+.vscode/
+*.code-workspace
 
 # Frontend build artifacts
 frontend/node_modules/

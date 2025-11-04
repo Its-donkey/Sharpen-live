@@ -10,7 +10,7 @@ import type {
   YouTubeMonitorEvent
 } from "./types";
 
-const DEFAULT_DEV_BASE = "http://localhost:8880";
+const DEFAULT_DEV_BASE = "http://localhost:41621";
 
 const API_BASE = resolveBase();
 

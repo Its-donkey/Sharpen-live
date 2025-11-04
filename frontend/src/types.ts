@@ -50,6 +50,11 @@ export interface AdminSettings {
   adminEmail: string;
   adminPassword: string;
   youtubeApiKey: string;
+  youtubeAlertsCallback: string;
+  youtubeAlertsSecret: string;
+  youtubeAlertsVerifyPrefix: string;
+  youtubeAlertsVerifySuffix: string;
+  youtubeAlertsHubUrl: string;
   dataDir: string;
   staticDir: string;
   streamersFile: string;

@@ -45,25 +45,35 @@ type loginResponse struct {
 }
 
 type settingsResponse struct {
-	ListenAddr      string `json:"listenAddr"`
-	AdminToken      string `json:"adminToken"`
-	AdminEmail      string `json:"adminEmail"`
-	AdminPassword   string `json:"adminPassword"`
-	YouTubeAPIKey   string `json:"youtubeApiKey"`
-	DataDir         string `json:"dataDir"`
-	StaticDir       string `json:"staticDir"`
-	StreamersFile   string `json:"streamersFile"`
-	SubmissionsFile string `json:"submissionsFile"`
+	ListenAddr                string `json:"listenAddr"`
+	AdminToken                string `json:"adminToken"`
+	AdminEmail                string `json:"adminEmail"`
+	AdminPassword             string `json:"adminPassword"`
+	YouTubeAPIKey             string `json:"youtubeApiKey"`
+	DataDir                   string `json:"dataDir"`
+	StaticDir                 string `json:"staticDir"`
+	StreamersFile             string `json:"streamersFile"`
+	SubmissionsFile           string `json:"submissionsFile"`
+	YouTubeAlertsCallback     string `json:"youtubeAlertsCallback"`
+	YouTubeAlertsSecret       string `json:"youtubeAlertsSecret"`
+	YouTubeAlertsVerifyPrefix string `json:"youtubeAlertsVerifyPrefix"`
+	YouTubeAlertsVerifySuffix string `json:"youtubeAlertsVerifySuffix"`
+	YouTubeAlertsHubURL       string `json:"youtubeAlertsHubUrl"`
 }
 
 type settingsUpdateRequest struct {
-	ListenAddr      *string `json:"listenAddr"`
-	AdminToken      *string `json:"adminToken"`
-	AdminEmail      *string `json:"adminEmail"`
-	AdminPassword   *string `json:"adminPassword"`
-	YouTubeAPIKey   *string `json:"youtubeApiKey"`
-	DataDir         *string `json:"dataDir"`
-	StaticDir       *string `json:"staticDir"`
-	StreamersFile   *string `json:"streamersFile"`
-	SubmissionsFile *string `json:"submissionsFile"`
+	ListenAddr                *string `json:"listenAddr"`
+	AdminToken                *string `json:"adminToken"`
+	AdminEmail                *string `json:"adminEmail"`
+	AdminPassword             *string `json:"adminPassword"`
+	YouTubeAPIKey             *string `json:"youtubeApiKey"`
+	DataDir                   *string `json:"dataDir"`
+	StaticDir                 *string `json:"staticDir"`
+	StreamersFile             *string `json:"streamersFile"`
+	SubmissionsFile           *string `json:"submissionsFile"`
+	YouTubeAlertsCallback     *string `json:"youtubeAlertsCallback"`
+	YouTubeAlertsSecret       *string `json:"youtubeAlertsSecret"`
+	YouTubeAlertsVerifyPrefix *string `json:"youtubeAlertsVerifyPrefix"`
+	YouTubeAlertsVerifySuffix *string `json:"youtubeAlertsVerifySuffix"`
+	YouTubeAlertsHubURL       *string `json:"youtubeAlertsHubUrl"`
 }

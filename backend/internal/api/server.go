@@ -392,16 +392,26 @@ func (s *Server) currentSettingsPayload() settingsResponse {
 	s.mu.RLock()
 	defer s.mu.RUnlock()
 
+	hub := strings.TrimSpace(s.youtubeHubURL)
+	if hub == "" {
+		hub = defaultYouTubeHubURL
+	}
+
 	return settingsResponse{
-		ListenAddr:      strings.TrimSpace(os.Getenv("LISTEN_ADDR")),
-		AdminToken:      s.adminToken,
-		AdminEmail:      s.adminEmail,
-		AdminPassword:   s.adminPassword,
-		YouTubeAPIKey:   s.youtubeAPIKey,
-		DataDir:         strings.TrimSpace(os.Getenv("SHARPEN_DATA_DIR")),
-		StaticDir:       strings.TrimSpace(os.Getenv("SHARPEN_STATIC_DIR")),
-		StreamersFile:   strings.TrimSpace(os.Getenv("SHARPEN_STREAMERS_FILE")),
-		SubmissionsFile: strings.TrimSpace(os.Getenv("SHARPEN_SUBMISSIONS_FILE")),
+		ListenAddr:                strings.TrimSpace(os.Getenv("LISTEN_ADDR")),
+		AdminToken:                s.adminToken,
+		AdminEmail:                s.adminEmail,
+		AdminPassword:             s.adminPassword,
+		YouTubeAPIKey:             s.youtubeAPIKey,
+		DataDir:                   strings.TrimSpace(os.Getenv("SHARPEN_DATA_DIR")),
+		StaticDir:                 strings.TrimSpace(os.Getenv("SHARPEN_STATIC_DIR")),
+		StreamersFile:             strings.TrimSpace(os.Getenv("SHARPEN_STREAMERS_FILE")),
+		SubmissionsFile:           strings.TrimSpace(os.Getenv("SHARPEN_SUBMISSIONS_FILE")),
+		YouTubeAlertsCallback:     s.youtubeAlerts.callbackURL,
+		YouTubeAlertsSecret:       s.youtubeAlerts.secret,
+		YouTubeAlertsVerifyPrefix: s.youtubeAlerts.verifyPref,
+		YouTubeAlertsVerifySuffix: s.youtubeAlerts.verifySuff,
+		YouTubeAlertsHubURL:       hub,
 	}
 }
 
@@ -424,6 +434,26 @@ func (s *Server) applySettings(payload settingsUpdateRequest) error {
 	if payload.YouTubeAPIKey != nil {
 		trimmed := strings.TrimSpace(*payload.YouTubeAPIKey)
 		*payload.YouTubeAPIKey = trimmed
+	}
+	if payload.YouTubeAlertsCallback != nil {
+		trimmed := strings.TrimSpace(*payload.YouTubeAlertsCallback)
+		*payload.YouTubeAlertsCallback = trimmed
+	}
+	if payload.YouTubeAlertsSecret != nil {
+		trimmed := strings.TrimSpace(*payload.YouTubeAlertsSecret)
+		*payload.YouTubeAlertsSecret = trimmed
+	}
+	if payload.YouTubeAlertsVerifyPrefix != nil {
+		trimmed := strings.TrimSpace(*payload.YouTubeAlertsVerifyPrefix)
+		*payload.YouTubeAlertsVerifyPrefix = trimmed
+	}
+	if payload.YouTubeAlertsVerifySuffix != nil {
+		trimmed := strings.TrimSpace(*payload.YouTubeAlertsVerifySuffix)
+		*payload.YouTubeAlertsVerifySuffix = trimmed
+	}
+	if payload.YouTubeAlertsHubURL != nil {
+		trimmed := strings.TrimSpace(*payload.YouTubeAlertsHubURL)
+		*payload.YouTubeAlertsHubURL = trimmed
 	}
 
 	s.mu.Lock()
@@ -459,6 +489,85 @@ func (s *Server) applySettings(payload settingsUpdateRequest) error {
 	}
 	if payload.SubmissionsFile != nil {
 		_ = os.Setenv("SHARPEN_SUBMISSIONS_FILE", strings.TrimSpace(*payload.SubmissionsFile))
+	}
+	callbackUpdated := payload.YouTubeAlertsCallback != nil
+	secretUpdated := payload.YouTubeAlertsSecret != nil
+	prefixUpdated := payload.YouTubeAlertsVerifyPrefix != nil
+	suffixUpdated := payload.YouTubeAlertsVerifySuffix != nil
+	hubUpdated := payload.YouTubeAlertsHubURL != nil
+
+	callback := s.youtubeAlerts.callbackURL
+	if payload.YouTubeAlertsCallback != nil {
+		callback = *payload.YouTubeAlertsCallback
+	}
+
+	secret := s.youtubeAlerts.secret
+	if payload.YouTubeAlertsSecret != nil {
+		secret = *payload.YouTubeAlertsSecret
+	}
+
+	verifyPrefix := s.youtubeAlerts.verifyPref
+	if payload.YouTubeAlertsVerifyPrefix != nil {
+		verifyPrefix = *payload.YouTubeAlertsVerifyPrefix
+	}
+
+	verifySuffix := s.youtubeAlerts.verifySuff
+	if payload.YouTubeAlertsVerifySuffix != nil {
+		verifySuffix = *payload.YouTubeAlertsVerifySuffix
+	}
+
+	hub := s.youtubeHubURL
+	hubEnvValue := ""
+	if payload.YouTubeAlertsHubURL != nil {
+		hubEnvValue = *payload.YouTubeAlertsHubURL
+		if hubEnvValue == "" {
+			hub = defaultYouTubeHubURL
+		} else {
+			hub = hubEnvValue
+		}
+	}
+
+	if callback == "" {
+		if secret != "" {
+			secret = ""
+			secretUpdated = true
+		}
+		if verifyPrefix != "" {
+			verifyPrefix = ""
+			prefixUpdated = true
+		}
+		if verifySuffix != "" {
+			verifySuffix = ""
+			suffixUpdated = true
+		}
+		if !hubUpdated && hub != defaultYouTubeHubURL {
+			hub = defaultYouTubeHubURL
+			hubEnvValue = ""
+			hubUpdated = true
+		}
+	}
+
+	s.youtubeAlerts.callbackURL = callback
+	s.youtubeAlerts.secret = secret
+	s.youtubeAlerts.verifyPref = verifyPrefix
+	s.youtubeAlerts.verifySuff = verifySuffix
+	s.youtubeAlerts.enabled = callback != ""
+	s.youtubeHubURL = hub
+
+	if callbackUpdated {
+		_ = os.Setenv("YOUTUBE_ALERTS_CALLBACK", callback)
+	}
+	if secretUpdated {
+		_ = os.Setenv("YOUTUBE_ALERTS_SECRET", secret)
+	}
+	if prefixUpdated {
+		_ = os.Setenv("YOUTUBE_ALERTS_VERIFY_PREFIX", verifyPrefix)
+	}
+	if suffixUpdated {
+		_ = os.Setenv("YOUTUBE_ALERTS_VERIFY_SUFFIX", verifySuffix)
+	}
+	if hubUpdated {
+		_ = os.Setenv("YOUTUBE_ALERTS_HUB_URL", hubEnvValue)
 	}
 
 	return nil

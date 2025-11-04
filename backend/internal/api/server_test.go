@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"net/http/httptest"
+	"os"
 	"path/filepath"
 	"testing"
 
@@ -17,6 +18,8 @@ const (
 	adminEmail    = "admin@example.com"
 	adminPassword = "strong-password"
 )
+
+const defaultHubURL = "https://pubsubhubbub.appspot.com/subscribe"
 
 type testEnv struct {
 	store   *storage.JSONStore
@@ -217,12 +220,37 @@ func TestAdminSettingsHandlers(t *testing.T) {
 	if payload["youtubeApiKey"] != "" {
 		t.Fatalf("expected blank youtube key, got %q", payload["youtubeApiKey"])
 	}
+	if payload["youtubeAlertsCallback"] != "" {
+		t.Fatalf("expected blank youtube alerts callback, got %q", payload["youtubeAlertsCallback"])
+	}
+	if payload["youtubeAlertsSecret"] != "" {
+		t.Fatalf("expected blank youtube alerts secret, got %q", payload["youtubeAlertsSecret"])
+	}
+	if payload["youtubeAlertsVerifyPrefix"] != "" {
+		t.Fatalf("expected blank youtube alerts verify prefix, got %q", payload["youtubeAlertsVerifyPrefix"])
+	}
+	if payload["youtubeAlertsVerifySuffix"] != "" {
+		t.Fatalf("expected blank youtube alerts verify suffix, got %q", payload["youtubeAlertsVerifySuffix"])
+	}
+	if payload["youtubeAlertsHubUrl"] != defaultHubURL {
+		t.Fatalf("expected default hub url %q, got %q", defaultHubURL, payload["youtubeAlertsHubUrl"])
+	}
 
 	newToken := "updated-token"
 	newYouTubeKey := "api-key-123"
+	newCallback := "https://sharpen.live/alerts"
+	newSecret := "secret-123"
+	newPrefix := "sharpen-"
+	newSuffix := "-testing"
+	customHub := "https://pubsubhubbub.example.com/subscribe"
 	updateResp := performRequest(env.handler, http.MethodPut, "/api/admin/settings", map[string]string{
-		"adminToken":    newToken,
-		"youtubeApiKey": newYouTubeKey,
+		"adminToken":                newToken,
+		"youtubeApiKey":             newYouTubeKey,
+		"youtubeAlertsCallback":     newCallback,
+		"youtubeAlertsSecret":       newSecret,
+		"youtubeAlertsVerifyPrefix": newPrefix,
+		"youtubeAlertsVerifySuffix": newSuffix,
+		"youtubeAlertsHubUrl":       customHub,
 	}, headers)
 	if updateResp.Code != http.StatusOK {
 		t.Fatalf("expected 200 updating settings, got %d", updateResp.Code)
@@ -241,5 +269,54 @@ func TestAdminSettingsHandlers(t *testing.T) {
 	}
 	if updated["youtubeApiKey"] != newYouTubeKey {
 		t.Fatalf("expected youtube key %q, got %q", newYouTubeKey, updated["youtubeApiKey"])
+	}
+	if updated["youtubeAlertsCallback"] != newCallback {
+		t.Fatalf("expected alerts callback %q, got %q", newCallback, updated["youtubeAlertsCallback"])
+	}
+	if updated["youtubeAlertsSecret"] != newSecret {
+		t.Fatalf("expected alerts secret %q, got %q", newSecret, updated["youtubeAlertsSecret"])
+	}
+	if updated["youtubeAlertsVerifyPrefix"] != newPrefix {
+		t.Fatalf("expected alerts verify prefix %q, got %q", newPrefix, updated["youtubeAlertsVerifyPrefix"])
+	}
+	if updated["youtubeAlertsVerifySuffix"] != newSuffix {
+		t.Fatalf("expected alerts verify suffix %q, got %q", newSuffix, updated["youtubeAlertsVerifySuffix"])
+	}
+	if updated["youtubeAlertsHubUrl"] != customHub {
+		t.Fatalf("expected hub url %q, got %q", customHub, updated["youtubeAlertsHubUrl"])
+	}
+
+	disableResp := performRequest(env.handler, http.MethodPut, "/api/admin/settings", map[string]string{
+		"youtubeAlertsCallback": "",
+	}, testHeaders)
+	if disableResp.Code != http.StatusOK {
+		t.Fatalf("expected 200 disabling alerts, got %d", disableResp.Code)
+	}
+
+	disabled := performRequest(env.handler, http.MethodGet, "/api/admin/settings", nil, testHeaders)
+	if disabled.Code != http.StatusOK {
+		t.Fatalf("expected 200 fetching disabled settings, got %d", disabled.Code)
+	}
+	var disabledPayload map[string]string
+	if err := json.Unmarshal(disabled.Body.Bytes(), &disabledPayload); err != nil {
+		t.Fatalf("unmarshal disabled settings: %v", err)
+	}
+	if disabledPayload["youtubeAlertsCallback"] != "" {
+		t.Fatalf("expected blank callback after disable, got %q", disabledPayload["youtubeAlertsCallback"])
+	}
+	if disabledPayload["youtubeAlertsSecret"] != "" {
+		t.Fatalf("expected secret cleared after disable, got %q", disabledPayload["youtubeAlertsSecret"])
+	}
+	if disabledPayload["youtubeAlertsVerifyPrefix"] != "" {
+		t.Fatalf("expected prefix cleared after disable, got %q", disabledPayload["youtubeAlertsVerifyPrefix"])
+	}
+	if disabledPayload["youtubeAlertsVerifySuffix"] != "" {
+		t.Fatalf("expected suffix cleared after disable, got %q", disabledPayload["youtubeAlertsVerifySuffix"])
+	}
+	if disabledPayload["youtubeAlertsHubUrl"] != defaultHubURL {
+		t.Fatalf("expected hub url reset to default %q, got %q", defaultHubURL, disabledPayload["youtubeAlertsHubUrl"])
+	}
+	if value := os.Getenv("YOUTUBE_ALERTS_HUB_URL"); value != "" {
+		t.Fatalf("expected hub env cleared, got %q", value)
 	}
 }

@@ -324,7 +324,16 @@ export function AdminConsole({
     if (!settingsDraft) {
       return;
     }
-    setSettingsDraft({ ...settingsDraft, [field]: value });
+    const nextSettings = { ...settingsDraft, [field]: value };
+
+    if (field === "youtubeAlertsCallback" && value.trim() === "") {
+      nextSettings.youtubeAlertsSecret = "";
+      nextSettings.youtubeAlertsVerifyPrefix = "";
+      nextSettings.youtubeAlertsVerifySuffix = "";
+      nextSettings.youtubeAlertsHubUrl = "";
+    }
+
+    setSettingsDraft(nextSettings);
   };
 
   const handleSettingsSubmit = async (event: FormEvent<HTMLFormElement>) => {
@@ -349,9 +358,7 @@ export function AdminConsole({
       setSettingsSaving(true);
       const response = await updateAdminSettings(token, updates);
       setStatus({ message: response.message || "Settings updated.", tone: "success" });
-      const nextSettings = { ...settings, ...updates } as AdminSettings;
-      setSettings(nextSettings);
-      setSettingsDraft(nextSettings);
+      await loadSettings(token);
     } catch (error) {
       setStatus({
         message: error instanceof Error ? error.message : "Unable to update settings.",
@@ -553,6 +560,61 @@ export function AdminConsole({
                         handleSettingsFieldChange("youtubeApiKey", event.target.value)
                       }
                       placeholder="Only used for YouTube lookups"
+                    />
+                  </label>
+                  <label className="form-field">
+                    <span>YouTube alerts callback URL</span>
+                    <input
+                      type="url"
+                      value={settingsDraft.youtubeAlertsCallback}
+                      onChange={(event) =>
+                        handleSettingsFieldChange("youtubeAlertsCallback", event.target.value)
+                      }
+                      placeholder="https://example.com/alerts"
+                    />
+                  </label>
+                  <label className="form-field">
+                    <span>YouTube alerts secret</span>
+                    <input
+                      type="password"
+                      value={settingsDraft.youtubeAlertsSecret}
+                      onChange={(event) =>
+                        handleSettingsFieldChange("youtubeAlertsSecret", event.target.value)
+                      }
+                      placeholder="Optional signing secret"
+                    />
+                  </label>
+                  <label className="form-field">
+                    <span>YouTube alerts verify prefix</span>
+                    <input
+                      type="text"
+                      value={settingsDraft.youtubeAlertsVerifyPrefix}
+                      onChange={(event) =>
+                        handleSettingsFieldChange("youtubeAlertsVerifyPrefix", event.target.value)
+                      }
+                      placeholder="Prefix for hub.verify_token"
+                    />
+                  </label>
+                  <label className="form-field">
+                    <span>YouTube alerts verify suffix</span>
+                    <input
+                      type="text"
+                      value={settingsDraft.youtubeAlertsVerifySuffix}
+                      onChange={(event) =>
+                        handleSettingsFieldChange("youtubeAlertsVerifySuffix", event.target.value)
+                      }
+                      placeholder="Suffix for hub.verify_token"
+                    />
+                  </label>
+                  <label className="form-field">
+                    <span>YouTube alerts hub URL</span>
+                    <input
+                      type="url"
+                      value={settingsDraft.youtubeAlertsHubUrl}
+                      onChange={(event) =>
+                        handleSettingsFieldChange("youtubeAlertsHubUrl", event.target.value)
+                      }
+                      placeholder="Defaults to Google's PubSubHubbub hub"
                     />
                   </label>
                   <label className="form-field">

@@ -1,6 +1,7 @@
 import type {
   AdminSettings,
   AdminSettingsUpdate,
+  AdminYouTubeEvent,
   LoginResponse,
   Streamer,
   Submission,
@@ -184,4 +185,13 @@ export async function updateAdminSettings(
     },
     token
   );
+}
+
+export async function getYouTubeMonitor(token: string): Promise<AdminYouTubeEvent[]> {
+  const response = await request<{ events: AdminYouTubeEvent[] }>(
+    "/api/admin/monitor/youtube",
+    { method: "GET" },
+    token
+  );
+  return response.events;
 }

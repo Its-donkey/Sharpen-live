@@ -3,10 +3,14 @@ package api_test
 import (
 	"bytes"
 	"encoding/json"
+	"io"
 	"net/http"
 	"net/http/httptest"
+	"net/url"
 	"os"
 	"path/filepath"
+	"strings"
+	"sync"
 	"testing"
 
 	"github.com/Its-donkey/Sharpen-live/backend/internal/api"
@@ -27,7 +31,7 @@ type testEnv struct {
 	server  *api.Server
 }
 
-func newTestEnv(t *testing.T) testEnv {
+func newTestEnv(t *testing.T, opts ...api.Option) testEnv {
 	t.Helper()
 	dir := t.TempDir()
 	store, err := storage.NewJSONStore(
@@ -37,7 +41,7 @@ func newTestEnv(t *testing.T) testEnv {
 	if err != nil {
 		t.Fatalf("create store: %v", err)
 	}
-	srv := api.New(store, adminToken, adminEmail, adminPassword, "")
+	srv := api.New(store, adminToken, adminEmail, adminPassword, "", opts...)
 	handler := srv.Handler(http.NotFoundHandler())
 	return testEnv{store: store, handler: handler, server: srv}
 }
@@ -192,6 +196,137 @@ func TestRejectAndDeleteStreamers(t *testing.T) {
 	del := performRequest(env.handler, http.MethodDelete, "/api/admin/streamers/"+created.ID, nil, headers)
 	if del.Code != http.StatusNoContent {
 		t.Fatalf("expected 204 deleting streamer, got %d", del.Code)
+	}
+}
+
+func TestAdminYouTubeMonitor(t *testing.T) {
+	var (
+		mu    sync.Mutex
+		calls []url.Values
+	)
+
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		data, err := io.ReadAll(r.Body)
+		if err != nil {
+			t.Fatalf("read body: %v", err)
+		}
+		_ = r.Body.Close()
+		values, err := url.ParseQuery(string(data))
+		if err != nil {
+			t.Fatalf("parse body: %v", err)
+		}
+		mu.Lock()
+		calls = append(calls, values)
+		mu.Unlock()
+		w.WriteHeader(http.StatusAccepted)
+	}))
+	defer ts.Close()
+
+	env := newTestEnv(t,
+		api.WithYouTubeAlerts(api.YouTubeAlertsConfig{
+			HubURL:            ts.URL,
+			CallbackURL:       "https://alerts.sharpen.live/callback",
+			Secret:            "secret-789",
+			VerifyTokenPrefix: "prefix-",
+			VerifyTokenSuffix: "-suffix",
+		}),
+		api.WithHTTPClient(ts.Client()),
+	)
+
+	headers := map[string]string{"Authorization": "Bearer " + adminToken}
+
+	createPayload := map[string]any{
+		"name":        "Monitor",
+		"description": "Testing",
+		"status":      "online",
+		"statusLabel": "Online",
+		"languages":   []string{"English"},
+		"platforms": []map[string]string{
+			{"name": "YouTube", "channelUrl": "https://www.youtube.com/channel/UC777"},
+		},
+	}
+
+	createResp := performRequest(env.handler, http.MethodPost, "/api/admin/streamers", createPayload, headers)
+	if createResp.Code != http.StatusCreated {
+		t.Fatalf("expected 201 creating streamer, got %d", createResp.Code)
+	}
+
+	var created storage.Streamer
+	if err := json.Unmarshal(createResp.Body.Bytes(), &created); err != nil {
+		t.Fatalf("decode created streamer: %v", err)
+	}
+
+	if len(created.Platforms) == 0 || created.Platforms[0].ID == "" {
+		t.Fatalf("expected platform ID to be populated, got %+v", created.Platforms)
+	}
+
+	streamers, err := env.store.ListStreamers()
+	if err != nil {
+		t.Fatalf("list streamers: %v", err)
+	}
+	t.Logf("stored streamers: %+v", streamers)
+
+	settingsResp := performRequest(env.handler, http.MethodGet, "/api/admin/settings", nil, headers)
+	if settingsResp.Code != http.StatusOK {
+		t.Fatalf("expected 200 fetching settings, got %d", settingsResp.Code)
+	}
+
+	var settingsPayload map[string]any
+	if err := json.Unmarshal(settingsResp.Body.Bytes(), &settingsPayload); err != nil {
+		t.Fatalf("decode settings: %v", err)
+	}
+	t.Logf("settings callback: %v", settingsPayload["youtubeAlertsCallback"])
+
+	resp := performRequest(env.handler, http.MethodDelete, "/api/admin/streamers/"+created.ID, nil, headers)
+	if resp.Code != http.StatusNoContent {
+		t.Fatalf("expected 204 deleting streamer, got %d", resp.Code)
+	}
+
+	monitor := performRequest(env.handler, http.MethodGet, "/api/admin/monitor/youtube", nil, headers)
+	if monitor.Code != http.StatusOK {
+		t.Fatalf("expected 200 fetching monitor, got %d", monitor.Code)
+	}
+
+	var payload struct {
+		Events []struct {
+			Mode      string `json:"mode"`
+			ChannelID string `json:"channelId"`
+			Status    string `json:"status"`
+		}
+	}
+	if err := json.Unmarshal(monitor.Body.Bytes(), &payload); err != nil {
+		t.Fatalf("decode monitor: %v", err)
+	}
+
+	mu.Lock()
+	callCount := len(calls)
+	mu.Unlock()
+
+	t.Logf("monitor events: %+v", payload.Events)
+	t.Logf("webhook calls: %d", callCount)
+
+	if len(payload.Events) < 2 {
+		t.Fatalf("expected at least 2 events, got %d", len(payload.Events))
+	}
+
+	last := payload.Events[len(payload.Events)-1]
+	if last.Mode != "unsubscribe" {
+		t.Fatalf("expected last event to be unsubscribe, got %s", last.Mode)
+	}
+	if last.ChannelID != "UC777" {
+		t.Fatalf("expected channel UC777, got %s", last.ChannelID)
+	}
+	if !strings.Contains(last.Status, "202") && !strings.Contains(last.Status, "200") {
+		t.Fatalf("expected success status, got %s", last.Status)
+	}
+
+	mu.Lock()
+	defer mu.Unlock()
+	if len(calls) < 2 {
+		t.Fatalf("expected at least 2 webhook calls, got %d", len(calls))
+	}
+	if calls[len(calls)-1].Get("hub.mode") != "unsubscribe" {
+		t.Fatalf("expected unsubscribe mode in webhook, got %s", calls[len(calls)-1].Get("hub.mode"))
 	}
 }
 

@@ -30,7 +30,8 @@ type Server struct {
 		verifySuff  string
 		enabled     bool
 	}
-	mu sync.RWMutex
+	youtubeEvents []youtubeEvent
+	mu            sync.RWMutex
 }
 
 // Option mutates server configuration during construction.
@@ -45,7 +46,20 @@ type YouTubeAlertsConfig struct {
 	VerifyTokenSuffix string
 }
 
+type youtubeEvent struct {
+	Timestamp   time.Time `json:"timestamp"`
+	Mode        string    `json:"mode"`
+	ChannelID   string    `json:"channelId"`
+	Topic       string    `json:"topic"`
+	Callback    string    `json:"callback"`
+	Status      string    `json:"status"`
+	Error       string    `json:"error,omitempty"`
+	VerifyToken string    `json:"verifyToken,omitempty"`
+	HasSecret   bool      `json:"hasSecret"`
+}
+
 const defaultYouTubeHubURL = "https://pubsubhubbub.appspot.com/subscribe"
+const youtubeEventLogLimit = 100
 
 // New constructs a Server with the provided dependencies.
 func New(store *storage.JSONStore, adminToken, adminEmail, adminPassword, youtubeAPIKey string, opts ...Option) *Server {
@@ -80,6 +94,7 @@ func (s *Server) Handler(static http.Handler) http.Handler {
 	mux.Handle("/api/submit-streamer", http.HandlerFunc(s.handleSubmitStreamer))
 	mux.Handle("/api/admin/submissions", http.HandlerFunc(s.handleAdminSubmissions))
 	mux.Handle("/api/admin/settings", http.HandlerFunc(s.handleAdminSettings))
+	mux.Handle("/api/admin/monitor/youtube", http.HandlerFunc(s.handleAdminYouTubeMonitor))
 
 	// Mount the static handler as a catch-all for everything else.
 	mux.Handle("/", static)
@@ -123,6 +138,15 @@ func WithYouTubeAlerts(cfg YouTubeAlertsConfig) Option {
 		s.youtubeAlerts.secret = strings.TrimSpace(cfg.Secret)
 		s.youtubeAlerts.verifyPref = strings.TrimSpace(cfg.VerifyTokenPrefix)
 		s.youtubeAlerts.verifySuff = strings.TrimSpace(cfg.VerifyTokenSuffix)
+	}
+}
+
+// WithHTTPClient overrides the HTTP client used for outbound requests. Primarily used for testing.
+func WithHTTPClient(client *http.Client) Option {
+	return func(s *Server) {
+		if client != nil {
+			s.httpClient = client
+		}
 	}
 }
 
@@ -248,7 +272,7 @@ func (s *Server) handleAdminStreamerByID(w http.ResponseWriter, r *http.Request)
 		result.Platforms = entry.Platforms
 		respondJSON(w, http.StatusOK, result)
 	case http.MethodDelete:
-		err := s.store.DeleteStreamer(id)
+		streamer, err := s.streamerByID(id)
 		if errors.Is(err, storage.ErrNotFound) {
 			respondJSON(w, http.StatusNotFound, errorPayload{Message: "Streamer not found."})
 			return
@@ -257,6 +281,17 @@ func (s *Server) handleAdminStreamerByID(w http.ResponseWriter, r *http.Request)
 			respondError(w, http.StatusInternalServerError, err)
 			return
 		}
+
+		err = s.store.DeleteStreamer(id)
+		if errors.Is(err, storage.ErrNotFound) {
+			respondJSON(w, http.StatusNotFound, errorPayload{Message: "Streamer not found."})
+			return
+		}
+		if err != nil {
+			respondError(w, http.StatusInternalServerError, err)
+			return
+		}
+		s.unsubscribeYouTubePlatforms(r.Context(), streamer.Platforms)
 		w.WriteHeader(http.StatusNoContent)
 	default:
 		methodNotAllowed(w, http.MethodPut, http.MethodDelete)
@@ -386,6 +421,20 @@ func (s *Server) handleAdminSettings(w http.ResponseWriter, r *http.Request) {
 	default:
 		methodNotAllowed(w, http.MethodGet, http.MethodPut)
 	}
+}
+
+func (s *Server) handleAdminYouTubeMonitor(w http.ResponseWriter, r *http.Request) {
+	if !s.authorizeAdmin(w, r) {
+		return
+	}
+
+	if r.Method != http.MethodGet {
+		methodNotAllowed(w, http.MethodGet)
+		return
+	}
+
+	events := s.youtubeEventsSnapshot()
+	respondJSON(w, http.StatusOK, youtubeMonitorResponse{Events: events})
 }
 
 func (s *Server) currentSettingsPayload() settingsResponse {
@@ -635,4 +684,40 @@ func constantTimeEquals(a, b string) bool {
 		result |= a[i] ^ b[i]
 	}
 	return result == 0
+}
+
+func (s *Server) streamerByID(id string) (storage.Streamer, error) {
+	trimmed := strings.TrimSpace(id)
+	if trimmed == "" {
+		return storage.Streamer{}, storage.ErrNotFound
+	}
+	streamers, err := s.store.ListStreamers()
+	if err != nil {
+		return storage.Streamer{}, err
+	}
+	for _, streamer := range streamers {
+		if streamer.ID == trimmed {
+			return streamer, nil
+		}
+	}
+	return storage.Streamer{}, storage.ErrNotFound
+}
+
+func (s *Server) youtubeEventsSnapshot() []youtubeEvent {
+	s.mu.RLock()
+	defer s.mu.RUnlock()
+	events := make([]youtubeEvent, len(s.youtubeEvents))
+	copy(events, s.youtubeEvents)
+	return events
+}
+
+func (s *Server) appendYouTubeEvent(event youtubeEvent) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	if len(s.youtubeEvents) >= youtubeEventLogLimit {
+		copy(s.youtubeEvents, s.youtubeEvents[1:])
+		s.youtubeEvents[len(s.youtubeEvents)-1] = event
+		return
+	}
+	s.youtubeEvents = append(s.youtubeEvents, event)
 }

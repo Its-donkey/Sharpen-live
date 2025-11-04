@@ -8,6 +8,8 @@ import (
 	"net/url"
 	"strings"
 	"testing"
+
+	"github.com/Its-donkey/Sharpen-live/backend/internal/settings"
 )
 
 func TestEnsureYouTubeSubscription_SendsRequest(t *testing.T) {
@@ -35,13 +37,20 @@ func TestEnsureYouTubeSubscription_SendsRequest(t *testing.T) {
 	}))
 	defer ts.Close()
 
-	srv := New(nil, "", "", "", "", WithYouTubeAlerts(YouTubeAlertsConfig{
-		HubURL:            ts.URL,
-		CallbackURL:       "https://sharpen.live/alerts",
-		Secret:            "sharpen-secret",
-		VerifyTokenPrefix: "sharpen-",
-		VerifyTokenSuffix: "-testing",
-	}))
+	initial := settings.Settings{
+		AdminToken:                "admin-token",
+		AdminEmail:                "admin@example.com",
+		AdminPassword:             "secret",
+		YouTubeAlertsCallback:     "https://sharpen.live/alerts",
+		YouTubeAlertsSecret:       "sharpen-secret",
+		YouTubeAlertsVerifyPrefix: "sharpen-",
+		YouTubeAlertsVerifySuffix: "-testing",
+		YouTubeAlertsHubURL:       ts.URL,
+	}
+
+	settingsStore := settings.NewMemoryStore(initial, true)
+
+	srv := New(nil, settingsStore, initial)
 	srv.httpClient = ts.Client()
 
 	srv.ensureYouTubeSubscription(context.Background(), "UC123")
@@ -85,9 +94,17 @@ func TestEnsureYouTubeSubscription_SkipsWhenDisabled(t *testing.T) {
 	}))
 	defer ts.Close()
 
-	srv := New(nil, "", "", "", "")
+	initial := settings.Settings{
+		AdminToken:          "admin-token",
+		AdminEmail:          "admin@example.com",
+		AdminPassword:       "secret",
+		YouTubeAlertsHubURL: ts.URL,
+	}
+
+	settingsStore := settings.NewMemoryStore(initial, true)
+
+	srv := New(nil, settingsStore, initial)
 	srv.httpClient = ts.Client()
-	srv.youtubeHubURL = ts.URL
 
 	srv.ensureYouTubeSubscription(context.Background(), "UC123")
 }
@@ -105,10 +122,17 @@ func TestCancelYouTubeSubscription_SendsRequest(t *testing.T) {
 	}))
 	defer ts.Close()
 
-	srv := New(nil, "", "", "", "", WithYouTubeAlerts(YouTubeAlertsConfig{
-		HubURL:      ts.URL,
-		CallbackURL: "https://sharpen.live/alerts",
-	}))
+	initial := settings.Settings{
+		AdminToken:            "admin-token",
+		AdminEmail:            "admin@example.com",
+		AdminPassword:         "secret",
+		YouTubeAlertsCallback: "https://sharpen.live/alerts",
+		YouTubeAlertsHubURL:   ts.URL,
+	}
+
+	settingsStore := settings.NewMemoryStore(initial, true)
+
+	srv := New(nil, settingsStore, initial)
 	srv.httpClient = ts.Client()
 
 	srv.cancelYouTubeSubscription(context.Background(), "UC456")

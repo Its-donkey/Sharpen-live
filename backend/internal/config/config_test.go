@@ -26,6 +26,7 @@ func TestFromEnvWithOverrides(t *testing.T) {
 	t.Setenv(envStreamersFile, streamersFile)
 	t.Setenv(envSubmissionsFile, submissionsFile)
 	t.Setenv(envStaticDir, staticDir)
+	t.Setenv(envDatabaseURL, "postgres://localhost/test?sslmode=disable")
 
 	cfg, err := FromEnv()
 	if err != nil {
@@ -43,6 +44,12 @@ func TestFromEnvWithOverrides(t *testing.T) {
 	}
 	if cfg.StaticDir != staticDir {
 		t.Fatalf("expected static dir %q, got %q", staticDir, cfg.StaticDir)
+	}
+	if cfg.DataDir != dataDir {
+		t.Fatalf("expected data dir %q, got %q", dataDir, cfg.DataDir)
+	}
+	if cfg.DatabaseURL != "postgres://localhost/test?sslmode=disable" {
+		t.Fatalf("expected database url override, got %q", cfg.DatabaseURL)
 	}
 }
 
@@ -79,6 +86,7 @@ func TestFromEnvDetectsDataDir(t *testing.T) {
 	t.Setenv(envAdminPassword, "secret")
 	t.Setenv(envListenAddr, "")
 	t.Setenv(envPort, "8088")
+	t.Setenv(envDatabaseURL, "postgres://localhost/test?sslmode=disable")
 
 	cfg, err := FromEnv()
 	if err != nil {
@@ -111,6 +119,8 @@ func TestConfigValidate(t *testing.T) {
 		AdminToken:      "token",
 		AdminEmail:      "admin@example.com",
 		AdminPassword:   "secret",
+		DatabaseURL:     "postgres://localhost/test?sslmode=disable",
+		DataDir:         "data",
 		StreamersPath:   "streamers.json",
 		SubmissionsPath: "submissions.json",
 		StaticDir:       "static",
@@ -128,9 +138,11 @@ func TestConfigValidate(t *testing.T) {
 		{"streamers", func(c *Config) { c.StreamersPath = "" }},
 		{"submissions", func(c *Config) { c.SubmissionsPath = "" }},
 		{"static", func(c *Config) { c.StaticDir = "" }},
+		{"dataDir", func(c *Config) { c.DataDir = "" }},
 		{"token", func(c *Config) { c.AdminToken = "" }},
 		{"email", func(c *Config) { c.AdminEmail = "" }},
 		{"password", func(c *Config) { c.AdminPassword = "" }},
+		{"database", func(c *Config) { c.DatabaseURL = "" }},
 	}
 
 	for _, tc := range invalidCases {

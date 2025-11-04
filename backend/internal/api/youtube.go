@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"net/url"
 	"strings"
+	"time"
 
 	"github.com/Its-donkey/Sharpen-live/backend/internal/storage"
 )
@@ -206,7 +207,25 @@ func decodeSearchResponse(data []byte) (string, error) {
 }
 
 func (s *Server) ensureYouTubeSubscription(ctx context.Context, channelID string) {
-	if !s.youtubeAlerts.enabled || channelID == "" || s.httpClient == nil {
+	s.manageYouTubeSubscription(ctx, channelID, "subscribe")
+}
+
+func (s *Server) cancelYouTubeSubscription(ctx context.Context, channelID string) {
+	s.manageYouTubeSubscription(ctx, channelID, "unsubscribe")
+}
+
+func (s *Server) manageYouTubeSubscription(ctx context.Context, channelID, mode string) {
+	channelID = strings.TrimSpace(channelID)
+	if channelID == "" || s.httpClient == nil {
+		return
+	}
+
+	callback := strings.TrimSpace(s.youtubeAlerts.callbackURL)
+	if callback == "" {
+		return
+	}
+
+	if mode == "subscribe" && !s.youtubeAlerts.enabled {
 		return
 	}
 
@@ -215,9 +234,9 @@ func (s *Server) ensureYouTubeSubscription(ctx context.Context, channelID string
 	}
 
 	params := url.Values{
-		"hub.mode":     []string{"subscribe"},
+		"hub.mode":     []string{mode},
 		"hub.topic":    []string{fmt.Sprintf("https://www.youtube.com/xml/feeds/videos.xml?channel_id=%s", channelID)},
-		"hub.callback": []string{s.youtubeAlerts.callbackURL},
+		"hub.callback": []string{callback},
 		"hub.verify":   []string{"async"},
 	}
 
@@ -229,25 +248,91 @@ func (s *Server) ensureYouTubeSubscription(ctx context.Context, channelID string
 		params.Set("hub.secret", s.youtubeAlerts.secret)
 	}
 
+	topic := params.Get("hub.topic")
+	verifyToken := params.Get("hub.verify_token")
+	hasSecret := s.youtubeAlerts.secret != ""
+	timestamp := time.Now().UTC()
+
 	req, err := http.NewRequestWithContext(ctx, http.MethodPost, s.youtubeHubURL, strings.NewReader(params.Encode()))
 	if err != nil {
+		s.appendYouTubeEvent(youtubeEvent{
+			Timestamp:   timestamp,
+			Mode:        mode,
+			ChannelID:   channelID,
+			Topic:       topic,
+			Callback:    callback,
+			Status:      "request_failed",
+			Error:       err.Error(),
+			VerifyToken: verifyToken,
+			HasSecret:   hasSecret,
+		})
 		return
 	}
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 
 	resp, err := s.httpClient.Do(req)
 	if err != nil {
+		s.appendYouTubeEvent(youtubeEvent{
+			Timestamp:   timestamp,
+			Mode:        mode,
+			ChannelID:   channelID,
+			Topic:       topic,
+			Callback:    callback,
+			Status:      "request_error",
+			Error:       err.Error(),
+			VerifyToken: verifyToken,
+			HasSecret:   hasSecret,
+		})
 		return
 	}
 	defer resp.Body.Close()
 
+	status := resp.Status
+	body, _ := io.ReadAll(io.LimitReader(resp.Body, 512))
+	message := strings.TrimSpace(string(body))
 	if resp.StatusCode >= http.StatusOK && resp.StatusCode < http.StatusMultipleChoices {
-		_, _ = io.Copy(io.Discard, resp.Body)
+		s.appendYouTubeEvent(youtubeEvent{
+			Timestamp:   timestamp,
+			Mode:        mode,
+			ChannelID:   channelID,
+			Topic:       topic,
+			Callback:    callback,
+			Status:      status,
+			Error:       message,
+			VerifyToken: verifyToken,
+			HasSecret:   hasSecret,
+		})
 		return
 	}
 
-	body, _ := io.ReadAll(io.LimitReader(resp.Body, 512))
-	fmt.Printf("youtube subscription failed: %s: %s\n", resp.Status, strings.TrimSpace(string(body)))
+	s.appendYouTubeEvent(youtubeEvent{
+		Timestamp:   timestamp,
+		Mode:        mode,
+		ChannelID:   channelID,
+		Topic:       topic,
+		Callback:    callback,
+		Status:      status,
+		Error:       message,
+		VerifyToken: verifyToken,
+		HasSecret:   hasSecret,
+	})
+	fmt.Printf("youtube subscription %s failed: %s: %s\n", mode, status, message)
+}
+
+func (s *Server) unsubscribeYouTubePlatforms(ctx context.Context, platforms []storage.Platform) {
+	if len(platforms) == 0 {
+		return
+	}
+	for _, platform := range platforms {
+		if !strings.EqualFold(platform.Name, "youtube") {
+			continue
+		}
+		id := strings.TrimSpace(platform.ID)
+		if id == "" {
+			continue
+		}
+		s.cancelYouTubeSubscription(ctx, id)
+	}
 }
 
 func (s *Server) youtubeVerifyToken(channelID string) string {

@@ -5,10 +5,11 @@ import type {
   Streamer,
   Submission,
   SubmissionPayload,
-  SuccessPayload
+  SuccessPayload,
+  YouTubeMonitorEvent
 } from "./types";
 
-const DEFAULT_DEV_BASE = "http://localhost:8880";
+const DEFAULT_DEV_BASE = "http://localhost:41621";
 
 const API_BASE = resolveBase();
 
@@ -16,6 +17,10 @@ function resolveBase(): string {
   const envBase = (import.meta.env.VITE_API_BASE_URL as string | undefined)?.trim();
   if (envBase) {
     return trimTrailingSlash(envBase);
+  }
+  const configuredBase = deriveBaseFromWindowConfig();
+  if (configuredBase) {
+    return configuredBase;
   }
   if (import.meta.env.DEV) {
     return DEFAULT_DEV_BASE;
@@ -33,6 +38,33 @@ function buildURL(path: string): string {
   }
   const normalizedPath = path.startsWith("/") ? path : `/${path}`;
   return `${API_BASE}${normalizedPath}`;
+}
+
+function deriveBaseFromWindowConfig(): string | undefined {
+  if (typeof window === "undefined") {
+    return undefined;
+  }
+  const listenAddr = window.__SHARPEN_CONFIG__?.listenAddr?.trim();
+  if (!listenAddr) {
+    return undefined;
+  }
+
+  if (listenAddr.startsWith("http://") || listenAddr.startsWith("https://")) {
+    return trimTrailingSlash(listenAddr);
+  }
+
+  const protocol = window.location?.protocol || "http:";
+  const host = window.location?.hostname || "localhost";
+
+  if (listenAddr.startsWith(":")) {
+    return `${protocol}//${host}${listenAddr}`;
+  }
+
+  if (!listenAddr.includes("://")) {
+    return `${protocol}//${listenAddr}`;
+  }
+
+  return trimTrailingSlash(listenAddr);
 }
 
 type RequestOptions = Omit<RequestInit, "headers"> & {
@@ -184,4 +216,13 @@ export async function updateAdminSettings(
     },
     token
   );
+}
+
+export async function getAdminYouTubeMonitor(token: string): Promise<YouTubeMonitorEvent[]> {
+  const response = await request<{ events?: YouTubeMonitorEvent[] }>(
+    "/api/admin/monitor/youtube",
+    { method: "GET" },
+    token
+  );
+  return response.events ?? [];
 }

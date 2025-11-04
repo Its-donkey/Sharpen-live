@@ -1,8 +1,15 @@
 # Changelog
 
 ## [Unreleased]
+- Persist admin and YouTube alert configuration in PostgreSQL via a dedicated settings store and API bootstrap flow.
+- Surface recent YouTube subscription activity through an admin monitor endpoint for troubleshooting PubSub workflows.
+- Store site settings as individual key/value rows in PostgreSQL for easier inspection and manual edits.
+- Fail admin settings updates when the settings store cannot persist changes, leaving runtime state untouched so operators see database outages immediately.
+- Add an admin monitor tab in the dashboard to review recent YouTube PubSub subscription events.
+- Unsubscribe YouTube alerts automatically when a streamer is removed.
 - Expose YouTube alert subscription settings in the admin UI for runtime configuration.
 - Automatically subscribe resolved YouTube channels to PubSubHubbub using the configured callback and secret.
+- Log and bind the API server using the listen address persisted in `site_settings`, updating the runtime environment to match.
 - Restore `/docs` Jekyll site scaffold so GitHub Pages builds succeed and highlight current repo layout.
 - Implement Sharpen Live API service with JSON-backed storage, admin endpoints, and accompanying tests plus local Go module packaging.
 - Rebuild the Sharpen Live frontend as a React application with submission workflow, admin dashboard, and Vite toolchain.
@@ -15,6 +22,7 @@
 - Design Sharpen Live landing page with custom logo and live streamer status table.
 - Relocate static site assets from `doc/` to `frontend/`.
 - Add YouTube alert listener service that polls live status every five minutes.
+- Record YouTube alert listener logs in PostgreSQL for the Admin monitor view.
 - Modularize YouTube alert application with dedicated packages and automated tests.
 - Add `frontend/streamers.json` to track streamer metadata.
 - Prompt for the YouTube alerts listener port and API key when the service starts to simplify local configuration.
@@ -23,6 +31,7 @@
 - Update API default static directory to `frontend/dist` so the merged bundle serves by default.
 - Add Go unit tests covering configuration, middleware, and SPA handler utilities.
 - Provide default admin token in dev launcher so backend starts without extra env vars.
+- Embed the persisted listen address into the SPA and let the frontend derive its API base from `site_settings`.
 - Convert platform name inputs to curated dropdowns of supported services across submission and admin forms.
 - Store YouTube API keys in admin settings and automatically resolve YouTube channel IDs into streamer platforms.
 - Remove handled stream live URLs from submissions/platform data and only surface platform links when a streamer is online.

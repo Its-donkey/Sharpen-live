@@ -454,6 +454,48 @@ tbody tr:hover {
   width: 100%;
 }
 
+.admin-monitor {
+  display: grid;
+  gap: 1rem;
+  width: 100%;
+}
+
+.admin-monitor-table-wrapper {
+  overflow-x: auto;
+}
+
+.admin-monitor-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 640px;
+  font-size: 0.9rem;
+}
+
+.admin-monitor-table th,
+.admin-monitor-table td {
+  padding: 0.65rem 0.75rem;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.2);
+  vertical-align: top;
+  text-align: left;
+}
+
+.admin-monitor-table tbody tr:nth-child(even) {
+  background: rgba(15, 23, 42, 0.35);
+}
+
+.admin-monitor-mode {
+  text-transform: capitalize;
+  font-weight: 600;
+}
+
+.admin-monitor-mode-subscribe {
+  color: #22d3ee;
+}
+
+.admin-monitor-mode-unsubscribe {
+  color: #f97316;
+}
+
 .admin-settings-form {
   display: grid;
   gap: 1.25rem;
@@ -929,6 +971,17 @@ footer a {
 }
 
 .admin-streamers {
+  display: grid;
+  gap: 1rem;
+}
+
+.admin-monitor {
+  margin-top: 2rem;
+  display: grid;
+  gap: 1.5rem;
+}
+
+.admin-monitor-events {
   display: grid;
   gap: 1rem;
 }

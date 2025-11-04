@@ -16,7 +16,9 @@ import (
 
 	"github.com/Its-donkey/Sharpen-live/backend/internal/api"
 	"github.com/Its-donkey/Sharpen-live/backend/internal/config"
+	"github.com/Its-donkey/Sharpen-live/backend/internal/settings"
 	"github.com/Its-donkey/Sharpen-live/backend/internal/storage"
+	"github.com/jackc/pgx/v5/pgxpool"
 )
 
 func main() {
@@ -32,28 +34,95 @@ func main() {
 		os.Exit(1)
 	}
 
-	store, err := storage.NewJSONStore(cfg.StreamersPath, cfg.SubmissionsPath)
+	ctx := context.Background()
+
+	pool, err := pgxpool.New(ctx, cfg.DatabaseURL)
+	if err != nil {
+		logger.Error("connect database", "error", err)
+		os.Exit(1)
+	}
+	defer pool.Close()
+
+	settingsStore := settings.NewPostgresStore(pool)
+	if err := settingsStore.EnsureSchema(ctx); err != nil {
+		logger.Error("ensure settings schema", "error", err)
+		os.Exit(1)
+	}
+
+	initialSettings, err := settingsStore.Load(ctx)
+	if errors.Is(err, settings.ErrNotFound) {
+		initialSettings = settings.Settings{
+			AdminToken:                cfg.AdminToken,
+			AdminEmail:                cfg.AdminEmail,
+			AdminPassword:             cfg.AdminPassword,
+			YouTubeAPIKey:             cfg.YouTubeAPIKey,
+			YouTubeAlertsCallback:     cfg.YouTubeAlertsCallback,
+			YouTubeAlertsSecret:       cfg.YouTubeAlertsSecret,
+			YouTubeAlertsVerifyPrefix: cfg.YouTubeAlertsVerifyPrefix,
+			YouTubeAlertsVerifySuffix: cfg.YouTubeAlertsVerifySuffix,
+			YouTubeAlertsHubURL:       cfg.YouTubeAlertsHubURL,
+			ListenAddr:                cfg.ListenAddr,
+			DataDir:                   cfg.DataDir,
+			StaticDir:                 cfg.StaticDir,
+			StreamersFile:             cfg.StreamersPath,
+			SubmissionsFile:           cfg.SubmissionsPath,
+		}
+		if err := settingsStore.Save(ctx, initialSettings); err != nil {
+			logger.Error("seed settings", "error", err)
+			os.Exit(1)
+		}
+	} else if err != nil {
+		logger.Error("load settings", "error", err)
+		os.Exit(1)
+	} else {
+		initialSettings = mergeSettingsWithConfig(initialSettings, cfg)
+		if err := settingsStore.Save(ctx, initialSettings); err != nil {
+			logger.Error("sync settings", "error", err)
+			os.Exit(1)
+		}
+	}
+
+	listenAddr := cfg.ListenAddr
+	if strings.TrimSpace(initialSettings.ListenAddr) != "" {
+		listenAddr = initialSettings.ListenAddr
+	}
+	staticDir := cfg.StaticDir
+	if strings.TrimSpace(initialSettings.StaticDir) != "" {
+		staticDir = initialSettings.StaticDir
+	}
+	streamersPath := cfg.StreamersPath
+	if strings.TrimSpace(initialSettings.StreamersFile) != "" {
+		streamersPath = initialSettings.StreamersFile
+	}
+	submissionsPath := cfg.SubmissionsPath
+	if strings.TrimSpace(initialSettings.SubmissionsFile) != "" {
+		submissionsPath = initialSettings.SubmissionsFile
+	}
+
+	store, err := storage.NewJSONStore(streamersPath, submissionsPath)
 	if err != nil {
 		logger.Error("init store", "error", err)
 		os.Exit(1)
 	}
 
-	var opts []api.Option
-	if cfg.YouTubeAlertsCallback != "" {
-		opts = append(opts, api.WithYouTubeAlerts(api.YouTubeAlertsConfig{
-			HubURL:            cfg.YouTubeAlertsHubURL,
-			CallbackURL:       cfg.YouTubeAlertsCallback,
-			Secret:            cfg.YouTubeAlertsSecret,
-			VerifyTokenPrefix: cfg.YouTubeAlertsVerifyPrefix,
-			VerifyTokenSuffix: cfg.YouTubeAlertsVerifySuffix,
-		}))
+	// Ensure persisted settings use the final file paths.
+	initialSettings.StreamersFile = streamersPath
+	initialSettings.SubmissionsFile = submissionsPath
+	initialSettings.StaticDir = staticDir
+	initialSettings.ListenAddr = listenAddr
+	if err := settingsStore.Save(ctx, initialSettings); err != nil {
+		logger.Error("finalize settings", "error", err)
+		os.Exit(1)
 	}
 
-	srv := api.New(store, cfg.AdminToken, cfg.AdminEmail, cfg.AdminPassword, cfg.YouTubeAPIKey, opts...)
-	staticHandler := spaHandler(cfg.StaticDir)
+	srv := api.New(store, settingsStore, initialSettings)
+	staticHandler := spaHandler(staticDir, listenAddr)
+
+	// Ensure downstream code sees the effective listen address.
+	_ = os.Setenv("LISTEN_ADDR", listenAddr)
 
 	httpServer := &http.Server{
-		Addr:    cfg.ListenAddr,
+		Addr:    listenAddr,
 		Handler: srv.Handler(staticHandler),
 		BaseContext: func(_ net.Listener) context.Context {
 			return context.Background()
@@ -64,7 +133,7 @@ func main() {
 	}
 
 	go func() {
-		logger.Info("server.started", "addr", cfg.ListenAddr)
+		logger.Info("server.started", "addr", listenAddr)
 		if err := httpServer.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
 			logger.Error("server.failed", "error", err)
 			os.Exit(1)
@@ -87,7 +156,53 @@ func main() {
 	}
 }
 
-func spaHandler(staticDir string) http.Handler {
+func mergeSettingsWithConfig(current settings.Settings, cfg config.Config) settings.Settings {
+	if strings.TrimSpace(current.AdminToken) == "" {
+		current.AdminToken = cfg.AdminToken
+	}
+	if strings.TrimSpace(current.AdminEmail) == "" {
+		current.AdminEmail = cfg.AdminEmail
+	}
+	if strings.TrimSpace(current.AdminPassword) == "" {
+		current.AdminPassword = cfg.AdminPassword
+	}
+	if strings.TrimSpace(current.YouTubeAPIKey) == "" {
+		current.YouTubeAPIKey = cfg.YouTubeAPIKey
+	}
+	if strings.TrimSpace(current.YouTubeAlertsCallback) == "" {
+		current.YouTubeAlertsCallback = cfg.YouTubeAlertsCallback
+	}
+	if strings.TrimSpace(current.YouTubeAlertsSecret) == "" {
+		current.YouTubeAlertsSecret = cfg.YouTubeAlertsSecret
+	}
+	if strings.TrimSpace(current.YouTubeAlertsVerifyPrefix) == "" {
+		current.YouTubeAlertsVerifyPrefix = cfg.YouTubeAlertsVerifyPrefix
+	}
+	if strings.TrimSpace(current.YouTubeAlertsVerifySuffix) == "" {
+		current.YouTubeAlertsVerifySuffix = cfg.YouTubeAlertsVerifySuffix
+	}
+	if strings.TrimSpace(current.YouTubeAlertsHubURL) == "" {
+		current.YouTubeAlertsHubURL = cfg.YouTubeAlertsHubURL
+	}
+	if strings.TrimSpace(current.ListenAddr) == "" {
+		current.ListenAddr = cfg.ListenAddr
+	}
+	if strings.TrimSpace(current.DataDir) == "" {
+		current.DataDir = cfg.DataDir
+	}
+	if strings.TrimSpace(current.StaticDir) == "" {
+		current.StaticDir = cfg.StaticDir
+	}
+	if strings.TrimSpace(current.StreamersFile) == "" {
+		current.StreamersFile = cfg.StreamersPath
+	}
+	if strings.TrimSpace(current.SubmissionsFile) == "" {
+		current.SubmissionsFile = cfg.SubmissionsPath
+	}
+	return current
+}
+
+func spaHandler(staticDir string, listenAddr string) http.Handler {
 	fileServer := http.FileServer(http.Dir(staticDir))
 
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -111,7 +226,22 @@ func spaHandler(staticDir string) http.Handler {
 			return
 		}
 
+		data = injectFrontendConfig(data, listenAddr)
+
 		w.Header().Set("Content-Type", "text/html; charset=utf-8")
 		_, _ = w.Write(data)
 	})
+}
+
+func injectFrontendConfig(data []byte, listenAddr string) []byte {
+	script := fmt.Sprintf(
+		"<script>window.__SHARPEN_CONFIG__=Object.assign({},window.__SHARPEN_CONFIG__,{listenAddr:%q});</script>",
+		strings.TrimSpace(listenAddr),
+	)
+	markup := string(data)
+	const headTag = "</head>"
+	if idx := strings.Index(strings.ToLower(markup), strings.ToLower(headTag)); idx != -1 {
+		return []byte(markup[:idx] + script + markup[idx:])
+	}
+	return append([]byte(script), data...)
 }

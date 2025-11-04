@@ -2,14 +2,21 @@ package api_test
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
+	"errors"
+	"io"
 	"net/http"
 	"net/http/httptest"
+	"net/url"
 	"os"
 	"path/filepath"
+	"strings"
+	"sync"
 	"testing"
 
 	"github.com/Its-donkey/Sharpen-live/backend/internal/api"
+	"github.com/Its-donkey/Sharpen-live/backend/internal/settings"
 	"github.com/Its-donkey/Sharpen-live/backend/internal/storage"
 )
 
@@ -27,19 +34,80 @@ type testEnv struct {
 	server  *api.Server
 }
 
-func newTestEnv(t *testing.T) testEnv {
+func newTestEnv(t *testing.T, initial *settings.Settings, opts ...api.Option) testEnv {
 	t.Helper()
 	dir := t.TempDir()
-	store, err := storage.NewJSONStore(
-		filepath.Join(dir, "streamers.json"),
-		filepath.Join(dir, "submissions.json"),
-	)
+	streamersPath := filepath.Join(dir, "streamers.json")
+	submissionsPath := filepath.Join(dir, "submissions.json")
+	store, err := storage.NewJSONStore(streamersPath, submissionsPath)
 	if err != nil {
 		t.Fatalf("create store: %v", err)
 	}
-	srv := api.New(store, adminToken, adminEmail, adminPassword, "")
+
+	seed := settings.Settings{
+		AdminToken:      adminToken,
+		AdminEmail:      adminEmail,
+		AdminPassword:   adminPassword,
+		ListenAddr:      ":8880",
+		DataDir:         filepath.Dir(streamersPath),
+		StaticDir:       "frontend/dist",
+		StreamersFile:   streamersPath,
+		SubmissionsFile: submissionsPath,
+	}
+	if initial != nil {
+		seed = mergeSettings(seed, *initial)
+	}
+
+	settingsStore := settings.NewMemoryStore(seed, true)
+	srv := api.New(store, settingsStore, seed, opts...)
 	handler := srv.Handler(http.NotFoundHandler())
 	return testEnv{store: store, handler: handler, server: srv}
+}
+
+func mergeSettings(base, override settings.Settings) settings.Settings {
+	if override.AdminToken != "" {
+		base.AdminToken = override.AdminToken
+	}
+	if override.AdminEmail != "" {
+		base.AdminEmail = override.AdminEmail
+	}
+	if override.AdminPassword != "" {
+		base.AdminPassword = override.AdminPassword
+	}
+	if override.YouTubeAPIKey != "" {
+		base.YouTubeAPIKey = override.YouTubeAPIKey
+	}
+	if override.YouTubeAlertsCallback != "" {
+		base.YouTubeAlertsCallback = override.YouTubeAlertsCallback
+	}
+	if override.YouTubeAlertsSecret != "" {
+		base.YouTubeAlertsSecret = override.YouTubeAlertsSecret
+	}
+	if override.YouTubeAlertsVerifyPrefix != "" {
+		base.YouTubeAlertsVerifyPrefix = override.YouTubeAlertsVerifyPrefix
+	}
+	if override.YouTubeAlertsVerifySuffix != "" {
+		base.YouTubeAlertsVerifySuffix = override.YouTubeAlertsVerifySuffix
+	}
+	if override.YouTubeAlertsHubURL != "" {
+		base.YouTubeAlertsHubURL = override.YouTubeAlertsHubURL
+	}
+	if override.ListenAddr != "" {
+		base.ListenAddr = override.ListenAddr
+	}
+	if override.DataDir != "" {
+		base.DataDir = override.DataDir
+	}
+	if override.StaticDir != "" {
+		base.StaticDir = override.StaticDir
+	}
+	if override.StreamersFile != "" {
+		base.StreamersFile = override.StreamersFile
+	}
+	if override.SubmissionsFile != "" {
+		base.SubmissionsFile = override.SubmissionsFile
+	}
+	return base
 }
 
 func performRequest(handler http.Handler, method, target string, body any, headers map[string]string) *httptest.ResponseRecorder {
@@ -65,7 +133,7 @@ func performRequest(handler http.Handler, method, target string, body any, heade
 }
 
 func TestSubmitAndApproveFlow(t *testing.T) {
-	env := newTestEnv(t)
+	env := newTestEnv(t, nil)
 
 	// Ensure login fails with incorrect credentials.
 	invalidResp := performRequest(env.handler, http.MethodPost, "/api/admin/login", map[string]string{
@@ -145,7 +213,7 @@ func TestSubmitAndApproveFlow(t *testing.T) {
 }
 
 func TestRejectAndDeleteStreamers(t *testing.T) {
-	env := newTestEnv(t)
+	env := newTestEnv(t, nil)
 
 	headers := map[string]string{"Authorization": "Bearer " + adminToken}
 
@@ -196,14 +264,19 @@ func TestRejectAndDeleteStreamers(t *testing.T) {
 }
 
 func TestAdminSettingsHandlers(t *testing.T) {
-	env := newTestEnv(t)
-	headers := map[string]string{"Authorization": "Bearer " + adminToken}
+	initial := settings.Settings{
+		AdminToken:      adminToken,
+		AdminEmail:      adminEmail,
+		AdminPassword:   adminPassword,
+		ListenAddr:      ":9000",
+		DataDir:         "/tmp/data",
+		StaticDir:       "/tmp/static",
+		StreamersFile:   "/tmp/streamers.json",
+		SubmissionsFile: "/tmp/submissions.json",
+	}
 
-	t.Setenv("LISTEN_ADDR", ":9000")
-	t.Setenv("SHARPEN_DATA_DIR", "/tmp/data")
-	t.Setenv("SHARPEN_STATIC_DIR", "/tmp/static")
-	t.Setenv("SHARPEN_STREAMERS_FILE", "/tmp/streamers.json")
-	t.Setenv("SHARPEN_SUBMISSIONS_FILE", "/tmp/submissions.json")
+	env := newTestEnv(t, &initial)
+	headers := map[string]string{"Authorization": "Bearer " + adminToken}
 
 	resp := performRequest(env.handler, http.MethodGet, "/api/admin/settings", nil, headers)
 	if resp.Code != http.StatusOK {
@@ -319,4 +392,176 @@ func TestAdminSettingsHandlers(t *testing.T) {
 	if value := os.Getenv("YOUTUBE_ALERTS_HUB_URL"); value != "" {
 		t.Fatalf("expected hub env cleared, got %q", value)
 	}
+}
+
+func TestAdminYouTubeMonitor(t *testing.T) {
+	var (
+		mu    sync.Mutex
+		calls []url.Values
+	)
+
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		data, err := io.ReadAll(r.Body)
+		if err != nil {
+			t.Fatalf("read body: %v", err)
+		}
+		_ = r.Body.Close()
+		values, err := url.ParseQuery(string(data))
+		if err != nil {
+			t.Fatalf("parse body: %v", err)
+		}
+		mu.Lock()
+		calls = append(calls, values)
+		mu.Unlock()
+		w.WriteHeader(http.StatusAccepted)
+	}))
+	defer ts.Close()
+
+	initial := settings.Settings{
+		AdminToken:                adminToken,
+		AdminEmail:                adminEmail,
+		AdminPassword:             adminPassword,
+		ListenAddr:                ":8880",
+		DataDir:                   "/tmp/data",
+		StaticDir:                 "frontend/dist",
+		StreamersFile:             "/tmp/streamers.json",
+		SubmissionsFile:           "/tmp/submissions.json",
+		YouTubeAlertsCallback:     "https://alerts.sharpen.live/callback",
+		YouTubeAlertsSecret:       "secret-789",
+		YouTubeAlertsVerifyPrefix: "prefix-",
+		YouTubeAlertsVerifySuffix: "-suffix",
+		YouTubeAlertsHubURL:       ts.URL,
+	}
+
+	env := newTestEnv(t, &initial, api.WithHTTPClient(ts.Client()))
+	headers := map[string]string{"Authorization": "Bearer " + adminToken}
+
+	createResp := performRequest(env.handler, http.MethodPost, "/api/admin/streamers", map[string]any{
+		"name":        "Monitor",
+		"description": "Testing",
+		"status":      "online",
+		"statusLabel": "Online",
+		"languages":   []string{"English"},
+		"platforms": []map[string]string{
+			{"name": "YouTube", "channelUrl": "https://www.youtube.com/channel/UC777"},
+		},
+	}, headers)
+	if createResp.Code != http.StatusCreated {
+		t.Fatalf("expected 201 creating streamer, got %d", createResp.Code)
+	}
+
+	var created storage.Streamer
+	if err := json.Unmarshal(createResp.Body.Bytes(), &created); err != nil {
+		t.Fatalf("decode created streamer: %v", err)
+	}
+
+	resp := performRequest(env.handler, http.MethodDelete, "/api/admin/streamers/"+created.ID, nil, headers)
+	if resp.Code != http.StatusNoContent {
+		t.Fatalf("expected 204 deleting streamer, got %d", resp.Code)
+	}
+
+	monitor := performRequest(env.handler, http.MethodGet, "/api/admin/monitor/youtube", nil, headers)
+	if monitor.Code != http.StatusOK {
+		t.Fatalf("expected 200 fetching monitor, got %d", monitor.Code)
+	}
+
+	var payload struct {
+		Events []struct {
+			Mode      string `json:"mode"`
+			ChannelID string `json:"channelId"`
+			Status    string `json:"status"`
+		}
+	}
+	if err := json.Unmarshal(monitor.Body.Bytes(), &payload); err != nil {
+		t.Fatalf("decode monitor: %v", err)
+	}
+
+	mu.Lock()
+	defer mu.Unlock()
+
+	if len(payload.Events) < 2 {
+		t.Fatalf("expected at least 2 events, got %d", len(payload.Events))
+	}
+	if len(calls) < 2 {
+		t.Fatalf("expected at least 2 webhook calls, got %d", len(calls))
+	}
+
+	last := payload.Events[len(payload.Events)-1]
+	if last.Mode != "unsubscribe" {
+		t.Fatalf("expected last event to be unsubscribe, got %s", last.Mode)
+	}
+	if last.ChannelID != created.Platforms[0].ID {
+		t.Fatalf("expected channel %s, got %s", created.Platforms[0].ID, last.ChannelID)
+	}
+	if !strings.Contains(last.Status, "202") && !strings.Contains(last.Status, "200") {
+		t.Fatalf("expected success status, got %s", last.Status)
+	}
+	if calls[len(calls)-1].Get("hub.mode") != "unsubscribe" {
+		t.Fatalf("expected unsubscribe mode in webhook, got %s", calls[len(calls)-1].Get("hub.mode"))
+	}
+}
+
+func TestAdminSettingsPersistFailure(t *testing.T) {
+	dir := t.TempDir()
+	streamersPath := filepath.Join(dir, "streamers.json")
+	submissionsPath := filepath.Join(dir, "submissions.json")
+	store, err := storage.NewJSONStore(streamersPath, submissionsPath)
+	if err != nil {
+		t.Fatalf("create store: %v", err)
+	}
+
+	seed := settings.Settings{
+		AdminToken:      adminToken,
+		AdminEmail:      adminEmail,
+		AdminPassword:   adminPassword,
+		ListenAddr:      ":9000",
+		DataDir:         "/tmp/data",
+		StaticDir:       "/tmp/static",
+		StreamersFile:   streamersPath,
+		SubmissionsFile: submissionsPath,
+	}
+
+	failingStore := &failingSettingsStore{
+		initial: seed,
+		err:     errors.New("database unavailable"),
+	}
+
+	srv := api.New(store, failingStore, seed)
+	handler := srv.Handler(http.NotFoundHandler())
+
+	headers := map[string]string{"Authorization": "Bearer " + adminToken}
+	body := map[string]string{"adminToken": "new-token"}
+
+	resp := performRequest(handler, http.MethodPut, "/api/admin/settings", body, headers)
+	if resp.Code != http.StatusInternalServerError {
+		t.Fatalf("expected 500 when persistence fails, got %d", resp.Code)
+	}
+
+	getResp := performRequest(handler, http.MethodGet, "/api/admin/settings", nil, headers)
+	if getResp.Code != http.StatusOK {
+		t.Fatalf("expected original token to remain valid, got %d", getResp.Code)
+	}
+
+	newHeaders := map[string]string{"Authorization": "Bearer new-token"}
+	unauth := performRequest(handler, http.MethodGet, "/api/admin/settings", nil, newHeaders)
+	if unauth.Code != http.StatusUnauthorized {
+		t.Fatalf("expected new token to be unauthorized after failed update, got %d", unauth.Code)
+	}
+}
+
+type failingSettingsStore struct {
+	initial settings.Settings
+	err     error
+}
+
+func (f *failingSettingsStore) EnsureSchema(context.Context) error {
+	return nil
+}
+
+func (f *failingSettingsStore) Load(context.Context) (settings.Settings, error) {
+	return f.initial, nil
+}
+
+func (f *failingSettingsStore) Save(context.Context, settings.Settings) error {
+	return f.err
 }

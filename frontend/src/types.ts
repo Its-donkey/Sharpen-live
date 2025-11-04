@@ -44,6 +44,18 @@ export interface ErrorPayload {
   message: string;
 }
 
+export interface AdminYouTubeEvent {
+  timestamp: string;
+  mode: string;
+  channelId: string;
+  topic: string;
+  callback: string;
+  status: string;
+  error?: string;
+  verifyToken?: string;
+  hasSecret: boolean;
+}
+
 export interface AdminSettings {
   listenAddr: string;
   adminToken: string;
@@ -68,3 +80,15 @@ export const STATUS_DEFAULT_LABELS: Record<StreamerStatus, string> = {
   busy: "Workshop",
   offline: "Offline"
 };
+
+export interface YouTubeMonitorEvent {
+  timestamp: string;
+  mode: string;
+  channelId: string;
+  topic: string;
+  callback: string;
+  status: string;
+  error?: string;
+  verifyToken?: string;
+  hasSecret: boolean;
+}

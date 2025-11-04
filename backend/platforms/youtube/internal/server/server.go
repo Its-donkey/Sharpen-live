@@ -6,7 +6,7 @@ import (
 	"errors"
 	"net/http"
 
-	"github.com/Its-donkey/Sharpen-live/platforms/youtube/internal/alerts"
+	"github.com/Its-donkey/Sharpen-live/backend/platforms/youtube/internal/alerts"
 )
 
 // AlertProcessor processes incoming stream alerts.

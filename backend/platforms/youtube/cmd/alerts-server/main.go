@@ -10,10 +10,10 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/Its-donkey/Sharpen-live/platforms/youtube/internal/alerts"
-	"github.com/Its-donkey/Sharpen-live/platforms/youtube/internal/config"
-	"github.com/Its-donkey/Sharpen-live/platforms/youtube/internal/server"
-	"github.com/Its-donkey/Sharpen-live/platforms/youtube/internal/youtube"
+	"github.com/Its-donkey/Sharpen-live/backend/platforms/youtube/internal/alerts"
+	"github.com/Its-donkey/Sharpen-live/backend/platforms/youtube/internal/config"
+	"github.com/Its-donkey/Sharpen-live/backend/platforms/youtube/internal/server"
+	"github.com/Its-donkey/Sharpen-live/backend/platforms/youtube/internal/youtube"
 )
 
 func main() {

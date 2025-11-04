@@ -12,8 +12,9 @@ const (
 	defaultListenAddr        = ":8080"
 	defaultPollInterval      = 5 * time.Minute
 	defaultShutdownGrace     = 10 * time.Second
+	defaultStreamersPath     = "backend/data/streamers.json"
 	envYouTubeAPIKey         = "YOUTUBE_API_KEY"
-	envYouTubeChannelID      = "YOUTUBE_CHANNEL_ID"
+	envStreamersPath         = "STREAMERS_JSON"
 	envListenAddr            = "LISTEN_ADDR"
 	envPort                  = "YTPORT"
 	envPollInterval          = "POLL_INTERVAL"
@@ -25,7 +26,7 @@ const (
 type Config struct {
 	ListenAddr          string
 	APIKey              string
-	ChannelID           string
+	StreamersPath       string
 	DatabaseURL         string
 	PollInterval        time.Duration
 	ShutdownGracePeriod time.Duration
@@ -38,8 +39,12 @@ func FromEnv() (Config, error) {
 		PollInterval:        defaultPollInterval,
 		ShutdownGracePeriod: defaultShutdownGrace,
 		APIKey:              os.Getenv(envYouTubeAPIKey),
-		ChannelID:           strings.TrimSpace(os.Getenv(envYouTubeChannelID)),
+		StreamersPath:       defaultStreamersPath,
 		DatabaseURL:         strings.TrimSpace(os.Getenv(envDatabaseURL)),
+	}
+
+	if v := strings.TrimSpace(os.Getenv(envStreamersPath)); v != "" {
+		cfg.StreamersPath = v
 	}
 
 	if v := strings.TrimSpace(os.Getenv(envListenAddr)); v != "" {
@@ -79,8 +84,8 @@ func (c Config) Validate() error {
 		return errors.New("config: listen address is required")
 	}
 
-	if strings.TrimSpace(c.ChannelID) == "" {
-		return errors.New("config: youtube channel id is required")
+	if strings.TrimSpace(c.StreamersPath) == "" {
+		return errors.New("config: streamers json path is required")
 	}
 
 	if c.PollInterval <= 0 {

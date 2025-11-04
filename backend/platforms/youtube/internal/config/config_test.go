@@ -8,7 +8,7 @@ import (
 
 func TestFromEnvDefaults(t *testing.T) {
 	t.Setenv("YOUTUBE_API_KEY", "")
-	t.Setenv("YOUTUBE_CHANNEL_ID", "UCCHAN")
+	t.Setenv("STREAMERS_JSON", "streamers.json")
 	t.Setenv("LISTEN_ADDR", "")
 	t.Setenv("YTPORT", "")
 	t.Setenv("POLL_INTERVAL", "")
@@ -35,7 +35,7 @@ func TestFromEnvDefaults(t *testing.T) {
 
 func TestFromEnvOverrides(t *testing.T) {
 	t.Setenv("YOUTUBE_API_KEY", "secret")
-	t.Setenv("YOUTUBE_CHANNEL_ID", "UCCHAN")
+	t.Setenv("STREAMERS_JSON", "streamers.json")
 	t.Setenv("LISTEN_ADDR", "127.0.0.1:9090")
 	t.Setenv("POLL_INTERVAL", "1m30s")
 	t.Setenv("SHUTDOWN_GRACE_PERIOD", "5s")
@@ -66,7 +66,7 @@ func TestFromEnvOverrides(t *testing.T) {
 func TestFromEnvPortFallback(t *testing.T) {
 	t.Setenv("LISTEN_ADDR", ":5050")
 	t.Setenv("YTPORT", "")
-	t.Setenv("YOUTUBE_CHANNEL_ID", "UCCHAN")
+	t.Setenv("STREAMERS_JSON", "streamers.json")
 	t.Setenv("DATABASE_URL", "postgres://localhost/test?sslmode=disable")
 
 	cfg, err := FromEnv()
@@ -81,7 +81,7 @@ func TestFromEnvPortFallback(t *testing.T) {
 
 func TestFromEnvInvalidDurations(t *testing.T) {
 	t.Setenv("DATABASE_URL", "postgres://localhost/test?sslmode=disable")
-	t.Setenv("YOUTUBE_CHANNEL_ID", "UCCHAN")
+	t.Setenv("STREAMERS_JSON", "streamers.json")
 	t.Setenv("POLL_INTERVAL", "abc")
 	if _, err := FromEnv(); err == nil {
 		t.Fatal("expected error for invalid poll interval")
@@ -100,7 +100,7 @@ func TestValidate(t *testing.T) {
 		PollInterval:        time.Minute,
 		ShutdownGracePeriod: time.Second,
 		DatabaseURL:         "postgres://localhost/test?sslmode=disable",
-		ChannelID:           "UCCHAN",
+		StreamersPath:       "streamers.json",
 	}
 
 	if err := cfg.Validate(); err == nil {
@@ -126,12 +126,12 @@ func TestValidate(t *testing.T) {
 	}
 
 	cfg.DatabaseURL = "postgres://localhost/test?sslmode=disable"
-	cfg.ChannelID = ""
+	cfg.StreamersPath = ""
 	if err := cfg.Validate(); err == nil {
-		t.Fatal("expected error for missing channel id")
+		t.Fatal("expected error for missing streamers path")
 	}
 
-	cfg.ChannelID = "UCCHAN"
+	cfg.StreamersPath = "streamers.json"
 	if err := cfg.Validate(); err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}

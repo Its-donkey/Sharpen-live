@@ -37,7 +37,7 @@ func TestNotificationAtom(t *testing.T) {
 	processor := &stubProcessor{}
 	srv := New(Config{
 		Processor: processor,
-		ChannelID: "UCCHAN",
+		Streamers: StreamerDirectory{"UCCHAN": "Test"},
 		Immediate: true,
 	})
 
@@ -67,7 +67,7 @@ func TestNotificationAtom(t *testing.T) {
 	}
 
 	alert := processor.alerts[0]
-	if alert.ChannelID != "UCCHAN" || alert.StreamID != "video-123" || alert.Status != "online" {
+	if alert.ChannelID != "UCCHAN" || alert.StreamID != "video-123" || alert.Status != "online" || alert.StreamerName != "Test" {
 		t.Fatalf("unexpected alert payload: %#v", alert)
 	}
 }
@@ -76,7 +76,7 @@ func TestNotificationAtomProcessorError(t *testing.T) {
 	processor := &stubProcessor{err: errors.New("boom")}
 	srv := New(Config{
 		Processor: processor,
-		ChannelID: "UCCHAN",
+		Streamers: StreamerDirectory{"UCCHAN": "Test"},
 		Immediate: true,
 	})
 
@@ -99,7 +99,7 @@ func TestNotificationAtomFallbackToBodyPrefix(t *testing.T) {
 	processor := &stubProcessor{}
 	srv := New(Config{
 		Processor: processor,
-		ChannelID: "UCCHAN",
+		Streamers: StreamerDirectory{"UCCHAN": "Test"},
 		Immediate: true,
 	})
 
@@ -115,7 +115,7 @@ func TestNotificationAtomFallbackToBodyPrefix(t *testing.T) {
 
 func TestNotificationUnsupportedPayload(t *testing.T) {
 	srv := New(Config{
-		ChannelID: "UCCHAN",
+		Streamers: StreamerDirectory{"UCCHAN": "Test"},
 		Immediate: true,
 	})
 
@@ -132,7 +132,7 @@ func TestNotificationUnsupportedPayload(t *testing.T) {
 
 func TestVerificationSuccess(t *testing.T) {
 	srv := New(Config{
-		ChannelID: "UCCHAN",
+		Streamers: StreamerDirectory{"UCCHAN": "Test"},
 	})
 
 	topic := "https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCCHAN"
@@ -152,7 +152,7 @@ func TestVerificationSuccess(t *testing.T) {
 
 func TestVerificationTopicMismatch(t *testing.T) {
 	srv := New(Config{
-		ChannelID: "UCCHAN",
+		Streamers: StreamerDirectory{"UCCHAN": "Test"},
 	})
 
 	req := httptest.NewRequest(http.MethodGet, "/alerts?hub.mode=subscribe&hub.challenge=test&hub.topic=https://example.com/feed", nil)
@@ -160,14 +160,14 @@ func TestVerificationTopicMismatch(t *testing.T) {
 
 	srv.Routes().ServeHTTP(rr, req)
 
-	if rr.Code != http.StatusNotFound {
-		t.Fatalf("expected 404, got %d", rr.Code)
+	if rr.Code != http.StatusBadRequest {
+		t.Fatalf("expected 400, got %d", rr.Code)
 	}
 }
 
 func TestVerificationMissingChallenge(t *testing.T) {
 	srv := New(Config{
-		ChannelID: "UCCHAN",
+		Streamers: StreamerDirectory{"UCCHAN": "Test"},
 	})
 
 	req := httptest.NewRequest(http.MethodGet, "/alerts?hub.mode=subscribe", nil)
@@ -182,7 +182,7 @@ func TestVerificationMissingChallenge(t *testing.T) {
 
 func TestUnsupportedMethod(t *testing.T) {
 	srv := New(Config{
-		ChannelID: "UCCHAN",
+		Streamers: StreamerDirectory{"UCCHAN": "Test"},
 	})
 
 	req := httptest.NewRequest(http.MethodPut, "/alerts", nil)

@@ -5,9 +5,9 @@ import (
 	"context"
 	"encoding/xml"
 	"errors"
-	"fmt"
 	"io"
 	"net/http"
+	"net/url"
 	"strings"
 
 	"github.com/Its-donkey/Sharpen-live/backend/platforms/youtube/internal/alerts"
@@ -27,18 +27,18 @@ type Logger interface {
 type Config struct {
 	Processor AlertProcessor
 	Logger    Logger
-	ChannelID string
+	Streamers StreamerDirectory
 	QueueSize int
 	Immediate bool
 }
 
 // Server exposes HTTP endpoints for alert delivery.
 type Server struct {
-	processor         AlertProcessor
-	logger            Logger
-	expectedChannelID string
-	queue             chan alerts.StreamAlert
-	immediate         bool
+	processor     AlertProcessor
+	logger        Logger
+	streamerNames StreamerDirectory
+	queue         chan alerts.StreamAlert
+	immediate     bool
 }
 
 const defaultQueueSize = 32
@@ -57,10 +57,10 @@ func New(cfg Config) *Server {
 	}
 
 	s := &Server{
-		processor:         cfg.Processor,
-		logger:            logger,
-		expectedChannelID: strings.TrimSpace(cfg.ChannelID),
-		immediate:         cfg.Immediate,
+		processor:     cfg.Processor,
+		logger:        logger,
+		streamerNames: cfg.Streamers,
+		immediate:     cfg.Immediate,
 	}
 
 	if !s.immediate {
@@ -79,20 +79,20 @@ func (s *Server) drainQueue() {
 
 func (s *Server) processAlert(alert alerts.StreamAlert) {
 	if s.processor == nil {
-		s.logger.Printf("alert dropped: processor unavailable channel=%s video=%s", alert.ChannelID, alert.StreamID)
+		s.logger.Printf("alert dropped: processor unavailable channel=%s streamer=%q video=%s", alert.ChannelID, alert.StreamerName, alert.StreamID)
 		return
 	}
 
 	if err := s.processor.Handle(context.Background(), alert); err != nil {
 		if errors.Is(err, alerts.ErrMissingChannelID) {
-			s.logger.Printf("alert rejected: missing channel id video=%s", alert.StreamID)
+			s.logger.Printf("alert rejected: missing channel id streamer=%q video=%s", alert.StreamerName, alert.StreamID)
 			return
 		}
-		s.logger.Printf("alert processing failed: channel=%s video=%s err=%v", alert.ChannelID, alert.StreamID, err)
+		s.logger.Printf("alert processing failed: channel=%s streamer=%q video=%s err=%v", alert.ChannelID, alert.StreamerName, alert.StreamID, err)
 		return
 	}
 
-	s.logger.Printf("alert processed: channel=%s video=%s", alert.ChannelID, alert.StreamID)
+	s.logger.Printf("alert processed: channel=%s streamer=%q video=%s", alert.ChannelID, alert.StreamerName, alert.StreamID)
 }
 
 func (s *Server) enqueueAlert(alert alerts.StreamAlert) {
@@ -104,7 +104,7 @@ func (s *Server) enqueueAlert(alert alerts.StreamAlert) {
 	select {
 	case s.queue <- alert:
 	default:
-		s.logger.Printf("alert queue saturated: dropping channel=%s video=%s", alert.ChannelID, alert.StreamID)
+		s.logger.Printf("alert queue saturated: dropping channel=%s streamer=%q video=%s", alert.ChannelID, alert.StreamerName, alert.StreamID)
 	}
 }
 
@@ -155,8 +155,15 @@ func (s *Server) handleVerification(w http.ResponseWriter, r *http.Request) {
 		verifyToken,
 	)
 
-	if expected := s.expectedTopic(); expected != "" && !strings.EqualFold(topic, expected) {
-		s.logger.Printf("verification topic mismatch: expected=%s got=%s", expected, topic)
+	channelID, err := channelIDFromTopic(topic)
+	if err != nil {
+		s.logger.Printf("verification topic invalid: topic=%s err=%v", topic, err)
+		http.Error(w, "invalid topic", http.StatusBadRequest)
+		return
+	}
+
+	if s.streamerNames != nil && !s.streamerNames.Contains(channelID) {
+		s.logger.Printf("verification topic mismatch: channel_id=%s not registered", channelID)
 		http.Error(w, "topic mismatch", http.StatusNotFound)
 		return
 	}
@@ -218,17 +225,23 @@ func (s *Server) handleNotification(w http.ResponseWriter, r *http.Request) {
 			continue
 		}
 
-		if expectedChannel := s.expectedChannelID; expectedChannel != "" && !strings.EqualFold(channelID, expectedChannel) {
-			s.logger.Printf("notification entry channel mismatch: request_id=%q expected=%s got=%s", requestID, expectedChannel, channelID)
-			continue
+		var streamerName string
+		if s.streamerNames != nil {
+			var ok bool
+			streamerName, ok = s.streamerNames.Name(channelID)
+			if !ok {
+				s.logger.Printf("notification entry channel mismatch: request_id=%q channel=%s not registered", requestID, channelID)
+				continue
+			}
 		}
 
 		link := entry.AlternateURL()
 		s.logger.Printf(
-			"notification queued: request_id=%q user_agent=%q channel=%s video=%s title=%q published=%s updated=%s link=%s",
+			"notification queued: request_id=%q user_agent=%q channel=%s streamer=%q video=%s title=%q published=%s updated=%s link=%s",
 			requestID,
 			userAgent,
 			channelID,
+			streamerName,
 			videoID,
 			strings.TrimSpace(entry.Title),
 			strings.TrimSpace(entry.Published),
@@ -237,9 +250,10 @@ func (s *Server) handleNotification(w http.ResponseWriter, r *http.Request) {
 		)
 
 		alert := alerts.StreamAlert{
-			ChannelID: channelID,
-			StreamID:  videoID,
-			Status:    "online",
+			ChannelID:    channelID,
+			StreamID:     videoID,
+			Status:       "online",
+			StreamerName: streamerName,
 		}
 		s.enqueueAlert(alert)
 	}
@@ -250,13 +264,6 @@ func (s *Server) handleNotification(w http.ResponseWriter, r *http.Request) {
 func hasVerificationParams(r *http.Request) bool {
 	query := r.URL.Query()
 	return strings.TrimSpace(query.Get("hub.mode")) != "" && strings.TrimSpace(query.Get("hub.challenge")) != ""
-}
-
-func (s *Server) expectedTopic() string {
-	if s.expectedChannelID == "" {
-		return ""
-	}
-	return fmt.Sprintf(youtubeTopicTemplate, s.expectedChannelID)
 }
 
 func isAtomPayload(contentType string, body []byte) bool {
@@ -398,6 +405,38 @@ func requestIDFrom(r *http.Request) string {
 		}
 	}
 	return ""
+}
+
+func channelIDFromTopic(topic string) (string, error) {
+	trimmed := strings.TrimSpace(topic)
+	if trimmed == "" {
+		return "", errors.New("empty topic")
+	}
+
+	u, err := url.Parse(trimmed)
+	if err != nil {
+		return "", err
+	}
+
+	if id := strings.TrimSpace(u.Query().Get("channel_id")); id != "" {
+		return id, nil
+	}
+
+	segments := strings.Split(strings.Trim(u.Path, "/"), "/")
+	for i := 0; i < len(segments); i++ {
+		segment := strings.TrimSpace(segments[i])
+		if !strings.EqualFold(segment, "channel") {
+			continue
+		}
+		if i+1 < len(segments) {
+			candidate := strings.TrimSpace(segments[i+1])
+			if candidate != "" {
+				return candidate, nil
+			}
+		}
+	}
+
+	return "", errors.New("channel id not found in topic")
 }
 
 type httpLogger struct{}

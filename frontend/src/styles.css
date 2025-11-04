@@ -933,6 +933,17 @@ footer a {
   gap: 1rem;
 }
 
+.admin-monitor {
+  margin-top: 2rem;
+  display: grid;
+  gap: 1.5rem;
+}
+
+.admin-monitor-events {
+  display: grid;
+  gap: 1rem;
+}
+
 .admin-card-body {
   display: grid;
   gap: 0.75rem;

@@ -10,6 +10,7 @@ import {
   deleteAdminStreamer,
   getAdminStreamers,
   getAdminSettings,
+  getAdminYouTubeMonitor,
   getSubmissions,
   loginAdmin,
   moderateSubmission,
@@ -22,7 +23,8 @@ import type {
   Streamer,
   StreamerStatus,
   Submission,
-  SubmissionPayload
+  SubmissionPayload,
+  YouTubeMonitorEvent
 } from "../types";
 import { STATUS_DEFAULT_LABELS } from "../types";
 import {
@@ -116,11 +118,15 @@ export function AdminConsole({
   const [submissions, setSubmissions] = useState<Submission[]>([]);
   const [streamers, setStreamers] = useState<Streamer[]>([]);
   const [isCreateOpen, setIsCreateOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState<"streamers" | "settings">("streamers");
+  const [activeTab, setActiveTab] = useState<"streamers" | "settings" | "monitor">(
+    "streamers"
+  );
   const [settings, setSettings] = useState<AdminSettings | null>(null);
   const [settingsDraft, setSettingsDraft] = useState<AdminSettings | null>(null);
   const [settingsLoading, setSettingsLoading] = useState(false);
   const [settingsSaving, setSettingsSaving] = useState(false);
+  const [monitorEvents, setMonitorEvents] = useState<YouTubeMonitorEvent[]>([]);
+  const [monitorLoading, setMonitorLoading] = useState(false);
   const isAuthenticated = Boolean(token);
 
   const loadAdminData = useCallback(
@@ -166,11 +172,31 @@ export function AdminConsole({
     []
   );
 
+  const loadMonitor = useCallback(
+    async (currentToken: string) => {
+      setMonitorLoading(true);
+      try {
+        const events = await getAdminYouTubeMonitor(currentToken);
+        setMonitorEvents(events);
+      } catch (error) {
+        setStatus({
+          message: error instanceof Error ? error.message : "Unable to load YouTube monitor.",
+          tone: "error"
+        });
+      } finally {
+        setMonitorLoading(false);
+      }
+    },
+    []
+  );
+
   useEffect(() => {
     if (!token) {
       setSubmissions([]);
       setStreamers([]);
       setSettings(null);
+      setMonitorEvents([]);
+      setMonitorLoading(false);
       return;
     }
     void loadAdminData(token);
@@ -184,6 +210,13 @@ export function AdminConsole({
       void loadSettings(token);
     }
   }, [isAuthenticated, activeTab, settings, settingsLoading, loadSettings, token]);
+
+  useEffect(() => {
+    if (!isAuthenticated || activeTab !== "monitor" || !token) {
+      return;
+    }
+    void loadMonitor(token);
+  }, [isAuthenticated, activeTab, token, loadMonitor]);
 
   const sortedSubmissions = useMemo(
     () =>
@@ -232,6 +265,8 @@ export function AdminConsole({
     setPassword(defaultPassword);
     setSettings(null);
     setSettingsDraft(null);
+     setMonitorEvents([]);
+     setMonitorLoading(false);
     setActiveTab("streamers");
     setStatus({ message: "Logged out of admin console.", tone: "info" });
   };
@@ -243,6 +278,14 @@ export function AdminConsole({
     }
     await loadAdminData(token);
     await onStreamersUpdated();
+  };
+
+  const refreshMonitor = async () => {
+    if (!token) {
+      setStatus({ message: "Log in to view monitor data.", tone: "error" });
+      return;
+    }
+    await loadMonitor(token);
   };
 
   const moderate = async (action: "approve" | "reject", id: string) => {
@@ -436,6 +479,13 @@ export function AdminConsole({
           </button>
           <button
             type="button"
+            className={activeTab === "monitor" ? "admin-tab active" : "admin-tab"}
+            onClick={() => setActiveTab("monitor")}
+          >
+            Monitor
+          </button>
+          <button
+            type="button"
             className={activeTab === "settings" ? "admin-tab active" : "admin-tab"}
             onClick={() => setActiveTab("settings")}
           >
@@ -506,6 +556,38 @@ export function AdminConsole({
             )}
           </section>
         </div>
+        ) : activeTab === "monitor" ? (
+          <section className="admin-monitor" role="tabpanel">
+            <div className="admin-streamers-header">
+              <h3>YouTube alerts monitor</h3>
+              <button
+                type="button"
+                className="secondary-button"
+                onClick={() => void refreshMonitor()}
+                disabled={monitorLoading}
+              >
+                {monitorLoading ? "Refreshing…" : "Refresh monitor"}
+              </button>
+            </div>
+            <p className="admin-help">
+              Review recent PubSub subscription activity so you can confirm callbacks and
+              troubleshoot alerts.
+            </p>
+            {monitorLoading && !monitorEvents.length ? (
+              <div className="admin-empty">Loading YouTube subscription activity…</div>
+            ) : monitorEvents.length ? (
+              <div className="admin-monitor-events">
+                {monitorEvents.map((event) => (
+                  <AdminMonitorEventCard
+                    key={`${event.timestamp}-${event.mode}-${event.channelId}`}
+                    event={event}
+                  />
+                ))}
+              </div>
+            ) : (
+              <div className="admin-empty">No YouTube PubSub events recorded yet.</div>
+            )}
+          </section>
         ) : (
           <section className="admin-settings" role="tabpanel">
             <h3>Environment settings</h3>
@@ -1037,6 +1119,56 @@ function AdminStreamerCard({ streamer, onUpdate, onDelete }: AdminStreamerCardPr
 
 interface AdminCreateStreamerProps {
   onSubmit: (payload: SubmissionPayload) => Promise<void>;
+}
+
+interface AdminMonitorEventCardProps {
+  event: YouTubeMonitorEvent;
+}
+
+function AdminMonitorEventCard({ event }: AdminMonitorEventCardProps) {
+  const eventDate = event.timestamp ? new Date(event.timestamp) : null;
+  const formattedTimestamp =
+    eventDate && !Number.isNaN(eventDate.getTime())
+      ? eventDate.toLocaleString()
+      : "Unknown time";
+  const modeLabel =
+    event.mode && event.mode.length > 0
+      ? event.mode.charAt(0).toUpperCase() + event.mode.slice(1)
+      : "Event";
+  const statusLine = event.error ? `${event.status} — ${event.error}` : event.status;
+
+  return (
+    <article className="admin-card" data-mode={event.mode}>
+      <div className="admin-card-header">
+        <h4>{modeLabel}</h4>
+        <span className="admin-card-meta">{formattedTimestamp}</span>
+      </div>
+      <section>
+        <strong>Channel</strong>
+        <p>{event.channelId || "—"}</p>
+      </section>
+      <section>
+        <strong>Status</strong>
+        <p>{statusLine || "—"}</p>
+      </section>
+      <section>
+        <strong>Callback</strong>
+        <p>{event.callback || "—"}</p>
+      </section>
+      <section>
+        <strong>Topic</strong>
+        <p>{event.topic || "—"}</p>
+      </section>
+      <section>
+        <strong>Verify token</strong>
+        <p>{event.verifyToken || "—"}</p>
+      </section>
+      <section>
+        <strong>Secret included</strong>
+        <p>{event.hasSecret ? "Yes" : "No"}</p>
+      </section>
+    </article>
+  );
 }
 
 function AdminCreateStreamer({ onSubmit }: AdminCreateStreamerProps) {

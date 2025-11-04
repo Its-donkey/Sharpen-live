@@ -68,3 +68,15 @@ export const STATUS_DEFAULT_LABELS: Record<StreamerStatus, string> = {
   busy: "Workshop",
   offline: "Offline"
 };
+
+export interface YouTubeMonitorEvent {
+  timestamp: string;
+  mode: string;
+  channelId: string;
+  topic: string;
+  callback: string;
+  status: string;
+  error?: string;
+  verifyToken?: string;
+  hasSecret: boolean;
+}

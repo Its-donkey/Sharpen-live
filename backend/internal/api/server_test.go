@@ -2,7 +2,9 @@ package api_test
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
+	"errors"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -497,4 +499,58 @@ func TestAdminYouTubeMonitor(t *testing.T) {
 	if calls[len(calls)-1].Get("hub.mode") != "unsubscribe" {
 		t.Fatalf("expected unsubscribe mode in webhook, got %s", calls[len(calls)-1].Get("hub.mode"))
 	}
+}
+
+func TestAdminSettingsPersistFailure(t *testing.T) {
+	dir := t.TempDir()
+	streamersPath := filepath.Join(dir, "streamers.json")
+	submissionsPath := filepath.Join(dir, "submissions.json")
+	store, err := storage.NewJSONStore(streamersPath, submissionsPath)
+	if err != nil {
+		t.Fatalf("create store: %v", err)
+	}
+
+	seed := settings.Settings{
+		AdminToken:      adminToken,
+		AdminEmail:      adminEmail,
+		AdminPassword:   adminPassword,
+		ListenAddr:      ":9000",
+		DataDir:         "/tmp/data",
+		StaticDir:       "/tmp/static",
+		StreamersFile:   streamersPath,
+		SubmissionsFile: submissionsPath,
+	}
+
+	failingStore := &failingSettingsStore{
+		initial: seed,
+		err:     errors.New("database unavailable"),
+	}
+
+	srv := api.New(store, failingStore, seed)
+	handler := srv.Handler(http.NotFoundHandler())
+
+	headers := map[string]string{"Authorization": "Bearer " + adminToken}
+	body := map[string]string{"adminToken": "new-token"}
+
+	resp := performRequest(handler, http.MethodPut, "/api/admin/settings", body, headers)
+	if resp.Code != http.StatusInternalServerError {
+		t.Fatalf("expected 500 when persistence fails, got %d", resp.Code)
+	}
+}
+
+type failingSettingsStore struct {
+	initial settings.Settings
+	err     error
+}
+
+func (f *failingSettingsStore) EnsureSchema(context.Context) error {
+	return nil
+}
+
+func (f *failingSettingsStore) Load(context.Context) (settings.Settings, error) {
+	return f.initial, nil
+}
+
+func (f *failingSettingsStore) Save(context.Context, settings.Settings) error {
+	return f.err
 }

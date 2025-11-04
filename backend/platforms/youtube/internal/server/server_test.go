@@ -130,6 +130,33 @@ func TestNotificationUnsupportedPayload(t *testing.T) {
 	}
 }
 
+func TestNotificationUnknownChannelAllowed(t *testing.T) {
+	processor := &stubProcessor{}
+	srv := New(Config{
+		Processor: processor,
+		Immediate: true,
+	})
+
+	req := httptest.NewRequest(http.MethodPost, "/alerts", strings.NewReader(sampleAtomNotification))
+	req.Header.Set("Content-Type", "application/atom+xml")
+	rr := httptest.NewRecorder()
+
+	srv.Routes().ServeHTTP(rr, req)
+
+	if rr.Code != http.StatusNoContent {
+		t.Fatalf("expected 204, got %d body=%q", rr.Code, rr.Body.String())
+	}
+
+	if len(processor.alerts) != 1 {
+		t.Fatalf("expected alert delivery, got %d", len(processor.alerts))
+	}
+
+	alert := processor.alerts[0]
+	if alert.StreamerName != "" {
+		t.Fatalf("expected empty streamer name for unknown channel, got %q", alert.StreamerName)
+	}
+}
+
 func TestVerificationSuccess(t *testing.T) {
 	srv := New(Config{
 		Streamers: StreamerDirectory{"UCCHAN": "Test"},

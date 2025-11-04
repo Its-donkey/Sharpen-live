@@ -162,10 +162,10 @@ func (s *Server) handleVerification(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if s.streamerNames != nil && !s.streamerNames.Contains(channelID) {
-		s.logger.Printf("verification topic mismatch: channel_id=%s not registered", channelID)
-		http.Error(w, "topic mismatch", http.StatusNotFound)
-		return
+	if name, ok := s.streamerNames.Name(channelID); ok {
+		s.logger.Printf("verification channel matched roster: channel_id=%s streamer=%q", channelID, name)
+	} else {
+		s.logger.Printf("verification channel not yet registered: channel_id=%s (allowing challenge)", channelID)
 	}
 
 	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
@@ -225,13 +225,10 @@ func (s *Server) handleNotification(w http.ResponseWriter, r *http.Request) {
 			continue
 		}
 
-		var streamerName string
+		streamerName, known := s.streamerNames.Name(channelID)
 		if s.streamerNames != nil {
-			var ok bool
-			streamerName, ok = s.streamerNames.Name(channelID)
-			if !ok {
-				s.logger.Printf("notification entry channel mismatch: request_id=%q channel=%s not registered", requestID, channelID)
-				continue
+			if !known {
+				s.logger.Printf("notification entry channel unknown: request_id=%q channel=%s", requestID, channelID)
 			}
 		}
 

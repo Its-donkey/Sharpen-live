@@ -160,6 +160,9 @@ export function AdminConsole({
         const result = await getAdminSettings(currentToken);
         setSettings(result);
         setSettingsDraft(result);
+        if (result.adminToken && result.adminToken !== currentToken) {
+          setToken(result.adminToken);
+        }
       } catch (error) {
         setStatus({
           message: error instanceof Error ? error.message : "Unable to load settings.",
@@ -169,7 +172,7 @@ export function AdminConsole({
         setSettingsLoading(false);
       }
     },
-    []
+    [setToken]
   );
 
   const loadMonitor = useCallback(

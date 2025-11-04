@@ -60,8 +60,8 @@ func TestFromEnvOverrides(t *testing.T) {
 }
 
 func TestFromEnvPortFallback(t *testing.T) {
-	t.Setenv("LISTEN_ADDR", "")
-	t.Setenv("PORT", "5050")
+	t.Setenv("LISTEN_ADDR", ":5050")
+	t.Setenv("PORT", "")
 
 	cfg, err := FromEnv()
 	if err != nil {

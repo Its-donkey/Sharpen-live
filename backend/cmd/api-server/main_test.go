@@ -5,6 +5,7 @@ import (
 	"net/http/httptest"
 	"os"
 	"path/filepath"
+	"strings"
 	"testing"
 )
 
@@ -19,7 +20,7 @@ func TestSpaHandlerServesExistingFile(t *testing.T) {
 		t.Fatalf("write index file: %v", err)
 	}
 
-	handler := spaHandler(tmp)
+	handler := spaHandler(tmp, ":8880")
 	rr := httptest.NewRecorder()
 	req := httptest.NewRequest(http.MethodGet, "/about.html", nil)
 
@@ -39,7 +40,7 @@ func TestSpaHandlerFallsBackToIndex(t *testing.T) {
 		t.Fatalf("write index file: %v", err)
 	}
 
-	handler := spaHandler(tmp)
+	handler := spaHandler(tmp, ":5555")
 	rr := httptest.NewRecorder()
 	req := httptest.NewRequest(http.MethodGet, "/missing", nil)
 
@@ -48,14 +49,21 @@ func TestSpaHandlerFallsBackToIndex(t *testing.T) {
 	if rr.Code != http.StatusOK {
 		t.Fatalf("expected 200 fallback, got %d", rr.Code)
 	}
-	if rr.Body.String() != "index" {
-		t.Fatalf("expected index content, got %q", rr.Body.String())
+	body := rr.Body.String()
+	if !strings.Contains(body, "index") {
+		t.Fatalf("expected index content, got %q", body)
+	}
+	if !strings.Contains(body, "__SHARPEN_CONFIG__") {
+		t.Fatalf("expected injected config script, got %q", body)
+	}
+	if !strings.Contains(body, ":5555") {
+		t.Fatalf("expected injected listen addr, got %q", body)
 	}
 }
 
 func TestSpaHandlerMissingIndex(t *testing.T) {
 	tmp := t.TempDir()
-	handler := spaHandler(tmp)
+	handler := spaHandler(tmp, ":8080")
 	rr := httptest.NewRecorder()
 	req := httptest.NewRequest(http.MethodGet, "/missing", nil)
 

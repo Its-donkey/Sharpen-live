@@ -18,6 +18,10 @@ function resolveBase(): string {
   if (envBase) {
     return trimTrailingSlash(envBase);
   }
+  const configuredBase = deriveBaseFromWindowConfig();
+  if (configuredBase) {
+    return configuredBase;
+  }
   if (import.meta.env.DEV) {
     return DEFAULT_DEV_BASE;
   }
@@ -34,6 +38,33 @@ function buildURL(path: string): string {
   }
   const normalizedPath = path.startsWith("/") ? path : `/${path}`;
   return `${API_BASE}${normalizedPath}`;
+}
+
+function deriveBaseFromWindowConfig(): string | undefined {
+  if (typeof window === "undefined") {
+    return undefined;
+  }
+  const listenAddr = window.__SHARPEN_CONFIG__?.listenAddr?.trim();
+  if (!listenAddr) {
+    return undefined;
+  }
+
+  if (listenAddr.startsWith("http://") || listenAddr.startsWith("https://")) {
+    return trimTrailingSlash(listenAddr);
+  }
+
+  const protocol = window.location?.protocol || "http:";
+  const host = window.location?.hostname || "localhost";
+
+  if (listenAddr.startsWith(":")) {
+    return `${protocol}//${host}${listenAddr}`;
+  }
+
+  if (!listenAddr.includes("://")) {
+    return `${protocol}//${listenAddr}`;
+  }
+
+  return trimTrailingSlash(listenAddr);
 }
 
 type RequestOptions = Omit<RequestInit, "headers"> & {

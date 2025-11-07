@@ -3,6 +3,8 @@ package server
 import (
 	"bytes"
 	"context"
+	"crypto/sha256"
+	"encoding/hex"
 	"encoding/xml"
 	"errors"
 	"io"
@@ -101,11 +103,7 @@ func (s *Server) enqueueAlert(alert alerts.StreamAlert) {
 		return
 	}
 
-	select {
-	case s.queue <- alert:
-	default:
-		s.logger.Printf("alert queue saturated: dropping channel=%s streamer=%q video=%s", alert.ChannelID, alert.StreamerName, alert.StreamID)
-	}
+	s.queue <- alert
 }
 
 // Routes returns the HTTP handler for the server.
@@ -138,6 +136,7 @@ func (s *Server) handleVerification(w http.ResponseWriter, r *http.Request) {
 	topic := strings.TrimSpace(query.Get("hub.topic"))
 	verifyToken := strings.TrimSpace(query.Get("hub.verify_token"))
 	userAgent := strings.TrimSpace(r.Header.Get("User-Agent"))
+	userAgentHash := hashValue(userAgent)
 	requestID := requestIDFrom(r)
 
 	if challenge == "" {
@@ -146,13 +145,13 @@ func (s *Server) handleVerification(w http.ResponseWriter, r *http.Request) {
 	}
 
 	s.logger.Printf(
-		"verification received: request_id=%q user_agent=%q mode=%s topic=%s lease_seconds=%s verify_token=%s",
+		"verification received: request_id=%q user_agent_hash=%q mode=%s topic=%s lease_seconds=%s verify_token_hash=%s",
 		requestID,
-		userAgent,
+		userAgentHash,
 		mode,
 		topic,
 		lease,
-		verifyToken,
+		hashValue(verifyToken),
 	)
 
 	channelID, err := channelIDFromTopic(topic)
@@ -171,7 +170,7 @@ func (s *Server) handleVerification(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
 	w.WriteHeader(http.StatusOK)
 	_, _ = w.Write([]byte(challenge))
-	s.logger.Printf("verification response sent: request_id=%q challenge=%s", requestID, challenge)
+	s.logger.Printf("verification response sent: request_id=%s challenge_hash=%s", requestID, hashValue(challenge))
 }
 
 func (s *Server) handleNotification(w http.ResponseWriter, r *http.Request) {
@@ -185,6 +184,7 @@ func (s *Server) handleNotification(w http.ResponseWriter, r *http.Request) {
 
 	contentType := strings.TrimSpace(r.Header.Get("Content-Type"))
 	userAgent := strings.TrimSpace(r.Header.Get("User-Agent"))
+	userAgentHash := hashValue(userAgent)
 	requestID := requestIDFrom(r)
 	trimmedBody := strings.TrimSpace(string(body))
 	bodyPreview := trimmedBody
@@ -192,13 +192,13 @@ func (s *Server) handleNotification(w http.ResponseWriter, r *http.Request) {
 		bodyPreview = bodyPreview[:2048] + "...(truncated)"
 	}
 
-	s.logger.Printf("notification raw body (request_id=%q):\n%s", requestID, string(body))
+	s.logger.Printf("notification raw body (request_id=%s):\n%s", requestID, string(body))
 
 	if !isAtomPayload(contentType, body) {
 		s.logger.Printf(
-			"notification rejected: request_id=%q user_agent=%q content_type=%q body_preview=%q",
+			"notification rejected: request_id=%q user_agent_hash=%q content_type=%q body_preview=%q",
 			requestID,
-			userAgent,
+			userAgentHash,
 			contentType,
 			bodyPreview,
 		)
@@ -236,9 +236,9 @@ func (s *Server) handleNotification(w http.ResponseWriter, r *http.Request) {
 
 		link := entry.AlternateURL()
 		s.logger.Printf(
-			"notification queued: request_id=%q user_agent=%q channel=%s streamer=%q video=%s title=%q published=%s updated=%s link=%s",
+			"notification queued: request_id=%q user_agent_hash=%q channel=%s streamer=%q video=%s title=%q published=%s updated=%s link=%s",
 			requestID,
-			userAgent,
+			userAgentHash,
 			channelID,
 			streamerName,
 			videoID,
@@ -399,11 +399,20 @@ func (e atomEntry) AlternateURL() string {
 func requestIDFrom(r *http.Request) string {
 	headers := []string{"X-Request-Id", "X-Goog-Request-Id", "X-Cloud-Trace-Context"}
 	for _, key := range headers {
-		if value := strings.TrimSpace(r.Header.Get(key)); value != "" {
-			return value
+		if masked := maskedHeaderID(key, r.Header.Get(key)); masked != "" {
+			return masked
 		}
 	}
 	return ""
+}
+
+// maskedHeaderID preserves log correlation while redacting the original header value.
+func maskedHeaderID(header, value string) string {
+	hashed := hashValue(value)
+	if hashed == "" {
+		return ""
+	}
+	return header + ":" + hashed
 }
 
 func channelIDFromTopic(topic string) (string, error) {
@@ -441,3 +450,13 @@ func channelIDFromTopic(topic string) (string, error) {
 type httpLogger struct{}
 
 func (httpLogger) Printf(string, ...any) {}
+
+func hashValue(value string) string {
+	trimmed := strings.TrimSpace(value)
+	if trimmed == "" {
+		return ""
+	}
+
+	sum := sha256.Sum256([]byte(trimmed))
+	return hex.EncodeToString(sum[:8])
+}

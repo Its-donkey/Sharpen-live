@@ -1,6 +1,8 @@
 # Changelog
 
 ## [Unreleased]
+- Hash sensitive YouTube PubSub headers/tokens in logs, hide hub challenges, and block the alert queue rather than ACKing dropped notifications so upstream retries aren't lost.
+- Stop echoing internal API errors back to clients by defaulting `respondError` to generic 5xx messages while still logging full details server-side.
 - Stack admin dashboard submissions and roster panels vertically for full-width review.
 - Move roster card actions above streamer names and match delete styling with submission removal buttons.
 - Load YouTube alert monitor events from PostgreSQL, add tab-styled platform filters, inline log formatting, and pagination controls with refreshed spacing/select styling in the admin console.

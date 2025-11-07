@@ -399,20 +399,11 @@ func (e atomEntry) AlternateURL() string {
 func requestIDFrom(r *http.Request) string {
 	headers := []string{"X-Request-Id", "X-Goog-Request-Id", "X-Cloud-Trace-Context"}
 	for _, key := range headers {
-		if masked := maskedHeaderID(key, r.Header.Get(key)); masked != "" {
-			return masked
+		if value := strings.TrimSpace(r.Header.Get(key)); value != "" {
+			return value
 		}
 	}
 	return ""
-}
-
-// maskedHeaderID preserves log correlation while redacting the original header value.
-func maskedHeaderID(header, value string) string {
-	hashed := hashValue(value)
-	if hashed == "" {
-		return ""
-	}
-	return header + ":" + hashed
 }
 
 func channelIDFromTopic(topic string) (string, error) {

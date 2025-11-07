@@ -827,6 +827,12 @@ tbody tr:hover {
   font-size: 1.15rem;
 }
 
+.admin-card-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
 .admin-card-meta {
   display: flex;
   flex-wrap: wrap;
@@ -850,6 +856,14 @@ tbody tr:hover {
   display: flex;
   flex-wrap: wrap;
   gap: 0.75rem;
+}
+
+.admin-card-actions--streamer {
+  justify-content: flex-start;
+}
+
+.admin-card-actions--streamer .remove-platform-button {
+  padding: 0.65rem 1.3rem;
 }
 
 .admin-card button {
@@ -951,15 +965,10 @@ footer a {
 }
 
 .admin-grid {
-  display: grid;
+  display: flex;
+  flex-direction: column;
   gap: 2rem;
   margin-top: 2rem;
-}
-
-@media (min-width: 920px) {
-  .admin-grid {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  }
 }
 
 .admin-streamers-header {
@@ -981,9 +990,83 @@ footer a {
   gap: 1.5rem;
 }
 
-.admin-monitor-events {
-  display: grid;
+.admin-monitor-filters {
+  margin: 0;
+  padding: 1rem;
+  border: 1px solid rgba(148, 163, 184, 0.28);
+  border-radius: 0.75rem;
+  background: rgba(15, 23, 42, 0.04);
+}
+
+.admin-monitor-filters legend {
+  font-weight: 600;
+  padding: 0 0.35rem;
+}
+
+.admin-monitor-filters-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+}
+
+.admin-monitor-filter-toggle {
+  padding: 0.75rem 1.85rem;
+  font-size: 0.95rem;
+}
+
+.admin-monitor-select {
+  min-width: 110px;
+  padding: 0.5rem 0.8rem;
+}
+
+.admin-monitor-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
   gap: 1rem;
+}
+
+.admin-monitor-page-size {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.95rem;
+  color: var(--fg-muted);
+}
+
+.admin-monitor-page-size .platform-picker {
+  min-width: 110px;
+}
+
+.admin-monitor-pagination {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.95rem;
+  color: var(--fg-muted);
+}
+
+.admin-monitor-log {
+  margin-top: 1rem;
+  padding: 1.25rem;
+  border: 1px solid rgba(148, 163, 184, 0.24);
+  border-radius: 0.85rem;
+  background: rgba(15, 23, 42, 0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.admin-monitor-entry {
+  color: var(--fg-muted);
+  font-size: 0.95rem;
+  word-break: break-word;
+}
+
+.admin-monitor-entry strong {
+  color: var(--fg-primary);
 }
 
 .admin-card-body {

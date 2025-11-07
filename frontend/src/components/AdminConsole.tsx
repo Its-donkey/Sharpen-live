@@ -63,6 +63,29 @@ type PlatformField = "name" | "channelUrl";
 const defaultStatus: StatusState = { message: "", tone: "idle" };
 const DEV_EMAIL = "admin@sharpen.live";
 const DEV_PASSWORD = "changeme123";
+const UNKNOWN_PLATFORM = "unknown";
+
+function normalizePlatformKey(value: string | null | undefined): string {
+  const trimmed = (value ?? "").trim();
+  return trimmed ? trimmed.toLowerCase() : UNKNOWN_PLATFORM;
+}
+
+function platformLabelFromKey(key: string): string {
+  const normalized = (key ?? "").trim().toLowerCase();
+  if (!normalized || normalized === UNKNOWN_PLATFORM) {
+    return "Unknown";
+  }
+  switch (normalized) {
+    case "youtube":
+      return "YouTube";
+    case "twitch":
+      return "Twitch";
+    case "kick":
+      return "Kick";
+    default:
+      return normalized.charAt(0).toUpperCase() + normalized.slice(1);
+  }
+}
 
 function toFormState(streamer?: Streamer): StreamerFormState {
   const status = streamer?.status ?? "online";
@@ -127,6 +150,9 @@ export function AdminConsole({
   const [settingsSaving, setSettingsSaving] = useState(false);
   const [monitorEvents, setMonitorEvents] = useState<YouTubeMonitorEvent[]>([]);
   const [monitorLoading, setMonitorLoading] = useState(false);
+  const [platformFilters, setPlatformFilters] = useState<Record<string, boolean>>({});
+  const [monitorPageSize, setMonitorPageSize] = useState(30);
+  const [monitorPage, setMonitorPage] = useState(1);
   const isAuthenticated = Boolean(token);
 
   const loadAdminData = useCallback(
@@ -180,7 +206,13 @@ export function AdminConsole({
       setMonitorLoading(true);
       try {
         const events = await getAdminYouTubeMonitor(currentToken);
-        setMonitorEvents(events);
+        const ordered = events
+          .slice()
+          .sort(
+            (a, b) =>
+              new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
+          );
+        setMonitorEvents(ordered);
       } catch (error) {
         setStatus({
           message: error instanceof Error ? error.message : "Unable to load YouTube monitor.",
@@ -200,6 +232,8 @@ export function AdminConsole({
       setSettings(null);
       setMonitorEvents([]);
       setMonitorLoading(false);
+      setPlatformFilters({});
+      setMonitorPage(1);
       return;
     }
     void loadAdminData(token);
@@ -221,6 +255,45 @@ export function AdminConsole({
     void loadMonitor(token);
   }, [isAuthenticated, activeTab, token, loadMonitor]);
 
+  useEffect(() => {
+    if (!monitorEvents.length) {
+      setPlatformFilters((prev) => (Object.keys(prev).length ? {} : prev));
+      return;
+    }
+    setPlatformFilters((prev) => {
+      const next: Record<string, boolean> = {};
+      let changed = false;
+      for (const event of monitorEvents) {
+        const key = normalizePlatformKey(event.platform);
+        if (Object.prototype.hasOwnProperty.call(next, key)) {
+          continue;
+        }
+        if (Object.prototype.hasOwnProperty.call(prev, key)) {
+          next[key] = prev[key];
+        } else {
+          next[key] = true;
+          changed = true;
+        }
+      }
+
+      const prevKeys = Object.keys(prev);
+      const nextKeys = Object.keys(next);
+      if (prevKeys.length != nextKeys.length) {
+        changed = true;
+      }
+      if (!changed) {
+        for (const key of nextKeys) {
+          if (prev[key] !== next[key]) {
+            changed = true;
+            break;
+          }
+        }
+      }
+      return changed ? next : prev;
+    });
+    setMonitorPage(1);
+  }, [monitorEvents]);
+
   const sortedSubmissions = useMemo(
     () =>
       submissions
@@ -231,6 +304,51 @@ export function AdminConsole({
         ),
     [submissions]
   );
+
+  const platformOptions = useMemo(() => {
+    return Object.keys(platformFilters).sort((a, b) => a.localeCompare(b));
+  }, [platformFilters]);
+
+  const filteredMonitorEvents = useMemo(() => {
+    const filterKeys = Object.keys(platformFilters);
+    if (!filterKeys.length) {
+      return monitorEvents;
+    }
+    const active = filterKeys.filter((key) => platformFilters[key]);
+    if (!active.length) {
+      return [];
+    }
+    return monitorEvents.filter((event) => {
+      const key = normalizePlatformKey(event.platform);
+      return active.includes(key);
+    });
+  }, [monitorEvents, platformFilters]);
+
+  useEffect(() => {
+    setMonitorPage(1);
+  }, [monitorPageSize]);
+
+  const totalMonitorPages = useMemo(() => {
+    if (!filteredMonitorEvents.length) {
+      return 1;
+    }
+    return Math.max(1, Math.ceil(filteredMonitorEvents.length / monitorPageSize));
+  }, [filteredMonitorEvents, monitorPageSize]);
+
+  useEffect(() => {
+    if (monitorPage > totalMonitorPages) {
+      setMonitorPage(totalMonitorPages);
+    }
+  }, [monitorPage, totalMonitorPages]);
+
+  const paginatedMonitorEvents = useMemo(() => {
+    if (!filteredMonitorEvents.length) {
+      return [];
+    }
+    const start = (monitorPage - 1) * monitorPageSize;
+    const end = start + monitorPageSize;
+    return filteredMonitorEvents.slice(start, end);
+  }, [filteredMonitorEvents, monitorPage, monitorPageSize]);
 
   const handleLoginSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -268,8 +386,9 @@ export function AdminConsole({
     setPassword(defaultPassword);
     setSettings(null);
     setSettingsDraft(null);
-     setMonitorEvents([]);
-     setMonitorLoading(false);
+    setMonitorEvents([]);
+    setMonitorLoading(false);
+    setPlatformFilters({});
     setActiveTab("streamers");
     setStatus({ message: "Logged out of admin console.", tone: "info" });
   };
@@ -289,6 +408,16 @@ export function AdminConsole({
       return;
     }
     await loadMonitor(token);
+  };
+
+  const togglePlatformFilter = (platform: string) => {
+    setPlatformFilters((prev) => {
+      if (!Object.prototype.hasOwnProperty.call(prev, platform)) {
+        return prev;
+      }
+      return { ...prev, [platform]: !prev[platform] };
+    });
+    setMonitorPage(1);
   };
 
   const moderate = async (action: "approve" | "reject", id: string) => {
@@ -547,10 +676,10 @@ export function AdminConsole({
               <div className="admin-streamers">
                 {streamers.map((streamer) => (
                   <AdminStreamerCard
+					onUpdate={updateStreamer}
+                    onDelete={removeStreamer}
                     key={streamer.id}
                     streamer={streamer}
-                    onUpdate={updateStreamer}
-                    onDelete={removeStreamer}
                   />
                 ))}
               </div>
@@ -579,14 +708,84 @@ export function AdminConsole({
             {monitorLoading && !monitorEvents.length ? (
               <div className="admin-empty">Loading YouTube subscription activity…</div>
             ) : monitorEvents.length ? (
-              <div className="admin-monitor-events">
-                {monitorEvents.map((event) => (
-                  <AdminMonitorEventCard
-                    key={`${event.timestamp}-${event.mode}-${event.channelId}`}
-                    event={event}
-                  />
-                ))}
-              </div>
+              <>
+                {platformOptions.length ? (
+                  <fieldset className="admin-monitor-filters">
+                    <legend>Platforms</legend>
+                    <div className="admin-monitor-filters-options">
+                      {platformOptions.map((platform) => {
+                        const isActive = Boolean(platformFilters[platform]);
+                        return (
+                          <button
+                            key={platform}
+                            type="button"
+                            className={`admin-monitor-filter-toggle admin-tab${
+                              isActive ? " active" : ""
+                            }`}
+                            onClick={() => togglePlatformFilter(platform)}
+                          >
+                            {platformLabelFromKey(platform)}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </fieldset>
+                ) : null}
+                <div className="admin-monitor-controls">
+                  <label className="admin-monitor-page-size">
+                    Show
+                    <div className="platform-picker admin-monitor-picker">
+                      <select
+                        className="platform-select admin-monitor-select"
+                        value={monitorPageSize}
+                        onChange={(event) => setMonitorPageSize(Number(event.target.value))}
+                      >
+                        <option value={30}>30</option>
+                        <option value={50}>50</option>
+                        <option value={100}>100</option>
+                      </select>
+                    </div>
+                    entries
+                  </label>
+                  <div className="admin-monitor-pagination">
+                    <button
+                      type="button"
+                      className="secondary-button"
+                      onClick={() => setMonitorPage((value) => Math.max(1, value - 1))}
+                      disabled={monitorPage <= 1}
+                    >
+                      Previous
+                    </button>
+                    <span>
+                      Page {Math.min(monitorPage, totalMonitorPages)} of {totalMonitorPages}
+                    </span>
+                    <button
+                      type="button"
+                      className="secondary-button"
+                      onClick={() =>
+                        setMonitorPage((value) => Math.min(totalMonitorPages, value + 1))
+                      }
+                      disabled={monitorPage >= totalMonitorPages}
+                    >
+                      Next
+                    </button>
+                  </div>
+                </div>
+                {paginatedMonitorEvents.length ? (
+                  <div className="admin-monitor-log">
+                    {paginatedMonitorEvents.map((event) => (
+                      <AdminMonitorEventCard
+                        key={`${event.id}-${event.timestamp}`}
+                        event={event}
+                      />
+                    ))}
+                  </div>
+                ) : (
+                  <div className="admin-empty">
+                    No monitor entries for selected platforms and page selection.
+                  </div>
+                )}
+              </>
             ) : (
               <div className="admin-empty">No YouTube PubSub events recorded yet.</div>
             )}
@@ -936,21 +1135,25 @@ function AdminStreamerCard({ streamer, onUpdate, onDelete }: AdminStreamerCardPr
 
   return (
     <article className="admin-card" data-streamer-id={streamer.id}>
+      <div className="admin-card-actions admin-card-actions--streamer">
+        <button type="button" onClick={() => setIsEditing((value) => !value)}>
+          {isEditing ? "Cancel edit" : "Edit"}
+        </button>
+        <button
+          type="button"
+          className="remove-platform-button"
+          onClick={handleDelete}
+          disabled={isSaving}
+        >
+          Delete
+        </button>
+      </div>
       <div className="admin-card-header">
-        <div>
-          <h4>{streamer.name}</h4>
-          <span className="admin-card-meta">
-            Status: {STATUS_DEFAULT_LABELS[streamer.status]} · Languages: {streamer.languages.join(" · ")}
-          </span>
-        </div>
-        <div className="admin-card-actions">
-          <button type="button" onClick={() => setIsEditing((value) => !value)}>
-            {isEditing ? "Cancel edit" : "Edit"}
-          </button>
-          <button type="button" className="secondary-button" onClick={handleDelete} disabled={isSaving}>
-            Delete
-          </button>
-        </div>
+        <h4>{streamer.name}</h4>
+        <span className="admin-card-meta">
+          Status: {STATUS_DEFAULT_LABELS[streamer.status]} · Languages:{" "}
+          {streamer.languages.join(" · ")}
+        </span>
       </div>
 
       {isEditing ? (
@@ -1129,47 +1332,17 @@ interface AdminMonitorEventCardProps {
 }
 
 function AdminMonitorEventCard({ event }: AdminMonitorEventCardProps) {
-  const eventDate = event.timestamp ? new Date(event.timestamp) : null;
-  const formattedTimestamp =
-    eventDate && !Number.isNaN(eventDate.getTime())
-      ? eventDate.toLocaleString()
-      : "Unknown time";
-  const modeLabel =
-    event.mode && event.mode.length > 0
-      ? event.mode.charAt(0).toUpperCase() + event.mode.slice(1)
-      : "Event";
-  const statusLine = event.error ? `${event.status} — ${event.error}` : event.status;
+  const platformKey = normalizePlatformKey(event.platform);
+  const platformTitle = platformLabelFromKey(platformKey);
+  const message = event.message && event.message.length > 0 ? event.message : "—";
 
   return (
-    <article className="admin-card" data-mode={event.mode}>
-      <div className="admin-card-header">
-        <h4>{modeLabel}</h4>
-        <span className="admin-card-meta">{formattedTimestamp}</span>
-      </div>
-      <section>
-        <strong>Channel</strong>
-        <p>{event.channelId || "—"}</p>
-      </section>
-      <section>
-        <strong>Status</strong>
-        <p>{statusLine || "—"}</p>
-      </section>
-      <section>
-        <strong>Callback</strong>
-        <p>{event.callback || "—"}</p>
-      </section>
-      <section>
-        <strong>Topic</strong>
-        <p>{event.topic || "—"}</p>
-      </section>
-      <section>
-        <strong>Verify token</strong>
-        <p>{event.verifyToken || "—"}</p>
-      </section>
-      <section>
-        <strong>Secret included</strong>
-        <p>{event.hasSecret ? "Yes" : "No"}</p>
-      </section>
+    <article className="admin-monitor-entry" data-platform={platformKey || "unknown"}>
+      <p>
+        <strong>{platformTitle}</strong>
+        {" - "}
+        {message}
+      </p>
     </article>
   );
 }

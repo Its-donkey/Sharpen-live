@@ -10,9 +10,10 @@ import (
 
 // StreamAlert represents the payload sent when a channel goes live.
 type StreamAlert struct {
-	ChannelID string `json:"channelId"`
-	StreamID  string `json:"streamId,omitempty"`
-	Status    string `json:"status"`
+	ChannelID    string `json:"channelId"`
+	StreamID     string `json:"streamId,omitempty"`
+	Status       string `json:"status"`
+	StreamerName string `json:"streamerName,omitempty"`
 }
 
 // StreamChecker determines whether a stream is still active.

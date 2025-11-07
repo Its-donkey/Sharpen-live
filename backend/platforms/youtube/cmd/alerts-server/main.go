@@ -62,9 +62,15 @@ func main() {
 		RootContext: rootCtx,
 	})
 
+	streamers, err := server.LoadStreamerDirectory(cfg.StreamersPath)
+	if err != nil {
+		logger.Fatalf("load streamers: %v", err)
+	}
+
 	srv := server.New(server.Config{
 		Processor: monitor,
 		Logger:    logger,
+		Streamers: streamers,
 	})
 
 	httpServer := &http.Server{

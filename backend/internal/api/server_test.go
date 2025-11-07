@@ -489,9 +489,9 @@ func TestAdminYouTubeMonitor(t *testing.T) {
 
 	var payload struct {
 		Events []struct {
-			Mode      string `json:"mode"`
-			ChannelID string `json:"channelId"`
-			Status    string `json:"status"`
+			Platform  string `json:"platform"`
+			Message   string `json:"message"`
+			Timestamp string `json:"timestamp"`
 		}
 	}
 	if err := json.Unmarshal(monitor.Body.Bytes(), &payload); err != nil {
@@ -509,14 +509,14 @@ func TestAdminYouTubeMonitor(t *testing.T) {
 	}
 
 	last := payload.Events[len(payload.Events)-1]
-	if last.Mode != "unsubscribe" {
-		t.Fatalf("expected last event to be unsubscribe, got %s", last.Mode)
+	if last.Platform != "youtube" {
+		t.Fatalf("expected platform youtube, got %s", last.Platform)
 	}
-	if last.ChannelID != created.Platforms[0].ID {
-		t.Fatalf("expected channel %s, got %s", created.Platforms[0].ID, last.ChannelID)
+	if !strings.Contains(last.Message, "mode=unsubscribe") {
+		t.Fatalf("expected unsubscribe mode in %q", last.Message)
 	}
-	if !strings.Contains(last.Status, "202") && !strings.Contains(last.Status, "200") {
-		t.Fatalf("expected success status, got %s", last.Status)
+	if !strings.Contains(last.Message, created.Platforms[0].ID) {
+		t.Fatalf("expected channel id in message %q", last.Message)
 	}
 	if calls[len(calls)-1].Get("hub.mode") != "unsubscribe" {
 		t.Fatalf("expected unsubscribe mode in webhook, got %s", calls[len(calls)-1].Get("hub.mode"))

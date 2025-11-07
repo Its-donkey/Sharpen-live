@@ -2,6 +2,7 @@
 
 ## [Unreleased]
 - Restore full request IDs, verify tokens, hub challenges, and User-Agent headers in YouTube PubSub logs while still blocking the alert queue to avoid silent drops.
+- Document project layout, setup steps, and contribution flow in a top-level README.
 - Prompt the YouTube alerts server for port, API key, and database URL values when running interactively so missing env vars don't block startup.
 - Stop echoing internal API errors back to clients by defaulting `respondError` to generic 5xx messages while still logging full details server-side.
 - Stack admin dashboard submissions and roster panels vertically for full-width review.

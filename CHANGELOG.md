@@ -2,6 +2,7 @@
 
 ## [Unreleased]
 - Hash sensitive YouTube PubSub tokens and user-agent headers in logs, hide hub challenges, and block the alert queue rather than ACKing dropped notifications so upstream retries aren't lost.
+- Prompt the YouTube alerts server for port, API key, and database URL values when running interactively so missing env vars don't block startup.
 - Stop echoing internal API errors back to clients by defaulting `respondError` to generic 5xx messages while still logging full details server-side.
 - Stack admin dashboard submissions and roster panels vertically for full-width review.
 - Move roster card actions above streamer names and match delete styling with submission removal buttons.

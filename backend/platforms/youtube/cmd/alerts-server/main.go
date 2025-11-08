@@ -133,6 +133,14 @@ func promptForRuntimeConfig(cfg config.Config) config.Config {
 		cfg.APIKey = apiKeyInput
 	}
 
+	maskedDB := maskSecret(cfg.DatabaseURL)
+	fmt.Printf("Enter PostgreSQL database URL [%s]: ", maskedDB)
+	dbInput, _ := reader.ReadString('\n')
+	dbInput = strings.TrimSpace(dbInput)
+	if dbInput != "" {
+		cfg.DatabaseURL = dbInput
+	}
+
 	return cfg
 }
 

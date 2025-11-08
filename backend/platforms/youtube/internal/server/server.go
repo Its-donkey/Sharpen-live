@@ -101,11 +101,7 @@ func (s *Server) enqueueAlert(alert alerts.StreamAlert) {
 		return
 	}
 
-	select {
-	case s.queue <- alert:
-	default:
-		s.logger.Printf("alert queue saturated: dropping channel=%s streamer=%q video=%s", alert.ChannelID, alert.StreamerName, alert.StreamID)
-	}
+	s.queue <- alert
 }
 
 // Routes returns the HTTP handler for the server.
@@ -171,7 +167,7 @@ func (s *Server) handleVerification(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
 	w.WriteHeader(http.StatusOK)
 	_, _ = w.Write([]byte(challenge))
-	s.logger.Printf("verification response sent: request_id=%q challenge=%s", requestID, challenge)
+	s.logger.Printf("verification response sent: request_id=%s challenge=%s", requestID, challenge)
 }
 
 func (s *Server) handleNotification(w http.ResponseWriter, r *http.Request) {
@@ -192,7 +188,7 @@ func (s *Server) handleNotification(w http.ResponseWriter, r *http.Request) {
 		bodyPreview = bodyPreview[:2048] + "...(truncated)"
 	}
 
-	s.logger.Printf("notification raw body (request_id=%q):\n%s", requestID, string(body))
+	s.logger.Printf("notification raw body (request_id=%s):\n%s", requestID, string(body))
 
 	if !isAtomPayload(contentType, body) {
 		s.logger.Printf(

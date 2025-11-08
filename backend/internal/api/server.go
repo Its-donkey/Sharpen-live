@@ -943,7 +943,22 @@ func respondJSON(w http.ResponseWriter, status int, payload any) {
 }
 
 func respondError(w http.ResponseWriter, status int, err error) {
-	respondJSON(w, status, errorPayload{Message: err.Error()})
+	msg := strings.TrimSpace(http.StatusText(status))
+	if status < http.StatusInternalServerError {
+		if err != nil {
+			if trimmed := strings.TrimSpace(err.Error()); trimmed != "" {
+				msg = trimmed
+			}
+		}
+	} else {
+		if msg == "" {
+			msg = "Internal Server Error"
+		}
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "api respond error: status=%d err=%v\n", status, err)
+		}
+	}
+	respondJSON(w, status, errorPayload{Message: msg})
 }
 
 func methodNotAllowed(w http.ResponseWriter, methods ...string) {

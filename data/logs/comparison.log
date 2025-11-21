@@ -1,0 +1,276 @@
+/--------------------------via Postman API-----------------------------//
+2025/11/16 17:14:01 ---- Incoming request from 127.0.0.1:50085 ----
+DELETE /api/streamers HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Connection: keep-alive
+Content-Length: 56
+Content-Type: application/json
+Postman-Token: b4a2df71-126a-4118-b934-a4586da2aefe
+User-Agent: PostmanRuntime/7.48.0
+
+{
+  "streamer": {
+    "id": "Iwillshavemyeyebrows"
+  }
+}
+
+2025/11/16 17:14:01 ---- Response for DELETE /api/streamers (200 OK) ----
+{"id":"Iwillshavemyeyebrows","status":"deleted"}
+
+2025/11/16 17:14:11 ---- Incoming request from 127.0.0.1:50085 ----
+POST /api/streamers HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Connection: keep-alive
+Content-Length: 238
+Content-Type: application/json
+Postman-Token: 3e93c62b-668a-4691-85e3-76ac355349e3
+User-Agent: PostmanRuntime/7.48.0
+
+{
+  "streamer": {
+    "alias": "I will shave my eyebrows",
+    "description": "Sharpening livestreams and tutorials.",
+    "languages": ["English"]
+  },
+  "platforms": {
+    "url": "https://www.youtube.com/@I-will-shave-my-eyebrows"
+  }
+}
+
+2025/11/16 17:14:11 Outbound WebSub request:
+POST /subscribe HTTP/1.1
+Host: pubsubhubbub.appspot.com
+User-Agent: live-stream-alerts-client/1.0
+Content-Length: 310
+Content-Type: application/x-www-form-urlencoded
+Accept-Encoding: gzip
+
+hub.callback=https%3A%2F%2Fsharpen.live%2Falerts&hub.lease_seconds=864000&hub.mode=subscribe&hub.secret=fMLhrXjjX89_DCQra3XBXu1efERlGYHm&hub.topic=https%3A%2F%2Fwww.youtube.com%2Fxml%2Ffeeds%2Fvideos.xml%3Fchannel_id%3DUCvwGfRXMzs2ey1h3opwK2zw&hub.verify=async&hub.verify_token=c712d160121c2d8c8391db755d141fea
+
+2025/11/16 17:14:12 ---- Response for POST /api/streamers (201 Created) ----
+{"streamer":{"id":"Iwillshavemyeyebrows","alias":"I will shave my eyebrows","description":"Sharpening livestreams and tutorials.","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{},"createdAt":"2025-11-16T06:14:11.179988Z","updatedAt":"2025-11-16T06:14:11.179988Z"}
+
+2025/11/16 17:14:13 ---- Incoming request from 127.0.0.1:50106 ----
+GET /alerts?hub.topic=https://www.youtube.com/xml/feeds/videos.xml%3Fchannel_id%3DUCvwGfRXMzs2ey1h3opwK2zw&hub.challenge=10228296466524872013&hub.verify_token=c712d160121c2d8c8391db755d141fea&hub.mode=subscribe&hub.lease_seconds=864000 HTTP/1.1
+Host: sharpen.live
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Cache-Control: no-cache,max-age=0
+From: googlebot(at)googlebot.com
+Pragma: no-cache
+User-Agent: FeedFetcher-Google; (+http://www.google.com/feedfetcher.html)
+Via: 1.1 Caddy
+X-Forwarded-For: 66.102.8.103
+X-Forwarded-Host: sharpen.live
+X-Forwarded-Proto: https
+X-Request-Id: {http.request_id.header}
+
+
+2025/11/16 17:14:13 Responding to hub challenge: mode=subscribe topic=https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCvwGfRXMzs2ey1h3opwK2zw lease=864000 token=c712d160121c2d8c8391db755d141fea body="10228296466524872013"
+
+2025/11/16 17:14:13 Raw verification request:
+GET /alerts?hub.topic=https://www.youtube.com/xml/feeds/videos.xml%3Fchannel_id%3DUCvwGfRXMzs2ey1h3opwK2zw&hub.challenge=10228296466524872013&hub.verify_token=c712d160121c2d8c8391db755d141fea&hub.mode=subscribe&hub.lease_seconds=864000 HTTP/1.1
+Host: sharpen.live
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Cache-Control: no-cache,max-age=0
+From: googlebot(at)googlebot.com
+Pragma: no-cache
+User-Agent: FeedFetcher-Google; (+http://www.google.com/feedfetcher.html)
+Via: 1.1 Caddy
+X-Forwarded-For: 66.102.8.103
+X-Forwarded-Host: sharpen.live
+X-Forwarded-Proto: https
+X-Request-Id: {http.request_id.header}
+
+
+2025/11/16 17:14:13 Planned hub response:
+HTTP/1.1 200 OK
+Content-Length: 20
+Content-Type: text/plain; charset=utf-8
+
+10228296466524872013
+
+2025/11/16 17:14:13 YouTube hub response status: 202 Accepted, body: 
+
+2025/11/16 17:14:13 YouTube alerts subscribed for I will shave my eyebrows (https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCvwGfRXMzs2ey1h3opwK2zw)
+
+2025/11/16 17:14:13 ---- Response for GET /alerts (200 OK) ----
+10228296466524872013
+
+streamers.json update
+{
+      "streamer": {
+        "id": "Iwillshavemyeyebrows",
+        "alias": "I will shave my eyebrows",
+        "description": "Sharpening livestreams and tutorials.",
+        "firstName": "",
+        "lastName": "",
+        "email": "",
+        "languages": [
+          "English"
+        ]
+      },
+      "platforms": {
+        "youtube": {
+          "handle": "@I-will-shave-my-eyebrows",
+          "channelId": "UCvwGfRXMzs2ey1h3opwK2zw",
+          "hubSecret": "scLIJBJwBtMwyC_ynYERaYFz33J71bQi",
+          "hubLeaseRenewalDue": "2025-11-16T06:22:21Z",
+          "topic": "https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCvwGfRXMzs2ey1h3opwK2zw",
+          "callbackUrl": "https://sharpen.live/alerts",
+          "hubUrl": "https://pubsubhubbub.appspot.com/subscribe",
+          "verifyMode": "async",
+          "leaseSeconds": 864000
+        }
+      },
+      "createdAt": "2025-11-16T06:22:19.570186Z",
+      "updatedAt": "2025-11-16T06:22:21.112098Z"
+    }
+
+	
+//--------------------------via alGUI-----------------------------------//
+2025/11/16 17:16:49 ---- Incoming request from 127.0.0.1:50167 ----
+DELETE /api/streamers HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Connection: keep-alive
+Content-Length: 56
+Content-Type: application/json
+Postman-Token: 880608b4-8f4c-45e7-bbf4-5279810265d7
+User-Agent: PostmanRuntime/7.48.0
+
+{
+  "streamer": {
+    "id": "Iwillshavemyeyebrows"
+  }
+}
+
+2025/11/16 17:16:49 Outbound WebSub request:
+POST /subscribe HTTP/1.1
+Host: pubsubhubbub.appspot.com
+User-Agent: live-stream-alerts-client/1.0
+Content-Length: 287
+Content-Type: application/x-www-form-urlencoded
+Accept-Encoding: gzip
+
+hub.callback=https%3A%2F%2Fsharpen.live%2Falerts&hub.mode=unsubscribe&hub.secret=fMLhrXjjX89_DCQra3XBXu1efERlGYHm&hub.topic=https%3A%2F%2Fwww.youtube.com%2Fxml%2Ffeeds%2Fvideos.xml%3Fchannel_id%3DUCvwGfRXMzs2ey1h3opwK2zw&hub.verify=async&hub.verify_token=0edcfb6e001a4bcd6966f5a6e2c5bfe0
+
+2025/11/16 17:16:50 ---- Response for DELETE /api/streamers (200 OK) ----
+{"id":"Iwillshavemyeyebrows","status":"deleted"}
+
+2025/11/16 17:16:50 ---- Incoming request from 127.0.0.1:50170 ----
+GET /alerts?hub.topic=https://www.youtube.com/xml/feeds/videos.xml%3Fchannel_id%3DUCvwGfRXMzs2ey1h3opwK2zw&hub.challenge=17932255888576876856&hub.verify_token=0edcfb6e001a4bcd6966f5a6e2c5bfe0&hub.mode=unsubscribe HTTP/1.1
+Host: sharpen.live
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Cache-Control: no-cache,max-age=0
+From: googlebot(at)googlebot.com
+Pragma: no-cache
+User-Agent: FeedFetcher-Google; (+http://www.google.com/feedfetcher.html)
+Via: 1.1 Caddy
+X-Forwarded-For: 66.102.8.103
+X-Forwarded-Host: sharpen.live
+X-Forwarded-Proto: https
+X-Request-Id: {http.request_id.header}
+
+
+2025/11/16 17:16:50 Responding to hub challenge: mode=unsubscribe topic=https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCvwGfRXMzs2ey1h3opwK2zw lease= token=0edcfb6e001a4bcd6966f5a6e2c5bfe0 body="17932255888576876856"
+
+2025/11/16 17:16:50 Raw verification request:
+GET /alerts?hub.topic=https://www.youtube.com/xml/feeds/videos.xml%3Fchannel_id%3DUCvwGfRXMzs2ey1h3opwK2zw&hub.challenge=17932255888576876856&hub.verify_token=0edcfb6e001a4bcd6966f5a6e2c5bfe0&hub.mode=unsubscribe HTTP/1.1
+Host: sharpen.live
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Cache-Control: no-cache,max-age=0
+From: googlebot(at)googlebot.com
+Pragma: no-cache
+User-Agent: FeedFetcher-Google; (+http://www.google.com/feedfetcher.html)
+Via: 1.1 Caddy
+X-Forwarded-For: 66.102.8.103
+X-Forwarded-Host: sharpen.live
+X-Forwarded-Proto: https
+X-Request-Id: {http.request_id.header}
+
+
+2025/11/16 17:16:50 Planned hub response:
+HTTP/1.1 200 OK
+Content-Length: 20
+Content-Type: text/plain; charset=utf-8
+
+17932255888576876856
+
+2025/11/16 17:16:50 YouTube hub response status: 202 Accepted, body: 
+
+2025/11/16 17:16:50 YouTube alerts unsubscribed for I will shave my eyebrows (https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCvwGfRXMzs2ey1h3opwK2zw)
+
+2025/11/16 17:16:50 ---- Response for GET /alerts (200 OK) ----
+17932255888576876856
+
+2025/11/16 17:18:14 ---- Incoming request from 127.0.0.1:50214 ----
+POST /api/youtube/metadata HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate
+Accept-Language: en-AU,en;q=0.9
+Content-Length: 59
+Content-Type: application/json
+Origin: http://127.0.0.1:4173
+Priority: u=3, i
+Referer: http://127.0.0.1:4173/
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15
+X-Forwarded-For: 127.0.0.1
+
+{"url":"https://www.youtube.com/@I-will-shave-my-eyebrows"}
+
+2025/11/16 17:18:14 ---- Response for POST /api/youtube/metadata (200 OK) ----
+{"description":"Share your videos with friends, family and the world","title":"I will shave my eyebrows","handle":"@I-will-shave-my-eyebrows","channelId":"UCvwGfRXMzs2ey1h3opwK2zw"}
+
+2025/11/16 17:18:32 ---- Incoming request from 127.0.0.1:50214 ----
+POST /api/streamers HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate
+Accept-Language: en-AU,en;q=0.9
+Content-Length: 291
+Content-Type: application/json
+Origin: http://127.0.0.1:4173
+Priority: u=3, i
+Referer: http://127.0.0.1:4173/
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15
+X-Forwarded-For: 127.0.0.1
+
+{"streamer":{"alias":"I will shave my eyebrows","description":"Share your videos with friends, family and the world","languages":["English"]},"platforms":{"youtube":{"handle":"@I-will-shave-my-eyebrows","channelId":"UCvwGfRXMzs2ey1h3opwK2zw","hubSecret":"d260e2f30c14d6ba6ae374eb9dec0694"}}}
+
+2025/11/16 17:18:32 ---- Response for POST /api/streamers (201 Created) ----
+{"streamer":{"id":"Iwillshavemyeyebrows","alias":"I will shave my eyebrows","description":"Share your videos with friends, family and the world","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{},"createdAt":"2025-11-16T06:18:32.810496Z","updatedAt":"2025-11-16T06:18:32.810496Z"}
+
+
+streamers.json updated
+{
+      "streamer": {
+        "id": "Iwillshavemyeyebrows",
+        "alias": "I will shave my eyebrows",
+        "description": "Share your videos with friends, family and the world",
+        "firstName": "",
+        "lastName": "",
+        "email": "",
+        "languages": [
+          "English"
+        ]
+      },
+      "platforms": {},
+      "createdAt": "2025-11-16T06:18:32.810496Z",
+      "updatedAt": "2025-11-16T06:18:32.810496Z"
+}

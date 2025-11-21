@@ -1,0 +1,50 @@
+
+2025/11/17 16:10:19 Listening on 127.0.0.1:8880
+
+2025/11/17 16:10:25 ---- Incoming request from 127.0.0.1:59593 ----
+POST /api/streamers HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Connection: keep-alive
+Content-Length: 253
+Content-Type: application/json
+Postman-Token: 431fdd1b-e86e-4a0c-9014-419d1c7f2cb0
+User-Agent: PostmanRuntime/7.49.1
+
+{
+  "streamer": {
+    "alias": "I will shave my eyebrows",
+    "description": "Share your videos with friends, family and the world",
+    "languages": ["English"]
+  },
+  "platforms": {
+    "url": "https://www.youtube.com/@I-will-shave-my-eyebrows"
+  }
+}
+
+2025/11/17 16:10:26 Outbound WebSub request:
+POST /subscribe HTTP/1.1
+Host: pubsubhubbub.appspot.com
+User-Agent: live-stream-alerts-client/1.0
+Content-Length: 310
+Content-Type: application/x-www-form-urlencoded
+Accept-Encoding: gzip
+
+hub.callback=https%3A%2F%2Fsharpen.live%2Falerts&hub.lease_seconds=864000&hub.mode=subscribe&hub.secret=IqQymduuvQGcMeguLlJHiDMt6r5mcLyC&hub.topic=https%3A%2F%2Fwww.youtube.com%2Fxml%2Ffeeds%2Fvideos.xml%3Fchannel_id%3DUCvwGfRXMzs2ey1h3opwK2zw&hub.verify=async&hub.verify_token=f73115fa6d4bad365e6f0e4a1f7ec26c
+
+2025/11/17 16:10:27 Inbound WebSub response:
+HTTP/2.0 202 Accepted
+Content-Length: 0
+Alt-Svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
+Cache-Control: no-cache
+Content-Type: text/plain; charset=utf-8
+Date: Mon, 17 Nov 2025 05:10:27 GMT
+Server: Google Frontend
+X-Cloud-Trace-Context: a64fa0cf9fe1a25bfe7087383a164dbe
+
+
+2025/11/17 16:10:27 YouTube hub accepted subscribe for I will shave my eyebrows (topic=https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCvwGfRXMzs2ey1h3opwK2zw, callback=https://sharpen.live/alerts, status=202 Accepted). Awaiting hub challenge with token f73115fa6d4bad365e6f0e4a1f7ec26c.
+
+2025/11/17 16:10:27 ---- Response for POST /api/streamers (201 Created) ----
+{"streamer":{"id":"5bdd5c47a71244a1bd322a7172a745a1","alias":"I will shave my eyebrows","description":"Share your videos with friends, family and the world","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{},"createdAt":"2025-11-17T05:10:25.945947Z","updatedAt":"2025-11-17T05:10:25.945947Z"}

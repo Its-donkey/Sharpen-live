@@ -1,0 +1,17 @@
+{
+  "$schema": "../schema/streamers.schema.json",
+  "streamers": [
+    {
+      "streamer": {
+        "id": "be6086d6de5240d39d88900be424ef3a",
+        "alias": "",
+        "firstName": "",
+        "lastName": "",
+        "email": ""
+      },
+      "platforms": {},
+      "createdAt": "2025-11-19T08:33:54.034364Z",
+      "updatedAt": "2025-11-19T08:33:54.034364Z"
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+
+2025/11/17 21:24:48 Listening on 127.0.0.1:8880
+
+2025/11/17 21:25:16 ---- Incoming request from 127.0.0.1:49923 ----
+GET /api/streamers HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate
+Accept-Language: en-AU,en;q=0.9
+Priority: u=3, i
+Referer: http://127.0.0.1:4173/
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/17 21:25:16 ---- Response for GET /api/streamers (200 OK) ----
+{"streamers":[{"streamer":{"id":"JordanMatter","alias":"Jordan Matter","description":"My daughter has taken over my channel!","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@jordanmatter","channelId":"UCI3szCgzGTRBTF_2dVaTZdQ","hubSecret":"GmtXT02Gnu7-R3iVcAIBUc1pOsOZkfwQ","hubLeaseRenewalDue":"2025-11-16T07:32:44Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCI3szCgzGTRBTF_2dVaTZdQ","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-16T07:32:43.278917Z","updatedAt":"2025-11-16T07:32:44.755495Z"},{"streamer":{"id":"73569d15ffeb4bd8bea1ef56f56dc34d","alias":"Ted Coningsby","description":"Oii oii! Ladies, gents and teddy bears, welcome to the Ted Coningsby channel, the fun but serious military aviation channel. This is not your usual aviation ...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@TedConingsby","channelId":"UCCVgP53k4WCUnFg9yFA_YbA","hubSecret":"wGQweFSvZQznZOQhZJSCYlddYuWmIPOq","hubLeaseRenewalDue":"2025-11-17T06:32:20Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCCVgP53k4WCUnFg9yFA_YbA","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-17T06:32:19.638136Z","updatedAt":"2025-11-17T06:32:20.561455Z"},{"streamer":{"id":"231eaca2f22744e49793f395430d15d1","alias":"I will shave my eyebrows","description":"Share your videos with friends, family and the world","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@I-will-shave-my-eyebrows","channelId":"UCvwGfRXMzs2ey1h3opwK2zw","hubSecret":"-uhGIkMq159tXNozrBJImXdR9X9YUhq2","hubLeaseRenewalDue":"2025-11-17T06:33:24Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCvwGfRXMzs2ey1h3opwK2zw","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-17T06:33:22.979369Z","updatedAt":"2025-11-17T06:33:24.155418Z"},{"streamer":{"id":"0a9d7ce8255f441198a6ed3461d320f4","alias":"Sharpen Right Services LLC - Mike White","description":"Sharpen Right Services LLC - Mike White located in League City, Texas.  We are a home based, mobile and mail order sharpening service; specializing in sharpe...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@sharpenrightservicesllc","channelId":"UC7d6BuAfHKTLR1l2SSg6HkA","hubSecret":"2pEuC4RTukNuWMTEJdMjjZDoP3gVhMFi","hubLeaseRenewalDue":"2025-11-17T06:37:11Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UC7d6BuAfHKTLR1l2SSg6HkA","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-17T06:37:10.946941Z","updatedAt":"2025-11-17T06:37:11.960348Z"},{"streamer":{"id":"4dd203ee36d046e0b686600358c1de65","alias":"Judge Jeffrey Middleton","description":"Share your videos with friends, family and the world","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@judgejeffreymiddleton7573","channelId":"UCS8gM5S889oBPyN6K07ZC6A","hubSecret":"IuAbxIHgV-tw2KHChFPJ9-bOuNW66Nnx","hubLeaseRenewalDue":"2025-11-17T06:37:38Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCS8gM5S889oBPyN6K07ZC6A","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-17T06:37:36.873738Z","updatedAt":"2025-11-17T06:37:38.001056Z"}]}
+
+2025/11/17 21:30:29 Shutting down...

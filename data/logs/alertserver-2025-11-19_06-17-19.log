@@ -1,0 +1,2072 @@
+
+2025/11/19 04:40:04 Listening on 127.0.0.1:8880
+
+2025/11/19 04:40:05 ---- Incoming request from 127.0.0.1:53518 ----
+GET /api/streamers/watch HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: text/event-stream
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Cache-Control: no-cache
+Connection: keep-alive
+Referer: http://127.0.0.1:8880/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+
+
+2025/11/19 04:40:13 ---- Incoming request from 127.0.0.1:53522 ----
+GET /api/streamers HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate
+Accept-Language: en-AU,en;q=0.9
+Priority: u=3, i
+Referer: http://127.0.0.1:4173/
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/19 04:40:13 ---- Response for GET /api/streamers (200 OK) ----
+{"streamers":[{"streamer":{"id":"395848a32c2c47c2a231c1b59f2b93d4","alias":"JonSiiN","description":"Hello everyone Welcome to the official JRK Knives channel. Knives have been used since prehistoric times for a plethora of activities from weapons and tools ...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@JRKKnives","channelId":"UCbT1jA8RTEHk7y6rn2vHNGw","hubSecret":"9C_7M8CuW959d3PFQ6fZ-FRaj3yzSvel","hubLeaseDate":"2025-11-18T08:56:59Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCbT1jA8RTEHk7y6rn2vHNGw","callbackUrl":"https://sharpen.live/dev/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"status":{"live":false,"youtube":{"live":false,"startedAt":"0001-01-01T00:00:00Z"}},"createdAt":"2025-11-18T08:56:57.714492Z","updatedAt":"2025-11-18T15:04:25.787204Z"},{"streamer":{"id":"4b8e82c4a16e49e58c1ac2993e7f85e0","alias":"Attorney Melanie Little","description":"Melanie Little is a New York lawyer with over 30 years experience as a trial attorney and litigator in state and federal courts, who is now a legal analyst a...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@AttorneyMelanieLittle","channelId":"UCFSlI8Y3Zdoq5buNW_40AAA","hubSecret":"nlXDE9expkcuWHJ4vXXe3UOjfDRYwRvy","hubLeaseDate":"2025-11-18T10:07:14Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCFSlI8Y3Zdoq5buNW_40AAA","callbackUrl":"https://sharpen.live/dev/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"status":{"live":true,"platforms":["youtube"],"youtube":{"live":true,"videoId":"AwDQP2Xfdo4","startedAt":"2025-11-18T17:35:04Z"}},"createdAt":"2025-11-18T10:07:12.769107Z","updatedAt":"2025-11-18T17:35:09.801548Z"},{"streamer":{"id":"816a93baffdc4102a959dc0875d74657","alias":"Arnaldo Mangini","description":"Arnaldo Mangini, comico, clown, fantasista","firstName":"","lastName":"","email":"","languages":["English","Italian"]},"platforms":{"youtube":{"handle":"@arnaldomangini","channelId":"UCoW3NnFgnDATwU9eUOswisg","hubSecret":"wSduM3o6zSJNs8LvdpuoADBL0b7g4mlT","hubLeaseDate":"2025-11-18T17:22:55Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCoW3NnFgnDATwU9eUOswisg","callbackUrl":"https://sharpen.live/dev/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-18T17:22:53.507193Z","updatedAt":"2025-11-18T17:22:55.018738Z"}]}
+
+2025/11/19 04:40:13 ---- Incoming request from 127.0.0.1:53522 ----
+GET /api/streamers/watch HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: text/event-stream
+Accept-Encoding: gzip, deflate
+Accept-Language: en-AU,en;q=0.9
+Cache-Control: no-cache
+Pragma: no-cache
+Priority: u=3, i
+Referer: http://127.0.0.1:4173/
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/19 04:40:23 ---- Incoming request from 127.0.0.1:53526 ----
+GET /api/admin/monitor/youtube HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate
+Accept-Language: en-AU,en;q=0.9
+Authorization: Bearer 406f57953759720b6c4933ae7e65e9674e0cb1eb060edaa47ac425dbc73ffbb8
+Priority: u=3, i
+Referer: http://127.0.0.1:4173/
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/19 04:40:23 ---- Response for GET /api/admin/monitor/youtube (404 Not Found) ----
+404 page not found
+
+2025/11/19 04:48:36 ---- Incoming request from 127.0.0.1:53771 ----
+POST /api/admin/login HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Content-Length: 53
+Content-Type: application/json
+User-Agent: curl/8.7.1
+
+{"email":"admin@sharpen.live","password":"change-me"}
+
+2025/11/19 04:48:36 ---- Response for POST /api/admin/login (200 OK) ----
+{"token":"d2283a1a4daec92f608695f8155fff873d7bd3507962e87eeffa21044c30c0c1","expiresAt":"2025-11-19T17:48:36Z"}
+
+2025/11/19 04:48:36 ---- Incoming request from 127.0.0.1:53772 ----
+POST /api/admin/login HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Content-Length: 53
+Content-Type: application/json
+User-Agent: curl/8.7.1
+
+{"email":"admin@sharpen.live","password":"change-me"}
+
+2025/11/19 04:48:36 ---- Response for POST /api/admin/login (200 OK) ----
+{"token":"86ef26e9d1795d03138d104a6f12d87071ae8ab90f648167fb04c0e62c0d1a43","expiresAt":"2025-11-19T17:48:36Z"}
+
+2025/11/19 04:48:36 ---- Incoming request from 127.0.0.1:53773 ----
+GET /api/admin/submissions HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Authorization: Bearer d2283a1a4daec92f608695f8155fff873d7bd3507962e87eeffa21044c30c0c1
+User-Agent: curl/8.7.1
+
+
+2025/11/19 04:48:36 ---- Response for GET /api/admin/submissions (200 OK) ----
+{"submissions":[]}
+
+2025/11/19 04:48:36 ---- Incoming request from 127.0.0.1:53774 ----
+GET /api/admin/streamers HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Authorization: Bearer d2283a1a4daec92f608695f8155fff873d7bd3507962e87eeffa21044c30c0c1
+User-Agent: curl/8.7.1
+
+
+2025/11/19 04:48:36 ---- Response for GET /api/admin/streamers (404 Not Found) ----
+404 page not found
+
+2025/11/19 04:48:36 ---- Incoming request from 127.0.0.1:53775 ----
+GET /api/admin/settings HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Authorization: Bearer d2283a1a4daec92f608695f8155fff873d7bd3507962e87eeffa21044c30c0c1
+User-Agent: curl/8.7.1
+
+
+2025/11/19 04:48:36 ---- Response for GET /api/admin/settings (404 Not Found) ----
+404 page not found
+
+2025/11/19 04:48:36 ---- Incoming request from 127.0.0.1:53776 ----
+GET /api/admin/monitor/youtube HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Authorization: Bearer d2283a1a4daec92f608695f8155fff873d7bd3507962e87eeffa21044c30c0c1
+User-Agent: curl/8.7.1
+
+
+2025/11/19 04:48:36 ---- Response for GET /api/admin/monitor/youtube (404 Not Found) ----
+404 page not found
+
+2025/11/19 04:48:36 ---- Incoming request from 127.0.0.1:53777 ----
+GET /api/streamers HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+User-Agent: curl/8.7.1
+
+
+2025/11/19 04:48:36 ---- Response for GET /api/streamers (200 OK) ----
+{"streamers":[{"streamer":{"id":"395848a32c2c47c2a231c1b59f2b93d4","alias":"JonSiiN","description":"Hello everyone Welcome to the official JRK Knives channel. Knives have been used since prehistoric times for a plethora of activities from weapons and tools ...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@JRKKnives","channelId":"UCbT1jA8RTEHk7y6rn2vHNGw","hubSecret":"9C_7M8CuW959d3PFQ6fZ-FRaj3yzSvel","hubLeaseDate":"2025-11-18T08:56:59Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCbT1jA8RTEHk7y6rn2vHNGw","callbackUrl":"https://sharpen.live/dev/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"status":{"live":false,"youtube":{"live":false,"startedAt":"0001-01-01T00:00:00Z"}},"createdAt":"2025-11-18T08:56:57.714492Z","updatedAt":"2025-11-18T15:04:25.787204Z"},{"streamer":{"id":"4b8e82c4a16e49e58c1ac2993e7f85e0","alias":"Attorney Melanie Little","description":"Melanie Little is a New York lawyer with over 30 years experience as a trial attorney and litigator in state and federal courts, who is now a legal analyst a...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@AttorneyMelanieLittle","channelId":"UCFSlI8Y3Zdoq5buNW_40AAA","hubSecret":"nlXDE9expkcuWHJ4vXXe3UOjfDRYwRvy","hubLeaseDate":"2025-11-18T10:07:14Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCFSlI8Y3Zdoq5buNW_40AAA","callbackUrl":"https://sharpen.live/dev/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"status":{"live":true,"platforms":["youtube"],"youtube":{"live":true,"videoId":"AwDQP2Xfdo4","startedAt":"2025-11-18T17:35:04Z"}},"createdAt":"2025-11-18T10:07:12.769107Z","updatedAt":"2025-11-18T17:35:09.801548Z"},{"streamer":{"id":"816a93baffdc4102a959dc0875d74657","alias":"Arnaldo Mangini","description":"Arnaldo Mangini, comico, clown, fantasista","firstName":"","lastName":"","email":"","languages":["English","Italian"]},"platforms":{"youtube":{"handle":"@arnaldomangini","channelId":"UCoW3NnFgnDATwU9eUOswisg","hubSecret":"wSduM3o6zSJNs8LvdpuoADBL0b7g4mlT","hubLeaseDate":"2025-11-18T17:22:55Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCoW3NnFgnDATwU9eUOswisg","callbackUrl":"https://sharpen.live/dev/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-18T17:22:53.507193Z","updatedAt":"2025-11-18T17:22:55.018738Z"}]}
+
+2025/11/19 04:48:36 ---- Incoming request from 127.0.0.1:53778 ----
+GET /api/streamers/watch HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+User-Agent: curl/8.7.1
+
+
+2025/11/19 04:50:16 ---- Response for GET /api/streamers/watch (200 OK) ----
+event: ready
+data: 1763487309801
+
+
+2025/11/19 05:08:13 ---- Response for GET /api/streamers/watch (200 OK) ----
+event: ready
+data: 1763487309801
+
+
+2025/11/19 05:08:13 ---- Incoming request from 127.0.0.1:54299 ----
+GET /api/streamers HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate
+Accept-Language: en-AU,en;q=0.9
+Priority: u=3, i
+Referer: http://127.0.0.1:4173/
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/19 05:08:13 ---- Response for GET /api/streamers (200 OK) ----
+{"streamers":[{"streamer":{"id":"395848a32c2c47c2a231c1b59f2b93d4","alias":"JonSiiN","description":"Hello everyone Welcome to the official JRK Knives channel. Knives have been used since prehistoric times for a plethora of activities from weapons and tools ...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@JRKKnives","channelId":"UCbT1jA8RTEHk7y6rn2vHNGw","hubSecret":"9C_7M8CuW959d3PFQ6fZ-FRaj3yzSvel","hubLeaseDate":"2025-11-18T08:56:59Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCbT1jA8RTEHk7y6rn2vHNGw","callbackUrl":"https://sharpen.live/dev/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"status":{"live":false,"youtube":{"live":false,"startedAt":"0001-01-01T00:00:00Z"}},"createdAt":"2025-11-18T08:56:57.714492Z","updatedAt":"2025-11-18T15:04:25.787204Z"},{"streamer":{"id":"4b8e82c4a16e49e58c1ac2993e7f85e0","alias":"Attorney Melanie Little","description":"Melanie Little is a New York lawyer with over 30 years experience as a trial attorney and litigator in state and federal courts, who is now a legal analyst a...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@AttorneyMelanieLittle","channelId":"UCFSlI8Y3Zdoq5buNW_40AAA","hubSecret":"nlXDE9expkcuWHJ4vXXe3UOjfDRYwRvy","hubLeaseDate":"2025-11-18T10:07:14Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCFSlI8Y3Zdoq5buNW_40AAA","callbackUrl":"https://sharpen.live/dev/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"status":{"live":true,"platforms":["youtube"],"youtube":{"live":true,"videoId":"AwDQP2Xfdo4","startedAt":"2025-11-18T17:35:04Z"}},"createdAt":"2025-11-18T10:07:12.769107Z","updatedAt":"2025-11-18T17:35:09.801548Z"},{"streamer":{"id":"816a93baffdc4102a959dc0875d74657","alias":"Arnaldo Mangini","description":"Arnaldo Mangini, comico, clown, fantasista","firstName":"","lastName":"","email":"","languages":["English","Italian"]},"platforms":{"youtube":{"handle":"@arnaldomangini","channelId":"UCoW3NnFgnDATwU9eUOswisg","hubSecret":"wSduM3o6zSJNs8LvdpuoADBL0b7g4mlT","hubLeaseDate":"2025-11-18T17:22:55Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCoW3NnFgnDATwU9eUOswisg","callbackUrl":"https://sharpen.live/dev/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-18T17:22:53.507193Z","updatedAt":"2025-11-18T17:22:55.018738Z"}]}
+
+2025/11/19 05:08:13 ---- Incoming request from 127.0.0.1:54299 ----
+GET /api/streamers/watch HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: text/event-stream
+Accept-Encoding: gzip, deflate
+Accept-Language: en-AU,en;q=0.9
+Cache-Control: no-cache
+Pragma: no-cache
+Priority: u=3, i
+Referer: http://127.0.0.1:4173/
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/19 05:08:24 ---- Incoming request from 127.0.0.1:54303 ----
+GET /api/admin/monitor/youtube HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate
+Accept-Language: en-AU,en;q=0.9
+Authorization: Bearer 406f57953759720b6c4933ae7e65e9674e0cb1eb060edaa47ac425dbc73ffbb8
+Priority: u=3, i
+Referer: http://127.0.0.1:4173/
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/19 05:08:24 ---- Response for GET /api/admin/monitor/youtube (404 Not Found) ----
+404 page not found
+
+2025/11/19 05:14:52 ---- Response for GET /api/streamers/watch (200 OK) ----
+event: ready
+data: 1763487309801
+
+
+2025/11/19 05:14:52 ---- Incoming request from 127.0.0.1:54505 ----
+GET /api/streamers HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate
+Accept-Language: en-AU,en;q=0.9
+Priority: u=3, i
+Referer: http://127.0.0.1:4173/
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/19 05:14:52 ---- Response for GET /api/streamers (200 OK) ----
+{"streamers":[{"streamer":{"id":"395848a32c2c47c2a231c1b59f2b93d4","alias":"JonSiiN","description":"Hello everyone Welcome to the official JRK Knives channel. Knives have been used since prehistoric times for a plethora of activities from weapons and tools ...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@JRKKnives","channelId":"UCbT1jA8RTEHk7y6rn2vHNGw","hubSecret":"9C_7M8CuW959d3PFQ6fZ-FRaj3yzSvel","hubLeaseDate":"2025-11-18T08:56:59Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCbT1jA8RTEHk7y6rn2vHNGw","callbackUrl":"https://sharpen.live/dev/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"status":{"live":false,"youtube":{"live":false,"startedAt":"0001-01-01T00:00:00Z"}},"createdAt":"2025-11-18T08:56:57.714492Z","updatedAt":"2025-11-18T15:04:25.787204Z"},{"streamer":{"id":"4b8e82c4a16e49e58c1ac2993e7f85e0","alias":"Attorney Melanie Little","description":"Melanie Little is a New York lawyer with over 30 years experience as a trial attorney and litigator in state and federal courts, who is now a legal analyst a...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@AttorneyMelanieLittle","channelId":"UCFSlI8Y3Zdoq5buNW_40AAA","hubSecret":"nlXDE9expkcuWHJ4vXXe3UOjfDRYwRvy","hubLeaseDate":"2025-11-18T10:07:14Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCFSlI8Y3Zdoq5buNW_40AAA","callbackUrl":"https://sharpen.live/dev/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"status":{"live":true,"platforms":["youtube"],"youtube":{"live":true,"videoId":"AwDQP2Xfdo4","startedAt":"2025-11-18T17:35:04Z"}},"createdAt":"2025-11-18T10:07:12.769107Z","updatedAt":"2025-11-18T17:35:09.801548Z"},{"streamer":{"id":"816a93baffdc4102a959dc0875d74657","alias":"Arnaldo Mangini","description":"Arnaldo Mangini, comico, clown, fantasista","firstName":"","lastName":"","email":"","languages":["English","Italian"]},"platforms":{"youtube":{"handle":"@arnaldomangini","channelId":"UCoW3NnFgnDATwU9eUOswisg","hubSecret":"wSduM3o6zSJNs8LvdpuoADBL0b7g4mlT","hubLeaseDate":"2025-11-18T17:22:55Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCoW3NnFgnDATwU9eUOswisg","callbackUrl":"https://sharpen.live/dev/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-18T17:22:53.507193Z","updatedAt":"2025-11-18T17:22:55.018738Z"}]}
+
+2025/11/19 05:14:52 ---- Incoming request from 127.0.0.1:54505 ----
+GET /api/streamers/watch HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: text/event-stream
+Accept-Encoding: gzip, deflate
+Accept-Language: en-AU,en;q=0.9
+Cache-Control: no-cache
+Pragma: no-cache
+Priority: u=3, i
+Referer: http://127.0.0.1:4173/
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/19 05:17:08 ---- Response for GET /api/streamers/watch (200 OK) ----
+event: ready
+data: 1763487309801
+
+
+2025/11/19 05:17:11 ---- Incoming request from 127.0.0.1:54584 ----
+GET /api/streamers/watch HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: text/event-stream
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Cache-Control: no-cache
+Connection: keep-alive
+Referer: http://127.0.0.1:8880/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+
+
+2025/11/19 05:19:56 ---- Response for GET /api/streamers/watch (200 OK) ----
+event: ready
+data: 1763487309801
+
+
+2025/11/19 05:19:59 ---- Incoming request from 127.0.0.1:54743 ----
+GET /api/streamers/watch HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: text/event-stream
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Cache-Control: no-cache
+Connection: keep-alive
+Referer: http://127.0.0.1:8880/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+
+
+2025/11/19 05:50:17 ---- Incoming request from 127.0.0.1:54857 ----
+POST /alerts HTTP/1.1
+Host: sharpen.live
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Cache-Control: no-cache,max-age=0
+Content-Length: 948
+Content-Type: application/atom+xml
+From: googlebot(at)googlebot.com
+Link: <https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCFSlI8Y3Zdoq5buNW_40AAA>; rel=self, <http://pubsubhubbub.appspot.com/>; rel=hub
+Pragma: no-cache
+User-Agent: FeedFetcher-Google; (+http://www.google.com/feedfetcher.html)
+Via: 1.1 Caddy
+X-Forwarded-For: 66.102.8.103
+X-Forwarded-Host: sharpen.live
+X-Forwarded-Proto: https
+X-Hub-Signature: sha1=d5879e5255c6bbb807e30975f903919af353c9f7
+X-Request-Id: {http.request.id}
+
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:yt="http://www.youtube.com/xml/schemas/2015" xmlns="http://www.w3.org/2005/Atom"><link rel="hub" href="https://pubsubhubbub.appspot.com"/><link rel="self" href="https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCFSlI8Y3Zdoq5buNW_40AAA"/><title>YouTube video feed</title><updated>2025-11-18T17:35:11.124802896+00:00</updated><entry>
+  <id>yt:video:AwDQP2Xfdo4</id>
+  <yt:videoId>AwDQP2Xfdo4</yt:videoId>
+  <yt:channelId>UCFSlI8Y3Zdoq5buNW_40AAA</yt:channelId>
+  <title>BREAKING💥KAREN READ IS SUING EVERYBODY! Civil Complaint Filed💥Bang Bang</title>
+  <link rel="alternate" href="https://www.youtube.com/watch?v=AwDQP2Xfdo4"/>
+  <author>
+   <name>Attorney Melanie Little</name>
+   <uri>https://www.youtube.com/channel/UCFSlI8Y3Zdoq5buNW_40AAA</uri>
+  </author>
+  <published>2025-11-18T16:41:19+00:00</published>
+  <updated>2025-11-18T17:35:11.124802896+00:00</updated>
+ </entry></feed>
+
+2025/11/19 05:50:17 Processing hub notification (1 entries) videos=AwDQP2Xfdo4 channel=UCFSlI8Y3Zdoq5buNW_40AAA
+
+2025/11/19 05:50:17 Fetching live metadata for 1 video(s): AwDQP2Xfdo4
+
+2025/11/19 05:50:17 Requesting watch page for AwDQP2Xfdo4: https://www.youtube.com/watch?v=AwDQP2Xfdo4
+
+2025/11/19 05:50:17 Fetch for video AwDQP2Xfdo4 failed: Get "https://www.youtube.com/watch?v=AwDQP2Xfdo4": context canceled
+
+2025/11/19 05:50:17 failed to fetch live metadata for videos AwDQP2Xfdo4: fetch AwDQP2Xfdo4: Get "https://www.youtube.com/watch?v=AwDQP2Xfdo4": context canceled
+
+2025/11/19 05:50:17 ---- Response for POST /alerts (202 Accepted) ----
+
+2025/11/19 05:50:17 ---- Incoming request from 127.0.0.1:54858 ----
+POST /alerts HTTP/1.1
+Host: sharpen.live
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Cache-Control: no-cache,max-age=0
+Content-Length: 948
+Content-Type: application/atom+xml
+From: googlebot(at)googlebot.com
+Link: <https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCFSlI8Y3Zdoq5buNW_40AAA>; rel=self, <http://pubsubhubbub.appspot.com/>; rel=hub
+Pragma: no-cache
+User-Agent: FeedFetcher-Google; (+http://www.google.com/feedfetcher.html)
+Via: 1.1 Caddy
+X-Forwarded-For: 66.102.8.103
+X-Forwarded-Host: sharpen.live
+X-Forwarded-Proto: https
+X-Hub-Signature: sha1=76945706683b7067afe3c72931a801e76e17fa72
+X-Request-Id: {http.request.id}
+
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:yt="http://www.youtube.com/xml/schemas/2015" xmlns="http://www.w3.org/2005/Atom"><link rel="hub" href="https://pubsubhubbub.appspot.com"/><link rel="self" href="https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCFSlI8Y3Zdoq5buNW_40AAA"/><title>YouTube video feed</title><updated>2025-11-18T17:35:11.795251866+00:00</updated><entry>
+  <id>yt:video:AwDQP2Xfdo4</id>
+  <yt:videoId>AwDQP2Xfdo4</yt:videoId>
+  <yt:channelId>UCFSlI8Y3Zdoq5buNW_40AAA</yt:channelId>
+  <title>BREAKING💥KAREN READ IS SUING EVERYBODY! Civil Complaint Filed💥Bang Bang</title>
+  <link rel="alternate" href="https://www.youtube.com/watch?v=AwDQP2Xfdo4"/>
+  <author>
+   <name>Attorney Melanie Little</name>
+   <uri>https://www.youtube.com/channel/UCFSlI8Y3Zdoq5buNW_40AAA</uri>
+  </author>
+  <published>2025-11-18T16:41:19+00:00</published>
+  <updated>2025-11-18T17:35:11.795251866+00:00</updated>
+ </entry></feed>
+
+2025/11/19 05:50:17 Processing hub notification (1 entries) videos=AwDQP2Xfdo4 channel=UCFSlI8Y3Zdoq5buNW_40AAA
+
+2025/11/19 05:50:17 Fetching live metadata for 1 video(s): AwDQP2Xfdo4
+
+2025/11/19 05:50:17 Requesting watch page for AwDQP2Xfdo4: https://www.youtube.com/watch?v=AwDQP2Xfdo4
+
+2025/11/19 05:50:17 Fetch for video AwDQP2Xfdo4 failed: Get "https://www.youtube.com/watch?v=AwDQP2Xfdo4": context canceled
+
+2025/11/19 05:50:17 failed to fetch live metadata for videos AwDQP2Xfdo4: fetch AwDQP2Xfdo4: Get "https://www.youtube.com/watch?v=AwDQP2Xfdo4": context canceled
+
+2025/11/19 05:50:17 ---- Response for POST /alerts (202 Accepted) ----
+
+2025/11/19 07:36:01 ---- Incoming request from 127.0.0.1:55405 ----
+POST /alerts HTTP/1.1
+Host: sharpen.live
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Cache-Control: no-cache,max-age=0
+Content-Length: 948
+Content-Type: application/atom+xml
+From: googlebot(at)googlebot.com
+Link: <https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCFSlI8Y3Zdoq5buNW_40AAA>; rel=self, <http://pubsubhubbub.appspot.com/>; rel=hub
+Pragma: no-cache
+User-Agent: FeedFetcher-Google; (+http://www.google.com/feedfetcher.html)
+Via: 1.1 Caddy
+X-Forwarded-For: 142.250.32.2
+X-Forwarded-Host: sharpen.live
+X-Forwarded-Proto: https
+X-Hub-Signature: sha1=d5879e5255c6bbb807e30975f903919af353c9f7
+X-Request-Id: {http.request.id}
+
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:yt="http://www.youtube.com/xml/schemas/2015" xmlns="http://www.w3.org/2005/Atom"><link rel="hub" href="https://pubsubhubbub.appspot.com"/><link rel="self" href="https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCFSlI8Y3Zdoq5buNW_40AAA"/><title>YouTube video feed</title><updated>2025-11-18T17:35:11.124802896+00:00</updated><entry>
+  <id>yt:video:AwDQP2Xfdo4</id>
+  <yt:videoId>AwDQP2Xfdo4</yt:videoId>
+  <yt:channelId>UCFSlI8Y3Zdoq5buNW_40AAA</yt:channelId>
+  <title>BREAKING💥KAREN READ IS SUING EVERYBODY! Civil Complaint Filed💥Bang Bang</title>
+  <link rel="alternate" href="https://www.youtube.com/watch?v=AwDQP2Xfdo4"/>
+  <author>
+   <name>Attorney Melanie Little</name>
+   <uri>https://www.youtube.com/channel/UCFSlI8Y3Zdoq5buNW_40AAA</uri>
+  </author>
+  <published>2025-11-18T16:41:19+00:00</published>
+  <updated>2025-11-18T17:35:11.124802896+00:00</updated>
+ </entry></feed>
+
+2025/11/19 07:36:01 Processing hub notification (1 entries) videos=AwDQP2Xfdo4 channel=UCFSlI8Y3Zdoq5buNW_40AAA
+
+2025/11/19 07:36:01 Fetching live metadata for 1 video(s): AwDQP2Xfdo4
+
+2025/11/19 07:36:01 Requesting watch page for AwDQP2Xfdo4: https://www.youtube.com/watch?v=AwDQP2Xfdo4
+
+2025/11/19 07:36:01 Fetch for video AwDQP2Xfdo4 failed: Get "https://www.youtube.com/watch?v=AwDQP2Xfdo4": context canceled
+
+2025/11/19 07:36:01 failed to fetch live metadata for videos AwDQP2Xfdo4: fetch AwDQP2Xfdo4: Get "https://www.youtube.com/watch?v=AwDQP2Xfdo4": context canceled
+
+2025/11/19 07:36:01 ---- Response for POST /alerts (202 Accepted) ----
+
+2025/11/19 07:36:02 ---- Incoming request from 127.0.0.1:55406 ----
+POST /alerts HTTP/1.1
+Host: sharpen.live
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Cache-Control: no-cache,max-age=0
+Content-Length: 948
+Content-Type: application/atom+xml
+From: googlebot(at)googlebot.com
+Link: <https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCFSlI8Y3Zdoq5buNW_40AAA>; rel=self, <http://pubsubhubbub.appspot.com/>; rel=hub
+Pragma: no-cache
+User-Agent: FeedFetcher-Google; (+http://www.google.com/feedfetcher.html)
+Via: 1.1 Caddy
+X-Forwarded-For: 142.250.32.1
+X-Forwarded-Host: sharpen.live
+X-Forwarded-Proto: https
+X-Hub-Signature: sha1=76945706683b7067afe3c72931a801e76e17fa72
+X-Request-Id: {http.request.id}
+
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:yt="http://www.youtube.com/xml/schemas/2015" xmlns="http://www.w3.org/2005/Atom"><link rel="hub" href="https://pubsubhubbub.appspot.com"/><link rel="self" href="https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCFSlI8Y3Zdoq5buNW_40AAA"/><title>YouTube video feed</title><updated>2025-11-18T17:35:11.795251866+00:00</updated><entry>
+  <id>yt:video:AwDQP2Xfdo4</id>
+  <yt:videoId>AwDQP2Xfdo4</yt:videoId>
+  <yt:channelId>UCFSlI8Y3Zdoq5buNW_40AAA</yt:channelId>
+  <title>BREAKING💥KAREN READ IS SUING EVERYBODY! Civil Complaint Filed💥Bang Bang</title>
+  <link rel="alternate" href="https://www.youtube.com/watch?v=AwDQP2Xfdo4"/>
+  <author>
+   <name>Attorney Melanie Little</name>
+   <uri>https://www.youtube.com/channel/UCFSlI8Y3Zdoq5buNW_40AAA</uri>
+  </author>
+  <published>2025-11-18T16:41:19+00:00</published>
+  <updated>2025-11-18T17:35:11.795251866+00:00</updated>
+ </entry></feed>
+
+2025/11/19 07:36:02 Processing hub notification (1 entries) videos=AwDQP2Xfdo4 channel=UCFSlI8Y3Zdoq5buNW_40AAA
+
+2025/11/19 07:36:02 Fetching live metadata for 1 video(s): AwDQP2Xfdo4
+
+2025/11/19 07:36:02 Requesting watch page for AwDQP2Xfdo4: https://www.youtube.com/watch?v=AwDQP2Xfdo4
+
+2025/11/19 07:36:02 Fetch for video AwDQP2Xfdo4 failed: Get "https://www.youtube.com/watch?v=AwDQP2Xfdo4": context canceled
+
+2025/11/19 07:36:02 failed to fetch live metadata for videos AwDQP2Xfdo4: fetch AwDQP2Xfdo4: Get "https://www.youtube.com/watch?v=AwDQP2Xfdo4": context canceled
+
+2025/11/19 07:36:02 ---- Response for POST /alerts (202 Accepted) ----
+
+2025/11/19 08:04:18 ---- Incoming request from 127.0.0.1:55544 ----
+POST /alerts HTTP/1.1
+Host: sharpen.live
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Cache-Control: no-cache,max-age=0
+Content-Length: 948
+Content-Type: application/atom+xml
+From: googlebot(at)googlebot.com
+Link: <https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCFSlI8Y3Zdoq5buNW_40AAA>; rel=self, <http://pubsubhubbub.appspot.com/>; rel=hub
+Pragma: no-cache
+User-Agent: FeedFetcher-Google; (+http://www.google.com/feedfetcher.html)
+Via: 1.1 Caddy
+X-Forwarded-For: 74.125.209.32
+X-Forwarded-Host: sharpen.live
+X-Forwarded-Proto: https
+X-Hub-Signature: sha1=c003542f08d964a0e211367c8cbe1ca02bd61247
+X-Request-Id: {http.request.id}
+
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:yt="http://www.youtube.com/xml/schemas/2015" xmlns="http://www.w3.org/2005/Atom"><link rel="hub" href="https://pubsubhubbub.appspot.com"/><link rel="self" href="https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCFSlI8Y3Zdoq5buNW_40AAA"/><title>YouTube video feed</title><updated>2025-11-18T21:04:15.751086783+00:00</updated><entry>
+  <id>yt:video:AwDQP2Xfdo4</id>
+  <yt:videoId>AwDQP2Xfdo4</yt:videoId>
+  <yt:channelId>UCFSlI8Y3Zdoq5buNW_40AAA</yt:channelId>
+  <title>BREAKING💥KAREN READ IS SUING EVERYBODY! Civil Complaint Filed💥Bang Bang</title>
+  <link rel="alternate" href="https://www.youtube.com/watch?v=AwDQP2Xfdo4"/>
+  <author>
+   <name>Attorney Melanie Little</name>
+   <uri>https://www.youtube.com/channel/UCFSlI8Y3Zdoq5buNW_40AAA</uri>
+  </author>
+  <published>2025-11-18T16:41:19+00:00</published>
+  <updated>2025-11-18T21:04:15.751086783+00:00</updated>
+ </entry></feed>
+
+2025/11/19 08:04:18 Processing hub notification (1 entries) videos=AwDQP2Xfdo4 channel=UCFSlI8Y3Zdoq5buNW_40AAA
+
+2025/11/19 08:04:18 Fetching live metadata for 1 video(s): AwDQP2Xfdo4
+
+2025/11/19 08:04:18 Requesting watch page for AwDQP2Xfdo4: https://www.youtube.com/watch?v=AwDQP2Xfdo4
+
+2025/11/19 08:04:18 Fetched metadata for AwDQP2Xfdo4: channel=UCFSlI8Y3Zdoq5buNW_40AAA title="BREAKING💥KAREN READ IS SUING EVERYBODY! Civil Complaint Filed💥Bang Bang" live=true start=2025-11-18 17:35:04 +0000 +0000
+
+2025/11/19 08:04:18 Live stream detected: channel=UCFSlI8Y3Zdoq5buNW_40AAA video=AwDQP2Xfdo4 title=BREAKING💥KAREN READ IS SUING EVERYBODY! Civil Complaint Filed💥Bang Bang
+
+2025/11/19 08:04:18 ---- Response for POST /alerts (204 No Content) ----
+
+2025/11/19 08:04:19 ---- Incoming request from 127.0.0.1:55547 ----
+GET /api/streamers HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Connection: keep-alive
+Referer: http://127.0.0.1:8880/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+
+
+2025/11/19 08:04:19 ---- Response for GET /api/streamers (200 OK) ----
+{"streamers":[{"streamer":{"id":"395848a32c2c47c2a231c1b59f2b93d4","alias":"JonSiiN","description":"Hello everyone Welcome to the official JRK Knives channel. Knives have been used since prehistoric times for a plethora of activities from weapons and tools ...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@JRKKnives","channelId":"UCbT1jA8RTEHk7y6rn2vHNGw","hubSecret":"9C_7M8CuW959d3PFQ6fZ-FRaj3yzSvel","hubLeaseDate":"2025-11-18T08:56:59Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCbT1jA8RTEHk7y6rn2vHNGw","callbackUrl":"https://sharpen.live/dev/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"status":{"live":false,"youtube":{"live":false,"startedAt":"0001-01-01T00:00:00Z"}},"createdAt":"2025-11-18T08:56:57.714492Z","updatedAt":"2025-11-18T15:04:25.787204Z"},{"streamer":{"id":"4b8e82c4a16e49e58c1ac2993e7f85e0","alias":"Attorney Melanie Little","description":"Melanie Little is a New York lawyer with over 30 years experience as a trial attorney and litigator in state and federal courts, who is now a legal analyst a...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@AttorneyMelanieLittle","channelId":"UCFSlI8Y3Zdoq5buNW_40AAA","hubSecret":"nlXDE9expkcuWHJ4vXXe3UOjfDRYwRvy","hubLeaseDate":"2025-11-18T10:07:14Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCFSlI8Y3Zdoq5buNW_40AAA","callbackUrl":"https://sharpen.live/dev/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"status":{"live":true,"platforms":["youtube"],"youtube":{"live":true,"videoId":"AwDQP2Xfdo4","startedAt":"2025-11-18T17:35:04Z"}},"createdAt":"2025-11-18T10:07:12.769107Z","updatedAt":"2025-11-18T21:04:18.881601Z"},{"streamer":{"id":"816a93baffdc4102a959dc0875d74657","alias":"Arnaldo Mangini","description":"Arnaldo Mangini, comico, clown, fantasista","firstName":"","lastName":"","email":"","languages":["English","Italian"]},"platforms":{"youtube":{"handle":"@arnaldomangini","channelId":"UCoW3NnFgnDATwU9eUOswisg","hubSecret":"wSduM3o6zSJNs8LvdpuoADBL0b7g4mlT","hubLeaseDate":"2025-11-18T17:22:55Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCoW3NnFgnDATwU9eUOswisg","callbackUrl":"https://sharpen.live/dev/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-18T17:22:53.507193Z","updatedAt":"2025-11-18T17:22:55.018738Z"}]}
+
+2025/11/19 08:20:49 ---- Incoming request from 127.0.0.1:55603 ----
+POST /alerts HTTP/1.1
+Host: sharpen.live
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Cache-Control: no-cache,max-age=0
+Content-Length: 948
+Content-Type: application/atom+xml
+From: googlebot(at)googlebot.com
+Link: <https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCFSlI8Y3Zdoq5buNW_40AAA>; rel=self, <http://pubsubhubbub.appspot.com/>; rel=hub
+Pragma: no-cache
+User-Agent: FeedFetcher-Google; (+http://www.google.com/feedfetcher.html)
+Via: 1.1 Caddy
+X-Forwarded-For: 74.125.209.32
+X-Forwarded-Host: sharpen.live
+X-Forwarded-Proto: https
+X-Hub-Signature: sha1=0b2730b60b66660fe5c656f598614208d23c7fa4
+X-Request-Id: {http.request.id}
+
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:yt="http://www.youtube.com/xml/schemas/2015" xmlns="http://www.w3.org/2005/Atom"><link rel="hub" href="https://pubsubhubbub.appspot.com"/><link rel="self" href="https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCFSlI8Y3Zdoq5buNW_40AAA"/><title>YouTube video feed</title><updated>2025-11-18T21:12:46.524855888+00:00</updated><entry>
+  <id>yt:video:AwDQP2Xfdo4</id>
+  <yt:videoId>AwDQP2Xfdo4</yt:videoId>
+  <yt:channelId>UCFSlI8Y3Zdoq5buNW_40AAA</yt:channelId>
+  <title>BREAKING💥KAREN READ IS SUING EVERYBODY! Civil Complaint Filed💥Bang Bang</title>
+  <link rel="alternate" href="https://www.youtube.com/watch?v=AwDQP2Xfdo4"/>
+  <author>
+   <name>Attorney Melanie Little</name>
+   <uri>https://www.youtube.com/channel/UCFSlI8Y3Zdoq5buNW_40AAA</uri>
+  </author>
+  <published>2025-11-18T21:12:44+00:00</published>
+  <updated>2025-11-18T21:12:46.524855888+00:00</updated>
+ </entry></feed>
+
+2025/11/19 08:20:49 Processing hub notification (1 entries) videos=AwDQP2Xfdo4 channel=UCFSlI8Y3Zdoq5buNW_40AAA
+
+2025/11/19 08:20:49 Fetching live metadata for 1 video(s): AwDQP2Xfdo4
+
+2025/11/19 08:20:49 Requesting watch page for AwDQP2Xfdo4: https://www.youtube.com/watch?v=AwDQP2Xfdo4
+
+2025/11/19 08:20:49 Fetch for video AwDQP2Xfdo4 failed: Get "https://www.youtube.com/watch?v=AwDQP2Xfdo4": context canceled
+
+2025/11/19 08:20:49 failed to fetch live metadata for videos AwDQP2Xfdo4: fetch AwDQP2Xfdo4: Get "https://www.youtube.com/watch?v=AwDQP2Xfdo4": context canceled
+
+2025/11/19 08:20:49 ---- Response for POST /alerts (202 Accepted) ----
+
+2025/11/19 08:40:29 ---- Incoming request from 127.0.0.1:55679 ----
+POST /alerts HTTP/1.1
+Host: sharpen.live
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Cache-Control: no-cache,max-age=0
+Content-Length: 948
+Content-Type: application/atom+xml
+From: googlebot(at)googlebot.com
+Link: <https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCFSlI8Y3Zdoq5buNW_40AAA>; rel=self, <http://pubsubhubbub.appspot.com/>; rel=hub
+Pragma: no-cache
+User-Agent: FeedFetcher-Google; (+http://www.google.com/feedfetcher.html)
+Via: 1.1 Caddy
+X-Forwarded-For: 74.125.209.32
+X-Forwarded-Host: sharpen.live
+X-Forwarded-Proto: https
+X-Hub-Signature: sha1=321f44285600f480297dc9166d02ad41c05e9df6
+X-Request-Id: {http.request.id}
+
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:yt="http://www.youtube.com/xml/schemas/2015" xmlns="http://www.w3.org/2005/Atom"><link rel="hub" href="https://pubsubhubbub.appspot.com"/><link rel="self" href="https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCFSlI8Y3Zdoq5buNW_40AAA"/><title>YouTube video feed</title><updated>2025-11-18T21:26:00.940927313+00:00</updated><entry>
+  <id>yt:video:AwDQP2Xfdo4</id>
+  <yt:videoId>AwDQP2Xfdo4</yt:videoId>
+  <yt:channelId>UCFSlI8Y3Zdoq5buNW_40AAA</yt:channelId>
+  <title>BREAKING💥KAREN READ IS SUING EVERYBODY! Civil Complaint Filed💥Bang Bang</title>
+  <link rel="alternate" href="https://www.youtube.com/watch?v=AwDQP2Xfdo4"/>
+  <author>
+   <name>Attorney Melanie Little</name>
+   <uri>https://www.youtube.com/channel/UCFSlI8Y3Zdoq5buNW_40AAA</uri>
+  </author>
+  <published>2025-11-18T21:12:44+00:00</published>
+  <updated>2025-11-18T21:26:00.940927313+00:00</updated>
+ </entry></feed>
+
+2025/11/19 08:40:29 ---- Incoming request from 127.0.0.1:55680 ----
+POST /alerts HTTP/1.1
+Host: sharpen.live
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Cache-Control: no-cache,max-age=0
+Content-Length: 978
+Content-Type: application/atom+xml
+From: googlebot(at)googlebot.com
+Link: <https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCFSlI8Y3Zdoq5buNW_40AAA>; rel=self, <http://pubsubhubbub.appspot.com/>; rel=hub
+Pragma: no-cache
+User-Agent: FeedFetcher-Google; (+http://www.google.com/feedfetcher.html)
+Via: 1.1 Caddy
+X-Forwarded-For: 74.125.209.34
+X-Forwarded-Host: sharpen.live
+X-Forwarded-Proto: https
+X-Hub-Signature: sha1=7aa1108864d2e60e3c4267e80542ce8d8b8271f7
+X-Request-Id: {http.request.id}
+
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:yt="http://www.youtube.com/xml/schemas/2015" xmlns="http://www.w3.org/2005/Atom"><link rel="hub" href="https://pubsubhubbub.appspot.com"/><link rel="self" href="https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCFSlI8Y3Zdoq5buNW_40AAA"/><title>YouTube video feed</title><updated>2025-11-18T21:29:06.72929409+00:00</updated><entry>
+  <id>yt:video:S_WSAqLzgtg</id>
+  <yt:videoId>S_WSAqLzgtg</yt:videoId>
+  <yt:channelId>UCFSlI8Y3Zdoq5buNW_40AAA</yt:channelId>
+  <title>LIVE💥BRIAN WALSHE Pleads Guilty to 2 Charges💥Jury Selection Proceeds on 1st Degree M💥Justice for Ana</title>
+  <link rel="alternate" href="https://www.youtube.com/watch?v=S_WSAqLzgtg"/>
+  <author>
+   <name>Attorney Melanie Little</name>
+   <uri>https://www.youtube.com/channel/UCFSlI8Y3Zdoq5buNW_40AAA</uri>
+  </author>
+  <published>2025-11-18T16:50:25+00:00</published>
+  <updated>2025-11-18T21:29:06.72929409+00:00</updated>
+ </entry></feed>
+
+2025/11/19 08:40:29 Processing hub notification (1 entries) videos=S_WSAqLzgtg channel=UCFSlI8Y3Zdoq5buNW_40AAA
+
+2025/11/19 08:40:29 Processing hub notification (1 entries) videos=AwDQP2Xfdo4 channel=UCFSlI8Y3Zdoq5buNW_40AAA
+
+2025/11/19 08:40:29 Fetching live metadata for 1 video(s): S_WSAqLzgtg
+
+2025/11/19 08:40:29 Requesting watch page for S_WSAqLzgtg: https://www.youtube.com/watch?v=S_WSAqLzgtg
+
+2025/11/19 08:40:29 Fetching live metadata for 1 video(s): AwDQP2Xfdo4
+
+2025/11/19 08:40:29 Requesting watch page for AwDQP2Xfdo4: https://www.youtube.com/watch?v=AwDQP2Xfdo4
+
+2025/11/19 08:40:29 Fetch for video AwDQP2Xfdo4 failed: Get "https://www.youtube.com/watch?v=AwDQP2Xfdo4": context canceled
+
+2025/11/19 08:40:29 failed to fetch live metadata for videos AwDQP2Xfdo4: fetch AwDQP2Xfdo4: Get "https://www.youtube.com/watch?v=AwDQP2Xfdo4": context canceled
+
+2025/11/19 08:40:29 ---- Response for POST /alerts (202 Accepted) ----
+
+2025/11/19 08:40:29 Fetch for video S_WSAqLzgtg failed: Get "https://www.youtube.com/watch?v=S_WSAqLzgtg": context canceled
+
+2025/11/19 08:40:29 failed to fetch live metadata for videos S_WSAqLzgtg: fetch S_WSAqLzgtg: Get "https://www.youtube.com/watch?v=S_WSAqLzgtg": context canceled
+
+2025/11/19 08:40:29 ---- Response for POST /alerts (202 Accepted) ----
+
+2025/11/19 08:40:29 ---- Incoming request from 127.0.0.1:55681 ----
+POST /alerts HTTP/1.1
+Host: sharpen.live
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Cache-Control: no-cache,max-age=0
+Content-Length: 980
+Content-Type: application/atom+xml
+From: googlebot(at)googlebot.com
+Link: <https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCFSlI8Y3Zdoq5buNW_40AAA>; rel=self, <http://pubsubhubbub.appspot.com/>; rel=hub
+Pragma: no-cache
+User-Agent: FeedFetcher-Google; (+http://www.google.com/feedfetcher.html)
+Via: 1.1 Caddy
+X-Forwarded-For: 74.125.209.34
+X-Forwarded-Host: sharpen.live
+X-Forwarded-Proto: https
+X-Hub-Signature: sha1=b834a68fa0d7cfe1be7b6454c2b1ad409aea37fe
+X-Request-Id: {http.request.id}
+
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:yt="http://www.youtube.com/xml/schemas/2015" xmlns="http://www.w3.org/2005/Atom"><link rel="hub" href="https://pubsubhubbub.appspot.com"/><link rel="self" href="https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCFSlI8Y3Zdoq5buNW_40AAA"/><title>YouTube video feed</title><updated>2025-11-18T21:30:10.901385969+00:00</updated><entry>
+  <id>yt:video:S_WSAqLzgtg</id>
+  <yt:videoId>S_WSAqLzgtg</yt:videoId>
+  <yt:channelId>UCFSlI8Y3Zdoq5buNW_40AAA</yt:channelId>
+  <title>LIVE💥BRIAN WALSHE Pleads Guilty to 2 Charges💥Jury Selection Proceeds on 1st Degree M💥Justice for Ana</title>
+  <link rel="alternate" href="https://www.youtube.com/watch?v=S_WSAqLzgtg"/>
+  <author>
+   <name>Attorney Melanie Little</name>
+   <uri>https://www.youtube.com/channel/UCFSlI8Y3Zdoq5buNW_40AAA</uri>
+  </author>
+  <published>2025-11-18T16:50:25+00:00</published>
+  <updated>2025-11-18T21:30:10.901385969+00:00</updated>
+ </entry></feed>
+
+2025/11/19 08:40:29 Processing hub notification (1 entries) videos=S_WSAqLzgtg channel=UCFSlI8Y3Zdoq5buNW_40AAA
+
+2025/11/19 08:40:29 Fetching live metadata for 1 video(s): S_WSAqLzgtg
+
+2025/11/19 08:40:29 Requesting watch page for S_WSAqLzgtg: https://www.youtube.com/watch?v=S_WSAqLzgtg
+
+2025/11/19 08:40:29 Fetch for video S_WSAqLzgtg failed: Get "https://www.youtube.com/watch?v=S_WSAqLzgtg": context canceled
+
+2025/11/19 08:40:29 failed to fetch live metadata for videos S_WSAqLzgtg: fetch S_WSAqLzgtg: Get "https://www.youtube.com/watch?v=S_WSAqLzgtg": context canceled
+
+2025/11/19 08:40:29 ---- Response for POST /alerts (202 Accepted) ----
+
+2025/11/19 09:05:50 ---- Incoming request from 127.0.0.1:56010 ----
+POST /alerts HTTP/1.1
+Host: sharpen.live
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Cache-Control: no-cache,max-age=0
+Content-Length: 880
+Content-Type: application/atom+xml
+From: googlebot(at)googlebot.com
+Link: <https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCoW3NnFgnDATwU9eUOswisg>; rel=self, <http://pubsubhubbub.appspot.com/>; rel=hub
+Pragma: no-cache
+User-Agent: FeedFetcher-Google; (+http://www.google.com/feedfetcher.html)
+Via: 1.1 Caddy
+X-Forwarded-For: 142.250.32.3
+X-Forwarded-Host: sharpen.live
+X-Forwarded-Proto: https
+X-Hub-Signature: sha1=867de5f0414df31c85423377d22c5a637eb8eb25
+X-Request-Id: {http.request.id}
+
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:yt="http://www.youtube.com/xml/schemas/2015" xmlns="http://www.w3.org/2005/Atom"><link rel="hub" href="https://pubsubhubbub.appspot.com"/><link rel="self" href="https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCoW3NnFgnDATwU9eUOswisg"/><title>YouTube video feed</title><updated>2025-11-18T19:05:26.861232058+00:00</updated><entry>
+  <id>yt:video:EuVbanJs0wM</id>
+  <yt:videoId>EuVbanJs0wM</yt:videoId>
+  <yt:channelId>UCoW3NnFgnDATwU9eUOswisg</yt:channelId>
+  <title>It's a Magic Day!</title>
+  <link rel="alternate" href="https://www.youtube.com/watch?v=EuVbanJs0wM"/>
+  <author>
+   <name>Arnaldo Mangini</name>
+   <uri>https://www.youtube.com/channel/UCoW3NnFgnDATwU9eUOswisg</uri>
+  </author>
+  <published>2025-11-18T17:03:35+00:00</published>
+  <updated>2025-11-18T19:05:26.861232058+00:00</updated>
+ </entry></feed>
+
+2025/11/19 09:05:50 Processing hub notification (1 entries) videos=EuVbanJs0wM channel=UCoW3NnFgnDATwU9eUOswisg
+
+2025/11/19 09:05:50 Fetching live metadata for 1 video(s): EuVbanJs0wM
+
+2025/11/19 09:05:50 Requesting watch page for EuVbanJs0wM: https://www.youtube.com/watch?v=EuVbanJs0wM
+
+2025/11/19 09:05:51 Fetched metadata for EuVbanJs0wM: channel=UCoW3NnFgnDATwU9eUOswisg title="It's a Magic Day!" live=true start=2025-11-18 17:06:56 +0000 +0000
+
+2025/11/19 09:05:51 Live stream detected: channel=UCoW3NnFgnDATwU9eUOswisg video=EuVbanJs0wM title=It's a Magic Day!
+
+2025/11/19 09:05:51 ---- Response for POST /alerts (204 No Content) ----
+
+2025/11/19 09:05:51 ---- Incoming request from 127.0.0.1:56013 ----
+GET /api/streamers HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Connection: keep-alive
+Referer: http://127.0.0.1:8880/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+
+
+2025/11/19 09:05:51 ---- Response for GET /api/streamers (200 OK) ----
+{"streamers":[{"streamer":{"id":"395848a32c2c47c2a231c1b59f2b93d4","alias":"JonSiiN","description":"Hello everyone Welcome to the official JRK Knives channel. Knives have been used since prehistoric times for a plethora of activities from weapons and tools ...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@JRKKnives","channelId":"UCbT1jA8RTEHk7y6rn2vHNGw","hubSecret":"9C_7M8CuW959d3PFQ6fZ-FRaj3yzSvel","hubLeaseDate":"2025-11-18T08:56:59Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCbT1jA8RTEHk7y6rn2vHNGw","callbackUrl":"https://sharpen.live/dev/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"status":{"live":false,"youtube":{"live":false,"startedAt":"0001-01-01T00:00:00Z"}},"createdAt":"2025-11-18T08:56:57.714492Z","updatedAt":"2025-11-18T15:04:25.787204Z"},{"streamer":{"id":"4b8e82c4a16e49e58c1ac2993e7f85e0","alias":"Attorney Melanie Little","description":"Melanie Little is a New York lawyer with over 30 years experience as a trial attorney and litigator in state and federal courts, who is now a legal analyst a...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@AttorneyMelanieLittle","channelId":"UCFSlI8Y3Zdoq5buNW_40AAA","hubSecret":"nlXDE9expkcuWHJ4vXXe3UOjfDRYwRvy","hubLeaseDate":"2025-11-18T10:07:14Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCFSlI8Y3Zdoq5buNW_40AAA","callbackUrl":"https://sharpen.live/dev/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"status":{"live":true,"platforms":["youtube"],"youtube":{"live":true,"videoId":"AwDQP2Xfdo4","startedAt":"2025-11-18T17:35:04Z"}},"createdAt":"2025-11-18T10:07:12.769107Z","updatedAt":"2025-11-18T21:04:18.881601Z"},{"streamer":{"id":"816a93baffdc4102a959dc0875d74657","alias":"Arnaldo Mangini","description":"Arnaldo Mangini, comico, clown, fantasista","firstName":"","lastName":"","email":"","languages":["English","Italian"]},"platforms":{"youtube":{"handle":"@arnaldomangini","channelId":"UCoW3NnFgnDATwU9eUOswisg","hubSecret":"wSduM3o6zSJNs8LvdpuoADBL0b7g4mlT","hubLeaseDate":"2025-11-18T17:22:55Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCoW3NnFgnDATwU9eUOswisg","callbackUrl":"https://sharpen.live/dev/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"status":{"live":true,"platforms":["youtube"],"youtube":{"live":true,"videoId":"EuVbanJs0wM","startedAt":"2025-11-18T17:06:56Z"}},"createdAt":"2025-11-18T17:22:53.507193Z","updatedAt":"2025-11-18T22:05:51.288284Z"}]}
+
+2025/11/19 09:05:55 ---- Incoming request from 127.0.0.1:56010 ----
+POST /alerts HTTP/1.1
+Host: sharpen.live
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Cache-Control: no-cache,max-age=0
+Content-Length: 884
+Content-Type: application/atom+xml
+From: googlebot(at)googlebot.com
+Link: <https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCoW3NnFgnDATwU9eUOswisg>; rel=self, <http://pubsubhubbub.appspot.com/>; rel=hub
+Pragma: no-cache
+User-Agent: FeedFetcher-Google; (+http://www.google.com/feedfetcher.html)
+Via: 1.1 Caddy
+X-Forwarded-For: 74.125.209.32
+X-Forwarded-Host: sharpen.live
+X-Forwarded-Proto: https
+X-Hub-Signature: sha1=00e7638df6068a497d28052f8a013b58fa0eef44
+X-Request-Id: {http.request.id}
+
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:yt="http://www.youtube.com/xml/schemas/2015" xmlns="http://www.w3.org/2005/Atom"><link rel="hub" href="https://pubsubhubbub.appspot.com"/><link rel="self" href="https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCoW3NnFgnDATwU9eUOswisg"/><title>YouTube video feed</title><updated>2025-11-18T19:05:33.005490681+00:00</updated><entry>
+  <id>yt:video:-VVe-5LYm-I</id>
+  <yt:videoId>-VVe-5LYm-I</yt:videoId>
+  <yt:channelId>UCoW3NnFgnDATwU9eUOswisg</yt:channelId>
+  <title>It's a Magic Day!🔥</title>
+  <link rel="alternate" href="https://www.youtube.com/watch?v=-VVe-5LYm-I"/>
+  <author>
+   <name>Arnaldo Mangini</name>
+   <uri>https://www.youtube.com/channel/UCoW3NnFgnDATwU9eUOswisg</uri>
+  </author>
+  <published>2025-11-18T17:03:09+00:00</published>
+  <updated>2025-11-18T19:05:33.005490681+00:00</updated>
+ </entry></feed>
+
+2025/11/19 09:05:55 Processing hub notification (1 entries) videos=-VVe-5LYm-I channel=UCoW3NnFgnDATwU9eUOswisg
+
+2025/11/19 09:05:55 Fetching live metadata for 1 video(s): -VVe-5LYm-I
+
+2025/11/19 09:05:55 Requesting watch page for -VVe-5LYm-I: https://www.youtube.com/watch?v=-VVe-5LYm-I
+
+2025/11/19 09:05:56 Fetched metadata for -VVe-5LYm-I: channel=UCoW3NnFgnDATwU9eUOswisg title="It's a Magic Day!🔥" live=true start=2025-11-18 17:06:56 +0000 +0000
+
+2025/11/19 09:05:56 Live stream detected: channel=UCoW3NnFgnDATwU9eUOswisg video=-VVe-5LYm-I title=It's a Magic Day!🔥
+
+2025/11/19 09:05:56 ---- Response for POST /alerts (204 No Content) ----
+
+2025/11/19 09:05:56 ---- Incoming request from 127.0.0.1:56013 ----
+GET /api/streamers HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Connection: keep-alive
+Referer: http://127.0.0.1:8880/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+
+
+2025/11/19 09:05:56 ---- Response for GET /api/streamers (200 OK) ----
+{"streamers":[{"streamer":{"id":"395848a32c2c47c2a231c1b59f2b93d4","alias":"JonSiiN","description":"Hello everyone Welcome to the official JRK Knives channel. Knives have been used since prehistoric times for a plethora of activities from weapons and tools ...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@JRKKnives","channelId":"UCbT1jA8RTEHk7y6rn2vHNGw","hubSecret":"9C_7M8CuW959d3PFQ6fZ-FRaj3yzSvel","hubLeaseDate":"2025-11-18T08:56:59Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCbT1jA8RTEHk7y6rn2vHNGw","callbackUrl":"https://sharpen.live/dev/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"status":{"live":false,"youtube":{"live":false,"startedAt":"0001-01-01T00:00:00Z"}},"createdAt":"2025-11-18T08:56:57.714492Z","updatedAt":"2025-11-18T15:04:25.787204Z"},{"streamer":{"id":"4b8e82c4a16e49e58c1ac2993e7f85e0","alias":"Attorney Melanie Little","description":"Melanie Little is a New York lawyer with over 30 years experience as a trial attorney and litigator in state and federal courts, who is now a legal analyst a...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@AttorneyMelanieLittle","channelId":"UCFSlI8Y3Zdoq5buNW_40AAA","hubSecret":"nlXDE9expkcuWHJ4vXXe3UOjfDRYwRvy","hubLeaseDate":"2025-11-18T10:07:14Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCFSlI8Y3Zdoq5buNW_40AAA","callbackUrl":"https://sharpen.live/dev/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"status":{"live":true,"platforms":["youtube"],"youtube":{"live":true,"videoId":"AwDQP2Xfdo4","startedAt":"2025-11-18T17:35:04Z"}},"createdAt":"2025-11-18T10:07:12.769107Z","updatedAt":"2025-11-18T21:04:18.881601Z"},{"streamer":{"id":"816a93baffdc4102a959dc0875d74657","alias":"Arnaldo Mangini","description":"Arnaldo Mangini, comico, clown, fantasista","firstName":"","lastName":"","email":"","languages":["English","Italian"]},"platforms":{"youtube":{"handle":"@arnaldomangini","channelId":"UCoW3NnFgnDATwU9eUOswisg","hubSecret":"wSduM3o6zSJNs8LvdpuoADBL0b7g4mlT","hubLeaseDate":"2025-11-18T17:22:55Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCoW3NnFgnDATwU9eUOswisg","callbackUrl":"https://sharpen.live/dev/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"status":{"live":true,"platforms":["youtube"],"youtube":{"live":true,"videoId":"-VVe-5LYm-I","startedAt":"2025-11-18T17:06:56Z"}},"createdAt":"2025-11-18T17:22:53.507193Z","updatedAt":"2025-11-18T22:05:56.834437Z"}]}
+
+2025/11/19 09:12:58 ---- Incoming request from 127.0.0.1:56152 ----
+POST /alerts HTTP/1.1
+Host: sharpen.live
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Cache-Control: no-cache,max-age=0
+Content-Length: 948
+Content-Type: application/atom+xml
+From: googlebot(at)googlebot.com
+Link: <https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCFSlI8Y3Zdoq5buNW_40AAA>; rel=self, <http://pubsubhubbub.appspot.com/>; rel=hub
+Pragma: no-cache
+User-Agent: FeedFetcher-Google; (+http://www.google.com/feedfetcher.html)
+Via: 1.1 Caddy
+X-Forwarded-For: 74.125.209.32
+X-Forwarded-Host: sharpen.live
+X-Forwarded-Proto: https
+X-Hub-Signature: sha1=0b2730b60b66660fe5c656f598614208d23c7fa4
+X-Request-Id: {http.request.id}
+
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:yt="http://www.youtube.com/xml/schemas/2015" xmlns="http://www.w3.org/2005/Atom"><link rel="hub" href="https://pubsubhubbub.appspot.com"/><link rel="self" href="https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCFSlI8Y3Zdoq5buNW_40AAA"/><title>YouTube video feed</title><updated>2025-11-18T21:12:46.524855888+00:00</updated><entry>
+  <id>yt:video:AwDQP2Xfdo4</id>
+  <yt:videoId>AwDQP2Xfdo4</yt:videoId>
+  <yt:channelId>UCFSlI8Y3Zdoq5buNW_40AAA</yt:channelId>
+  <title>BREAKING💥KAREN READ IS SUING EVERYBODY! Civil Complaint Filed💥Bang Bang</title>
+  <link rel="alternate" href="https://www.youtube.com/watch?v=AwDQP2Xfdo4"/>
+  <author>
+   <name>Attorney Melanie Little</name>
+   <uri>https://www.youtube.com/channel/UCFSlI8Y3Zdoq5buNW_40AAA</uri>
+  </author>
+  <published>2025-11-18T21:12:44+00:00</published>
+  <updated>2025-11-18T21:12:46.524855888+00:00</updated>
+ </entry></feed>
+
+2025/11/19 09:12:58 Processing hub notification (1 entries) videos=AwDQP2Xfdo4 channel=UCFSlI8Y3Zdoq5buNW_40AAA
+
+2025/11/19 09:12:58 Fetching live metadata for 1 video(s): AwDQP2Xfdo4
+
+2025/11/19 09:12:58 Requesting watch page for AwDQP2Xfdo4: https://www.youtube.com/watch?v=AwDQP2Xfdo4
+
+2025/11/19 09:12:59 Fetched metadata for AwDQP2Xfdo4: channel=UCFSlI8Y3Zdoq5buNW_40AAA title="BREAKING💥KAREN READ IS SUING EVERYBODY! Civil Complaint Filed💥Bang Bang" live=true start=2025-11-18 17:35:04 +0000 +0000
+
+2025/11/19 09:12:59 Live stream detected: channel=UCFSlI8Y3Zdoq5buNW_40AAA video=AwDQP2Xfdo4 title=BREAKING💥KAREN READ IS SUING EVERYBODY! Civil Complaint Filed💥Bang Bang
+
+2025/11/19 09:12:59 ---- Response for POST /alerts (204 No Content) ----
+
+2025/11/19 09:12:59 ---- Incoming request from 127.0.0.1:56154 ----
+GET /api/streamers HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Connection: keep-alive
+Referer: http://127.0.0.1:8880/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+
+
+2025/11/19 09:12:59 ---- Response for GET /api/streamers (200 OK) ----
+{"streamers":[{"streamer":{"id":"395848a32c2c47c2a231c1b59f2b93d4","alias":"JonSiiN","description":"Hello everyone Welcome to the official JRK Knives channel. Knives have been used since prehistoric times for a plethora of activities from weapons and tools ...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@JRKKnives","channelId":"UCbT1jA8RTEHk7y6rn2vHNGw","hubSecret":"9C_7M8CuW959d3PFQ6fZ-FRaj3yzSvel","hubLeaseDate":"2025-11-18T08:56:59Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCbT1jA8RTEHk7y6rn2vHNGw","callbackUrl":"https://sharpen.live/dev/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"status":{"live":false,"youtube":{"live":false,"startedAt":"0001-01-01T00:00:00Z"}},"createdAt":"2025-11-18T08:56:57.714492Z","updatedAt":"2025-11-18T15:04:25.787204Z"},{"streamer":{"id":"4b8e82c4a16e49e58c1ac2993e7f85e0","alias":"Attorney Melanie Little","description":"Melanie Little is a New York lawyer with over 30 years experience as a trial attorney and litigator in state and federal courts, who is now a legal analyst a...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@AttorneyMelanieLittle","channelId":"UCFSlI8Y3Zdoq5buNW_40AAA","hubSecret":"nlXDE9expkcuWHJ4vXXe3UOjfDRYwRvy","hubLeaseDate":"2025-11-18T10:07:14Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCFSlI8Y3Zdoq5buNW_40AAA","callbackUrl":"https://sharpen.live/dev/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"status":{"live":true,"platforms":["youtube"],"youtube":{"live":true,"videoId":"AwDQP2Xfdo4","startedAt":"2025-11-18T17:35:04Z"}},"createdAt":"2025-11-18T10:07:12.769107Z","updatedAt":"2025-11-18T22:12:59.61733Z"},{"streamer":{"id":"816a93baffdc4102a959dc0875d74657","alias":"Arnaldo Mangini","description":"Arnaldo Mangini, comico, clown, fantasista","firstName":"","lastName":"","email":"","languages":["English","Italian"]},"platforms":{"youtube":{"handle":"@arnaldomangini","channelId":"UCoW3NnFgnDATwU9eUOswisg","hubSecret":"wSduM3o6zSJNs8LvdpuoADBL0b7g4mlT","hubLeaseDate":"2025-11-18T17:22:55Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCoW3NnFgnDATwU9eUOswisg","callbackUrl":"https://sharpen.live/dev/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"status":{"live":true,"platforms":["youtube"],"youtube":{"live":true,"videoId":"-VVe-5LYm-I","startedAt":"2025-11-18T17:06:56Z"}},"createdAt":"2025-11-18T17:22:53.507193Z","updatedAt":"2025-11-18T22:05:56.834437Z"}]}
+
+2025/11/19 09:26:15 ---- Incoming request from 127.0.0.1:56375 ----
+POST /alerts HTTP/1.1
+Host: sharpen.live
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Cache-Control: no-cache,max-age=0
+Content-Length: 948
+Content-Type: application/atom+xml
+From: googlebot(at)googlebot.com
+Link: <https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCFSlI8Y3Zdoq5buNW_40AAA>; rel=self, <http://pubsubhubbub.appspot.com/>; rel=hub
+Pragma: no-cache
+User-Agent: FeedFetcher-Google; (+http://www.google.com/feedfetcher.html)
+Via: 1.1 Caddy
+X-Forwarded-For: 66.102.8.101
+X-Forwarded-Host: sharpen.live
+X-Forwarded-Proto: https
+X-Hub-Signature: sha1=321f44285600f480297dc9166d02ad41c05e9df6
+X-Request-Id: {http.request.id}
+
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:yt="http://www.youtube.com/xml/schemas/2015" xmlns="http://www.w3.org/2005/Atom"><link rel="hub" href="https://pubsubhubbub.appspot.com"/><link rel="self" href="https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCFSlI8Y3Zdoq5buNW_40AAA"/><title>YouTube video feed</title><updated>2025-11-18T21:26:00.940927313+00:00</updated><entry>
+  <id>yt:video:AwDQP2Xfdo4</id>
+  <yt:videoId>AwDQP2Xfdo4</yt:videoId>
+  <yt:channelId>UCFSlI8Y3Zdoq5buNW_40AAA</yt:channelId>
+  <title>BREAKING💥KAREN READ IS SUING EVERYBODY! Civil Complaint Filed💥Bang Bang</title>
+  <link rel="alternate" href="https://www.youtube.com/watch?v=AwDQP2Xfdo4"/>
+  <author>
+   <name>Attorney Melanie Little</name>
+   <uri>https://www.youtube.com/channel/UCFSlI8Y3Zdoq5buNW_40AAA</uri>
+  </author>
+  <published>2025-11-18T21:12:44+00:00</published>
+  <updated>2025-11-18T21:26:00.940927313+00:00</updated>
+ </entry></feed>
+
+2025/11/19 09:26:15 Processing hub notification (1 entries) videos=AwDQP2Xfdo4 channel=UCFSlI8Y3Zdoq5buNW_40AAA
+
+2025/11/19 09:26:15 Fetching live metadata for 1 video(s): AwDQP2Xfdo4
+
+2025/11/19 09:26:15 Requesting watch page for AwDQP2Xfdo4: https://www.youtube.com/watch?v=AwDQP2Xfdo4
+
+2025/11/19 09:26:16 Fetched metadata for AwDQP2Xfdo4: channel=UCFSlI8Y3Zdoq5buNW_40AAA title="BREAKING💥KAREN READ IS SUING EVERYBODY! Civil Complaint Filed💥Bang Bang" live=true start=2025-11-18 17:35:04 +0000 +0000
+
+2025/11/19 09:26:16 Live stream detected: channel=UCFSlI8Y3Zdoq5buNW_40AAA video=AwDQP2Xfdo4 title=BREAKING💥KAREN READ IS SUING EVERYBODY! Civil Complaint Filed💥Bang Bang
+
+2025/11/19 09:26:16 ---- Response for POST /alerts (204 No Content) ----
+
+2025/11/19 09:26:16 ---- Incoming request from 127.0.0.1:56378 ----
+GET /api/streamers HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Connection: keep-alive
+Referer: http://127.0.0.1:8880/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+
+
+2025/11/19 09:26:16 ---- Response for GET /api/streamers (200 OK) ----
+{"streamers":[{"streamer":{"id":"395848a32c2c47c2a231c1b59f2b93d4","alias":"JonSiiN","description":"Hello everyone Welcome to the official JRK Knives channel. Knives have been used since prehistoric times for a plethora of activities from weapons and tools ...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@JRKKnives","channelId":"UCbT1jA8RTEHk7y6rn2vHNGw","hubSecret":"9C_7M8CuW959d3PFQ6fZ-FRaj3yzSvel","hubLeaseDate":"2025-11-18T08:56:59Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCbT1jA8RTEHk7y6rn2vHNGw","callbackUrl":"https://sharpen.live/dev/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"status":{"live":false,"youtube":{"live":false,"startedAt":"0001-01-01T00:00:00Z"}},"createdAt":"2025-11-18T08:56:57.714492Z","updatedAt":"2025-11-18T15:04:25.787204Z"},{"streamer":{"id":"4b8e82c4a16e49e58c1ac2993e7f85e0","alias":"Attorney Melanie Little","description":"Melanie Little is a New York lawyer with over 30 years experience as a trial attorney and litigator in state and federal courts, who is now a legal analyst a...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@AttorneyMelanieLittle","channelId":"UCFSlI8Y3Zdoq5buNW_40AAA","hubSecret":"nlXDE9expkcuWHJ4vXXe3UOjfDRYwRvy","hubLeaseDate":"2025-11-18T10:07:14Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCFSlI8Y3Zdoq5buNW_40AAA","callbackUrl":"https://sharpen.live/dev/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"status":{"live":true,"platforms":["youtube"],"youtube":{"live":true,"videoId":"AwDQP2Xfdo4","startedAt":"2025-11-18T17:35:04Z"}},"createdAt":"2025-11-18T10:07:12.769107Z","updatedAt":"2025-11-18T22:26:16.521506Z"},{"streamer":{"id":"816a93baffdc4102a959dc0875d74657","alias":"Arnaldo Mangini","description":"Arnaldo Mangini, comico, clown, fantasista","firstName":"","lastName":"","email":"","languages":["English","Italian"]},"platforms":{"youtube":{"handle":"@arnaldomangini","channelId":"UCoW3NnFgnDATwU9eUOswisg","hubSecret":"wSduM3o6zSJNs8LvdpuoADBL0b7g4mlT","hubLeaseDate":"2025-11-18T17:22:55Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCoW3NnFgnDATwU9eUOswisg","callbackUrl":"https://sharpen.live/dev/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"status":{"live":true,"platforms":["youtube"],"youtube":{"live":true,"videoId":"-VVe-5LYm-I","startedAt":"2025-11-18T17:06:56Z"}},"createdAt":"2025-11-18T17:22:53.507193Z","updatedAt":"2025-11-18T22:05:56.834437Z"}]}
+
+2025/11/19 09:29:21 ---- Incoming request from 127.0.0.1:56447 ----
+POST /alerts HTTP/1.1
+Host: sharpen.live
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Cache-Control: no-cache,max-age=0
+Content-Length: 978
+Content-Type: application/atom+xml
+From: googlebot(at)googlebot.com
+Link: <https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCFSlI8Y3Zdoq5buNW_40AAA>; rel=self, <http://pubsubhubbub.appspot.com/>; rel=hub
+Pragma: no-cache
+User-Agent: FeedFetcher-Google; (+http://www.google.com/feedfetcher.html)
+Via: 1.1 Caddy
+X-Forwarded-For: 142.250.32.2
+X-Forwarded-Host: sharpen.live
+X-Forwarded-Proto: https
+X-Hub-Signature: sha1=7aa1108864d2e60e3c4267e80542ce8d8b8271f7
+X-Request-Id: {http.request.id}
+
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:yt="http://www.youtube.com/xml/schemas/2015" xmlns="http://www.w3.org/2005/Atom"><link rel="hub" href="https://pubsubhubbub.appspot.com"/><link rel="self" href="https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCFSlI8Y3Zdoq5buNW_40AAA"/><title>YouTube video feed</title><updated>2025-11-18T21:29:06.72929409+00:00</updated><entry>
+  <id>yt:video:S_WSAqLzgtg</id>
+  <yt:videoId>S_WSAqLzgtg</yt:videoId>
+  <yt:channelId>UCFSlI8Y3Zdoq5buNW_40AAA</yt:channelId>
+  <title>LIVE💥BRIAN WALSHE Pleads Guilty to 2 Charges💥Jury Selection Proceeds on 1st Degree M💥Justice for Ana</title>
+  <link rel="alternate" href="https://www.youtube.com/watch?v=S_WSAqLzgtg"/>
+  <author>
+   <name>Attorney Melanie Little</name>
+   <uri>https://www.youtube.com/channel/UCFSlI8Y3Zdoq5buNW_40AAA</uri>
+  </author>
+  <published>2025-11-18T16:50:25+00:00</published>
+  <updated>2025-11-18T21:29:06.72929409+00:00</updated>
+ </entry></feed>
+
+2025/11/19 09:29:21 Processing hub notification (1 entries) videos=S_WSAqLzgtg channel=UCFSlI8Y3Zdoq5buNW_40AAA
+
+2025/11/19 09:29:21 Fetching live metadata for 1 video(s): S_WSAqLzgtg
+
+2025/11/19 09:29:21 Requesting watch page for S_WSAqLzgtg: https://www.youtube.com/watch?v=S_WSAqLzgtg
+
+2025/11/19 09:29:22 Fetched metadata for S_WSAqLzgtg: channel=UCFSlI8Y3Zdoq5buNW_40AAA title="LIVE💥BRIAN WALSHE Pleads Guilty to 2 Charges💥Jury Selection Proceeds on 1st Degree M💥Justice for Ana" live=true start=2025-11-18 14:22:13 +0000 +0000
+
+2025/11/19 09:29:22 Live stream detected: channel=UCFSlI8Y3Zdoq5buNW_40AAA video=S_WSAqLzgtg title=LIVE💥BRIAN WALSHE Pleads Guilty to 2 Charges💥Jury Selection Proceeds on 1st Degree M💥Justice for Ana
+
+2025/11/19 09:29:22 ---- Response for POST /alerts (204 No Content) ----
+
+2025/11/19 09:29:22 ---- Incoming request from 127.0.0.1:56378 ----
+GET /api/streamers HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Connection: keep-alive
+Referer: http://127.0.0.1:8880/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+
+
+2025/11/19 09:29:22 ---- Response for GET /api/streamers (200 OK) ----
+{"streamers":[{"streamer":{"id":"395848a32c2c47c2a231c1b59f2b93d4","alias":"JonSiiN","description":"Hello everyone Welcome to the official JRK Knives channel. Knives have been used since prehistoric times for a plethora of activities from weapons and tools ...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@JRKKnives","channelId":"UCbT1jA8RTEHk7y6rn2vHNGw","hubSecret":"9C_7M8CuW959d3PFQ6fZ-FRaj3yzSvel","hubLeaseDate":"2025-11-18T08:56:59Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCbT1jA8RTEHk7y6rn2vHNGw","callbackUrl":"https://sharpen.live/dev/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"status":{"live":false,"youtube":{"live":false,"startedAt":"0001-01-01T00:00:00Z"}},"createdAt":"2025-11-18T08:56:57.714492Z","updatedAt":"2025-11-18T15:04:25.787204Z"},{"streamer":{"id":"4b8e82c4a16e49e58c1ac2993e7f85e0","alias":"Attorney Melanie Little","description":"Melanie Little is a New York lawyer with over 30 years experience as a trial attorney and litigator in state and federal courts, who is now a legal analyst a...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@AttorneyMelanieLittle","channelId":"UCFSlI8Y3Zdoq5buNW_40AAA","hubSecret":"nlXDE9expkcuWHJ4vXXe3UOjfDRYwRvy","hubLeaseDate":"2025-11-18T10:07:14Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCFSlI8Y3Zdoq5buNW_40AAA","callbackUrl":"https://sharpen.live/dev/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"status":{"live":true,"platforms":["youtube"],"youtube":{"live":true,"videoId":"S_WSAqLzgtg","startedAt":"2025-11-18T14:22:13Z"}},"createdAt":"2025-11-18T10:07:12.769107Z","updatedAt":"2025-11-18T22:29:22.23723Z"},{"streamer":{"id":"816a93baffdc4102a959dc0875d74657","alias":"Arnaldo Mangini","description":"Arnaldo Mangini, comico, clown, fantasista","firstName":"","lastName":"","email":"","languages":["English","Italian"]},"platforms":{"youtube":{"handle":"@arnaldomangini","channelId":"UCoW3NnFgnDATwU9eUOswisg","hubSecret":"wSduM3o6zSJNs8LvdpuoADBL0b7g4mlT","hubLeaseDate":"2025-11-18T17:22:55Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCoW3NnFgnDATwU9eUOswisg","callbackUrl":"https://sharpen.live/dev/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"status":{"live":true,"platforms":["youtube"],"youtube":{"live":true,"videoId":"-VVe-5LYm-I","startedAt":"2025-11-18T17:06:56Z"}},"createdAt":"2025-11-18T17:22:53.507193Z","updatedAt":"2025-11-18T22:05:56.834437Z"}]}
+
+2025/11/19 09:30:25 ---- Incoming request from 127.0.0.1:56447 ----
+POST /alerts HTTP/1.1
+Host: sharpen.live
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Cache-Control: no-cache,max-age=0
+Content-Length: 980
+Content-Type: application/atom+xml
+From: googlebot(at)googlebot.com
+Link: <https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCFSlI8Y3Zdoq5buNW_40AAA>; rel=self, <http://pubsubhubbub.appspot.com/>; rel=hub
+Pragma: no-cache
+User-Agent: FeedFetcher-Google; (+http://www.google.com/feedfetcher.html)
+Via: 1.1 Caddy
+X-Forwarded-For: 142.250.32.3
+X-Forwarded-Host: sharpen.live
+X-Forwarded-Proto: https
+X-Hub-Signature: sha1=b834a68fa0d7cfe1be7b6454c2b1ad409aea37fe
+X-Request-Id: {http.request.id}
+
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:yt="http://www.youtube.com/xml/schemas/2015" xmlns="http://www.w3.org/2005/Atom"><link rel="hub" href="https://pubsubhubbub.appspot.com"/><link rel="self" href="https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCFSlI8Y3Zdoq5buNW_40AAA"/><title>YouTube video feed</title><updated>2025-11-18T21:30:10.901385969+00:00</updated><entry>
+  <id>yt:video:S_WSAqLzgtg</id>
+  <yt:videoId>S_WSAqLzgtg</yt:videoId>
+  <yt:channelId>UCFSlI8Y3Zdoq5buNW_40AAA</yt:channelId>
+  <title>LIVE💥BRIAN WALSHE Pleads Guilty to 2 Charges💥Jury Selection Proceeds on 1st Degree M💥Justice for Ana</title>
+  <link rel="alternate" href="https://www.youtube.com/watch?v=S_WSAqLzgtg"/>
+  <author>
+   <name>Attorney Melanie Little</name>
+   <uri>https://www.youtube.com/channel/UCFSlI8Y3Zdoq5buNW_40AAA</uri>
+  </author>
+  <published>2025-11-18T16:50:25+00:00</published>
+  <updated>2025-11-18T21:30:10.901385969+00:00</updated>
+ </entry></feed>
+
+2025/11/19 09:30:25 Processing hub notification (1 entries) videos=S_WSAqLzgtg channel=UCFSlI8Y3Zdoq5buNW_40AAA
+
+2025/11/19 09:30:25 Fetching live metadata for 1 video(s): S_WSAqLzgtg
+
+2025/11/19 09:30:25 Requesting watch page for S_WSAqLzgtg: https://www.youtube.com/watch?v=S_WSAqLzgtg
+
+2025/11/19 09:30:26 Fetched metadata for S_WSAqLzgtg: channel=UCFSlI8Y3Zdoq5buNW_40AAA title="LIVE💥BRIAN WALSHE Pleads Guilty to 2 Charges💥Jury Selection Proceeds on 1st Degree M💥Justice for Ana" live=true start=2025-11-18 14:22:13 +0000 +0000
+
+2025/11/19 09:30:26 Live stream detected: channel=UCFSlI8Y3Zdoq5buNW_40AAA video=S_WSAqLzgtg title=LIVE💥BRIAN WALSHE Pleads Guilty to 2 Charges💥Jury Selection Proceeds on 1st Degree M💥Justice for Ana
+
+2025/11/19 09:30:26 ---- Response for POST /alerts (204 No Content) ----
+
+2025/11/19 09:30:26 ---- Incoming request from 127.0.0.1:56378 ----
+GET /api/streamers HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Connection: keep-alive
+Referer: http://127.0.0.1:8880/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+
+
+2025/11/19 09:30:26 ---- Response for GET /api/streamers (200 OK) ----
+{"streamers":[{"streamer":{"id":"395848a32c2c47c2a231c1b59f2b93d4","alias":"JonSiiN","description":"Hello everyone Welcome to the official JRK Knives channel. Knives have been used since prehistoric times for a plethora of activities from weapons and tools ...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@JRKKnives","channelId":"UCbT1jA8RTEHk7y6rn2vHNGw","hubSecret":"9C_7M8CuW959d3PFQ6fZ-FRaj3yzSvel","hubLeaseDate":"2025-11-18T08:56:59Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCbT1jA8RTEHk7y6rn2vHNGw","callbackUrl":"https://sharpen.live/dev/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"status":{"live":false,"youtube":{"live":false,"startedAt":"0001-01-01T00:00:00Z"}},"createdAt":"2025-11-18T08:56:57.714492Z","updatedAt":"2025-11-18T15:04:25.787204Z"},{"streamer":{"id":"4b8e82c4a16e49e58c1ac2993e7f85e0","alias":"Attorney Melanie Little","description":"Melanie Little is a New York lawyer with over 30 years experience as a trial attorney and litigator in state and federal courts, who is now a legal analyst a...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@AttorneyMelanieLittle","channelId":"UCFSlI8Y3Zdoq5buNW_40AAA","hubSecret":"nlXDE9expkcuWHJ4vXXe3UOjfDRYwRvy","hubLeaseDate":"2025-11-18T10:07:14Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCFSlI8Y3Zdoq5buNW_40AAA","callbackUrl":"https://sharpen.live/dev/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"status":{"live":true,"platforms":["youtube"],"youtube":{"live":true,"videoId":"S_WSAqLzgtg","startedAt":"2025-11-18T14:22:13Z"}},"createdAt":"2025-11-18T10:07:12.769107Z","updatedAt":"2025-11-18T22:30:26.63074Z"},{"streamer":{"id":"816a93baffdc4102a959dc0875d74657","alias":"Arnaldo Mangini","description":"Arnaldo Mangini, comico, clown, fantasista","firstName":"","lastName":"","email":"","languages":["English","Italian"]},"platforms":{"youtube":{"handle":"@arnaldomangini","channelId":"UCoW3NnFgnDATwU9eUOswisg","hubSecret":"wSduM3o6zSJNs8LvdpuoADBL0b7g4mlT","hubLeaseDate":"2025-11-18T17:22:55Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCoW3NnFgnDATwU9eUOswisg","callbackUrl":"https://sharpen.live/dev/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"status":{"live":true,"platforms":["youtube"],"youtube":{"live":true,"videoId":"-VVe-5LYm-I","startedAt":"2025-11-18T17:06:56Z"}},"createdAt":"2025-11-18T17:22:53.507193Z","updatedAt":"2025-11-18T22:05:56.834437Z"}]}
+
+2025/11/19 09:52:18 ---- Incoming request from 127.0.0.1:56834 ----
+POST /alerts HTTP/1.1
+Host: sharpen.live
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Cache-Control: no-cache,max-age=0
+Content-Length: 880
+Content-Type: application/atom+xml
+From: googlebot(at)googlebot.com
+Link: <https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCoW3NnFgnDATwU9eUOswisg>; rel=self, <http://pubsubhubbub.appspot.com/>; rel=hub
+Pragma: no-cache
+User-Agent: FeedFetcher-Google; (+http://www.google.com/feedfetcher.html)
+Via: 1.1 Caddy
+X-Forwarded-For: 66.102.6.233
+X-Forwarded-Host: sharpen.live
+X-Forwarded-Proto: https
+X-Hub-Signature: sha1=e19425a455e72541da4d821b37401e59a3f8b8e0
+X-Request-Id: {http.request.id}
+
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:yt="http://www.youtube.com/xml/schemas/2015" xmlns="http://www.w3.org/2005/Atom"><link rel="hub" href="https://pubsubhubbub.appspot.com"/><link rel="self" href="https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCoW3NnFgnDATwU9eUOswisg"/><title>YouTube video feed</title><updated>2025-11-18T19:51:58.347121689+00:00</updated><entry>
+  <id>yt:video:EuVbanJs0wM</id>
+  <yt:videoId>EuVbanJs0wM</yt:videoId>
+  <yt:channelId>UCoW3NnFgnDATwU9eUOswisg</yt:channelId>
+  <title>It's a Magic Day!</title>
+  <link rel="alternate" href="https://www.youtube.com/watch?v=EuVbanJs0wM"/>
+  <author>
+   <name>Arnaldo Mangini</name>
+   <uri>https://www.youtube.com/channel/UCoW3NnFgnDATwU9eUOswisg</uri>
+  </author>
+  <published>2025-11-18T19:51:55+00:00</published>
+  <updated>2025-11-18T19:51:58.347121689+00:00</updated>
+ </entry></feed>
+
+2025/11/19 09:52:18 Processing hub notification (1 entries) videos=EuVbanJs0wM channel=UCoW3NnFgnDATwU9eUOswisg
+
+2025/11/19 09:52:18 Fetching live metadata for 1 video(s): EuVbanJs0wM
+
+2025/11/19 09:52:18 Requesting watch page for EuVbanJs0wM: https://www.youtube.com/watch?v=EuVbanJs0wM
+
+2025/11/19 09:52:19 Fetched metadata for EuVbanJs0wM: channel=UCoW3NnFgnDATwU9eUOswisg title="It's a Magic Day!" live=true start=2025-11-18 17:06:56 +0000 +0000
+
+2025/11/19 09:52:19 Live stream detected: channel=UCoW3NnFgnDATwU9eUOswisg video=EuVbanJs0wM title=It's a Magic Day!
+
+2025/11/19 09:52:19 ---- Response for POST /alerts (204 No Content) ----
+
+2025/11/19 09:52:19 ---- Incoming request from 127.0.0.1:56836 ----
+GET /api/streamers HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Connection: keep-alive
+Referer: http://127.0.0.1:8880/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+
+
+2025/11/19 09:52:19 ---- Response for GET /api/streamers (200 OK) ----
+{"streamers":[{"streamer":{"id":"395848a32c2c47c2a231c1b59f2b93d4","alias":"JonSiiN","description":"Hello everyone Welcome to the official JRK Knives channel. Knives have been used since prehistoric times for a plethora of activities from weapons and tools ...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@JRKKnives","channelId":"UCbT1jA8RTEHk7y6rn2vHNGw","hubSecret":"9C_7M8CuW959d3PFQ6fZ-FRaj3yzSvel","hubLeaseDate":"2025-11-18T08:56:59Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCbT1jA8RTEHk7y6rn2vHNGw","callbackUrl":"https://sharpen.live/dev/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"status":{"live":false,"youtube":{"live":false,"startedAt":"0001-01-01T00:00:00Z"}},"createdAt":"2025-11-18T08:56:57.714492Z","updatedAt":"2025-11-18T15:04:25.787204Z"},{"streamer":{"id":"4b8e82c4a16e49e58c1ac2993e7f85e0","alias":"Attorney Melanie Little","description":"Melanie Little is a New York lawyer with over 30 years experience as a trial attorney and litigator in state and federal courts, who is now a legal analyst a...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@AttorneyMelanieLittle","channelId":"UCFSlI8Y3Zdoq5buNW_40AAA","hubSecret":"nlXDE9expkcuWHJ4vXXe3UOjfDRYwRvy","hubLeaseDate":"2025-11-18T10:07:14Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCFSlI8Y3Zdoq5buNW_40AAA","callbackUrl":"https://sharpen.live/dev/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"status":{"live":true,"platforms":["youtube"],"youtube":{"live":true,"videoId":"S_WSAqLzgtg","startedAt":"2025-11-18T14:22:13Z"}},"createdAt":"2025-11-18T10:07:12.769107Z","updatedAt":"2025-11-18T22:30:26.63074Z"},{"streamer":{"id":"816a93baffdc4102a959dc0875d74657","alias":"Arnaldo Mangini","description":"Arnaldo Mangini, comico, clown, fantasista","firstName":"","lastName":"","email":"","languages":["English","Italian"]},"platforms":{"youtube":{"handle":"@arnaldomangini","channelId":"UCoW3NnFgnDATwU9eUOswisg","hubSecret":"wSduM3o6zSJNs8LvdpuoADBL0b7g4mlT","hubLeaseDate":"2025-11-18T17:22:55Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCoW3NnFgnDATwU9eUOswisg","callbackUrl":"https://sharpen.live/dev/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"status":{"live":true,"platforms":["youtube"],"youtube":{"live":true,"videoId":"EuVbanJs0wM","startedAt":"2025-11-18T17:06:56Z"}},"createdAt":"2025-11-18T17:22:53.507193Z","updatedAt":"2025-11-18T22:52:19.506509Z"}]}
+
+2025/11/19 09:52:22 ---- Incoming request from 127.0.0.1:56834 ----
+POST /alerts HTTP/1.1
+Host: sharpen.live
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Cache-Control: no-cache,max-age=0
+Content-Length: 880
+Content-Type: application/atom+xml
+From: googlebot(at)googlebot.com
+Link: <https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCoW3NnFgnDATwU9eUOswisg>; rel=self, <http://pubsubhubbub.appspot.com/>; rel=hub
+Pragma: no-cache
+User-Agent: FeedFetcher-Google; (+http://www.google.com/feedfetcher.html)
+Via: 1.1 Caddy
+X-Forwarded-For: 66.102.6.233
+X-Forwarded-Host: sharpen.live
+X-Forwarded-Proto: https
+X-Hub-Signature: sha1=db3cdcb016411eb665a8260ef17d78d3329285d8
+X-Request-Id: {http.request.id}
+
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:yt="http://www.youtube.com/xml/schemas/2015" xmlns="http://www.w3.org/2005/Atom"><link rel="hub" href="https://pubsubhubbub.appspot.com"/><link rel="self" href="https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCoW3NnFgnDATwU9eUOswisg"/><title>YouTube video feed</title><updated>2025-11-18T19:52:00.752767391+00:00</updated><entry>
+  <id>yt:video:EuVbanJs0wM</id>
+  <yt:videoId>EuVbanJs0wM</yt:videoId>
+  <yt:channelId>UCoW3NnFgnDATwU9eUOswisg</yt:channelId>
+  <title>It's a Magic Day!</title>
+  <link rel="alternate" href="https://www.youtube.com/watch?v=EuVbanJs0wM"/>
+  <author>
+   <name>Arnaldo Mangini</name>
+   <uri>https://www.youtube.com/channel/UCoW3NnFgnDATwU9eUOswisg</uri>
+  </author>
+  <published>2025-11-18T19:51:55+00:00</published>
+  <updated>2025-11-18T19:52:00.752767391+00:00</updated>
+ </entry></feed>
+
+2025/11/19 09:52:22 Processing hub notification (1 entries) videos=EuVbanJs0wM channel=UCoW3NnFgnDATwU9eUOswisg
+
+2025/11/19 09:52:22 Fetching live metadata for 1 video(s): EuVbanJs0wM
+
+2025/11/19 09:52:22 Requesting watch page for EuVbanJs0wM: https://www.youtube.com/watch?v=EuVbanJs0wM
+
+2025/11/19 09:52:23 Fetched metadata for EuVbanJs0wM: channel=UCoW3NnFgnDATwU9eUOswisg title="It's a Magic Day!" live=true start=2025-11-18 17:06:56 +0000 +0000
+
+2025/11/19 09:52:23 Live stream detected: channel=UCoW3NnFgnDATwU9eUOswisg video=EuVbanJs0wM title=It's a Magic Day!
+
+2025/11/19 09:52:23 ---- Response for POST /alerts (204 No Content) ----
+
+2025/11/19 09:52:23 ---- Incoming request from 127.0.0.1:56836 ----
+GET /api/streamers HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Connection: keep-alive
+Referer: http://127.0.0.1:8880/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+
+
+2025/11/19 09:52:23 ---- Response for GET /api/streamers (200 OK) ----
+{"streamers":[{"streamer":{"id":"395848a32c2c47c2a231c1b59f2b93d4","alias":"JonSiiN","description":"Hello everyone Welcome to the official JRK Knives channel. Knives have been used since prehistoric times for a plethora of activities from weapons and tools ...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@JRKKnives","channelId":"UCbT1jA8RTEHk7y6rn2vHNGw","hubSecret":"9C_7M8CuW959d3PFQ6fZ-FRaj3yzSvel","hubLeaseDate":"2025-11-18T08:56:59Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCbT1jA8RTEHk7y6rn2vHNGw","callbackUrl":"https://sharpen.live/dev/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"status":{"live":false,"youtube":{"live":false,"startedAt":"0001-01-01T00:00:00Z"}},"createdAt":"2025-11-18T08:56:57.714492Z","updatedAt":"2025-11-18T15:04:25.787204Z"},{"streamer":{"id":"4b8e82c4a16e49e58c1ac2993e7f85e0","alias":"Attorney Melanie Little","description":"Melanie Little is a New York lawyer with over 30 years experience as a trial attorney and litigator in state and federal courts, who is now a legal analyst a...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@AttorneyMelanieLittle","channelId":"UCFSlI8Y3Zdoq5buNW_40AAA","hubSecret":"nlXDE9expkcuWHJ4vXXe3UOjfDRYwRvy","hubLeaseDate":"2025-11-18T10:07:14Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCFSlI8Y3Zdoq5buNW_40AAA","callbackUrl":"https://sharpen.live/dev/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"status":{"live":true,"platforms":["youtube"],"youtube":{"live":true,"videoId":"S_WSAqLzgtg","startedAt":"2025-11-18T14:22:13Z"}},"createdAt":"2025-11-18T10:07:12.769107Z","updatedAt":"2025-11-18T22:30:26.63074Z"},{"streamer":{"id":"816a93baffdc4102a959dc0875d74657","alias":"Arnaldo Mangini","description":"Arnaldo Mangini, comico, clown, fantasista","firstName":"","lastName":"","email":"","languages":["English","Italian"]},"platforms":{"youtube":{"handle":"@arnaldomangini","channelId":"UCoW3NnFgnDATwU9eUOswisg","hubSecret":"wSduM3o6zSJNs8LvdpuoADBL0b7g4mlT","hubLeaseDate":"2025-11-18T17:22:55Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCoW3NnFgnDATwU9eUOswisg","callbackUrl":"https://sharpen.live/dev/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"status":{"live":true,"platforms":["youtube"],"youtube":{"live":true,"videoId":"EuVbanJs0wM","startedAt":"2025-11-18T17:06:56Z"}},"createdAt":"2025-11-18T17:22:53.507193Z","updatedAt":"2025-11-18T22:52:23.299481Z"}]}
+
+2025/11/19 12:14:42 ---- Incoming request from 127.0.0.1:57201 ----
+POST /alerts HTTP/1.1
+Host: sharpen.live
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Cache-Control: no-cache,max-age=0
+Content-Length: 884
+Content-Type: application/atom+xml
+From: googlebot(at)googlebot.com
+Link: <https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCoW3NnFgnDATwU9eUOswisg>; rel=self, <http://pubsubhubbub.appspot.com/>; rel=hub
+Pragma: no-cache
+User-Agent: FeedFetcher-Google; (+http://www.google.com/feedfetcher.html)
+Via: 1.1 Caddy
+X-Forwarded-For: 66.102.8.102
+X-Forwarded-Host: sharpen.live
+X-Forwarded-Proto: https
+X-Hub-Signature: sha1=72888e44b4c90c6dad1a7ec4a747040c3a635264
+X-Request-Id: {http.request.id}
+
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:yt="http://www.youtube.com/xml/schemas/2015" xmlns="http://www.w3.org/2005/Atom"><link rel="hub" href="https://pubsubhubbub.appspot.com"/><link rel="self" href="https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCoW3NnFgnDATwU9eUOswisg"/><title>YouTube video feed</title><updated>2025-11-19T01:12:22.644616984+00:00</updated><entry>
+  <id>yt:video:EK_s3VAY_WE</id>
+  <yt:videoId>EK_s3VAY_WE</yt:videoId>
+  <yt:channelId>UCoW3NnFgnDATwU9eUOswisg</yt:channelId>
+  <title>It's a Magic Day!🔥</title>
+  <link rel="alternate" href="https://www.youtube.com/watch?v=EK_s3VAY_WE"/>
+  <author>
+   <name>Arnaldo Mangini</name>
+   <uri>https://www.youtube.com/channel/UCoW3NnFgnDATwU9eUOswisg</uri>
+  </author>
+  <published>2025-11-19T01:12:20+00:00</published>
+  <updated>2025-11-19T01:12:22.644616984+00:00</updated>
+ </entry></feed>
+
+2025/11/19 12:14:42 Processing hub notification (1 entries) videos=EK_s3VAY_WE channel=UCoW3NnFgnDATwU9eUOswisg
+
+2025/11/19 12:14:42 Fetching live metadata for 1 video(s): EK_s3VAY_WE
+
+2025/11/19 12:14:42 Requesting watch page for EK_s3VAY_WE: https://www.youtube.com/watch?v=EK_s3VAY_WE
+
+2025/11/19 12:14:42 Fetch for video EK_s3VAY_WE failed: Get "https://www.youtube.com/watch?v=EK_s3VAY_WE": context canceled
+
+2025/11/19 12:14:42 failed to fetch live metadata for videos EK_s3VAY_WE: fetch EK_s3VAY_WE: Get "https://www.youtube.com/watch?v=EK_s3VAY_WE": context canceled
+
+2025/11/19 12:14:42 ---- Response for POST /alerts (202 Accepted) ----
+
+2025/11/19 13:13:10 ---- Incoming request from 127.0.0.1:57326 ----
+POST /alerts HTTP/1.1
+Host: sharpen.live
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Cache-Control: no-cache,max-age=0
+Content-Length: 884
+Content-Type: application/atom+xml
+From: googlebot(at)googlebot.com
+Link: <https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCoW3NnFgnDATwU9eUOswisg>; rel=self, <http://pubsubhubbub.appspot.com/>; rel=hub
+Pragma: no-cache
+User-Agent: FeedFetcher-Google; (+http://www.google.com/feedfetcher.html)
+Via: 1.1 Caddy
+X-Forwarded-For: 66.102.6.234
+X-Forwarded-Host: sharpen.live
+X-Forwarded-Proto: https
+X-Hub-Signature: sha1=72888e44b4c90c6dad1a7ec4a747040c3a635264
+X-Request-Id: {http.request.id}
+
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:yt="http://www.youtube.com/xml/schemas/2015" xmlns="http://www.w3.org/2005/Atom"><link rel="hub" href="https://pubsubhubbub.appspot.com"/><link rel="self" href="https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCoW3NnFgnDATwU9eUOswisg"/><title>YouTube video feed</title><updated>2025-11-19T01:12:22.644616984+00:00</updated><entry>
+  <id>yt:video:EK_s3VAY_WE</id>
+  <yt:videoId>EK_s3VAY_WE</yt:videoId>
+  <yt:channelId>UCoW3NnFgnDATwU9eUOswisg</yt:channelId>
+  <title>It's a Magic Day!🔥</title>
+  <link rel="alternate" href="https://www.youtube.com/watch?v=EK_s3VAY_WE"/>
+  <author>
+   <name>Arnaldo Mangini</name>
+   <uri>https://www.youtube.com/channel/UCoW3NnFgnDATwU9eUOswisg</uri>
+  </author>
+  <published>2025-11-19T01:12:20+00:00</published>
+  <updated>2025-11-19T01:12:22.644616984+00:00</updated>
+ </entry></feed>
+
+2025/11/19 13:13:10 Processing hub notification (1 entries) videos=EK_s3VAY_WE channel=UCoW3NnFgnDATwU9eUOswisg
+
+2025/11/19 13:13:10 Fetching live metadata for 1 video(s): EK_s3VAY_WE
+
+2025/11/19 13:13:10 Requesting watch page for EK_s3VAY_WE: https://www.youtube.com/watch?v=EK_s3VAY_WE
+
+2025/11/19 13:13:11 Fetch for video EK_s3VAY_WE failed: Get "https://www.youtube.com/watch?v=EK_s3VAY_WE": context canceled
+
+2025/11/19 13:13:11 failed to fetch live metadata for videos EK_s3VAY_WE: fetch EK_s3VAY_WE: Get "https://www.youtube.com/watch?v=EK_s3VAY_WE": context canceled
+
+2025/11/19 13:13:11 ---- Response for POST /alerts (202 Accepted) ----
+
+2025/11/19 14:15:12 ---- Incoming request from 127.0.0.1:57471 ----
+POST /alerts HTTP/1.1
+Host: sharpen.live
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Cache-Control: no-cache,max-age=0
+Content-Length: 971
+Content-Type: application/atom+xml
+From: googlebot(at)googlebot.com
+Link: <https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCFSlI8Y3Zdoq5buNW_40AAA>; rel=self, <http://pubsubhubbub.appspot.com/>; rel=hub
+Pragma: no-cache
+User-Agent: FeedFetcher-Google; (+http://www.google.com/feedfetcher.html)
+Via: 1.1 Caddy
+X-Forwarded-For: 74.125.209.34
+X-Forwarded-Host: sharpen.live
+X-Forwarded-Proto: https
+X-Hub-Signature: sha1=6aa639c171abb75a232dff4a1fa93239a2b9713a
+X-Request-Id: {http.request.id}
+
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:yt="http://www.youtube.com/xml/schemas/2015" xmlns="http://www.w3.org/2005/Atom"><link rel="hub" href="https://pubsubhubbub.appspot.com"/><link rel="self" href="https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCFSlI8Y3Zdoq5buNW_40AAA"/><title>YouTube video feed</title><updated>2025-11-19T02:15:00.166173901+00:00</updated><entry>
+  <id>yt:video:P4ABIOUhHMY</id>
+  <yt:videoId>P4ABIOUhHMY</yt:videoId>
+  <yt:channelId>UCFSlI8Y3Zdoq5buNW_40AAA</yt:channelId>
+  <title>MA v Aidan Kearney aka Turtleboy💥Bederow Filing Exposes MORE Brady Violations...Cosgrove, hello??</title>
+  <link rel="alternate" href="https://www.youtube.com/watch?v=P4ABIOUhHMY"/>
+  <author>
+   <name>Attorney Melanie Little</name>
+   <uri>https://www.youtube.com/channel/UCFSlI8Y3Zdoq5buNW_40AAA</uri>
+  </author>
+  <published>2025-11-19T02:14:57+00:00</published>
+  <updated>2025-11-19T02:15:00.166173901+00:00</updated>
+ </entry></feed>
+
+2025/11/19 14:15:12 Processing hub notification (1 entries) videos=P4ABIOUhHMY channel=UCFSlI8Y3Zdoq5buNW_40AAA
+
+2025/11/19 14:15:12 Fetching live metadata for 1 video(s): P4ABIOUhHMY
+
+2025/11/19 14:15:12 Requesting watch page for P4ABIOUhHMY: https://www.youtube.com/watch?v=P4ABIOUhHMY
+
+2025/11/19 14:15:13 Fetched metadata for P4ABIOUhHMY: channel=UCFSlI8Y3Zdoq5buNW_40AAA title="MA v Aidan Kearney aka Turtleboy💥Bederow Filing Exposes MORE Brady Violations...Cosgrove, hello??" live=true start=2025-11-19 15:00:00 +0000 +0000
+
+2025/11/19 14:15:13 Live stream detected: channel=UCFSlI8Y3Zdoq5buNW_40AAA video=P4ABIOUhHMY title=MA v Aidan Kearney aka Turtleboy💥Bederow Filing Exposes MORE Brady Violations...Cosgrove, hello??
+
+2025/11/19 14:15:13 ---- Response for POST /alerts (204 No Content) ----
+
+2025/11/19 14:15:13 ---- Incoming request from 127.0.0.1:57473 ----
+GET /api/streamers HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Connection: keep-alive
+Referer: http://127.0.0.1:8880/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+
+
+2025/11/19 14:15:13 ---- Response for GET /api/streamers (200 OK) ----
+{"streamers":[{"streamer":{"id":"395848a32c2c47c2a231c1b59f2b93d4","alias":"JonSiiN","description":"Hello everyone Welcome to the official JRK Knives channel. Knives have been used since prehistoric times for a plethora of activities from weapons and tools ...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@JRKKnives","channelId":"UCbT1jA8RTEHk7y6rn2vHNGw","hubSecret":"9C_7M8CuW959d3PFQ6fZ-FRaj3yzSvel","hubLeaseDate":"2025-11-18T08:56:59Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCbT1jA8RTEHk7y6rn2vHNGw","callbackUrl":"https://sharpen.live/dev/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"status":{"live":false,"youtube":{"live":false,"startedAt":"0001-01-01T00:00:00Z"}},"createdAt":"2025-11-18T08:56:57.714492Z","updatedAt":"2025-11-18T15:04:25.787204Z"},{"streamer":{"id":"4b8e82c4a16e49e58c1ac2993e7f85e0","alias":"Attorney Melanie Little","description":"Melanie Little is a New York lawyer with over 30 years experience as a trial attorney and litigator in state and federal courts, who is now a legal analyst a...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@AttorneyMelanieLittle","channelId":"UCFSlI8Y3Zdoq5buNW_40AAA","hubSecret":"nlXDE9expkcuWHJ4vXXe3UOjfDRYwRvy","hubLeaseDate":"2025-11-18T10:07:14Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCFSlI8Y3Zdoq5buNW_40AAA","callbackUrl":"https://sharpen.live/dev/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"status":{"live":true,"platforms":["youtube"],"youtube":{"live":true,"videoId":"P4ABIOUhHMY","startedAt":"2025-11-19T15:00:00Z"}},"createdAt":"2025-11-18T10:07:12.769107Z","updatedAt":"2025-11-19T03:15:13.585357Z"},{"streamer":{"id":"816a93baffdc4102a959dc0875d74657","alias":"Arnaldo Mangini","description":"Arnaldo Mangini, comico, clown, fantasista","firstName":"","lastName":"","email":"","languages":["English","Italian"]},"platforms":{"youtube":{"handle":"@arnaldomangini","channelId":"UCoW3NnFgnDATwU9eUOswisg","hubSecret":"wSduM3o6zSJNs8LvdpuoADBL0b7g4mlT","hubLeaseDate":"2025-11-18T17:22:55Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCoW3NnFgnDATwU9eUOswisg","callbackUrl":"https://sharpen.live/dev/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"status":{"live":true,"platforms":["youtube"],"youtube":{"live":true,"videoId":"EuVbanJs0wM","startedAt":"2025-11-18T17:06:56Z"}},"createdAt":"2025-11-18T17:22:53.507193Z","updatedAt":"2025-11-18T22:52:23.299481Z"}]}
+
+2025/11/19 14:25:30 ---- Incoming request from 127.0.0.1:57471 ----
+POST /alerts HTTP/1.1
+Host: sharpen.live
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Cache-Control: no-cache,max-age=0
+Content-Length: 971
+Content-Type: application/atom+xml
+From: googlebot(at)googlebot.com
+Link: <https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCFSlI8Y3Zdoq5buNW_40AAA>; rel=self, <http://pubsubhubbub.appspot.com/>; rel=hub
+Pragma: no-cache
+User-Agent: FeedFetcher-Google; (+http://www.google.com/feedfetcher.html)
+Via: 1.1 Caddy
+X-Forwarded-For: 66.102.8.101
+X-Forwarded-Host: sharpen.live
+X-Forwarded-Proto: https
+X-Hub-Signature: sha1=3d19c9ea8e64d0ccc1f2a6e4579362a6dc6f8f3a
+X-Request-Id: {http.request.id}
+
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:yt="http://www.youtube.com/xml/schemas/2015" xmlns="http://www.w3.org/2005/Atom"><link rel="hub" href="https://pubsubhubbub.appspot.com"/><link rel="self" href="https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCFSlI8Y3Zdoq5buNW_40AAA"/><title>YouTube video feed</title><updated>2025-11-19T02:16:54.191479094+00:00</updated><entry>
+  <id>yt:video:P4ABIOUhHMY</id>
+  <yt:videoId>P4ABIOUhHMY</yt:videoId>
+  <yt:channelId>UCFSlI8Y3Zdoq5buNW_40AAA</yt:channelId>
+  <title>MA v Aidan Kearney aka Turtleboy💥Bederow Filing Exposes MORE Brady Violations...Cosgrove, hello??</title>
+  <link rel="alternate" href="https://www.youtube.com/watch?v=P4ABIOUhHMY"/>
+  <author>
+   <name>Attorney Melanie Little</name>
+   <uri>https://www.youtube.com/channel/UCFSlI8Y3Zdoq5buNW_40AAA</uri>
+  </author>
+  <published>2025-11-19T02:14:57+00:00</published>
+  <updated>2025-11-19T02:16:54.191479094+00:00</updated>
+ </entry></feed>
+
+2025/11/19 14:25:30 Processing hub notification (1 entries) videos=P4ABIOUhHMY channel=UCFSlI8Y3Zdoq5buNW_40AAA
+
+2025/11/19 14:25:30 Fetching live metadata for 1 video(s): P4ABIOUhHMY
+
+2025/11/19 14:25:30 Requesting watch page for P4ABIOUhHMY: https://www.youtube.com/watch?v=P4ABIOUhHMY
+
+2025/11/19 14:25:30 Fetch for video P4ABIOUhHMY failed: Get "https://www.youtube.com/watch?v=P4ABIOUhHMY": context canceled
+
+2025/11/19 14:25:30 failed to fetch live metadata for videos P4ABIOUhHMY: fetch P4ABIOUhHMY: Get "https://www.youtube.com/watch?v=P4ABIOUhHMY": context canceled
+
+2025/11/19 14:25:30 ---- Response for POST /alerts (202 Accepted) ----
+
+2025/11/19 14:25:30 ---- Incoming request from 127.0.0.1:57544 ----
+POST /alerts HTTP/1.1
+Host: sharpen.live
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Cache-Control: no-cache,max-age=0
+Content-Length: 971
+Content-Type: application/atom+xml
+From: googlebot(at)googlebot.com
+Link: <https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCFSlI8Y3Zdoq5buNW_40AAA>; rel=self, <http://pubsubhubbub.appspot.com/>; rel=hub
+Pragma: no-cache
+User-Agent: FeedFetcher-Google; (+http://www.google.com/feedfetcher.html)
+Via: 1.1 Caddy
+X-Forwarded-For: 66.102.8.103
+X-Forwarded-Host: sharpen.live
+X-Forwarded-Proto: https
+X-Hub-Signature: sha1=860bf3606636e532cf15ee8288d88068abfa045a
+X-Request-Id: {http.request.id}
+
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:yt="http://www.youtube.com/xml/schemas/2015" xmlns="http://www.w3.org/2005/Atom"><link rel="hub" href="https://pubsubhubbub.appspot.com"/><link rel="self" href="https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCFSlI8Y3Zdoq5buNW_40AAA"/><title>YouTube video feed</title><updated>2025-11-19T02:16:54.863582028+00:00</updated><entry>
+  <id>yt:video:P4ABIOUhHMY</id>
+  <yt:videoId>P4ABIOUhHMY</yt:videoId>
+  <yt:channelId>UCFSlI8Y3Zdoq5buNW_40AAA</yt:channelId>
+  <title>MA v Aidan Kearney aka Turtleboy💥Bederow Filing Exposes MORE Brady Violations...Cosgrove, hello??</title>
+  <link rel="alternate" href="https://www.youtube.com/watch?v=P4ABIOUhHMY"/>
+  <author>
+   <name>Attorney Melanie Little</name>
+   <uri>https://www.youtube.com/channel/UCFSlI8Y3Zdoq5buNW_40AAA</uri>
+  </author>
+  <published>2025-11-19T02:14:57+00:00</published>
+  <updated>2025-11-19T02:16:54.863582028+00:00</updated>
+ </entry></feed>
+
+2025/11/19 14:25:30 ---- Incoming request from 127.0.0.1:57545 ----
+POST /alerts HTTP/1.1
+Host: sharpen.live
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Cache-Control: no-cache,max-age=0
+Content-Length: 971
+Content-Type: application/atom+xml
+From: googlebot(at)googlebot.com
+Link: <https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCFSlI8Y3Zdoq5buNW_40AAA>; rel=self, <http://pubsubhubbub.appspot.com/>; rel=hub
+Pragma: no-cache
+User-Agent: FeedFetcher-Google; (+http://www.google.com/feedfetcher.html)
+Via: 1.1 Caddy
+X-Forwarded-For: 66.102.8.102
+X-Forwarded-Host: sharpen.live
+X-Forwarded-Proto: https
+X-Hub-Signature: sha1=070ce2ac5a01ba69249f9ba16a80526324c84b36
+X-Request-Id: {http.request.id}
+
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:yt="http://www.youtube.com/xml/schemas/2015" xmlns="http://www.w3.org/2005/Atom"><link rel="hub" href="https://pubsubhubbub.appspot.com"/><link rel="self" href="https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCFSlI8Y3Zdoq5buNW_40AAA"/><title>YouTube video feed</title><updated>2025-11-19T02:16:56.398784966+00:00</updated><entry>
+  <id>yt:video:P4ABIOUhHMY</id>
+  <yt:videoId>P4ABIOUhHMY</yt:videoId>
+  <yt:channelId>UCFSlI8Y3Zdoq5buNW_40AAA</yt:channelId>
+  <title>MA v Aidan Kearney aka Turtleboy💥Bederow Filing Exposes MORE Brady Violations...Cosgrove, hello??</title>
+  <link rel="alternate" href="https://www.youtube.com/watch?v=P4ABIOUhHMY"/>
+  <author>
+   <name>Attorney Melanie Little</name>
+   <uri>https://www.youtube.com/channel/UCFSlI8Y3Zdoq5buNW_40AAA</uri>
+  </author>
+  <published>2025-11-19T02:14:57+00:00</published>
+  <updated>2025-11-19T02:16:56.398784966+00:00</updated>
+ </entry></feed>
+
+2025/11/19 14:25:30 Processing hub notification (1 entries) videos=P4ABIOUhHMY channel=UCFSlI8Y3Zdoq5buNW_40AAA
+
+2025/11/19 14:25:30 Fetching live metadata for 1 video(s): P4ABIOUhHMY
+
+2025/11/19 14:25:30 Requesting watch page for P4ABIOUhHMY: https://www.youtube.com/watch?v=P4ABIOUhHMY
+
+2025/11/19 14:25:30 Processing hub notification (1 entries) videos=P4ABIOUhHMY channel=UCFSlI8Y3Zdoq5buNW_40AAA
+
+2025/11/19 14:25:30 Fetching live metadata for 1 video(s): P4ABIOUhHMY
+
+2025/11/19 14:25:30 Requesting watch page for P4ABIOUhHMY: https://www.youtube.com/watch?v=P4ABIOUhHMY
+
+2025/11/19 14:25:30 Fetch for video P4ABIOUhHMY failed: Get "https://www.youtube.com/watch?v=P4ABIOUhHMY": context canceled
+
+2025/11/19 14:25:30 failed to fetch live metadata for videos P4ABIOUhHMY: fetch P4ABIOUhHMY: Get "https://www.youtube.com/watch?v=P4ABIOUhHMY": context canceled
+
+2025/11/19 14:25:30 ---- Response for POST /alerts (202 Accepted) ----
+
+2025/11/19 14:25:30 ---- Incoming request from 127.0.0.1:57547 ----
+POST /alerts HTTP/1.1
+Host: sharpen.live
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Cache-Control: no-cache,max-age=0
+Content-Length: 948
+Content-Type: application/atom+xml
+From: googlebot(at)googlebot.com
+Link: <https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCbT1jA8RTEHk7y6rn2vHNGw>; rel=self, <http://pubsubhubbub.appspot.com/>; rel=hub
+Pragma: no-cache
+User-Agent: FeedFetcher-Google; (+http://www.google.com/feedfetcher.html)
+Via: 1.1 Caddy
+X-Forwarded-For: 142.250.32.3
+X-Forwarded-Host: sharpen.live
+X-Forwarded-Proto: https
+X-Hub-Signature: sha1=af2eef80c0928dbbf0c72c6ef65c68fdf60ac3b2
+X-Request-Id: {http.request.id}
+
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:yt="http://www.youtube.com/xml/schemas/2015" xmlns="http://www.w3.org/2005/Atom"><link rel="hub" href="https://pubsubhubbub.appspot.com"/><link rel="self" href="https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCbT1jA8RTEHk7y6rn2vHNGw"/><title>YouTube video feed</title><updated>2025-11-19T03:20:08.298583741+00:00</updated><entry>
+  <id>yt:video:AeP_0Ev0Iso</id>
+  <yt:videoId>AeP_0Ev0Iso</yt:videoId>
+  <yt:channelId>UCbT1jA8RTEHk7y6rn2vHNGw</yt:channelId>
+  <title>SiiNs Workshop - Let the fun begin, new month new goal, new knives.  Lets make something epic</title>
+  <link rel="alternate" href="https://www.youtube.com/watch?v=AeP_0Ev0Iso"/>
+  <author>
+   <name>JonSiiN</name>
+   <uri>https://www.youtube.com/channel/UCbT1jA8RTEHk7y6rn2vHNGw</uri>
+  </author>
+  <published>2025-11-19T03:20:05+00:00</published>
+  <updated>2025-11-19T03:20:08.298583741+00:00</updated>
+ </entry></feed>
+
+2025/11/19 14:25:30 ---- Incoming request from 127.0.0.1:57546 ----
+POST /alerts HTTP/1.1
+Host: sharpen.live
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Cache-Control: no-cache,max-age=0
+Content-Length: 971
+Content-Type: application/atom+xml
+From: googlebot(at)googlebot.com
+Link: <https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCFSlI8Y3Zdoq5buNW_40AAA>; rel=self, <http://pubsubhubbub.appspot.com/>; rel=hub
+Pragma: no-cache
+User-Agent: FeedFetcher-Google; (+http://www.google.com/feedfetcher.html)
+Via: 1.1 Caddy
+X-Forwarded-For: 66.102.8.101
+X-Forwarded-Host: sharpen.live
+X-Forwarded-Proto: https
+X-Hub-Signature: sha1=29dd6a8d5b2a0402e1594e76fdc19733ca0ebca3
+X-Request-Id: {http.request.id}
+
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:yt="http://www.youtube.com/xml/schemas/2015" xmlns="http://www.w3.org/2005/Atom"><link rel="hub" href="https://pubsubhubbub.appspot.com"/><link rel="self" href="https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCFSlI8Y3Zdoq5buNW_40AAA"/><title>YouTube video feed</title><updated>2025-11-19T02:16:57.512405539+00:00</updated><entry>
+  <id>yt:video:P4ABIOUhHMY</id>
+  <yt:videoId>P4ABIOUhHMY</yt:videoId>
+  <yt:channelId>UCFSlI8Y3Zdoq5buNW_40AAA</yt:channelId>
+  <title>MA v Aidan Kearney aka Turtleboy💥Bederow Filing Exposes MORE Brady Violations...Cosgrove, hello??</title>
+  <link rel="alternate" href="https://www.youtube.com/watch?v=P4ABIOUhHMY"/>
+  <author>
+   <name>Attorney Melanie Little</name>
+   <uri>https://www.youtube.com/channel/UCFSlI8Y3Zdoq5buNW_40AAA</uri>
+  </author>
+  <published>2025-11-19T02:14:57+00:00</published>
+  <updated>2025-11-19T02:16:57.512405539+00:00</updated>
+ </entry></feed>
+
+2025/11/19 14:25:30 Processing hub notification (1 entries) videos=AeP_0Ev0Iso channel=UCbT1jA8RTEHk7y6rn2vHNGw
+
+2025/11/19 14:25:30 Fetching live metadata for 1 video(s): AeP_0Ev0Iso
+
+2025/11/19 14:25:30 Processing hub notification (1 entries) videos=P4ABIOUhHMY channel=UCFSlI8Y3Zdoq5buNW_40AAA
+
+2025/11/19 14:25:30 Fetching live metadata for 1 video(s): P4ABIOUhHMY
+
+2025/11/19 14:25:30 Fetch for video P4ABIOUhHMY failed: Get "https://www.youtube.com/watch?v=P4ABIOUhHMY": context canceled
+
+2025/11/19 14:25:30 Requesting watch page for AeP_0Ev0Iso: https://www.youtube.com/watch?v=AeP_0Ev0Iso
+
+2025/11/19 14:25:30 Requesting watch page for P4ABIOUhHMY: https://www.youtube.com/watch?v=P4ABIOUhHMY
+
+2025/11/19 14:25:30 Fetch for video P4ABIOUhHMY failed: Get "https://www.youtube.com/watch?v=P4ABIOUhHMY": context canceled
+
+2025/11/19 14:25:30 failed to fetch live metadata for videos P4ABIOUhHMY: fetch P4ABIOUhHMY: Get "https://www.youtube.com/watch?v=P4ABIOUhHMY": context canceled
+
+2025/11/19 14:25:30 ---- Response for POST /alerts (202 Accepted) ----
+
+2025/11/19 14:25:30 Fetch for video AeP_0Ev0Iso failed: Get "https://www.youtube.com/watch?v=AeP_0Ev0Iso": context canceled
+
+2025/11/19 14:25:30 failed to fetch live metadata for videos AeP_0Ev0Iso: fetch AeP_0Ev0Iso: Get "https://www.youtube.com/watch?v=AeP_0Ev0Iso": context canceled
+
+2025/11/19 14:25:30 failed to fetch live metadata for videos P4ABIOUhHMY: fetch P4ABIOUhHMY: Get "https://www.youtube.com/watch?v=P4ABIOUhHMY": context canceled
+
+2025/11/19 14:25:30 ---- Response for POST /alerts (202 Accepted) ----
+
+2025/11/19 14:25:30 ---- Response for POST /alerts (202 Accepted) ----
+
+2025/11/19 15:00:25 ---- Incoming request from 127.0.0.1:57816 ----
+GET /api/streamers HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate
+Accept-Language: en-AU,en;q=0.9
+Priority: u=3, i
+Referer: http://127.0.0.1:4173/
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/19 15:00:25 ---- Incoming request from 127.0.0.1:57818 ----
+GET /api/streamers HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate
+Accept-Language: en-AU,en;q=0.9
+Priority: u=3, i
+Referer: http://127.0.0.1:4173/
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/19 15:00:25 ---- Response for GET /api/streamers (200 OK) ----
+{"streamers":[{"streamer":{"id":"395848a32c2c47c2a231c1b59f2b93d4","alias":"JonSiiN","description":"Hello everyone Welcome to the official JRK Knives channel. Knives have been used since prehistoric times for a plethora of activities from weapons and tools ...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@JRKKnives","channelId":"UCbT1jA8RTEHk7y6rn2vHNGw","hubSecret":"9C_7M8CuW959d3PFQ6fZ-FRaj3yzSvel","hubLeaseDate":"2025-11-18T08:56:59Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCbT1jA8RTEHk7y6rn2vHNGw","callbackUrl":"https://sharpen.live/dev/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"status":{"live":false,"youtube":{"live":false,"startedAt":"0001-01-01T00:00:00Z"}},"createdAt":"2025-11-18T08:56:57.714492Z","updatedAt":"2025-11-18T15:04:25.787204Z"},{"streamer":{"id":"4b8e82c4a16e49e58c1ac2993e7f85e0","alias":"Attorney Melanie Little","description":"Melanie Little is a New York lawyer with over 30 years experience as a trial attorney and litigator in state and federal courts, who is now a legal analyst a...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@AttorneyMelanieLittle","channelId":"UCFSlI8Y3Zdoq5buNW_40AAA","hubSecret":"nlXDE9expkcuWHJ4vXXe3UOjfDRYwRvy","hubLeaseDate":"2025-11-18T10:07:14Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCFSlI8Y3Zdoq5buNW_40AAA","callbackUrl":"https://sharpen.live/dev/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"status":{"live":true,"platforms":["youtube"],"youtube":{"live":true,"videoId":"P4ABIOUhHMY","startedAt":"2025-11-19T15:00:00Z"}},"createdAt":"2025-11-18T10:07:12.769107Z","updatedAt":"2025-11-19T03:15:13.585357Z"},{"streamer":{"id":"816a93baffdc4102a959dc0875d74657","alias":"Arnaldo Mangini","description":"Arnaldo Mangini, comico, clown, fantasista","firstName":"","lastName":"","email":"","languages":["English","Italian"]},"platforms":{"youtube":{"handle":"@arnaldomangini","channelId":"UCoW3NnFgnDATwU9eUOswisg","hubSecret":"wSduM3o6zSJNs8LvdpuoADBL0b7g4mlT","hubLeaseDate":"2025-11-18T17:22:55Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCoW3NnFgnDATwU9eUOswisg","callbackUrl":"https://sharpen.live/dev/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"status":{"live":true,"platforms":["youtube"],"youtube":{"live":true,"videoId":"EuVbanJs0wM","startedAt":"2025-11-18T17:06:56Z"}},"createdAt":"2025-11-18T17:22:53.507193Z","updatedAt":"2025-11-18T22:52:23.299481Z"}]}
+
+2025/11/19 15:00:25 ---- Response for GET /api/streamers (200 OK) ----
+{"streamers":[{"streamer":{"id":"395848a32c2c47c2a231c1b59f2b93d4","alias":"JonSiiN","description":"Hello everyone Welcome to the official JRK Knives channel. Knives have been used since prehistoric times for a plethora of activities from weapons and tools ...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@JRKKnives","channelId":"UCbT1jA8RTEHk7y6rn2vHNGw","hubSecret":"9C_7M8CuW959d3PFQ6fZ-FRaj3yzSvel","hubLeaseDate":"2025-11-18T08:56:59Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCbT1jA8RTEHk7y6rn2vHNGw","callbackUrl":"https://sharpen.live/dev/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"status":{"live":false,"youtube":{"live":false,"startedAt":"0001-01-01T00:00:00Z"}},"createdAt":"2025-11-18T08:56:57.714492Z","updatedAt":"2025-11-18T15:04:25.787204Z"},{"streamer":{"id":"4b8e82c4a16e49e58c1ac2993e7f85e0","alias":"Attorney Melanie Little","description":"Melanie Little is a New York lawyer with over 30 years experience as a trial attorney and litigator in state and federal courts, who is now a legal analyst a...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@AttorneyMelanieLittle","channelId":"UCFSlI8Y3Zdoq5buNW_40AAA","hubSecret":"nlXDE9expkcuWHJ4vXXe3UOjfDRYwRvy","hubLeaseDate":"2025-11-18T10:07:14Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCFSlI8Y3Zdoq5buNW_40AAA","callbackUrl":"https://sharpen.live/dev/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"status":{"live":true,"platforms":["youtube"],"youtube":{"live":true,"videoId":"P4ABIOUhHMY","startedAt":"2025-11-19T15:00:00Z"}},"createdAt":"2025-11-18T10:07:12.769107Z","updatedAt":"2025-11-19T03:15:13.585357Z"},{"streamer":{"id":"816a93baffdc4102a959dc0875d74657","alias":"Arnaldo Mangini","description":"Arnaldo Mangini, comico, clown, fantasista","firstName":"","lastName":"","email":"","languages":["English","Italian"]},"platforms":{"youtube":{"handle":"@arnaldomangini","channelId":"UCoW3NnFgnDATwU9eUOswisg","hubSecret":"wSduM3o6zSJNs8LvdpuoADBL0b7g4mlT","hubLeaseDate":"2025-11-18T17:22:55Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCoW3NnFgnDATwU9eUOswisg","callbackUrl":"https://sharpen.live/dev/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"status":{"live":true,"platforms":["youtube"],"youtube":{"live":true,"videoId":"EuVbanJs0wM","startedAt":"2025-11-18T17:06:56Z"}},"createdAt":"2025-11-18T17:22:53.507193Z","updatedAt":"2025-11-18T22:52:23.299481Z"}]}
+
+2025/11/19 15:00:25 ---- Incoming request from 127.0.0.1:57818 ----
+GET /api/streamers HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate
+Accept-Language: en-AU,en;q=0.9
+Priority: u=3, i
+Referer: http://127.0.0.1:4173/
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/19 15:00:26 ---- Response for GET /api/streamers (200 OK) ----
+{"streamers":[{"streamer":{"id":"395848a32c2c47c2a231c1b59f2b93d4","alias":"JonSiiN","description":"Hello everyone Welcome to the official JRK Knives channel. Knives have been used since prehistoric times for a plethora of activities from weapons and tools ...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@JRKKnives","channelId":"UCbT1jA8RTEHk7y6rn2vHNGw","hubSecret":"9C_7M8CuW959d3PFQ6fZ-FRaj3yzSvel","hubLeaseDate":"2025-11-18T08:56:59Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCbT1jA8RTEHk7y6rn2vHNGw","callbackUrl":"https://sharpen.live/dev/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"status":{"live":false,"youtube":{"live":false,"startedAt":"0001-01-01T00:00:00Z"}},"createdAt":"2025-11-18T08:56:57.714492Z","updatedAt":"2025-11-18T15:04:25.787204Z"},{"streamer":{"id":"4b8e82c4a16e49e58c1ac2993e7f85e0","alias":"Attorney Melanie Little","description":"Melanie Little is a New York lawyer with over 30 years experience as a trial attorney and litigator in state and federal courts, who is now a legal analyst a...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@AttorneyMelanieLittle","channelId":"UCFSlI8Y3Zdoq5buNW_40AAA","hubSecret":"nlXDE9expkcuWHJ4vXXe3UOjfDRYwRvy","hubLeaseDate":"2025-11-18T10:07:14Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCFSlI8Y3Zdoq5buNW_40AAA","callbackUrl":"https://sharpen.live/dev/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"status":{"live":true,"platforms":["youtube"],"youtube":{"live":true,"videoId":"P4ABIOUhHMY","startedAt":"2025-11-19T15:00:00Z"}},"createdAt":"2025-11-18T10:07:12.769107Z","updatedAt":"2025-11-19T03:15:13.585357Z"},{"streamer":{"id":"816a93baffdc4102a959dc0875d74657","alias":"Arnaldo Mangini","description":"Arnaldo Mangini, comico, clown, fantasista","firstName":"","lastName":"","email":"","languages":["English","Italian"]},"platforms":{"youtube":{"handle":"@arnaldomangini","channelId":"UCoW3NnFgnDATwU9eUOswisg","hubSecret":"wSduM3o6zSJNs8LvdpuoADBL0b7g4mlT","hubLeaseDate":"2025-11-18T17:22:55Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCoW3NnFgnDATwU9eUOswisg","callbackUrl":"https://sharpen.live/dev/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"status":{"live":true,"platforms":["youtube"],"youtube":{"live":true,"videoId":"EuVbanJs0wM","startedAt":"2025-11-18T17:06:56Z"}},"createdAt":"2025-11-18T17:22:53.507193Z","updatedAt":"2025-11-18T22:52:23.299481Z"}]}
+
+2025/11/19 15:00:26 ---- Incoming request from 127.0.0.1:57818 ----
+GET /api/streamers HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate
+Accept-Language: en-AU,en;q=0.9
+Priority: u=3, i
+Referer: http://127.0.0.1:4173/
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/19 15:00:26 ---- Incoming request from 127.0.0.1:57816 ----
+GET /api/streamers HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate
+Accept-Language: en-AU,en;q=0.9
+Priority: u=3, i
+Referer: http://127.0.0.1:4173/
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/19 15:00:26 ---- Incoming request from 127.0.0.1:57822 ----
+GET /api/streamers HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate
+Accept-Language: en-AU,en;q=0.9
+Priority: u=3, i
+Referer: http://127.0.0.1:4173/
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/19 15:00:26 ---- Response for GET /api/streamers (200 OK) ----
+{"streamers":[{"streamer":{"id":"395848a32c2c47c2a231c1b59f2b93d4","alias":"JonSiiN","description":"Hello everyone Welcome to the official JRK Knives channel. Knives have been used since prehistoric times for a plethora of activities from weapons and tools ...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@JRKKnives","channelId":"UCbT1jA8RTEHk7y6rn2vHNGw","hubSecret":"9C_7M8CuW959d3PFQ6fZ-FRaj3yzSvel","hubLeaseDate":"2025-11-18T08:56:59Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCbT1jA8RTEHk7y6rn2vHNGw","callbackUrl":"https://sharpen.live/dev/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"status":{"live":false,"youtube":{"live":false,"startedAt":"0001-01-01T00:00:00Z"}},"createdAt":"2025-11-18T08:56:57.714492Z","updatedAt":"2025-11-18T15:04:25.787204Z"},{"streamer":{"id":"4b8e82c4a16e49e58c1ac2993e7f85e0","alias":"Attorney Melanie Little","description":"Melanie Little is a New York lawyer with over 30 years experience as a trial attorney and litigator in state and federal courts, who is now a legal analyst a...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@AttorneyMelanieLittle","channelId":"UCFSlI8Y3Zdoq5buNW_40AAA","hubSecret":"nlXDE9expkcuWHJ4vXXe3UOjfDRYwRvy","hubLeaseDate":"2025-11-18T10:07:14Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCFSlI8Y3Zdoq5buNW_40AAA","callbackUrl":"https://sharpen.live/dev/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"status":{"live":true,"platforms":["youtube"],"youtube":{"live":true,"videoId":"P4ABIOUhHMY","startedAt":"2025-11-19T15:00:00Z"}},"createdAt":"2025-11-18T10:07:12.769107Z","updatedAt":"2025-11-19T03:15:13.585357Z"},{"streamer":{"id":"816a93baffdc4102a959dc0875d74657","alias":"Arnaldo Mangini","description":"Arnaldo Mangini, comico, clown, fantasista","firstName":"","lastName":"","email":"","languages":["English","Italian"]},"platforms":{"youtube":{"handle":"@arnaldomangini","channelId":"UCoW3NnFgnDATwU9eUOswisg","hubSecret":"wSduM3o6zSJNs8LvdpuoADBL0b7g4mlT","hubLeaseDate":"2025-11-18T17:22:55Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCoW3NnFgnDATwU9eUOswisg","callbackUrl":"https://sharpen.live/dev/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"status":{"live":true,"platforms":["youtube"],"youtube":{"live":true,"videoId":"EuVbanJs0wM","startedAt":"2025-11-18T17:06:56Z"}},"createdAt":"2025-11-18T17:22:53.507193Z","updatedAt":"2025-11-18T22:52:23.299481Z"}]}
+
+2025/11/19 15:00:26 ---- Response for GET /api/streamers (200 OK) ----
+{"streamers":[{"streamer":{"id":"395848a32c2c47c2a231c1b59f2b93d4","alias":"JonSiiN","description":"Hello everyone Welcome to the official JRK Knives channel. Knives have been used since prehistoric times for a plethora of activities from weapons and tools ...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@JRKKnives","channelId":"UCbT1jA8RTEHk7y6rn2vHNGw","hubSecret":"9C_7M8CuW959d3PFQ6fZ-FRaj3yzSvel","hubLeaseDate":"2025-11-18T08:56:59Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCbT1jA8RTEHk7y6rn2vHNGw","callbackUrl":"https://sharpen.live/dev/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"status":{"live":false,"youtube":{"live":false,"startedAt":"0001-01-01T00:00:00Z"}},"createdAt":"2025-11-18T08:56:57.714492Z","updatedAt":"2025-11-18T15:04:25.787204Z"},{"streamer":{"id":"4b8e82c4a16e49e58c1ac2993e7f85e0","alias":"Attorney Melanie Little","description":"Melanie Little is a New York lawyer with over 30 years experience as a trial attorney and litigator in state and federal courts, who is now a legal analyst a...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@AttorneyMelanieLittle","channelId":"UCFSlI8Y3Zdoq5buNW_40AAA","hubSecret":"nlXDE9expkcuWHJ4vXXe3UOjfDRYwRvy","hubLeaseDate":"2025-11-18T10:07:14Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCFSlI8Y3Zdoq5buNW_40AAA","callbackUrl":"https://sharpen.live/dev/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"status":{"live":true,"platforms":["youtube"],"youtube":{"live":true,"videoId":"P4ABIOUhHMY","startedAt":"2025-11-19T15:00:00Z"}},"createdAt":"2025-11-18T10:07:12.769107Z","updatedAt":"2025-11-19T03:15:13.585357Z"},{"streamer":{"id":"816a93baffdc4102a959dc0875d74657","alias":"Arnaldo Mangini","description":"Arnaldo Mangini, comico, clown, fantasista","firstName":"","lastName":"","email":"","languages":["English","Italian"]},"platforms":{"youtube":{"handle":"@arnaldomangini","channelId":"UCoW3NnFgnDATwU9eUOswisg","hubSecret":"wSduM3o6zSJNs8LvdpuoADBL0b7g4mlT","hubLeaseDate":"2025-11-18T17:22:55Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCoW3NnFgnDATwU9eUOswisg","callbackUrl":"https://sharpen.live/dev/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"status":{"live":true,"platforms":["youtube"],"youtube":{"live":true,"videoId":"EuVbanJs0wM","startedAt":"2025-11-18T17:06:56Z"}},"createdAt":"2025-11-18T17:22:53.507193Z","updatedAt":"2025-11-18T22:52:23.299481Z"}]}
+
+2025/11/19 15:00:26 ---- Response for GET /api/streamers (200 OK) ----
+{"streamers":[{"streamer":{"id":"395848a32c2c47c2a231c1b59f2b93d4","alias":"JonSiiN","description":"Hello everyone Welcome to the official JRK Knives channel. Knives have been used since prehistoric times for a plethora of activities from weapons and tools ...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@JRKKnives","channelId":"UCbT1jA8RTEHk7y6rn2vHNGw","hubSecret":"9C_7M8CuW959d3PFQ6fZ-FRaj3yzSvel","hubLeaseDate":"2025-11-18T08:56:59Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCbT1jA8RTEHk7y6rn2vHNGw","callbackUrl":"https://sharpen.live/dev/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"status":{"live":false,"youtube":{"live":false,"startedAt":"0001-01-01T00:00:00Z"}},"createdAt":"2025-11-18T08:56:57.714492Z","updatedAt":"2025-11-18T15:04:25.787204Z"},{"streamer":{"id":"4b8e82c4a16e49e58c1ac2993e7f85e0","alias":"Attorney Melanie Little","description":"Melanie Little is a New York lawyer with over 30 years experience as a trial attorney and litigator in state and federal courts, who is now a legal analyst a...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@AttorneyMelanieLittle","channelId":"UCFSlI8Y3Zdoq5buNW_40AAA","hubSecret":"nlXDE9expkcuWHJ4vXXe3UOjfDRYwRvy","hubLeaseDate":"2025-11-18T10:07:14Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCFSlI8Y3Zdoq5buNW_40AAA","callbackUrl":"https://sharpen.live/dev/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"status":{"live":true,"platforms":["youtube"],"youtube":{"live":true,"videoId":"P4ABIOUhHMY","startedAt":"2025-11-19T15:00:00Z"}},"createdAt":"2025-11-18T10:07:12.769107Z","updatedAt":"2025-11-19T03:15:13.585357Z"},{"streamer":{"id":"816a93baffdc4102a959dc0875d74657","alias":"Arnaldo Mangini","description":"Arnaldo Mangini, comico, clown, fantasista","firstName":"","lastName":"","email":"","languages":["English","Italian"]},"platforms":{"youtube":{"handle":"@arnaldomangini","channelId":"UCoW3NnFgnDATwU9eUOswisg","hubSecret":"wSduM3o6zSJNs8LvdpuoADBL0b7g4mlT","hubLeaseDate":"2025-11-18T17:22:55Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCoW3NnFgnDATwU9eUOswisg","callbackUrl":"https://sharpen.live/dev/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"status":{"live":true,"platforms":["youtube"],"youtube":{"live":true,"videoId":"EuVbanJs0wM","startedAt":"2025-11-18T17:06:56Z"}},"createdAt":"2025-11-18T17:22:53.507193Z","updatedAt":"2025-11-18T22:52:23.299481Z"}]}
+
+2025/11/19 15:00:26 ---- Incoming request from 127.0.0.1:57818 ----
+GET /api/streamers HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate
+Accept-Language: en-AU,en;q=0.9
+Priority: u=3, i
+Referer: http://127.0.0.1:4173/
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/19 15:00:26 ---- Response for GET /api/streamers (200 OK) ----
+{"streamers":[{"streamer":{"id":"395848a32c2c47c2a231c1b59f2b93d4","alias":"JonSiiN","description":"Hello everyone Welcome to the official JRK Knives channel. Knives have been used since prehistoric times for a plethora of activities from weapons and tools ...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@JRKKnives","channelId":"UCbT1jA8RTEHk7y6rn2vHNGw","hubSecret":"9C_7M8CuW959d3PFQ6fZ-FRaj3yzSvel","hubLeaseDate":"2025-11-18T08:56:59Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCbT1jA8RTEHk7y6rn2vHNGw","callbackUrl":"https://sharpen.live/dev/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"status":{"live":false,"youtube":{"live":false,"startedAt":"0001-01-01T00:00:00Z"}},"createdAt":"2025-11-18T08:56:57.714492Z","updatedAt":"2025-11-18T15:04:25.787204Z"},{"streamer":{"id":"4b8e82c4a16e49e58c1ac2993e7f85e0","alias":"Attorney Melanie Little","description":"Melanie Little is a New York lawyer with over 30 years experience as a trial attorney and litigator in state and federal courts, who is now a legal analyst a...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@AttorneyMelanieLittle","channelId":"UCFSlI8Y3Zdoq5buNW_40AAA","hubSecret":"nlXDE9expkcuWHJ4vXXe3UOjfDRYwRvy","hubLeaseDate":"2025-11-18T10:07:14Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCFSlI8Y3Zdoq5buNW_40AAA","callbackUrl":"https://sharpen.live/dev/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"status":{"live":true,"platforms":["youtube"],"youtube":{"live":true,"videoId":"P4ABIOUhHMY","startedAt":"2025-11-19T15:00:00Z"}},"createdAt":"2025-11-18T10:07:12.769107Z","updatedAt":"2025-11-19T03:15:13.585357Z"},{"streamer":{"id":"816a93baffdc4102a959dc0875d74657","alias":"Arnaldo Mangini","description":"Arnaldo Mangini, comico, clown, fantasista","firstName":"","lastName":"","email":"","languages":["English","Italian"]},"platforms":{"youtube":{"handle":"@arnaldomangini","channelId":"UCoW3NnFgnDATwU9eUOswisg","hubSecret":"wSduM3o6zSJNs8LvdpuoADBL0b7g4mlT","hubLeaseDate":"2025-11-18T17:22:55Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCoW3NnFgnDATwU9eUOswisg","callbackUrl":"https://sharpen.live/dev/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"status":{"live":true,"platforms":["youtube"],"youtube":{"live":true,"videoId":"EuVbanJs0wM","startedAt":"2025-11-18T17:06:56Z"}},"createdAt":"2025-11-18T17:22:53.507193Z","updatedAt":"2025-11-18T22:52:23.299481Z"}]}
+
+2025/11/19 15:00:26 ---- Incoming request from 127.0.0.1:57818 ----
+GET /api/streamers HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate
+Accept-Language: en-AU,en;q=0.9
+Priority: u=3, i
+Referer: http://127.0.0.1:4173/
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/19 15:00:26 ---- Response for GET /api/streamers (200 OK) ----
+{"streamers":[{"streamer":{"id":"395848a32c2c47c2a231c1b59f2b93d4","alias":"JonSiiN","description":"Hello everyone Welcome to the official JRK Knives channel. Knives have been used since prehistoric times for a plethora of activities from weapons and tools ...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@JRKKnives","channelId":"UCbT1jA8RTEHk7y6rn2vHNGw","hubSecret":"9C_7M8CuW959d3PFQ6fZ-FRaj3yzSvel","hubLeaseDate":"2025-11-18T08:56:59Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCbT1jA8RTEHk7y6rn2vHNGw","callbackUrl":"https://sharpen.live/dev/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"status":{"live":false,"youtube":{"live":false,"startedAt":"0001-01-01T00:00:00Z"}},"createdAt":"2025-11-18T08:56:57.714492Z","updatedAt":"2025-11-18T15:04:25.787204Z"},{"streamer":{"id":"4b8e82c4a16e49e58c1ac2993e7f85e0","alias":"Attorney Melanie Little","description":"Melanie Little is a New York lawyer with over 30 years experience as a trial attorney and litigator in state and federal courts, who is now a legal analyst a...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@AttorneyMelanieLittle","channelId":"UCFSlI8Y3Zdoq5buNW_40AAA","hubSecret":"nlXDE9expkcuWHJ4vXXe3UOjfDRYwRvy","hubLeaseDate":"2025-11-18T10:07:14Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCFSlI8Y3Zdoq5buNW_40AAA","callbackUrl":"https://sharpen.live/dev/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"status":{"live":true,"platforms":["youtube"],"youtube":{"live":true,"videoId":"P4ABIOUhHMY","startedAt":"2025-11-19T15:00:00Z"}},"createdAt":"2025-11-18T10:07:12.769107Z","updatedAt":"2025-11-19T03:15:13.585357Z"},{"streamer":{"id":"816a93baffdc4102a959dc0875d74657","alias":"Arnaldo Mangini","description":"Arnaldo Mangini, comico, clown, fantasista","firstName":"","lastName":"","email":"","languages":["English","Italian"]},"platforms":{"youtube":{"handle":"@arnaldomangini","channelId":"UCoW3NnFgnDATwU9eUOswisg","hubSecret":"wSduM3o6zSJNs8LvdpuoADBL0b7g4mlT","hubLeaseDate":"2025-11-18T17:22:55Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCoW3NnFgnDATwU9eUOswisg","callbackUrl":"https://sharpen.live/dev/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"status":{"live":true,"platforms":["youtube"],"youtube":{"live":true,"videoId":"EuVbanJs0wM","startedAt":"2025-11-18T17:06:56Z"}},"createdAt":"2025-11-18T17:22:53.507193Z","updatedAt":"2025-11-18T22:52:23.299481Z"}]}
+
+2025/11/19 15:00:26 ---- Incoming request from 127.0.0.1:57816 ----
+GET /api/streamers HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate
+Accept-Language: en-AU,en;q=0.9
+Priority: u=3, i
+Referer: http://127.0.0.1:4173/
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/19 15:00:26 ---- Incoming request from 127.0.0.1:57818 ----
+GET /api/streamers HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate
+Accept-Language: en-AU,en;q=0.9
+Priority: u=3, i
+Referer: http://127.0.0.1:4173/
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/19 15:00:26 ---- Response for GET /api/streamers (200 OK) ----
+{"streamers":[{"streamer":{"id":"395848a32c2c47c2a231c1b59f2b93d4","alias":"JonSiiN","description":"Hello everyone Welcome to the official JRK Knives channel. Knives have been used since prehistoric times for a plethora of activities from weapons and tools ...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@JRKKnives","channelId":"UCbT1jA8RTEHk7y6rn2vHNGw","hubSecret":"9C_7M8CuW959d3PFQ6fZ-FRaj3yzSvel","hubLeaseDate":"2025-11-18T08:56:59Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCbT1jA8RTEHk7y6rn2vHNGw","callbackUrl":"https://sharpen.live/dev/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"status":{"live":false,"youtube":{"live":false,"startedAt":"0001-01-01T00:00:00Z"}},"createdAt":"2025-11-18T08:56:57.714492Z","updatedAt":"2025-11-18T15:04:25.787204Z"},{"streamer":{"id":"4b8e82c4a16e49e58c1ac2993e7f85e0","alias":"Attorney Melanie Little","description":"Melanie Little is a New York lawyer with over 30 years experience as a trial attorney and litigator in state and federal courts, who is now a legal analyst a...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@AttorneyMelanieLittle","channelId":"UCFSlI8Y3Zdoq5buNW_40AAA","hubSecret":"nlXDE9expkcuWHJ4vXXe3UOjfDRYwRvy","hubLeaseDate":"2025-11-18T10:07:14Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCFSlI8Y3Zdoq5buNW_40AAA","callbackUrl":"https://sharpen.live/dev/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"status":{"live":true,"platforms":["youtube"],"youtube":{"live":true,"videoId":"P4ABIOUhHMY","startedAt":"2025-11-19T15:00:00Z"}},"createdAt":"2025-11-18T10:07:12.769107Z","updatedAt":"2025-11-19T03:15:13.585357Z"},{"streamer":{"id":"816a93baffdc4102a959dc0875d74657","alias":"Arnaldo Mangini","description":"Arnaldo Mangini, comico, clown, fantasista","firstName":"","lastName":"","email":"","languages":["English","Italian"]},"platforms":{"youtube":{"handle":"@arnaldomangini","channelId":"UCoW3NnFgnDATwU9eUOswisg","hubSecret":"wSduM3o6zSJNs8LvdpuoADBL0b7g4mlT","hubLeaseDate":"2025-11-18T17:22:55Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCoW3NnFgnDATwU9eUOswisg","callbackUrl":"https://sharpen.live/dev/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"status":{"live":true,"platforms":["youtube"],"youtube":{"live":true,"videoId":"EuVbanJs0wM","startedAt":"2025-11-18T17:06:56Z"}},"createdAt":"2025-11-18T17:22:53.507193Z","updatedAt":"2025-11-18T22:52:23.299481Z"}]}
+
+2025/11/19 15:00:26 ---- Response for GET /api/streamers (200 OK) ----
+{"streamers":[{"streamer":{"id":"395848a32c2c47c2a231c1b59f2b93d4","alias":"JonSiiN","description":"Hello everyone Welcome to the official JRK Knives channel. Knives have been used since prehistoric times for a plethora of activities from weapons and tools ...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@JRKKnives","channelId":"UCbT1jA8RTEHk7y6rn2vHNGw","hubSecret":"9C_7M8CuW959d3PFQ6fZ-FRaj3yzSvel","hubLeaseDate":"2025-11-18T08:56:59Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCbT1jA8RTEHk7y6rn2vHNGw","callbackUrl":"https://sharpen.live/dev/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"status":{"live":false,"youtube":{"live":false,"startedAt":"0001-01-01T00:00:00Z"}},"createdAt":"2025-11-18T08:56:57.714492Z","updatedAt":"2025-11-18T15:04:25.787204Z"},{"streamer":{"id":"4b8e82c4a16e49e58c1ac2993e7f85e0","alias":"Attorney Melanie Little","description":"Melanie Little is a New York lawyer with over 30 years experience as a trial attorney and litigator in state and federal courts, who is now a legal analyst a...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@AttorneyMelanieLittle","channelId":"UCFSlI8Y3Zdoq5buNW_40AAA","hubSecret":"nlXDE9expkcuWHJ4vXXe3UOjfDRYwRvy","hubLeaseDate":"2025-11-18T10:07:14Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCFSlI8Y3Zdoq5buNW_40AAA","callbackUrl":"https://sharpen.live/dev/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"status":{"live":true,"platforms":["youtube"],"youtube":{"live":true,"videoId":"P4ABIOUhHMY","startedAt":"2025-11-19T15:00:00Z"}},"createdAt":"2025-11-18T10:07:12.769107Z","updatedAt":"2025-11-19T03:15:13.585357Z"},{"streamer":{"id":"816a93baffdc4102a959dc0875d74657","alias":"Arnaldo Mangini","description":"Arnaldo Mangini, comico, clown, fantasista","firstName":"","lastName":"","email":"","languages":["English","Italian"]},"platforms":{"youtube":{"handle":"@arnaldomangini","channelId":"UCoW3NnFgnDATwU9eUOswisg","hubSecret":"wSduM3o6zSJNs8LvdpuoADBL0b7g4mlT","hubLeaseDate":"2025-11-18T17:22:55Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCoW3NnFgnDATwU9eUOswisg","callbackUrl":"https://sharpen.live/dev/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"status":{"live":true,"platforms":["youtube"],"youtube":{"live":true,"videoId":"EuVbanJs0wM","startedAt":"2025-11-18T17:06:56Z"}},"createdAt":"2025-11-18T17:22:53.507193Z","updatedAt":"2025-11-18T22:52:23.299481Z"}]}
+
+2025/11/19 15:00:36 ---- Response for GET /api/streamers/watch (200 OK) ----
+event: ready
+data: 1763487309801
+
+event: change
+data: 1763499858881
+
+event: change
+data: 1763503551291
+
+event: change
+data: 1763503556834
+
+event: change
+data: 1763503979617
+
+event: change
+data: 1763504776521
+
+event: change
+data: 1763504962237
+
+event: change
+data: 1763505026631
+
+event: change
+data: 1763506339506
+
+event: change
+data: 1763506343299
+
+event: change
+data: 1763522113589
+
+
+2025/11/19 15:00:36 ---- Incoming request from 127.0.0.1:57816 ----
+GET /api/streamers HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate
+Accept-Language: en-AU,en;q=0.9
+Priority: u=3, i
+Referer: http://127.0.0.1:4173/
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/19 15:00:36 ---- Response for GET /api/streamers (200 OK) ----
+{"streamers":[{"streamer":{"id":"395848a32c2c47c2a231c1b59f2b93d4","alias":"JonSiiN","description":"Hello everyone Welcome to the official JRK Knives channel. Knives have been used since prehistoric times for a plethora of activities from weapons and tools ...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@JRKKnives","channelId":"UCbT1jA8RTEHk7y6rn2vHNGw","hubSecret":"9C_7M8CuW959d3PFQ6fZ-FRaj3yzSvel","hubLeaseDate":"2025-11-18T08:56:59Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCbT1jA8RTEHk7y6rn2vHNGw","callbackUrl":"https://sharpen.live/dev/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"status":{"live":false,"youtube":{"live":false,"startedAt":"0001-01-01T00:00:00Z"}},"createdAt":"2025-11-18T08:56:57.714492Z","updatedAt":"2025-11-18T15:04:25.787204Z"},{"streamer":{"id":"4b8e82c4a16e49e58c1ac2993e7f85e0","alias":"Attorney Melanie Little","description":"Melanie Little is a New York lawyer with over 30 years experience as a trial attorney and litigator in state and federal courts, who is now a legal analyst a...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@AttorneyMelanieLittle","channelId":"UCFSlI8Y3Zdoq5buNW_40AAA","hubSecret":"nlXDE9expkcuWHJ4vXXe3UOjfDRYwRvy","hubLeaseDate":"2025-11-18T10:07:14Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCFSlI8Y3Zdoq5buNW_40AAA","callbackUrl":"https://sharpen.live/dev/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"status":{"live":true,"platforms":["youtube"],"youtube":{"live":true,"videoId":"P4ABIOUhHMY","startedAt":"2025-11-19T15:00:00Z"}},"createdAt":"2025-11-18T10:07:12.769107Z","updatedAt":"2025-11-19T03:15:13.585357Z"},{"streamer":{"id":"816a93baffdc4102a959dc0875d74657","alias":"Arnaldo Mangini","description":"Arnaldo Mangini, comico, clown, fantasista","firstName":"","lastName":"","email":"","languages":["English","Italian"]},"platforms":{"youtube":{"handle":"@arnaldomangini","channelId":"UCoW3NnFgnDATwU9eUOswisg","hubSecret":"wSduM3o6zSJNs8LvdpuoADBL0b7g4mlT","hubLeaseDate":"2025-11-18T17:22:55Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCoW3NnFgnDATwU9eUOswisg","callbackUrl":"https://sharpen.live/dev/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"status":{"live":true,"platforms":["youtube"],"youtube":{"live":true,"videoId":"EuVbanJs0wM","startedAt":"2025-11-18T17:06:56Z"}},"createdAt":"2025-11-18T17:22:53.507193Z","updatedAt":"2025-11-18T22:52:23.299481Z"}]}
+
+2025/11/19 15:00:36 ---- Incoming request from 127.0.0.1:57816 ----
+GET /api/streamers/watch HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: text/event-stream
+Accept-Encoding: gzip, deflate
+Accept-Language: en-AU,en;q=0.9
+Cache-Control: no-cache
+Pragma: no-cache
+Priority: u=3, i
+Referer: http://127.0.0.1:4173/
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/19 15:12:44 ---- Incoming request from 127.0.0.1:58215 ----
+POST /alerts HTTP/1.1
+Host: sharpen.live
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Cache-Control: no-cache,max-age=0
+Content-Length: 884
+Content-Type: application/atom+xml
+From: googlebot(at)googlebot.com
+Link: <https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCoW3NnFgnDATwU9eUOswisg>; rel=self, <http://pubsubhubbub.appspot.com/>; rel=hub
+Pragma: no-cache
+User-Agent: FeedFetcher-Google; (+http://www.google.com/feedfetcher.html)
+Via: 1.1 Caddy
+X-Forwarded-For: 66.102.8.102
+X-Forwarded-Host: sharpen.live
+X-Forwarded-Proto: https
+X-Hub-Signature: sha1=72888e44b4c90c6dad1a7ec4a747040c3a635264
+X-Request-Id: {http.request.id}
+
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:yt="http://www.youtube.com/xml/schemas/2015" xmlns="http://www.w3.org/2005/Atom"><link rel="hub" href="https://pubsubhubbub.appspot.com"/><link rel="self" href="https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCoW3NnFgnDATwU9eUOswisg"/><title>YouTube video feed</title><updated>2025-11-19T01:12:22.644616984+00:00</updated><entry>
+  <id>yt:video:EK_s3VAY_WE</id>
+  <yt:videoId>EK_s3VAY_WE</yt:videoId>
+  <yt:channelId>UCoW3NnFgnDATwU9eUOswisg</yt:channelId>
+  <title>It's a Magic Day!🔥</title>
+  <link rel="alternate" href="https://www.youtube.com/watch?v=EK_s3VAY_WE"/>
+  <author>
+   <name>Arnaldo Mangini</name>
+   <uri>https://www.youtube.com/channel/UCoW3NnFgnDATwU9eUOswisg</uri>
+  </author>
+  <published>2025-11-19T01:12:20+00:00</published>
+  <updated>2025-11-19T01:12:22.644616984+00:00</updated>
+ </entry></feed>
+
+2025/11/19 15:12:44 Processing hub notification (1 entries) videos=EK_s3VAY_WE channel=UCoW3NnFgnDATwU9eUOswisg
+
+2025/11/19 15:12:44 Fetching live metadata for 1 video(s): EK_s3VAY_WE
+
+2025/11/19 15:12:44 Requesting watch page for EK_s3VAY_WE: https://www.youtube.com/watch?v=EK_s3VAY_WE
+
+2025/11/19 15:12:45 Fetched metadata for EK_s3VAY_WE: channel=UCoW3NnFgnDATwU9eUOswisg title="It's a Magic Day!🔥" live=true start=2025-11-18 11:38:34 +0000 +0000
+
+2025/11/19 15:12:45 Live stream detected: channel=UCoW3NnFgnDATwU9eUOswisg video=EK_s3VAY_WE title=It's a Magic Day!🔥
+
+2025/11/19 15:12:45 ---- Response for POST /alerts (204 No Content) ----
+
+2025/11/19 15:12:45 ---- Incoming request from 127.0.0.1:58218 ----
+GET /api/streamers HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Connection: keep-alive
+Referer: http://127.0.0.1:8880/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+
+
+2025/11/19 15:12:45 ---- Response for GET /api/streamers (200 OK) ----
+{"streamers":[{"streamer":{"id":"395848a32c2c47c2a231c1b59f2b93d4","alias":"JonSiiN","description":"Hello everyone Welcome to the official JRK Knives channel. Knives have been used since prehistoric times for a plethora of activities from weapons and tools ...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@JRKKnives","channelId":"UCbT1jA8RTEHk7y6rn2vHNGw","hubSecret":"9C_7M8CuW959d3PFQ6fZ-FRaj3yzSvel","hubLeaseDate":"2025-11-18T08:56:59Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCbT1jA8RTEHk7y6rn2vHNGw","callbackUrl":"https://sharpen.live/dev/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"status":{"live":false,"youtube":{"live":false,"startedAt":"0001-01-01T00:00:00Z"}},"createdAt":"2025-11-18T08:56:57.714492Z","updatedAt":"2025-11-18T15:04:25.787204Z"},{"streamer":{"id":"4b8e82c4a16e49e58c1ac2993e7f85e0","alias":"Attorney Melanie Little","description":"Melanie Little is a New York lawyer with over 30 years experience as a trial attorney and litigator in state and federal courts, who is now a legal analyst a...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@AttorneyMelanieLittle","channelId":"UCFSlI8Y3Zdoq5buNW_40AAA","hubSecret":"nlXDE9expkcuWHJ4vXXe3UOjfDRYwRvy","hubLeaseDate":"2025-11-18T10:07:14Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCFSlI8Y3Zdoq5buNW_40AAA","callbackUrl":"https://sharpen.live/dev/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"status":{"live":true,"platforms":["youtube"],"youtube":{"live":true,"videoId":"P4ABIOUhHMY","startedAt":"2025-11-19T15:00:00Z"}},"createdAt":"2025-11-18T10:07:12.769107Z","updatedAt":"2025-11-19T03:15:13.585357Z"},{"streamer":{"id":"816a93baffdc4102a959dc0875d74657","alias":"Arnaldo Mangini","description":"Arnaldo Mangini, comico, clown, fantasista","firstName":"","lastName":"","email":"","languages":["English","Italian"]},"platforms":{"youtube":{"handle":"@arnaldomangini","channelId":"UCoW3NnFgnDATwU9eUOswisg","hubSecret":"wSduM3o6zSJNs8LvdpuoADBL0b7g4mlT","hubLeaseDate":"2025-11-18T17:22:55Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCoW3NnFgnDATwU9eUOswisg","callbackUrl":"https://sharpen.live/dev/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"status":{"live":true,"platforms":["youtube"],"youtube":{"live":true,"videoId":"EK_s3VAY_WE","startedAt":"2025-11-18T11:38:34Z"}},"createdAt":"2025-11-18T17:22:53.507193Z","updatedAt":"2025-11-19T04:12:45.089807Z"}]}
+
+2025/11/19 15:12:45 ---- Incoming request from 127.0.0.1:58220 ----
+GET /api/streamers HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate
+Accept-Language: en-AU,en;q=0.9
+Priority: u=3, i
+Referer: http://127.0.0.1:4173/
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/19 15:12:45 ---- Response for GET /api/streamers (200 OK) ----
+{"streamers":[{"streamer":{"id":"395848a32c2c47c2a231c1b59f2b93d4","alias":"JonSiiN","description":"Hello everyone Welcome to the official JRK Knives channel. Knives have been used since prehistoric times for a plethora of activities from weapons and tools ...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@JRKKnives","channelId":"UCbT1jA8RTEHk7y6rn2vHNGw","hubSecret":"9C_7M8CuW959d3PFQ6fZ-FRaj3yzSvel","hubLeaseDate":"2025-11-18T08:56:59Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCbT1jA8RTEHk7y6rn2vHNGw","callbackUrl":"https://sharpen.live/dev/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"status":{"live":false,"youtube":{"live":false,"startedAt":"0001-01-01T00:00:00Z"}},"createdAt":"2025-11-18T08:56:57.714492Z","updatedAt":"2025-11-18T15:04:25.787204Z"},{"streamer":{"id":"4b8e82c4a16e49e58c1ac2993e7f85e0","alias":"Attorney Melanie Little","description":"Melanie Little is a New York lawyer with over 30 years experience as a trial attorney and litigator in state and federal courts, who is now a legal analyst a...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@AttorneyMelanieLittle","channelId":"UCFSlI8Y3Zdoq5buNW_40AAA","hubSecret":"nlXDE9expkcuWHJ4vXXe3UOjfDRYwRvy","hubLeaseDate":"2025-11-18T10:07:14Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCFSlI8Y3Zdoq5buNW_40AAA","callbackUrl":"https://sharpen.live/dev/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"status":{"live":true,"platforms":["youtube"],"youtube":{"live":true,"videoId":"P4ABIOUhHMY","startedAt":"2025-11-19T15:00:00Z"}},"createdAt":"2025-11-18T10:07:12.769107Z","updatedAt":"2025-11-19T03:15:13.585357Z"},{"streamer":{"id":"816a93baffdc4102a959dc0875d74657","alias":"Arnaldo Mangini","description":"Arnaldo Mangini, comico, clown, fantasista","firstName":"","lastName":"","email":"","languages":["English","Italian"]},"platforms":{"youtube":{"handle":"@arnaldomangini","channelId":"UCoW3NnFgnDATwU9eUOswisg","hubSecret":"wSduM3o6zSJNs8LvdpuoADBL0b7g4mlT","hubLeaseDate":"2025-11-18T17:22:55Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCoW3NnFgnDATwU9eUOswisg","callbackUrl":"https://sharpen.live/dev/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"status":{"live":true,"platforms":["youtube"],"youtube":{"live":true,"videoId":"EK_s3VAY_WE","startedAt":"2025-11-18T11:38:34Z"}},"createdAt":"2025-11-18T17:22:53.507193Z","updatedAt":"2025-11-19T04:12:45.089807Z"}]}
+
+2025/11/19 15:20:20 ---- Incoming request from 127.0.0.1:58483 ----
+POST /alerts HTTP/1.1
+Host: sharpen.live
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Cache-Control: no-cache,max-age=0
+Content-Length: 948
+Content-Type: application/atom+xml
+From: googlebot(at)googlebot.com
+Link: <https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCbT1jA8RTEHk7y6rn2vHNGw>; rel=self, <http://pubsubhubbub.appspot.com/>; rel=hub
+Pragma: no-cache
+User-Agent: FeedFetcher-Google; (+http://www.google.com/feedfetcher.html)
+Via: 1.1 Caddy
+X-Forwarded-For: 74.125.209.34
+X-Forwarded-Host: sharpen.live
+X-Forwarded-Proto: https
+X-Hub-Signature: sha1=af2eef80c0928dbbf0c72c6ef65c68fdf60ac3b2
+X-Request-Id: {http.request.id}
+
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:yt="http://www.youtube.com/xml/schemas/2015" xmlns="http://www.w3.org/2005/Atom"><link rel="hub" href="https://pubsubhubbub.appspot.com"/><link rel="self" href="https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCbT1jA8RTEHk7y6rn2vHNGw"/><title>YouTube video feed</title><updated>2025-11-19T03:20:08.298583741+00:00</updated><entry>
+  <id>yt:video:AeP_0Ev0Iso</id>
+  <yt:videoId>AeP_0Ev0Iso</yt:videoId>
+  <yt:channelId>UCbT1jA8RTEHk7y6rn2vHNGw</yt:channelId>
+  <title>SiiNs Workshop - Let the fun begin, new month new goal, new knives.  Lets make something epic</title>
+  <link rel="alternate" href="https://www.youtube.com/watch?v=AeP_0Ev0Iso"/>
+  <author>
+   <name>JonSiiN</name>
+   <uri>https://www.youtube.com/channel/UCbT1jA8RTEHk7y6rn2vHNGw</uri>
+  </author>
+  <published>2025-11-19T03:20:05+00:00</published>
+  <updated>2025-11-19T03:20:08.298583741+00:00</updated>
+ </entry></feed>
+
+2025/11/19 15:20:20 Processing hub notification (1 entries) videos=AeP_0Ev0Iso channel=UCbT1jA8RTEHk7y6rn2vHNGw
+
+2025/11/19 15:20:20 Fetching live metadata for 1 video(s): AeP_0Ev0Iso
+
+2025/11/19 15:20:20 Requesting watch page for AeP_0Ev0Iso: https://www.youtube.com/watch?v=AeP_0Ev0Iso
+
+2025/11/19 15:20:21 Fetched metadata for AeP_0Ev0Iso: channel=UCbT1jA8RTEHk7y6rn2vHNGw title="SiiNs Workshop - Let the fun begin, new month new goal, new knives.  Lets make something epic" live=true start=2025-11-18 12:59:26 +0000 +0000
+
+2025/11/19 15:20:21 Live stream detected: channel=UCbT1jA8RTEHk7y6rn2vHNGw video=AeP_0Ev0Iso title=SiiNs Workshop - Let the fun begin, new month new goal, new knives.  Lets make something epic
+
+2025/11/19 15:20:21 ---- Response for POST /alerts (204 No Content) ----
+
+2025/11/19 15:20:21 ---- Incoming request from 127.0.0.1:58485 ----
+GET /api/streamers HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Connection: keep-alive
+Referer: http://127.0.0.1:8880/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+
+
+2025/11/19 15:20:21 ---- Response for GET /api/streamers (200 OK) ----
+{"streamers":[{"streamer":{"id":"395848a32c2c47c2a231c1b59f2b93d4","alias":"JonSiiN","description":"Hello everyone Welcome to the official JRK Knives channel. Knives have been used since prehistoric times for a plethora of activities from weapons and tools ...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@JRKKnives","channelId":"UCbT1jA8RTEHk7y6rn2vHNGw","hubSecret":"9C_7M8CuW959d3PFQ6fZ-FRaj3yzSvel","hubLeaseDate":"2025-11-18T08:56:59Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCbT1jA8RTEHk7y6rn2vHNGw","callbackUrl":"https://sharpen.live/dev/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"status":{"live":true,"platforms":["youtube"],"youtube":{"live":true,"videoId":"AeP_0Ev0Iso","startedAt":"2025-11-18T12:59:26Z"}},"createdAt":"2025-11-18T08:56:57.714492Z","updatedAt":"2025-11-19T04:20:21.164371Z"},{"streamer":{"id":"4b8e82c4a16e49e58c1ac2993e7f85e0","alias":"Attorney Melanie Little","description":"Melanie Little is a New York lawyer with over 30 years experience as a trial attorney and litigator in state and federal courts, who is now a legal analyst a...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@AttorneyMelanieLittle","channelId":"UCFSlI8Y3Zdoq5buNW_40AAA","hubSecret":"nlXDE9expkcuWHJ4vXXe3UOjfDRYwRvy","hubLeaseDate":"2025-11-18T10:07:14Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCFSlI8Y3Zdoq5buNW_40AAA","callbackUrl":"https://sharpen.live/dev/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"status":{"live":true,"platforms":["youtube"],"youtube":{"live":true,"videoId":"P4ABIOUhHMY","startedAt":"2025-11-19T15:00:00Z"}},"createdAt":"2025-11-18T10:07:12.769107Z","updatedAt":"2025-11-19T03:15:13.585357Z"},{"streamer":{"id":"816a93baffdc4102a959dc0875d74657","alias":"Arnaldo Mangini","description":"Arnaldo Mangini, comico, clown, fantasista","firstName":"","lastName":"","email":"","languages":["English","Italian"]},"platforms":{"youtube":{"handle":"@arnaldomangini","channelId":"UCoW3NnFgnDATwU9eUOswisg","hubSecret":"wSduM3o6zSJNs8LvdpuoADBL0b7g4mlT","hubLeaseDate":"2025-11-18T17:22:55Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCoW3NnFgnDATwU9eUOswisg","callbackUrl":"https://sharpen.live/dev/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"status":{"live":true,"platforms":["youtube"],"youtube":{"live":true,"videoId":"EK_s3VAY_WE","startedAt":"2025-11-18T11:38:34Z"}},"createdAt":"2025-11-18T17:22:53.507193Z","updatedAt":"2025-11-19T04:12:45.089807Z"}]}
+
+2025/11/19 16:43:35 ---- Response for GET /api/streamers/watch (200 OK) ----
+event: ready
+data: 1763522113589
+
+event: change
+data: 1763525565090
+
+event: change
+data: 1763526021165
+

@@ -1,0 +1,906 @@
+2025/11/16 02:50:33 Outbound WebSub request:
+POST /subscribe HTTP/1.1
+Host: pubsubhubbub.appspot.com
+User-Agent: live-stream-alerts-client/1.0
+Content-Length: 285
+Content-Type: application/x-www-form-urlencoded
+Accept-Encoding: gzip
+
+hub.callback=https%3A%2F%2Fsharpen.live%2Falerts&hub.mode=subscribe&hub.secret=vK2FiWHHx3mhL85GeRlNi8CRnmaT97pM&hub.topic=https%3A%2F%2Fwww.youtube.com%2Fxml%2Ffeeds%2Fvideos.xml%3Fchannel_id%3DUC7d6BuAfHKTLR1l2SSg6HkA&hub.verify=async&hub.verify_token=dbc2b7b616315eda55a7777482de59c3
+
+2025/11/16 02:50:34 ---- Response for POST /api/streamers (201 Created) ----
+{"streamer":{"id":"SharpenRightServicesLLCMikeWhite","alias":"Sharpen Right Services LLC - Mike White","description":"Sharpening livestreams and tutorials.","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{},"createdAt":"2025-11-15T15:50:33.05698Z","updatedAt":"2025-11-15T15:50:33.05698Z"}
+
+2025/11/16 02:50:35 ---- Incoming request from 127.0.0.1:53391 ----
+GET /alerts?hub.topic=https://www.youtube.com/xml/feeds/videos.xml%3Fchannel_id%3DUC7d6BuAfHKTLR1l2SSg6HkA&hub.challenge=9013900215642614849&hub.verify_token=dbc2b7b616315eda55a7777482de59c3&hub.mode=subscribe&hub.lease_seconds=432000 HTTP/1.1
+Host: sharpen.live
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Cache-Control: no-cache,max-age=0
+From: googlebot(at)googlebot.com
+Pragma: no-cache
+User-Agent: FeedFetcher-Google; (+http://www.google.com/feedfetcher.html)
+Via: 1.1 Caddy
+X-Forwarded-For: 66.102.8.102
+X-Forwarded-Host: sharpen.live
+X-Forwarded-Proto: https
+X-Request-Id: {http.request_id.header}
+
+
+2025/11/16 02:50:35 Responding to hub challenge: mode=subscribe topic=https://www.youtube.com/xml/feeds/videos.xml?channel_id=UC7d6BuAfHKTLR1l2SSg6HkA lease=432000 token=dbc2b7b616315eda55a7777482de59c3 body="9013900215642614849"
+
+2025/11/16 02:50:35 Raw verification request:
+GET /alerts?hub.topic=https://www.youtube.com/xml/feeds/videos.xml%3Fchannel_id%3DUC7d6BuAfHKTLR1l2SSg6HkA&hub.challenge=9013900215642614849&hub.verify_token=dbc2b7b616315eda55a7777482de59c3&hub.mode=subscribe&hub.lease_seconds=432000 HTTP/1.1
+Host: sharpen.live
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Cache-Control: no-cache,max-age=0
+From: googlebot(at)googlebot.com
+Pragma: no-cache
+User-Agent: FeedFetcher-Google; (+http://www.google.com/feedfetcher.html)
+Via: 1.1 Caddy
+X-Forwarded-For: 66.102.8.102
+X-Forwarded-Host: sharpen.live
+X-Forwarded-Proto: https
+X-Request-Id: {http.request_id.header}
+
+
+2025/11/16 02:50:35 Planned hub response:
+HTTP/1.1 200 OK
+Content-Type: text/plain; charset=utf-8
+Content-Length: 19
+
+9013900215642614849
+
+2025/11/16 02:50:35 YouTube hub response status: 202 Accepted, body: 
+
+2025/11/16 02:50:35 YouTube alerts subscribed for Sharpen Right Services LLC - Mike White (https://www.youtube.com/xml/feeds/videos.xml?channel_id=UC7d6BuAfHKTLR1l2SSg6HkA)
+
+2025/11/16 02:50:35 ---- Response for GET /alerts (200 OK) ----
+9013900215642614849
+
+2025/11/16 02:50:58 ---- Incoming request from 127.0.0.1:53387 ----
+DELETE /api/streamers HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Connection: keep-alive
+Content-Length: 68
+Content-Type: application/json
+Postman-Token: 44757cd5-771a-4fc7-ba0d-42d3d8b5bdf2
+User-Agent: PostmanRuntime/7.48.0
+
+{
+  "streamer": {
+    "id": "SharpenRightServicesLLCMikeWhite"
+  }
+}
+
+2025/11/16 02:50:58 Outbound WebSub request:
+POST /subscribe HTTP/1.1
+Host: pubsubhubbub.appspot.com
+User-Agent: live-stream-alerts-client/1.0
+Content-Length: 287
+Content-Type: application/x-www-form-urlencoded
+Accept-Encoding: gzip
+
+hub.callback=https%3A%2F%2Fsharpen.live%2Falerts&hub.mode=unsubscribe&hub.secret=vK2FiWHHx3mhL85GeRlNi8CRnmaT97pM&hub.topic=https%3A%2F%2Fwww.youtube.com%2Fxml%2Ffeeds%2Fvideos.xml%3Fchannel_id%3DUC7d6BuAfHKTLR1l2SSg6HkA&hub.verify=async&hub.verify_token=805eec1fbbb9eaec59f4368385ca8c45
+
+2025/11/16 02:50:58 ---- Response for DELETE /api/streamers (200 OK) ----
+{"id":"SharpenRightServicesLLCMikeWhite","status":"deleted"}
+
+2025/11/16 02:50:58 ---- Incoming request from 127.0.0.1:53391 ----
+GET /alerts?hub.topic=https://www.youtube.com/xml/feeds/videos.xml%3Fchannel_id%3DUC7d6BuAfHKTLR1l2SSg6HkA&hub.challenge=5770100938788336298&hub.verify_token=805eec1fbbb9eaec59f4368385ca8c45&hub.mode=unsubscribe HTTP/1.1
+Host: sharpen.live
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Cache-Control: no-cache,max-age=0
+From: googlebot(at)googlebot.com
+Pragma: no-cache
+User-Agent: FeedFetcher-Google; (+http://www.google.com/feedfetcher.html)
+Via: 1.1 Caddy
+X-Forwarded-For: 66.102.8.101
+X-Forwarded-Host: sharpen.live
+X-Forwarded-Proto: https
+X-Request-Id: {http.request_id.header}
+
+
+2025/11/16 02:50:58 Responding to hub challenge: mode=unsubscribe topic=https://www.youtube.com/xml/feeds/videos.xml?channel_id=UC7d6BuAfHKTLR1l2SSg6HkA lease= token=805eec1fbbb9eaec59f4368385ca8c45 body="5770100938788336298"
+
+2025/11/16 02:50:58 Raw verification request:
+GET /alerts?hub.topic=https://www.youtube.com/xml/feeds/videos.xml%3Fchannel_id%3DUC7d6BuAfHKTLR1l2SSg6HkA&hub.challenge=5770100938788336298&hub.verify_token=805eec1fbbb9eaec59f4368385ca8c45&hub.mode=unsubscribe HTTP/1.1
+Host: sharpen.live
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Cache-Control: no-cache,max-age=0
+From: googlebot(at)googlebot.com
+Pragma: no-cache
+User-Agent: FeedFetcher-Google; (+http://www.google.com/feedfetcher.html)
+Via: 1.1 Caddy
+X-Forwarded-For: 66.102.8.101
+X-Forwarded-Host: sharpen.live
+X-Forwarded-Proto: https
+X-Request-Id: {http.request_id.header}
+
+
+2025/11/16 02:50:58 Planned hub response:
+HTTP/1.1 200 OK
+Content-Type: text/plain; charset=utf-8
+Content-Length: 19
+
+5770100938788336298
+
+2025/11/16 02:50:58 failed to record hub lease for UC7d6BuAfHKTLR1l2SSg6HkA: update streamers file: channel id UC7d6BuAfHKTLR1l2SSg6HkA not found
+
+2025/11/16 02:50:58 YouTube hub response status: 202 Accepted, body: 
+
+2025/11/16 02:50:58 YouTube alerts subscribed for Sharpen Right Services LLC - Mike White (https://www.youtube.com/xml/feeds/videos.xml?channel_id=UC7d6BuAfHKTLR1l2SSg6HkA)
+
+2025/11/16 02:50:58 ---- Response for GET /alerts (200 OK) ----
+5770100938788336298
+
+2025/11/16 02:51:42 ---- Incoming request from 127.0.0.1:53387 ----
+POST /api/streamers HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Connection: keep-alive
+Content-Length: 252
+Content-Type: application/json
+Postman-Token: 2ae263f3-a0c7-48b9-a6b2-3f5acd34077b
+User-Agent: PostmanRuntime/7.48.0
+
+{
+  "streamer": {
+    "alias": "Sharpen Right Services LLC - Mike White",
+    "description": "Sharpening livestreams and tutorials.",
+    "languages": ["English"]
+  },
+  "platforms": {
+    "url": "https://www.youtube.com/@sharpenrightservicesllc"
+  }
+}
+
+2025/11/16 02:51:42 Outbound WebSub request:
+POST /subscribe HTTP/1.1
+Host: pubsubhubbub.appspot.com
+User-Agent: live-stream-alerts-client/1.0
+Content-Length: 285
+Content-Type: application/x-www-form-urlencoded
+Accept-Encoding: gzip
+
+hub.callback=https%3A%2F%2Fsharpen.live%2Falerts&hub.mode=subscribe&hub.secret=fx-kFKjETulZ_fdRSjrDs66t-68yeXCd&hub.topic=https%3A%2F%2Fwww.youtube.com%2Fxml%2Ffeeds%2Fvideos.xml%3Fchannel_id%3DUC7d6BuAfHKTLR1l2SSg6HkA&hub.verify=async&hub.verify_token=7d9aab80c5ea9ee7cfee316bd5958cd8
+
+2025/11/16 02:51:43 ---- Response for POST /api/streamers (201 Created) ----
+{"streamer":{"id":"SharpenRightServicesLLCMikeWhite","alias":"Sharpen Right Services LLC - Mike White","description":"Sharpening livestreams and tutorials.","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{},"createdAt":"2025-11-15T15:51:42.157625Z","updatedAt":"2025-11-15T15:51:42.157625Z"}
+
+2025/11/16 02:51:43 ---- Incoming request from 127.0.0.1:53391 ----
+GET /alerts?hub.topic=https://www.youtube.com/xml/feeds/videos.xml%3Fchannel_id%3DUC7d6BuAfHKTLR1l2SSg6HkA&hub.challenge=6891766894107459763&hub.verify_token=7d9aab80c5ea9ee7cfee316bd5958cd8&hub.mode=subscribe&hub.lease_seconds=432000 HTTP/1.1
+Host: sharpen.live
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Cache-Control: no-cache,max-age=0
+From: googlebot(at)googlebot.com
+Pragma: no-cache
+User-Agent: FeedFetcher-Google; (+http://www.google.com/feedfetcher.html)
+Via: 1.1 Caddy
+X-Forwarded-For: 66.102.8.102
+X-Forwarded-Host: sharpen.live
+X-Forwarded-Proto: https
+X-Request-Id: {http.request_id.header}
+
+
+2025/11/16 02:51:43 Responding to hub challenge: mode=subscribe topic=https://www.youtube.com/xml/feeds/videos.xml?channel_id=UC7d6BuAfHKTLR1l2SSg6HkA lease=432000 token=7d9aab80c5ea9ee7cfee316bd5958cd8 body="6891766894107459763"
+
+2025/11/16 02:51:43 Raw verification request:
+GET /alerts?hub.topic=https://www.youtube.com/xml/feeds/videos.xml%3Fchannel_id%3DUC7d6BuAfHKTLR1l2SSg6HkA&hub.challenge=6891766894107459763&hub.verify_token=7d9aab80c5ea9ee7cfee316bd5958cd8&hub.mode=subscribe&hub.lease_seconds=432000 HTTP/1.1
+Host: sharpen.live
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Cache-Control: no-cache,max-age=0
+From: googlebot(at)googlebot.com
+Pragma: no-cache
+User-Agent: FeedFetcher-Google; (+http://www.google.com/feedfetcher.html)
+Via: 1.1 Caddy
+X-Forwarded-For: 66.102.8.102
+X-Forwarded-Host: sharpen.live
+X-Forwarded-Proto: https
+X-Request-Id: {http.request_id.header}
+
+
+2025/11/16 02:51:43 Planned hub response:
+HTTP/1.1 200 OK
+Content-Length: 19
+Content-Type: text/plain; charset=utf-8
+
+6891766894107459763
+
+2025/11/16 02:51:43 YouTube hub response status: 202 Accepted, body: 
+
+2025/11/16 02:51:43 YouTube alerts subscribed for Sharpen Right Services LLC - Mike White (https://www.youtube.com/xml/feeds/videos.xml?channel_id=UC7d6BuAfHKTLR1l2SSg6HkA)
+
+2025/11/16 02:51:43 ---- Response for GET /alerts (200 OK) ----
+6891766894107459763
+
+2025/11/16 04:01:58 ---- Incoming request from 127.0.0.1:54084 ----
+POST /alerts HTTP/1.1
+Host: sharpen.live
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Cache-Control: no-cache,max-age=0
+Content-Length: 991
+Content-Type: application/atom+xml
+From: googlebot(at)googlebot.com
+Link: <https://www.youtube.com/xml/feeds/videos.xml?channel_id=UC7d6BuAfHKTLR1l2SSg6HkA>; rel=self, <http://pubsubhubbub.appspot.com/>; rel=hub
+Pragma: no-cache
+User-Agent: FeedFetcher-Google; (+http://www.google.com/feedfetcher.html)
+Via: 1.1 Caddy
+X-Forwarded-For: 66.102.6.233
+X-Forwarded-Host: sharpen.live
+X-Forwarded-Proto: https
+X-Hub-Signature: sha1=89805e96f23c934fe56986b6216cc26c10aa953e
+X-Request-Id: {http.request_id.header}
+
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:yt="http://www.youtube.com/xml/schemas/2015" xmlns="http://www.w3.org/2005/Atom"><link rel="hub" href="https://pubsubhubbub.appspot.com"/><link rel="self" href="https://www.youtube.com/xml/feeds/videos.xml?channel_id=UC7d6BuAfHKTLR1l2SSg6HkA"/><title>YouTube video feed</title><updated>2025-11-15T16:55:41.76023948+00:00</updated><entry>
+  <id>yt:video:ilpSRpy1h68</id>
+  <yt:videoId>ilpSRpy1h68</yt:videoId>
+  <yt:channelId>UC7d6BuAfHKTLR1l2SSg6HkA</yt:channelId>
+  <title>Sharpen Right Services LLC - League City, Texas | Knife &amp; Shear Sharpening Tips, Training &amp; Tools</title>
+  <link rel="alternate" href="https://www.youtube.com/watch?v=ilpSRpy1h68"/>
+  <author>
+   <name>Sharpen Right Services LLC - Mike White </name>
+   <uri>https://www.youtube.com/channel/UC7d6BuAfHKTLR1l2SSg6HkA</uri>
+  </author>
+  <published>2025-11-15T16:32:54+00:00</published>
+  <updated>2025-11-15T16:55:41.76023948+00:00</updated>
+ </entry></feed>
+
+2025/11/16 04:01:58 ---- Incoming request from 127.0.0.1:54083 ----
+POST /alerts HTTP/1.1
+Host: sharpen.live
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Cache-Control: no-cache,max-age=0
+Content-Length: 993
+Content-Type: application/atom+xml
+From: googlebot(at)googlebot.com
+Link: <https://www.youtube.com/xml/feeds/videos.xml?channel_id=UC7d6BuAfHKTLR1l2SSg6HkA>; rel=self, <http://pubsubhubbub.appspot.com/>; rel=hub
+Pragma: no-cache
+User-Agent: FeedFetcher-Google; (+http://www.google.com/feedfetcher.html)
+Via: 1.1 Caddy
+X-Forwarded-For: 66.102.6.234
+X-Forwarded-Host: sharpen.live
+X-Forwarded-Proto: https
+X-Hub-Signature: sha1=2c817f0998a40f98427b99b701cd21af2a58b8b6
+X-Request-Id: {http.request_id.header}
+
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:yt="http://www.youtube.com/xml/schemas/2015" xmlns="http://www.w3.org/2005/Atom"><link rel="hub" href="https://pubsubhubbub.appspot.com"/><link rel="self" href="https://www.youtube.com/xml/feeds/videos.xml?channel_id=UC7d6BuAfHKTLR1l2SSg6HkA"/><title>YouTube video feed</title><updated>2025-11-15T16:55:40.716168575+00:00</updated><entry>
+  <id>yt:video:ilpSRpy1h68</id>
+  <yt:videoId>ilpSRpy1h68</yt:videoId>
+  <yt:channelId>UC7d6BuAfHKTLR1l2SSg6HkA</yt:channelId>
+  <title>Sharpen Right Services LLC - League City, Texas | Knife &amp; Shear Sharpening Tips, Training &amp; Tools</title>
+  <link rel="alternate" href="https://www.youtube.com/watch?v=ilpSRpy1h68"/>
+  <author>
+   <name>Sharpen Right Services LLC - Mike White </name>
+   <uri>https://www.youtube.com/channel/UC7d6BuAfHKTLR1l2SSg6HkA</uri>
+  </author>
+  <published>2025-11-15T16:32:54+00:00</published>
+  <updated>2025-11-15T16:55:40.716168575+00:00</updated>
+ </entry></feed>
+
+2025/11/16 04:01:58 ---- Response for POST /alerts (405 Method Not Allowed) ----
+method not allowed
+
+2025/11/16 04:01:58 ---- Response for POST /alerts (405 Method Not Allowed) ----
+method not allowed
+
+2025/11/16 04:01:58 ---- Incoming request from 127.0.0.1:54085 ----
+POST /alerts HTTP/1.1
+Host: sharpen.live
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Cache-Control: no-cache,max-age=0
+Content-Length: 993
+Content-Type: application/atom+xml
+From: googlebot(at)googlebot.com
+Link: <https://www.youtube.com/xml/feeds/videos.xml?channel_id=UC7d6BuAfHKTLR1l2SSg6HkA>; rel=self, <http://pubsubhubbub.appspot.com/>; rel=hub
+Pragma: no-cache
+User-Agent: FeedFetcher-Google; (+http://www.google.com/feedfetcher.html)
+Via: 1.1 Caddy
+X-Forwarded-For: 66.102.6.232
+X-Forwarded-Host: sharpen.live
+X-Forwarded-Proto: https
+X-Hub-Signature: sha1=5a4bd23213cf0ddf6f1934f12b59e693cdbf1817
+X-Request-Id: {http.request_id.header}
+
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:yt="http://www.youtube.com/xml/schemas/2015" xmlns="http://www.w3.org/2005/Atom"><link rel="hub" href="https://pubsubhubbub.appspot.com"/><link rel="self" href="https://www.youtube.com/xml/feeds/videos.xml?channel_id=UC7d6BuAfHKTLR1l2SSg6HkA"/><title>YouTube video feed</title><updated>2025-11-15T16:58:54.900434085+00:00</updated><entry>
+  <id>yt:video:ilpSRpy1h68</id>
+  <yt:videoId>ilpSRpy1h68</yt:videoId>
+  <yt:channelId>UC7d6BuAfHKTLR1l2SSg6HkA</yt:channelId>
+  <title>Sharpen Right Services LLC - League City, Texas | Knife &amp; Shear Sharpening Tips, Training &amp; Tools</title>
+  <link rel="alternate" href="https://www.youtube.com/watch?v=ilpSRpy1h68"/>
+  <author>
+   <name>Sharpen Right Services LLC - Mike White </name>
+   <uri>https://www.youtube.com/channel/UC7d6BuAfHKTLR1l2SSg6HkA</uri>
+  </author>
+  <published>2025-11-15T16:58:52+00:00</published>
+  <updated>2025-11-15T16:58:54.900434085+00:00</updated>
+ </entry></feed>
+
+2025/11/16 04:01:58 ---- Response for POST /alerts (405 Method Not Allowed) ----
+method not allowed
+
+2025/11/16 04:22:39 ---- Incoming request from 127.0.0.1:54196 ----
+POST /alerts HTTP/1.1
+Host: sharpen.live
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Cache-Control: no-cache,max-age=0
+Content-Length: 961
+Content-Type: application/atom+xml
+From: googlebot(at)googlebot.com
+Link: <https://www.youtube.com/xml/feeds/videos.xml?channel_id=UC7d6BuAfHKTLR1l2SSg6HkA>; rel=self, <http://pubsubhubbub.appspot.com/>; rel=hub
+Pragma: no-cache
+User-Agent: FeedFetcher-Google; (+http://www.google.com/feedfetcher.html)
+Via: 1.1 Caddy
+X-Forwarded-For: 66.102.6.233
+X-Forwarded-Host: sharpen.live
+X-Forwarded-Proto: https
+X-Hub-Signature: sha1=4259d939778f5c44e2eb5aee761d91ac9c38cc7b
+X-Request-Id: {http.request_id.header}
+
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:yt="http://www.youtube.com/xml/schemas/2015" xmlns="http://www.w3.org/2005/Atom"><link rel="hub" href="https://pubsubhubbub.appspot.com"/><link rel="self" href="https://www.youtube.com/xml/feeds/videos.xml?channel_id=UC7d6BuAfHKTLR1l2SSg6HkA"/><title>YouTube video feed</title><updated>2025-11-15T16:09:55.063849833+00:00</updated><entry>
+  <id>yt:video:8Ij-QmD6zlc</id>
+  <yt:videoId>8Ij-QmD6zlc</yt:videoId>
+  <yt:channelId>UC7d6BuAfHKTLR1l2SSg6HkA</yt:channelId>
+  <title>Knife Sharpening Saturday Sharpen Right Services LLC - League City, Texas</title>
+  <link rel="alternate" href="https://www.youtube.com/watch?v=8Ij-QmD6zlc"/>
+  <author>
+   <name>Sharpen Right Services LLC - Mike White </name>
+   <uri>https://www.youtube.com/channel/UC7d6BuAfHKTLR1l2SSg6HkA</uri>
+  </author>
+  <published>2025-11-15T15:29:13+00:00</published>
+  <updated>2025-11-15T16:09:55.063849833+00:00</updated>
+ </entry></feed>
+
+2025/11/16 04:22:39 ---- Response for POST /alerts (405 Method Not Allowed) ----
+method not allowed
+
+2025/11/16 04:22:39 ---- Incoming request from 127.0.0.1:54197 ----
+POST /alerts HTTP/1.1
+Host: sharpen.live
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Cache-Control: no-cache,max-age=0
+Content-Length: 961
+Content-Type: application/atom+xml
+From: googlebot(at)googlebot.com
+Link: <https://www.youtube.com/xml/feeds/videos.xml?channel_id=UC7d6BuAfHKTLR1l2SSg6HkA>; rel=self, <http://pubsubhubbub.appspot.com/>; rel=hub
+Pragma: no-cache
+User-Agent: FeedFetcher-Google; (+http://www.google.com/feedfetcher.html)
+Via: 1.1 Caddy
+X-Forwarded-For: 66.102.6.233
+X-Forwarded-Host: sharpen.live
+X-Forwarded-Proto: https
+X-Hub-Signature: sha1=35dc284c32c80af2fec3d5ebe6486d1b61381262
+X-Request-Id: {http.request_id.header}
+
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:yt="http://www.youtube.com/xml/schemas/2015" xmlns="http://www.w3.org/2005/Atom"><link rel="hub" href="https://pubsubhubbub.appspot.com"/><link rel="self" href="https://www.youtube.com/xml/feeds/videos.xml?channel_id=UC7d6BuAfHKTLR1l2SSg6HkA"/><title>YouTube video feed</title><updated>2025-11-15T16:09:56.604533116+00:00</updated><entry>
+  <id>yt:video:8Ij-QmD6zlc</id>
+  <yt:videoId>8Ij-QmD6zlc</yt:videoId>
+  <yt:channelId>UC7d6BuAfHKTLR1l2SSg6HkA</yt:channelId>
+  <title>Knife Sharpening Saturday Sharpen Right Services LLC - League City, Texas</title>
+  <link rel="alternate" href="https://www.youtube.com/watch?v=8Ij-QmD6zlc"/>
+  <author>
+   <name>Sharpen Right Services LLC - Mike White </name>
+   <uri>https://www.youtube.com/channel/UC7d6BuAfHKTLR1l2SSg6HkA</uri>
+  </author>
+  <published>2025-11-15T15:29:13+00:00</published>
+  <updated>2025-11-15T16:09:56.604533116+00:00</updated>
+ </entry></feed>
+
+2025/11/16 04:22:39 ---- Response for POST /alerts (405 Method Not Allowed) ----
+method not allowed
+
+2025/11/16 04:22:39 ---- Incoming request from 127.0.0.1:54198 ----
+POST /alerts HTTP/1.1
+Host: sharpen.live
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Cache-Control: no-cache,max-age=0
+Content-Length: 961
+Content-Type: application/atom+xml
+From: googlebot(at)googlebot.com
+Link: <https://www.youtube.com/xml/feeds/videos.xml?channel_id=UC7d6BuAfHKTLR1l2SSg6HkA>; rel=self, <http://pubsubhubbub.appspot.com/>; rel=hub
+Pragma: no-cache
+User-Agent: FeedFetcher-Google; (+http://www.google.com/feedfetcher.html)
+Via: 1.1 Caddy
+X-Forwarded-For: 66.102.6.233
+X-Forwarded-Host: sharpen.live
+X-Forwarded-Proto: https
+X-Hub-Signature: sha1=11798e0f94f4753fb21df36f72af1a8c07276679
+X-Request-Id: {http.request_id.header}
+
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:yt="http://www.youtube.com/xml/schemas/2015" xmlns="http://www.w3.org/2005/Atom"><link rel="hub" href="https://pubsubhubbub.appspot.com"/><link rel="self" href="https://www.youtube.com/xml/feeds/videos.xml?channel_id=UC7d6BuAfHKTLR1l2SSg6HkA"/><title>YouTube video feed</title><updated>2025-11-15T16:15:35.325040459+00:00</updated><entry>
+  <id>yt:video:8Ij-QmD6zlc</id>
+  <yt:videoId>8Ij-QmD6zlc</yt:videoId>
+  <yt:channelId>UC7d6BuAfHKTLR1l2SSg6HkA</yt:channelId>
+  <title>Knife Sharpening Saturday Sharpen Right Services LLC - League City, Texas</title>
+  <link rel="alternate" href="https://www.youtube.com/watch?v=8Ij-QmD6zlc"/>
+  <author>
+   <name>Sharpen Right Services LLC - Mike White </name>
+   <uri>https://www.youtube.com/channel/UC7d6BuAfHKTLR1l2SSg6HkA</uri>
+  </author>
+  <published>2025-11-15T16:15:33+00:00</published>
+  <updated>2025-11-15T16:15:35.325040459+00:00</updated>
+ </entry></feed>
+
+2025/11/16 04:22:39 ---- Response for POST /alerts (405 Method Not Allowed) ----
+method not allowed
+
+2025/11/16 04:40:38 ---- Incoming request from 127.0.0.1:54251 ----
+POST /alerts HTTP/1.1
+Host: sharpen.live
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Cache-Control: no-cache,max-age=0
+Content-Length: 993
+Content-Type: application/atom+xml
+From: googlebot(at)googlebot.com
+Link: <https://www.youtube.com/xml/feeds/videos.xml?channel_id=UC7d6BuAfHKTLR1l2SSg6HkA>; rel=self, <http://pubsubhubbub.appspot.com/>; rel=hub
+Pragma: no-cache
+User-Agent: FeedFetcher-Google; (+http://www.google.com/feedfetcher.html)
+Via: 1.1 Caddy
+X-Forwarded-For: 142.250.32.2
+X-Forwarded-Host: sharpen.live
+X-Forwarded-Proto: https
+X-Hub-Signature: sha1=f75732fc33b72d3bc12286f53a95dd9883206d57
+X-Request-Id: {http.request_id.header}
+
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:yt="http://www.youtube.com/xml/schemas/2015" xmlns="http://www.w3.org/2005/Atom"><link rel="hub" href="https://pubsubhubbub.appspot.com"/><link rel="self" href="https://www.youtube.com/xml/feeds/videos.xml?channel_id=UC7d6BuAfHKTLR1l2SSg6HkA"/><title>YouTube video feed</title><updated>2025-11-15T16:33:32.522040506+00:00</updated><entry>
+  <id>yt:video:ilpSRpy1h68</id>
+  <yt:videoId>ilpSRpy1h68</yt:videoId>
+  <yt:channelId>UC7d6BuAfHKTLR1l2SSg6HkA</yt:channelId>
+  <title>Sharpen Right Services LLC - League City, Texas | Knife &amp; Shear Sharpening Tips, Training &amp; Tools</title>
+  <link rel="alternate" href="https://www.youtube.com/watch?v=ilpSRpy1h68"/>
+  <author>
+   <name>Sharpen Right Services LLC - Mike White </name>
+   <uri>https://www.youtube.com/channel/UC7d6BuAfHKTLR1l2SSg6HkA</uri>
+  </author>
+  <published>2025-11-15T16:32:54+00:00</published>
+  <updated>2025-11-15T16:33:32.522040506+00:00</updated>
+ </entry></feed>
+
+2025/11/16 04:40:38 ---- Response for POST /alerts (405 Method Not Allowed) ----
+method not allowed
+
+2025/11/16 04:41:19 ---- Incoming request from 127.0.0.1:54251 ----
+POST /alerts HTTP/1.1
+Host: sharpen.live
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Cache-Control: no-cache,max-age=0
+Content-Length: 993
+Content-Type: application/atom+xml
+From: googlebot(at)googlebot.com
+Link: <https://www.youtube.com/xml/feeds/videos.xml?channel_id=UC7d6BuAfHKTLR1l2SSg6HkA>; rel=self, <http://pubsubhubbub.appspot.com/>; rel=hub
+Pragma: no-cache
+User-Agent: FeedFetcher-Google; (+http://www.google.com/feedfetcher.html)
+Via: 1.1 Caddy
+X-Forwarded-For: 142.250.32.1
+X-Forwarded-Host: sharpen.live
+X-Forwarded-Proto: https
+X-Hub-Signature: sha1=9549c789ad645541d37db03f7db1388c41683269
+X-Request-Id: {http.request_id.header}
+
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:yt="http://www.youtube.com/xml/schemas/2015" xmlns="http://www.w3.org/2005/Atom"><link rel="hub" href="https://pubsubhubbub.appspot.com"/><link rel="self" href="https://www.youtube.com/xml/feeds/videos.xml?channel_id=UC7d6BuAfHKTLR1l2SSg6HkA"/><title>YouTube video feed</title><updated>2025-11-15T16:33:54.478752088+00:00</updated><entry>
+  <id>yt:video:ilpSRpy1h68</id>
+  <yt:videoId>ilpSRpy1h68</yt:videoId>
+  <yt:channelId>UC7d6BuAfHKTLR1l2SSg6HkA</yt:channelId>
+  <title>Sharpen Right Services LLC - League City, Texas | Knife &amp; Shear Sharpening Tips, Training &amp; Tools</title>
+  <link rel="alternate" href="https://www.youtube.com/watch?v=ilpSRpy1h68"/>
+  <author>
+   <name>Sharpen Right Services LLC - Mike White </name>
+   <uri>https://www.youtube.com/channel/UC7d6BuAfHKTLR1l2SSg6HkA</uri>
+  </author>
+  <published>2025-11-15T16:32:54+00:00</published>
+  <updated>2025-11-15T16:33:54.478752088+00:00</updated>
+ </entry></feed>
+
+2025/11/16 04:41:19 ---- Response for POST /alerts (405 Method Not Allowed) ----
+method not allowed
+
+2025/11/16 09:40:14 ---- Incoming request from 127.0.0.1:55264 ----
+POST /alerts HTTP/1.1
+Host: sharpen.live
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Cache-Control: no-cache,max-age=0
+Content-Length: 942
+Content-Type: application/atom+xml
+From: googlebot(at)googlebot.com
+Link: <https://www.youtube.com/xml/feeds/videos.xml?channel_id=UC7d6BuAfHKTLR1l2SSg6HkA>; rel=self, <http://pubsubhubbub.appspot.com/>; rel=hub
+Pragma: no-cache
+User-Agent: FeedFetcher-Google; (+http://www.google.com/feedfetcher.html)
+Via: 1.1 Caddy
+X-Forwarded-For: 66.102.6.232
+X-Forwarded-Host: sharpen.live
+X-Forwarded-Proto: https
+X-Hub-Signature: sha1=a1d8546fa41a1c9fdf97d8cf916fd6fa1aeb72d7
+X-Request-Id: {http.request_id.header}
+
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:yt="http://www.youtube.com/xml/schemas/2015" xmlns="http://www.w3.org/2005/Atom"><link rel="hub" href="https://pubsubhubbub.appspot.com"/><link rel="self" href="https://www.youtube.com/xml/feeds/videos.xml?channel_id=UC7d6BuAfHKTLR1l2SSg6HkA"/><title>YouTube video feed</title><updated>2025-11-15T22:36:32.816541726+00:00</updated><entry>
+  <id>yt:video:B6SuEqvQd8Y</id>
+  <yt:videoId>B6SuEqvQd8Y</yt:videoId>
+  <yt:channelId>UC7d6BuAfHKTLR1l2SSg6HkA</yt:channelId>
+  <title>More Mailed In Items to Be Sharpened Came In Today 😂</title>
+  <link rel="alternate" href="https://www.youtube.com/shorts/B6SuEqvQd8Y"/>
+  <author>
+   <name>Sharpen Right Services LLC - Mike White </name>
+   <uri>https://www.youtube.com/channel/UC7d6BuAfHKTLR1l2SSg6HkA</uri>
+  </author>
+  <published>2025-11-15T22:27:34+00:00</published>
+  <updated>2025-11-15T22:36:32.816541726+00:00</updated>
+ </entry></feed>
+
+2025/11/16 09:40:14 ---- Response for POST /alerts (405 Method Not Allowed) ----
+method not allowed
+
+2025/11/16 09:40:14 ---- Incoming request from 127.0.0.1:55263 ----
+POST /alerts HTTP/1.1
+Host: sharpen.live
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Cache-Control: no-cache,max-age=0
+Content-Length: 940
+Content-Type: application/atom+xml
+From: googlebot(at)googlebot.com
+Link: <https://www.youtube.com/xml/feeds/videos.xml?channel_id=UC7d6BuAfHKTLR1l2SSg6HkA>; rel=self, <http://pubsubhubbub.appspot.com/>; rel=hub
+Pragma: no-cache
+User-Agent: FeedFetcher-Google; (+http://www.google.com/feedfetcher.html)
+Via: 1.1 Caddy
+X-Forwarded-For: 66.102.6.234
+X-Forwarded-Host: sharpen.live
+X-Forwarded-Proto: https
+X-Hub-Signature: sha1=2cd2e44a188b5c5013e57e1c559dd785a2c49051
+X-Request-Id: {http.request_id.header}
+
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:yt="http://www.youtube.com/xml/schemas/2015" xmlns="http://www.w3.org/2005/Atom"><link rel="hub" href="https://pubsubhubbub.appspot.com"/><link rel="self" href="https://www.youtube.com/xml/feeds/videos.xml?channel_id=UC7d6BuAfHKTLR1l2SSg6HkA"/><title>YouTube video feed</title><updated>2025-11-15T22:27:37.33225332+00:00</updated><entry>
+  <id>yt:video:B6SuEqvQd8Y</id>
+  <yt:videoId>B6SuEqvQd8Y</yt:videoId>
+  <yt:channelId>UC7d6BuAfHKTLR1l2SSg6HkA</yt:channelId>
+  <title>More Mailed In Items to Be Sharpened Came In Today 😂</title>
+  <link rel="alternate" href="https://www.youtube.com/shorts/B6SuEqvQd8Y"/>
+  <author>
+   <name>Sharpen Right Services LLC - Mike White </name>
+   <uri>https://www.youtube.com/channel/UC7d6BuAfHKTLR1l2SSg6HkA</uri>
+  </author>
+  <published>2025-11-15T22:27:34+00:00</published>
+  <updated>2025-11-15T22:27:37.33225332+00:00</updated>
+ </entry></feed>
+
+2025/11/16 09:40:14 ---- Response for POST /alerts (405 Method Not Allowed) ----
+method not allowed
+
+2025/11/16 09:40:14 ---- Incoming request from 127.0.0.1:55265 ----
+POST /alerts HTTP/1.1
+Host: sharpen.live
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Cache-Control: no-cache,max-age=0
+Content-Length: 942
+Content-Type: application/atom+xml
+From: googlebot(at)googlebot.com
+Link: <https://www.youtube.com/xml/feeds/videos.xml?channel_id=UC7d6BuAfHKTLR1l2SSg6HkA>; rel=self, <http://pubsubhubbub.appspot.com/>; rel=hub
+Pragma: no-cache
+User-Agent: FeedFetcher-Google; (+http://www.google.com/feedfetcher.html)
+Via: 1.1 Caddy
+X-Forwarded-For: 66.102.6.233
+X-Forwarded-Host: sharpen.live
+X-Forwarded-Proto: https
+X-Hub-Signature: sha1=82d7a65885f331c9ad434a03af8bbc930cb76960
+X-Request-Id: {http.request_id.header}
+
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:yt="http://www.youtube.com/xml/schemas/2015" xmlns="http://www.w3.org/2005/Atom"><link rel="hub" href="https://pubsubhubbub.appspot.com"/><link rel="self" href="https://www.youtube.com/xml/feeds/videos.xml?channel_id=UC7d6BuAfHKTLR1l2SSg6HkA"/><title>YouTube video feed</title><updated>2025-11-15T22:36:34.447032895+00:00</updated><entry>
+  <id>yt:video:B6SuEqvQd8Y</id>
+  <yt:videoId>B6SuEqvQd8Y</yt:videoId>
+  <yt:channelId>UC7d6BuAfHKTLR1l2SSg6HkA</yt:channelId>
+  <title>More Mailed In Items to Be Sharpened Came In Today 😂</title>
+  <link rel="alternate" href="https://www.youtube.com/shorts/B6SuEqvQd8Y"/>
+  <author>
+   <name>Sharpen Right Services LLC - Mike White </name>
+   <uri>https://www.youtube.com/channel/UC7d6BuAfHKTLR1l2SSg6HkA</uri>
+  </author>
+  <published>2025-11-15T22:27:34+00:00</published>
+  <updated>2025-11-15T22:36:34.447032895+00:00</updated>
+ </entry></feed>
+
+2025/11/16 09:40:14 ---- Response for POST /alerts (405 Method Not Allowed) ----
+method not allowed
+
+2025/11/16 10:56:13 ---- Incoming request from 127.0.0.1:55932 ----
+POST /alerts HTTP/1.1
+Host: sharpen.live
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Cache-Control: no-cache,max-age=0
+Content-Length: 993
+Content-Type: application/atom+xml
+From: googlebot(at)googlebot.com
+Link: <https://www.youtube.com/xml/feeds/videos.xml?channel_id=UC7d6BuAfHKTLR1l2SSg6HkA>; rel=self, <http://pubsubhubbub.appspot.com/>; rel=hub
+Pragma: no-cache
+User-Agent: FeedFetcher-Google; (+http://www.google.com/feedfetcher.html)
+Via: 1.1 Caddy
+X-Forwarded-For: 74.125.209.33
+X-Forwarded-Host: sharpen.live
+X-Forwarded-Proto: https
+X-Hub-Signature: sha1=2c817f0998a40f98427b99b701cd21af2a58b8b6
+X-Request-Id: {http.request_id.header}
+
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:yt="http://www.youtube.com/xml/schemas/2015" xmlns="http://www.w3.org/2005/Atom"><link rel="hub" href="https://pubsubhubbub.appspot.com"/><link rel="self" href="https://www.youtube.com/xml/feeds/videos.xml?channel_id=UC7d6BuAfHKTLR1l2SSg6HkA"/><title>YouTube video feed</title><updated>2025-11-15T16:55:40.716168575+00:00</updated><entry>
+  <id>yt:video:ilpSRpy1h68</id>
+  <yt:videoId>ilpSRpy1h68</yt:videoId>
+  <yt:channelId>UC7d6BuAfHKTLR1l2SSg6HkA</yt:channelId>
+  <title>Sharpen Right Services LLC - League City, Texas | Knife &amp; Shear Sharpening Tips, Training &amp; Tools</title>
+  <link rel="alternate" href="https://www.youtube.com/watch?v=ilpSRpy1h68"/>
+  <author>
+   <name>Sharpen Right Services LLC - Mike White </name>
+   <uri>https://www.youtube.com/channel/UC7d6BuAfHKTLR1l2SSg6HkA</uri>
+  </author>
+  <published>2025-11-15T16:32:54+00:00</published>
+  <updated>2025-11-15T16:55:40.716168575+00:00</updated>
+ </entry></feed>
+
+2025/11/16 10:56:13 ---- Response for POST /alerts (405 Method Not Allowed) ----
+method not allowed
+
+2025/11/16 10:56:16 ---- Incoming request from 127.0.0.1:55932 ----
+POST /alerts HTTP/1.1
+Host: sharpen.live
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Cache-Control: no-cache,max-age=0
+Content-Length: 991
+Content-Type: application/atom+xml
+From: googlebot(at)googlebot.com
+Link: <https://www.youtube.com/xml/feeds/videos.xml?channel_id=UC7d6BuAfHKTLR1l2SSg6HkA>; rel=self, <http://pubsubhubbub.appspot.com/>; rel=hub
+Pragma: no-cache
+User-Agent: FeedFetcher-Google; (+http://www.google.com/feedfetcher.html)
+Via: 1.1 Caddy
+X-Forwarded-For: 74.125.209.34
+X-Forwarded-Host: sharpen.live
+X-Forwarded-Proto: https
+X-Hub-Signature: sha1=89805e96f23c934fe56986b6216cc26c10aa953e
+X-Request-Id: {http.request_id.header}
+
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:yt="http://www.youtube.com/xml/schemas/2015" xmlns="http://www.w3.org/2005/Atom"><link rel="hub" href="https://pubsubhubbub.appspot.com"/><link rel="self" href="https://www.youtube.com/xml/feeds/videos.xml?channel_id=UC7d6BuAfHKTLR1l2SSg6HkA"/><title>YouTube video feed</title><updated>2025-11-15T16:55:41.76023948+00:00</updated><entry>
+  <id>yt:video:ilpSRpy1h68</id>
+  <yt:videoId>ilpSRpy1h68</yt:videoId>
+  <yt:channelId>UC7d6BuAfHKTLR1l2SSg6HkA</yt:channelId>
+  <title>Sharpen Right Services LLC - League City, Texas | Knife &amp; Shear Sharpening Tips, Training &amp; Tools</title>
+  <link rel="alternate" href="https://www.youtube.com/watch?v=ilpSRpy1h68"/>
+  <author>
+   <name>Sharpen Right Services LLC - Mike White </name>
+   <uri>https://www.youtube.com/channel/UC7d6BuAfHKTLR1l2SSg6HkA</uri>
+  </author>
+  <published>2025-11-15T16:32:54+00:00</published>
+  <updated>2025-11-15T16:55:41.76023948+00:00</updated>
+ </entry></feed>
+
+2025/11/16 10:56:16 ---- Response for POST /alerts (405 Method Not Allowed) ----
+method not allowed
+
+2025/11/16 10:59:27 ---- Incoming request from 127.0.0.1:56011 ----
+POST /alerts HTTP/1.1
+Host: sharpen.live
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Cache-Control: no-cache,max-age=0
+Content-Length: 993
+Content-Type: application/atom+xml
+From: googlebot(at)googlebot.com
+Link: <https://www.youtube.com/xml/feeds/videos.xml?channel_id=UC7d6BuAfHKTLR1l2SSg6HkA>; rel=self, <http://pubsubhubbub.appspot.com/>; rel=hub
+Pragma: no-cache
+User-Agent: FeedFetcher-Google; (+http://www.google.com/feedfetcher.html)
+Via: 1.1 Caddy
+X-Forwarded-For: 142.250.32.1
+X-Forwarded-Host: sharpen.live
+X-Forwarded-Proto: https
+X-Hub-Signature: sha1=5a4bd23213cf0ddf6f1934f12b59e693cdbf1817
+X-Request-Id: {http.request_id.header}
+
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:yt="http://www.youtube.com/xml/schemas/2015" xmlns="http://www.w3.org/2005/Atom"><link rel="hub" href="https://pubsubhubbub.appspot.com"/><link rel="self" href="https://www.youtube.com/xml/feeds/videos.xml?channel_id=UC7d6BuAfHKTLR1l2SSg6HkA"/><title>YouTube video feed</title><updated>2025-11-15T16:58:54.900434085+00:00</updated><entry>
+  <id>yt:video:ilpSRpy1h68</id>
+  <yt:videoId>ilpSRpy1h68</yt:videoId>
+  <yt:channelId>UC7d6BuAfHKTLR1l2SSg6HkA</yt:channelId>
+  <title>Sharpen Right Services LLC - League City, Texas | Knife &amp; Shear Sharpening Tips, Training &amp; Tools</title>
+  <link rel="alternate" href="https://www.youtube.com/watch?v=ilpSRpy1h68"/>
+  <author>
+   <name>Sharpen Right Services LLC - Mike White </name>
+   <uri>https://www.youtube.com/channel/UC7d6BuAfHKTLR1l2SSg6HkA</uri>
+  </author>
+  <published>2025-11-15T16:58:52+00:00</published>
+  <updated>2025-11-15T16:58:54.900434085+00:00</updated>
+ </entry></feed>
+
+2025/11/16 10:59:27 ---- Response for POST /alerts (405 Method Not Allowed) ----
+method not allowed
+
+2025/11/16 11:09:44 ---- Incoming request from 127.0.0.1:56265 ----
+POST /alerts HTTP/1.1
+Host: sharpen.live
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Cache-Control: no-cache,max-age=0
+Content-Length: 940
+Content-Type: application/atom+xml
+From: googlebot(at)googlebot.com
+Link: <https://www.youtube.com/xml/feeds/videos.xml?channel_id=UC7d6BuAfHKTLR1l2SSg6HkA>; rel=self, <http://pubsubhubbub.appspot.com/>; rel=hub
+Pragma: no-cache
+User-Agent: FeedFetcher-Google; (+http://www.google.com/feedfetcher.html)
+Via: 1.1 Caddy
+X-Forwarded-For: 66.102.6.233
+X-Forwarded-Host: sharpen.live
+X-Forwarded-Proto: https
+X-Hub-Signature: sha1=2cd2e44a188b5c5013e57e1c559dd785a2c49051
+X-Request-Id: {http.request_id.header}
+
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:yt="http://www.youtube.com/xml/schemas/2015" xmlns="http://www.w3.org/2005/Atom"><link rel="hub" href="https://pubsubhubbub.appspot.com"/><link rel="self" href="https://www.youtube.com/xml/feeds/videos.xml?channel_id=UC7d6BuAfHKTLR1l2SSg6HkA"/><title>YouTube video feed</title><updated>2025-11-15T22:27:37.33225332+00:00</updated><entry>
+  <id>yt:video:B6SuEqvQd8Y</id>
+  <yt:videoId>B6SuEqvQd8Y</yt:videoId>
+  <yt:channelId>UC7d6BuAfHKTLR1l2SSg6HkA</yt:channelId>
+  <title>More Mailed In Items to Be Sharpened Came In Today 😂</title>
+  <link rel="alternate" href="https://www.youtube.com/shorts/B6SuEqvQd8Y"/>
+  <author>
+   <name>Sharpen Right Services LLC - Mike White </name>
+   <uri>https://www.youtube.com/channel/UC7d6BuAfHKTLR1l2SSg6HkA</uri>
+  </author>
+  <published>2025-11-15T22:27:34+00:00</published>
+  <updated>2025-11-15T22:27:37.33225332+00:00</updated>
+ </entry></feed>
+
+2025/11/16 11:09:44 ---- Response for POST /alerts (405 Method Not Allowed) ----
+method not allowed
+
+2025/11/16 11:23:57 ---- Incoming request from 127.0.0.1:56615 ----
+POST /alerts HTTP/1.1
+Host: sharpen.live
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Cache-Control: no-cache,max-age=0
+Content-Length: 942
+Content-Type: application/atom+xml
+From: googlebot(at)googlebot.com
+Link: <https://www.youtube.com/xml/feeds/videos.xml?channel_id=UC7d6BuAfHKTLR1l2SSg6HkA>; rel=self, <http://pubsubhubbub.appspot.com/>; rel=hub
+Pragma: no-cache
+User-Agent: FeedFetcher-Google; (+http://www.google.com/feedfetcher.html)
+Via: 1.1 Caddy
+X-Forwarded-For: 142.250.32.2
+X-Forwarded-Host: sharpen.live
+X-Forwarded-Proto: https
+X-Hub-Signature: sha1=a1d8546fa41a1c9fdf97d8cf916fd6fa1aeb72d7
+X-Request-Id: {http.request_id.header}
+
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:yt="http://www.youtube.com/xml/schemas/2015" xmlns="http://www.w3.org/2005/Atom"><link rel="hub" href="https://pubsubhubbub.appspot.com"/><link rel="self" href="https://www.youtube.com/xml/feeds/videos.xml?channel_id=UC7d6BuAfHKTLR1l2SSg6HkA"/><title>YouTube video feed</title><updated>2025-11-15T22:36:32.816541726+00:00</updated><entry>
+  <id>yt:video:B6SuEqvQd8Y</id>
+  <yt:videoId>B6SuEqvQd8Y</yt:videoId>
+  <yt:channelId>UC7d6BuAfHKTLR1l2SSg6HkA</yt:channelId>
+  <title>More Mailed In Items to Be Sharpened Came In Today 😂</title>
+  <link rel="alternate" href="https://www.youtube.com/shorts/B6SuEqvQd8Y"/>
+  <author>
+   <name>Sharpen Right Services LLC - Mike White </name>
+   <uri>https://www.youtube.com/channel/UC7d6BuAfHKTLR1l2SSg6HkA</uri>
+  </author>
+  <published>2025-11-15T22:27:34+00:00</published>
+  <updated>2025-11-15T22:36:32.816541726+00:00</updated>
+ </entry></feed>
+
+2025/11/16 11:23:57 ---- Response for POST /alerts (405 Method Not Allowed) ----
+method not allowed
+
+2025/11/16 11:23:57 ---- Incoming request from 127.0.0.1:56616 ----
+POST /alerts HTTP/1.1
+Host: sharpen.live
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Cache-Control: no-cache,max-age=0
+Content-Length: 942
+Content-Type: application/atom+xml
+From: googlebot(at)googlebot.com
+Link: <https://www.youtube.com/xml/feeds/videos.xml?channel_id=UC7d6BuAfHKTLR1l2SSg6HkA>; rel=self, <http://pubsubhubbub.appspot.com/>; rel=hub
+Pragma: no-cache
+User-Agent: FeedFetcher-Google; (+http://www.google.com/feedfetcher.html)
+Via: 1.1 Caddy
+X-Forwarded-For: 142.250.32.3
+X-Forwarded-Host: sharpen.live
+X-Forwarded-Proto: https
+X-Hub-Signature: sha1=82d7a65885f331c9ad434a03af8bbc930cb76960
+X-Request-Id: {http.request_id.header}
+
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:yt="http://www.youtube.com/xml/schemas/2015" xmlns="http://www.w3.org/2005/Atom"><link rel="hub" href="https://pubsubhubbub.appspot.com"/><link rel="self" href="https://www.youtube.com/xml/feeds/videos.xml?channel_id=UC7d6BuAfHKTLR1l2SSg6HkA"/><title>YouTube video feed</title><updated>2025-11-15T22:36:34.447032895+00:00</updated><entry>
+  <id>yt:video:B6SuEqvQd8Y</id>
+  <yt:videoId>B6SuEqvQd8Y</yt:videoId>
+  <yt:channelId>UC7d6BuAfHKTLR1l2SSg6HkA</yt:channelId>
+  <title>More Mailed In Items to Be Sharpened Came In Today 😂</title>
+  <link rel="alternate" href="https://www.youtube.com/shorts/B6SuEqvQd8Y"/>
+  <author>
+   <name>Sharpen Right Services LLC - Mike White </name>
+   <uri>https://www.youtube.com/channel/UC7d6BuAfHKTLR1l2SSg6HkA</uri>
+  </author>
+  <published>2025-11-15T22:27:34+00:00</published>
+  <updated>2025-11-15T22:36:34.447032895+00:00</updated>
+ </entry></feed>
+
+2025/11/16 11:23:57 ---- Response for POST /alerts (405 Method Not Allowed) ----
+method not allowed
+
+2025/11/16 13:26:03 ---- Incoming request from 127.0.0.1:60271 ----
+GET /alerts HTTP/1.1
+Host: sharpen.live
+Accept: */*
+Baggage: sentry-environment=production,sentry-public_key=e6210d6b5d3246c29d5667b356d11c63,sentry-release=ha_github_commits_consumer@441513,sentry-trace_id=36d32c302dd64e7d9ccdd759b70de8ee
+Range: bytes: 0-22
+Traceparent: 00-7fbdf2ca0272ebc0f0c0b6e02f16faf9-eb4e82c6ed5cae2a-00
+User-Agent: Mozilla/5.0 (compatible)
+Via: 1.1 Caddy
+X-Forwarded-For: 54.198.55.229
+X-Forwarded-Host: sharpen.live
+X-Forwarded-Proto: https
+X-Request-Id: {http.request_id.header}
+
+
+2025/11/16 13:26:03 ---- Response for GET /alerts (400 Bad Request) ----
+missing hub.challenge
+
+2025/11/16 13:26:04 ---- Incoming request from 127.0.0.1:60271 ----
+GET /alerts HTTP/1.1
+Host: sharpen.live
+Accept: */*
+Baggage: sentry-environment=production,sentry-public_key=e6210d6b5d3246c29d5667b356d11c63,sentry-release=ha_github_commits_consumer@441513,sentry-trace_id=36d32c302dd64e7d9ccdd759b70de8ee
+Range: bytes: 0-22
+Traceparent: 00-be878edb7ea3ff7c4a3293a7e87ef3e7-80846a6b248ddc2e-00
+User-Agent: Mozilla/5.0 (compatible)
+Via: 1.1 Caddy
+X-Forwarded-For: 54.156.251.192
+X-Forwarded-Host: sharpen.live
+X-Forwarded-Proto: https
+X-Request-Id: {http.request_id.header}
+
+
+2025/11/16 13:26:04 ---- Response for GET /alerts (400 Bad Request) ----
+missing hub.challenge
+
+2025/11/16 13:26:04 ---- Incoming request from 127.0.0.1:60271 ----
+GET /alerts HTTP/1.1
+Host: sharpen.live
+Accept: */*
+Baggage: sentry-environment=production,sentry-public_key=e6210d6b5d3246c29d5667b356d11c63,sentry-release=ha_github_commits_consumer@441513,sentry-trace_id=36d32c302dd64e7d9ccdd759b70de8ee
+Range: bytes: 0-22
+Traceparent: 00-52fc05c118cc543bbe5f56e67176d860-237e8b4d66d3fceb-00
+User-Agent: Mozilla/5.0 (compatible)
+Via: 1.1 Caddy
+X-Forwarded-For: 54.156.251.192
+X-Forwarded-Host: sharpen.live
+X-Forwarded-Proto: https
+X-Request-Id: {http.request_id.header}
+
+
+2025/11/16 13:26:04 ---- Response for GET /alerts (400 Bad Request) ----
+missing hub.challenge

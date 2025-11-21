@@ -1,0 +1,17 @@
+
+2025/11/18 18:50:21 Listening on 127.0.0.1:8880
+
+2025/11/18 18:51:37 ---- Incoming request from 127.0.0.1:52719 ----
+GET /dev/api/server/config HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Connection: keep-alive
+Postman-Token: b3d68ddf-5933-4636-ac5e-290420cb03c7
+User-Agent: PostmanRuntime/7.49.1
+
+
+2025/11/18 18:51:37 ---- Response for GET /api/server/config (200 OK) ----
+{"name":"live-stream-alerts","addr":"127.0.0.1","port":":8880","readTimeout":"10s","dataPath":"data/streamers.json","basePath":"/dev"}
+
+2025/11/18 19:00:30 Shutting down...

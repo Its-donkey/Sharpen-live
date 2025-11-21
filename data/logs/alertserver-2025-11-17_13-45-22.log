@@ -1,0 +1,1345 @@
+
+2025/11/17 23:48:27 Listening on 127.0.0.1:8880
+
+2025/11/17 23:48:40 ---- Incoming request from 127.0.0.1:53662 ----
+GET /api/streamers HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate
+Accept-Language: en-AU,en;q=0.9
+Priority: u=3, i
+Referer: http://127.0.0.1:4173/
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/17 23:48:40 ---- Incoming request from 127.0.0.1:53664 ----
+GET /api/streamers/watch HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: text/event-stream
+Accept-Encoding: gzip, deflate
+Accept-Language: en-AU,en;q=0.9
+Cache-Control: no-cache
+Pragma: no-cache
+Priority: u=3, i
+Referer: http://127.0.0.1:4173/
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/17 23:48:40 ---- Response for GET /api/streamers/watch (500 Internal Server Error) ----
+streaming unsupported
+
+2025/11/17 23:48:40 ---- Response for GET /api/streamers (200 OK) ----
+{"streamers":[{"streamer":{"id":"JordanMatter","alias":"Jordan Matter","description":"My daughter has taken over my channel!","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@jordanmatter","channelId":"UCI3szCgzGTRBTF_2dVaTZdQ","hubSecret":"GmtXT02Gnu7-R3iVcAIBUc1pOsOZkfwQ","hubLeaseRenewalDue":"2025-11-16T07:32:44Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCI3szCgzGTRBTF_2dVaTZdQ","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-16T07:32:43.278917Z","updatedAt":"2025-11-16T07:32:44.755495Z"},{"streamer":{"id":"73569d15ffeb4bd8bea1ef56f56dc34d","alias":"Ted Coningsby","description":"Oii oii! Ladies, gents and teddy bears, welcome to the Ted Coningsby channel, the fun but serious military aviation channel. This is not your usual aviation ...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@TedConingsby","channelId":"UCCVgP53k4WCUnFg9yFA_YbA","hubSecret":"wGQweFSvZQznZOQhZJSCYlddYuWmIPOq","hubLeaseRenewalDue":"2025-11-17T06:32:20Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCCVgP53k4WCUnFg9yFA_YbA","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-17T06:32:19.638136Z","updatedAt":"2025-11-17T06:32:20.561455Z"},{"streamer":{"id":"231eaca2f22744e49793f395430d15d1","alias":"I will shave my eyebrows","description":"Share your videos with friends, family and the world","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@I-will-shave-my-eyebrows","channelId":"UCvwGfRXMzs2ey1h3opwK2zw","hubSecret":"-uhGIkMq159tXNozrBJImXdR9X9YUhq2","hubLeaseRenewalDue":"2025-11-17T06:33:24Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCvwGfRXMzs2ey1h3opwK2zw","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-17T06:33:22.979369Z","updatedAt":"2025-11-17T06:33:24.155418Z"},{"streamer":{"id":"0a9d7ce8255f441198a6ed3461d320f4","alias":"Sharpen Right Services LLC - Mike White","description":"Sharpen Right Services LLC - Mike White located in League City, Texas.  We are a home based, mobile and mail order sharpening service; specializing in sharpe...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@sharpenrightservicesllc","channelId":"UC7d6BuAfHKTLR1l2SSg6HkA","hubSecret":"2pEuC4RTukNuWMTEJdMjjZDoP3gVhMFi","hubLeaseRenewalDue":"2025-11-17T06:37:11Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UC7d6BuAfHKTLR1l2SSg6HkA","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-17T06:37:10.946941Z","updatedAt":"2025-11-17T06:37:11.960348Z"},{"streamer":{"id":"4dd203ee36d046e0b686600358c1de65","alias":"Judge Jeffrey Middleton","description":"Share your videos with friends, family and the world","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@judgejeffreymiddleton7573","channelId":"UCS8gM5S889oBPyN6K07ZC6A","hubSecret":"IuAbxIHgV-tw2KHChFPJ9-bOuNW66Nnx","hubLeaseRenewalDue":"2025-11-17T06:37:38Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCS8gM5S889oBPyN6K07ZC6A","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-17T06:37:36.873738Z","updatedAt":"2025-11-17T06:37:38.001056Z"}]}
+
+2025/11/17 23:49:11 ---- Incoming request from 127.0.0.1:53684 ----
+POST /alerts HTTP/1.1
+Host: sharpen.live
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Cache-Control: no-cache,max-age=0
+Content-Length: 879
+Content-Type: application/atom+xml
+From: googlebot(at)googlebot.com
+Link: <https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCvwGfRXMzs2ey1h3opwK2zw>; rel=self, <http://pubsubhubbub.appspot.com/>; rel=hub
+Pragma: no-cache
+User-Agent: FeedFetcher-Google; (+http://www.google.com/feedfetcher.html)
+Via: 1.1 Caddy
+X-Forwarded-For: 74.125.209.33
+X-Forwarded-Host: sharpen.live
+X-Forwarded-Proto: https
+X-Hub-Signature: sha1=68edf6c4dace4ff3f1cb193d3d02193dfb616937
+X-Request-Id: {http.request_id.header}
+
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:yt="http://www.youtube.com/xml/schemas/2015" xmlns="http://www.w3.org/2005/Atom"><link rel="hub" href="https://pubsubhubbub.appspot.com"/><link rel="self" href="https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCvwGfRXMzs2ey1h3opwK2zw"/><title>YouTube video feed</title><updated>2025-11-17T12:49:09.309536284+00:00</updated><entry>
+  <id>yt:video:KnJLP0qCEyk</id>
+  <yt:videoId>KnJLP0qCEyk</yt:videoId>
+  <yt:channelId>UCvwGfRXMzs2ey1h3opwK2zw</yt:channelId>
+  <title>fdsggdf</title>
+  <link rel="alternate" href="https://www.youtube.com/watch?v=KnJLP0qCEyk"/>
+  <author>
+   <name>I will shave my eyebrows</name>
+   <uri>https://www.youtube.com/channel/UCvwGfRXMzs2ey1h3opwK2zw</uri>
+  </author>
+  <published>2025-11-17T12:49:06+00:00</published>
+  <updated>2025-11-17T12:49:09.309536284+00:00</updated>
+ </entry></feed>
+
+2025/11/17 23:49:12 YouTube livestream offline: fdsggdf (video=KnJLP0qCEyk liveNow=false status=LIVE_STREAM_OFFLINE)
+
+2025/11/17 23:49:12 ---- Response for POST /alerts (204 No Content) ----
+
+2025/11/17 23:49:57 ---- Incoming request from 127.0.0.1:53684 ----
+POST /alerts HTTP/1.1
+Host: sharpen.live
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Cache-Control: no-cache,max-age=0
+Content-Length: 883
+Content-Type: application/atom+xml
+From: googlebot(at)googlebot.com
+Link: <https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCvwGfRXMzs2ey1h3opwK2zw>; rel=self, <http://pubsubhubbub.appspot.com/>; rel=hub
+Pragma: no-cache
+User-Agent: FeedFetcher-Google; (+http://www.google.com/feedfetcher.html)
+Via: 1.1 Caddy
+X-Forwarded-For: 74.125.209.32
+X-Forwarded-Host: sharpen.live
+X-Forwarded-Proto: https
+X-Hub-Signature: sha1=0e7f1f86cc4c96ae686438d5da07f64133c039bb
+X-Request-Id: {http.request_id.header}
+
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:yt="http://www.youtube.com/xml/schemas/2015" xmlns="http://www.w3.org/2005/Atom"><link rel="hub" href="https://pubsubhubbub.appspot.com"/><link rel="self" href="https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCvwGfRXMzs2ey1h3opwK2zw"/><title>YouTube video feed</title><updated>2025-11-17T12:49:54.965796997+00:00</updated><entry>
+  <id>yt:video:SBXtRZ48TPY</id>
+  <yt:videoId>SBXtRZ48TPY</yt:videoId>
+  <yt:channelId>UCvwGfRXMzs2ey1h3opwK2zw</yt:channelId>
+  <title>dsfgfdsgdgf</title>
+  <link rel="alternate" href="https://www.youtube.com/watch?v=SBXtRZ48TPY"/>
+  <author>
+   <name>I will shave my eyebrows</name>
+   <uri>https://www.youtube.com/channel/UCvwGfRXMzs2ey1h3opwK2zw</uri>
+  </author>
+  <published>2025-11-17T12:49:44+00:00</published>
+  <updated>2025-11-17T12:49:54.965796997+00:00</updated>
+ </entry></feed>
+
+2025/11/17 23:49:57 YouTube livestream offline: dsfgfdsgdgf (video=SBXtRZ48TPY liveNow=false status=LIVE_STREAM_OFFLINE)
+
+2025/11/17 23:49:57 ---- Response for POST /alerts (204 No Content) ----
+
+2025/11/17 23:50:05 ---- Incoming request from 127.0.0.1:53684 ----
+POST /alerts HTTP/1.1
+Host: sharpen.live
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Cache-Control: no-cache,max-age=0
+Content-Length: 439
+Content-Type: application/atom+xml
+From: googlebot(at)googlebot.com
+Link: <https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCvwGfRXMzs2ey1h3opwK2zw>; rel=self, <http://pubsubhubbub.appspot.com/>; rel=hub
+Pragma: no-cache
+User-Agent: FeedFetcher-Google; (+http://www.google.com/feedfetcher.html)
+Via: 1.1 Caddy
+X-Forwarded-For: 74.125.209.34
+X-Forwarded-Host: sharpen.live
+X-Forwarded-Proto: https
+X-Hub-Signature: sha1=03506e079af725764c2f7623f17ddae1c331cb15
+X-Request-Id: {http.request_id.header}
+
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:at="http://purl.org/atompub/tombstones/1.0" xmlns="http://www.w3.org/2005/Atom"><at:deleted-entry ref="yt:video:KnJLP0qCEyk" when="2025-11-17T12:49:24.861885+00:00">
+  <link href="https://www.youtube.com/watch?v=KnJLP0qCEyk"/>
+  <at:by>
+   <name>I will shave my eyebrows</name>
+   <uri>https://www.youtube.com/channel/UCvwGfRXMzs2ey1h3opwK2zw</uri>
+  </at:by>
+ </at:deleted-entry></feed>
+
+2025/11/17 23:50:05 ---- Response for POST /alerts (204 No Content) ----
+
+2025/11/17 23:51:05 ---- Incoming request from 127.0.0.1:53684 ----
+POST /alerts HTTP/1.1
+Host: sharpen.live
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Cache-Control: no-cache,max-age=0
+Content-Length: 883
+Content-Type: application/atom+xml
+From: googlebot(at)googlebot.com
+Link: <https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCvwGfRXMzs2ey1h3opwK2zw>; rel=self, <http://pubsubhubbub.appspot.com/>; rel=hub
+Pragma: no-cache
+User-Agent: FeedFetcher-Google; (+http://www.google.com/feedfetcher.html)
+Via: 1.1 Caddy
+X-Forwarded-For: 74.125.209.34
+X-Forwarded-Host: sharpen.live
+X-Forwarded-Proto: https
+X-Hub-Signature: sha1=2104fa0f26a46ca98cd1e6fd7f276a538bc51229
+X-Request-Id: {http.request_id.header}
+
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:yt="http://www.youtube.com/xml/schemas/2015" xmlns="http://www.w3.org/2005/Atom"><link rel="hub" href="https://pubsubhubbub.appspot.com"/><link rel="self" href="https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCvwGfRXMzs2ey1h3opwK2zw"/><title>YouTube video feed</title><updated>2025-11-17T12:51:02.898140589+00:00</updated><entry>
+  <id>yt:video:SBXtRZ48TPY</id>
+  <yt:videoId>SBXtRZ48TPY</yt:videoId>
+  <yt:channelId>UCvwGfRXMzs2ey1h3opwK2zw</yt:channelId>
+  <title>dsfgfdsgdgf</title>
+  <link rel="alternate" href="https://www.youtube.com/watch?v=SBXtRZ48TPY"/>
+  <author>
+   <name>I will shave my eyebrows</name>
+   <uri>https://www.youtube.com/channel/UCvwGfRXMzs2ey1h3opwK2zw</uri>
+  </author>
+  <published>2025-11-17T12:49:44+00:00</published>
+  <updated>2025-11-17T12:51:02.898140589+00:00</updated>
+ </entry></feed>
+
+2025/11/17 23:51:06 YouTube livestream online: dsfgfdsgdgf (video=SBXtRZ48TPY channel=UCvwGfRXMzs2ey1h3opwK2zw)
+
+2025/11/17 23:51:06 ---- Response for POST /alerts (204 No Content) ----
+
+2025/11/17 23:51:12 ---- Incoming request from 127.0.0.1:53684 ----
+POST /alerts HTTP/1.1
+Host: sharpen.live
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Cache-Control: no-cache,max-age=0
+Content-Length: 883
+Content-Type: application/atom+xml
+From: googlebot(at)googlebot.com
+Link: <https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCvwGfRXMzs2ey1h3opwK2zw>; rel=self, <http://pubsubhubbub.appspot.com/>; rel=hub
+Pragma: no-cache
+User-Agent: FeedFetcher-Google; (+http://www.google.com/feedfetcher.html)
+Via: 1.1 Caddy
+X-Forwarded-For: 74.125.209.32
+X-Forwarded-Host: sharpen.live
+X-Forwarded-Proto: https
+X-Hub-Signature: sha1=134d4a3fd84cd6479136960e694df4af4ec41a8f
+X-Request-Id: {http.request_id.header}
+
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:yt="http://www.youtube.com/xml/schemas/2015" xmlns="http://www.w3.org/2005/Atom"><link rel="hub" href="https://pubsubhubbub.appspot.com"/><link rel="self" href="https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCvwGfRXMzs2ey1h3opwK2zw"/><title>YouTube video feed</title><updated>2025-11-17T12:51:09.580499732+00:00</updated><entry>
+  <id>yt:video:SBXtRZ48TPY</id>
+  <yt:videoId>SBXtRZ48TPY</yt:videoId>
+  <yt:channelId>UCvwGfRXMzs2ey1h3opwK2zw</yt:channelId>
+  <title>dsfgfdsgdgf</title>
+  <link rel="alternate" href="https://www.youtube.com/watch?v=SBXtRZ48TPY"/>
+  <author>
+   <name>I will shave my eyebrows</name>
+   <uri>https://www.youtube.com/channel/UCvwGfRXMzs2ey1h3opwK2zw</uri>
+  </author>
+  <published>2025-11-17T12:49:44+00:00</published>
+  <updated>2025-11-17T12:51:09.580499732+00:00</updated>
+ </entry></feed>
+
+2025/11/17 23:51:12 YouTube livestream online: dsfgfdsgdgf (video=SBXtRZ48TPY channel=UCvwGfRXMzs2ey1h3opwK2zw)
+
+2025/11/17 23:51:12 ---- Response for POST /alerts (204 No Content) ----
+
+2025/11/17 23:53:22 ---- Incoming request from 127.0.0.1:53787 ----
+GET /api/streamers HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate
+Accept-Language: en-AU,en;q=0.9
+Priority: u=3, i
+Referer: http://127.0.0.1:4173/
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/17 23:53:22 ---- Response for GET /api/streamers (200 OK) ----
+{"streamers":[{"streamer":{"id":"JordanMatter","alias":"Jordan Matter","description":"My daughter has taken over my channel!","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@jordanmatter","channelId":"UCI3szCgzGTRBTF_2dVaTZdQ","hubSecret":"GmtXT02Gnu7-R3iVcAIBUc1pOsOZkfwQ","hubLeaseRenewalDue":"2025-11-16T07:32:44Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCI3szCgzGTRBTF_2dVaTZdQ","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-16T07:32:43.278917Z","updatedAt":"2025-11-16T07:32:44.755495Z"},{"streamer":{"id":"73569d15ffeb4bd8bea1ef56f56dc34d","alias":"Ted Coningsby","description":"Oii oii! Ladies, gents and teddy bears, welcome to the Ted Coningsby channel, the fun but serious military aviation channel. This is not your usual aviation ...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@TedConingsby","channelId":"UCCVgP53k4WCUnFg9yFA_YbA","hubSecret":"wGQweFSvZQznZOQhZJSCYlddYuWmIPOq","hubLeaseRenewalDue":"2025-11-17T06:32:20Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCCVgP53k4WCUnFg9yFA_YbA","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-17T06:32:19.638136Z","updatedAt":"2025-11-17T06:32:20.561455Z"},{"streamer":{"id":"231eaca2f22744e49793f395430d15d1","alias":"I will shave my eyebrows","description":"Share your videos with friends, family and the world","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@I-will-shave-my-eyebrows","channelId":"UCvwGfRXMzs2ey1h3opwK2zw","hubSecret":"-uhGIkMq159tXNozrBJImXdR9X9YUhq2","hubLeaseRenewalDue":"2025-11-17T06:33:24Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCvwGfRXMzs2ey1h3opwK2zw","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"status":{"live":true,"platforms":["youtube"],"youtube":{"live":true,"videoId":"SBXtRZ48TPY","startedAt":"2025-11-17T12:50:57Z"}},"createdAt":"2025-11-17T06:33:22.979369Z","updatedAt":"2025-11-17T12:51:12.31203Z"},{"streamer":{"id":"0a9d7ce8255f441198a6ed3461d320f4","alias":"Sharpen Right Services LLC - Mike White","description":"Sharpen Right Services LLC - Mike White located in League City, Texas.  We are a home based, mobile and mail order sharpening service; specializing in sharpe...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@sharpenrightservicesllc","channelId":"UC7d6BuAfHKTLR1l2SSg6HkA","hubSecret":"2pEuC4RTukNuWMTEJdMjjZDoP3gVhMFi","hubLeaseRenewalDue":"2025-11-17T06:37:11Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UC7d6BuAfHKTLR1l2SSg6HkA","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-17T06:37:10.946941Z","updatedAt":"2025-11-17T06:37:11.960348Z"},{"streamer":{"id":"4dd203ee36d046e0b686600358c1de65","alias":"Judge Jeffrey Middleton","description":"Share your videos with friends, family and the world","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@judgejeffreymiddleton7573","channelId":"UCS8gM5S889oBPyN6K07ZC6A","hubSecret":"IuAbxIHgV-tw2KHChFPJ9-bOuNW66Nnx","hubLeaseRenewalDue":"2025-11-17T06:37:38Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCS8gM5S889oBPyN6K07ZC6A","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-17T06:37:36.873738Z","updatedAt":"2025-11-17T06:37:38.001056Z"}]}
+
+2025/11/17 23:53:22 ---- Incoming request from 127.0.0.1:53787 ----
+GET /api/streamers/watch HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: text/event-stream
+Accept-Encoding: gzip, deflate
+Accept-Language: en-AU,en;q=0.9
+Cache-Control: no-cache
+Pragma: no-cache
+Priority: u=3, i
+Referer: http://127.0.0.1:4173/
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/17 23:53:22 ---- Response for GET /api/streamers/watch (500 Internal Server Error) ----
+streaming unsupported
+
+2025/11/17 23:54:01 ---- Incoming request from 127.0.0.1:53787 ----
+GET /api/streamers HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate
+Accept-Language: en-AU,en;q=0.9
+Priority: u=3, i
+Referer: http://127.0.0.1:4173/
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/17 23:54:01 ---- Response for GET /api/streamers (200 OK) ----
+{"streamers":[{"streamer":{"id":"JordanMatter","alias":"Jordan Matter","description":"My daughter has taken over my channel!","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@jordanmatter","channelId":"UCI3szCgzGTRBTF_2dVaTZdQ","hubSecret":"GmtXT02Gnu7-R3iVcAIBUc1pOsOZkfwQ","hubLeaseRenewalDue":"2025-11-16T07:32:44Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCI3szCgzGTRBTF_2dVaTZdQ","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-16T07:32:43.278917Z","updatedAt":"2025-11-16T07:32:44.755495Z"},{"streamer":{"id":"73569d15ffeb4bd8bea1ef56f56dc34d","alias":"Ted Coningsby","description":"Oii oii! Ladies, gents and teddy bears, welcome to the Ted Coningsby channel, the fun but serious military aviation channel. This is not your usual aviation ...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@TedConingsby","channelId":"UCCVgP53k4WCUnFg9yFA_YbA","hubSecret":"wGQweFSvZQznZOQhZJSCYlddYuWmIPOq","hubLeaseRenewalDue":"2025-11-17T06:32:20Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCCVgP53k4WCUnFg9yFA_YbA","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-17T06:32:19.638136Z","updatedAt":"2025-11-17T06:32:20.561455Z"},{"streamer":{"id":"231eaca2f22744e49793f395430d15d1","alias":"I will shave my eyebrows","description":"Share your videos with friends, family and the world","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@I-will-shave-my-eyebrows","channelId":"UCvwGfRXMzs2ey1h3opwK2zw","hubSecret":"-uhGIkMq159tXNozrBJImXdR9X9YUhq2","hubLeaseRenewalDue":"2025-11-17T06:33:24Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCvwGfRXMzs2ey1h3opwK2zw","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"status":{"live":false,"platforms":["youtube"],"youtube":{"live":false,"videoId":"SBXtRZ48TPY","startedAt":"2025-11-17T12:50:57Z"}},"createdAt":"2025-11-17T06:33:22.979369Z","updatedAt":"2025-11-17T12:51:12.31203Z"},{"streamer":{"id":"0a9d7ce8255f441198a6ed3461d320f4","alias":"Sharpen Right Services LLC - Mike White","description":"Sharpen Right Services LLC - Mike White located in League City, Texas.  We are a home based, mobile and mail order sharpening service; specializing in sharpe...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@sharpenrightservicesllc","channelId":"UC7d6BuAfHKTLR1l2SSg6HkA","hubSecret":"2pEuC4RTukNuWMTEJdMjjZDoP3gVhMFi","hubLeaseRenewalDue":"2025-11-17T06:37:11Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UC7d6BuAfHKTLR1l2SSg6HkA","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-17T06:37:10.946941Z","updatedAt":"2025-11-17T06:37:11.960348Z"},{"streamer":{"id":"4dd203ee36d046e0b686600358c1de65","alias":"Judge Jeffrey Middleton","description":"Share your videos with friends, family and the world","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@judgejeffreymiddleton7573","channelId":"UCS8gM5S889oBPyN6K07ZC6A","hubSecret":"IuAbxIHgV-tw2KHChFPJ9-bOuNW66Nnx","hubLeaseRenewalDue":"2025-11-17T06:37:38Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCS8gM5S889oBPyN6K07ZC6A","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-17T06:37:36.873738Z","updatedAt":"2025-11-17T06:37:38.001056Z"}]}
+
+2025/11/17 23:54:01 ---- Incoming request from 127.0.0.1:53787 ----
+GET /api/streamers/watch HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: text/event-stream
+Accept-Encoding: gzip, deflate
+Accept-Language: en-AU,en;q=0.9
+Cache-Control: no-cache
+Pragma: no-cache
+Priority: u=3, i
+Referer: http://127.0.0.1:4173/
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/17 23:54:01 ---- Response for GET /api/streamers/watch (500 Internal Server Error) ----
+streaming unsupported
+
+2025/11/17 23:54:36 ---- Incoming request from 127.0.0.1:53787 ----
+GET /api/streamers HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate
+Accept-Language: en-AU,en;q=0.9
+Priority: u=3, i
+Referer: http://127.0.0.1:4173/
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/17 23:54:36 ---- Response for GET /api/streamers (200 OK) ----
+{"streamers":[{"streamer":{"id":"JordanMatter","alias":"Jordan Matter","description":"My daughter has taken over my channel!","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@jordanmatter","channelId":"UCI3szCgzGTRBTF_2dVaTZdQ","hubSecret":"GmtXT02Gnu7-R3iVcAIBUc1pOsOZkfwQ","hubLeaseRenewalDue":"2025-11-16T07:32:44Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCI3szCgzGTRBTF_2dVaTZdQ","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-16T07:32:43.278917Z","updatedAt":"2025-11-16T07:32:44.755495Z"},{"streamer":{"id":"73569d15ffeb4bd8bea1ef56f56dc34d","alias":"Ted Coningsby","description":"Oii oii! Ladies, gents and teddy bears, welcome to the Ted Coningsby channel, the fun but serious military aviation channel. This is not your usual aviation ...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@TedConingsby","channelId":"UCCVgP53k4WCUnFg9yFA_YbA","hubSecret":"wGQweFSvZQznZOQhZJSCYlddYuWmIPOq","hubLeaseRenewalDue":"2025-11-17T06:32:20Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCCVgP53k4WCUnFg9yFA_YbA","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-17T06:32:19.638136Z","updatedAt":"2025-11-17T06:32:20.561455Z"},{"streamer":{"id":"231eaca2f22744e49793f395430d15d1","alias":"I will shave my eyebrows","description":"Share your videos with friends, family and the world","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@I-will-shave-my-eyebrows","channelId":"UCvwGfRXMzs2ey1h3opwK2zw","hubSecret":"-uhGIkMq159tXNozrBJImXdR9X9YUhq2","hubLeaseRenewalDue":"2025-11-17T06:33:24Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCvwGfRXMzs2ey1h3opwK2zw","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"status":{"live":false,"youtube":{"live":false,"videoId":"SBXtRZ48TPY","startedAt":"2025-11-17T12:50:57Z"}},"createdAt":"2025-11-17T06:33:22.979369Z","updatedAt":"2025-11-17T12:51:12.31203Z"},{"streamer":{"id":"0a9d7ce8255f441198a6ed3461d320f4","alias":"Sharpen Right Services LLC - Mike White","description":"Sharpen Right Services LLC - Mike White located in League City, Texas.  We are a home based, mobile and mail order sharpening service; specializing in sharpe...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@sharpenrightservicesllc","channelId":"UC7d6BuAfHKTLR1l2SSg6HkA","hubSecret":"2pEuC4RTukNuWMTEJdMjjZDoP3gVhMFi","hubLeaseRenewalDue":"2025-11-17T06:37:11Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UC7d6BuAfHKTLR1l2SSg6HkA","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-17T06:37:10.946941Z","updatedAt":"2025-11-17T06:37:11.960348Z"},{"streamer":{"id":"4dd203ee36d046e0b686600358c1de65","alias":"Judge Jeffrey Middleton","description":"Share your videos with friends, family and the world","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@judgejeffreymiddleton7573","channelId":"UCS8gM5S889oBPyN6K07ZC6A","hubSecret":"IuAbxIHgV-tw2KHChFPJ9-bOuNW66Nnx","hubLeaseRenewalDue":"2025-11-17T06:37:38Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCS8gM5S889oBPyN6K07ZC6A","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-17T06:37:36.873738Z","updatedAt":"2025-11-17T06:37:38.001056Z"}]}
+
+2025/11/17 23:54:36 ---- Incoming request from 127.0.0.1:53824 ----
+GET /api/streamers/watch HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: text/event-stream
+Accept-Encoding: gzip, deflate
+Accept-Language: en-AU,en;q=0.9
+Cache-Control: no-cache
+Pragma: no-cache
+Priority: u=3, i
+Referer: http://127.0.0.1:4173/
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/17 23:54:36 ---- Response for GET /api/streamers/watch (500 Internal Server Error) ----
+streaming unsupported
+
+2025/11/17 23:54:57 ---- Incoming request from 127.0.0.1:53824 ----
+GET /api/streamers HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate
+Accept-Language: en-AU,en;q=0.9
+Priority: u=3, i
+Referer: http://127.0.0.1:4173/
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/17 23:54:57 ---- Response for GET /api/streamers (200 OK) ----
+{"streamers":[{"streamer":{"id":"JordanMatter","alias":"Jordan Matter","description":"My daughter has taken over my channel!","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@jordanmatter","channelId":"UCI3szCgzGTRBTF_2dVaTZdQ","hubSecret":"GmtXT02Gnu7-R3iVcAIBUc1pOsOZkfwQ","hubLeaseRenewalDue":"2025-11-16T07:32:44Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCI3szCgzGTRBTF_2dVaTZdQ","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-16T07:32:43.278917Z","updatedAt":"2025-11-16T07:32:44.755495Z"},{"streamer":{"id":"73569d15ffeb4bd8bea1ef56f56dc34d","alias":"Ted Coningsby","description":"Oii oii! Ladies, gents and teddy bears, welcome to the Ted Coningsby channel, the fun but serious military aviation channel. This is not your usual aviation ...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@TedConingsby","channelId":"UCCVgP53k4WCUnFg9yFA_YbA","hubSecret":"wGQweFSvZQznZOQhZJSCYlddYuWmIPOq","hubLeaseRenewalDue":"2025-11-17T06:32:20Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCCVgP53k4WCUnFg9yFA_YbA","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-17T06:32:19.638136Z","updatedAt":"2025-11-17T06:32:20.561455Z"},{"streamer":{"id":"231eaca2f22744e49793f395430d15d1","alias":"I will shave my eyebrows","description":"Share your videos with friends, family and the world","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@I-will-shave-my-eyebrows","channelId":"UCvwGfRXMzs2ey1h3opwK2zw","hubSecret":"-uhGIkMq159tXNozrBJImXdR9X9YUhq2","hubLeaseRenewalDue":"2025-11-17T06:33:24Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCvwGfRXMzs2ey1h3opwK2zw","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"status":{"live":true,"platforms":["youtube"],"youtube":{"live":true,"videoId":"SBXtRZ48TPY","startedAt":"2025-11-17T12:50:57Z"}},"createdAt":"2025-11-17T06:33:22.979369Z","updatedAt":"2025-11-17T12:51:12.31203Z"},{"streamer":{"id":"0a9d7ce8255f441198a6ed3461d320f4","alias":"Sharpen Right Services LLC - Mike White","description":"Sharpen Right Services LLC - Mike White located in League City, Texas.  We are a home based, mobile and mail order sharpening service; specializing in sharpe...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@sharpenrightservicesllc","channelId":"UC7d6BuAfHKTLR1l2SSg6HkA","hubSecret":"2pEuC4RTukNuWMTEJdMjjZDoP3gVhMFi","hubLeaseRenewalDue":"2025-11-17T06:37:11Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UC7d6BuAfHKTLR1l2SSg6HkA","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-17T06:37:10.946941Z","updatedAt":"2025-11-17T06:37:11.960348Z"},{"streamer":{"id":"4dd203ee36d046e0b686600358c1de65","alias":"Judge Jeffrey Middleton","description":"Share your videos with friends, family and the world","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@judgejeffreymiddleton7573","channelId":"UCS8gM5S889oBPyN6K07ZC6A","hubSecret":"IuAbxIHgV-tw2KHChFPJ9-bOuNW66Nnx","hubLeaseRenewalDue":"2025-11-17T06:37:38Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCS8gM5S889oBPyN6K07ZC6A","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-17T06:37:36.873738Z","updatedAt":"2025-11-17T06:37:38.001056Z"}]}
+
+2025/11/17 23:54:57 ---- Incoming request from 127.0.0.1:53824 ----
+GET /api/streamers/watch HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: text/event-stream
+Accept-Encoding: gzip, deflate
+Accept-Language: en-AU,en;q=0.9
+Cache-Control: no-cache
+Pragma: no-cache
+Priority: u=3, i
+Referer: http://127.0.0.1:4173/
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/17 23:54:57 ---- Response for GET /api/streamers/watch (500 Internal Server Error) ----
+streaming unsupported
+
+2025/11/18 00:01:17 ---- Incoming request from 127.0.0.1:54019 ----
+POST /alerts HTTP/1.1
+Host: sharpen.live
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Cache-Control: no-cache,max-age=0
+Content-Length: 3090
+Content-Type: application/atom+xml
+From: googlebot(at)googlebot.com
+Link: <https://www.youtube.com/xml/feeds/videos.xml?channel_id=UC-2XiVy5AbEn2TXf0f2APeQ>; rel=self, <http://pubsubhubbub.appspot.com/>; rel=hub
+Pragma: no-cache
+User-Agent: FeedFetcher-Google; (+http://www.google.com/feedfetcher.html)
+Via: 1.1 Caddy
+X-Forwarded-For: 142.250.32.2
+X-Forwarded-Host: sharpen.live
+X-Forwarded-Proto: https
+X-Hub-Signature: sha1=0a2a284857ca21639ec8714ea3ad4fb2fd539e84
+X-Request-Id: {http.request_id.header}
+
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:yt="http://www.youtube.com/xml/schemas/2015" xmlns="http://www.w3.org/2005/Atom"><link rel="hub" href="https://pubsubhubbub.appspot.com"/><link rel="self" href="https://www.youtube.com/xml/feeds/videos.xml?channel_id=UC-2XiVy5AbEn2TXf0f2APeQ"/><title>YouTube video feed</title><updated>2025-11-17T13:01:15.730704742+00:00</updated><entry>
+  <id>yt:video:_8DtHhIh4hM</id>
+  <yt:videoId>_8DtHhIh4hM</yt:videoId>
+  <yt:channelId>UC-2XiVy5AbEn2TXf0f2APeQ</yt:channelId>
+  <title>How To Create A 5G Football Pitch In Your Garden  #construction #footballpitch #gardendesign</title>
+  <link rel="alternate" href="https://www.youtube.com/shorts/_8DtHhIh4hM"/>
+  <link rel="alternate" hreflang="ar" href="https://www.youtube.com/shorts/_8DtHhIh4hM?vl=ar"/>
+  <link rel="alternate" hreflang="bn" href="https://www.youtube.com/shorts/_8DtHhIh4hM?vl=bn"/>
+  <link rel="alternate" hreflang="de-DE" href="https://www.youtube.com/shorts/_8DtHhIh4hM?vl=de-DE"/>
+  <link rel="alternate" hreflang="en" href="https://www.youtube.com/shorts/_8DtHhIh4hM?vl=en"/>
+  <link rel="alternate" hreflang="es-US" href="https://www.youtube.com/shorts/_8DtHhIh4hM?vl=es-US"/>
+  <link rel="alternate" hreflang="fr-FR" href="https://www.youtube.com/shorts/_8DtHhIh4hM?vl=fr-FR"/>
+  <link rel="alternate" hreflang="hi" href="https://www.youtube.com/shorts/_8DtHhIh4hM?vl=hi"/>
+  <link rel="alternate" hreflang="id" href="https://www.youtube.com/shorts/_8DtHhIh4hM?vl=id"/>
+  <link rel="alternate" hreflang="it" href="https://www.youtube.com/shorts/_8DtHhIh4hM?vl=it"/>
+  <link rel="alternate" hreflang="iw" href="https://www.youtube.com/shorts/_8DtHhIh4hM?vl=iw"/>
+  <link rel="alternate" hreflang="ja" href="https://www.youtube.com/shorts/_8DtHhIh4hM?vl=ja"/>
+  <link rel="alternate" hreflang="ko" href="https://www.youtube.com/shorts/_8DtHhIh4hM?vl=ko"/>
+  <link rel="alternate" hreflang="ml" href="https://www.youtube.com/shorts/_8DtHhIh4hM?vl=ml"/>
+  <link rel="alternate" hreflang="nl-NL" href="https://www.youtube.com/shorts/_8DtHhIh4hM?vl=nl-NL"/>
+  <link rel="alternate" hreflang="pa" href="https://www.youtube.com/shorts/_8DtHhIh4hM?vl=pa"/>
+  <link rel="alternate" hreflang="pl" href="https://www.youtube.com/shorts/_8DtHhIh4hM?vl=pl"/>
+  <link rel="alternate" hreflang="pt-BR" href="https://www.youtube.com/shorts/_8DtHhIh4hM?vl=pt-BR"/>
+  <link rel="alternate" hreflang="ru" href="https://www.youtube.com/shorts/_8DtHhIh4hM?vl=ru"/>
+  <link rel="alternate" hreflang="ta" href="https://www.youtube.com/shorts/_8DtHhIh4hM?vl=ta"/>
+  <link rel="alternate" hreflang="te" href="https://www.youtube.com/shorts/_8DtHhIh4hM?vl=te"/>
+  <link rel="alternate" hreflang="uk" href="https://www.youtube.com/shorts/_8DtHhIh4hM?vl=uk"/>
+  <link rel="alternate" hreflang="x-default" href="https://www.youtube.com/shorts/_8DtHhIh4hM"/>
+  <author>
+   <name>Ashville</name>
+   <uri>https://www.youtube.com/channel/UC-2XiVy5AbEn2TXf0f2APeQ</uri>
+  </author>
+  <published>2025-11-17T13:01:13+00:00</published>
+  <updated>2025-11-17T13:01:15.730704742+00:00</updated>
+ </entry></feed>
+
+2025/11/18 00:01:17 YouTube upload ignored (not live): How To Create A 5G Football Pitch In Your Garden  #construction #footballpitch #gardendesign (video=_8DtHhIh4hM)
+
+2025/11/18 00:01:17 ---- Response for POST /alerts (204 No Content) ----
+
+2025/11/18 00:05:22 ---- Incoming request from 127.0.0.1:54116 ----
+GET /api/streamers HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Referer: http://127.0.0.1:4173/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/18 00:05:22 ---- Response for GET /api/streamers (200 OK) ----
+{"streamers":[{"streamer":{"id":"JordanMatter","alias":"Jordan Matter","description":"My daughter has taken over my channel!","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@jordanmatter","channelId":"UCI3szCgzGTRBTF_2dVaTZdQ","hubSecret":"GmtXT02Gnu7-R3iVcAIBUc1pOsOZkfwQ","hubLeaseRenewalDue":"2025-11-16T07:32:44Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCI3szCgzGTRBTF_2dVaTZdQ","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-16T07:32:43.278917Z","updatedAt":"2025-11-16T07:32:44.755495Z"},{"streamer":{"id":"73569d15ffeb4bd8bea1ef56f56dc34d","alias":"Ted Coningsby","description":"Oii oii! Ladies, gents and teddy bears, welcome to the Ted Coningsby channel, the fun but serious military aviation channel. This is not your usual aviation ...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@TedConingsby","channelId":"UCCVgP53k4WCUnFg9yFA_YbA","hubSecret":"wGQweFSvZQznZOQhZJSCYlddYuWmIPOq","hubLeaseRenewalDue":"2025-11-17T06:32:20Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCCVgP53k4WCUnFg9yFA_YbA","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-17T06:32:19.638136Z","updatedAt":"2025-11-17T06:32:20.561455Z"},{"streamer":{"id":"231eaca2f22744e49793f395430d15d1","alias":"I will shave my eyebrows","description":"Share your videos with friends, family and the world","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@I-will-shave-my-eyebrows","channelId":"UCvwGfRXMzs2ey1h3opwK2zw","hubSecret":"-uhGIkMq159tXNozrBJImXdR9X9YUhq2","hubLeaseRenewalDue":"2025-11-17T06:33:24Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCvwGfRXMzs2ey1h3opwK2zw","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"status":{"live":true,"platforms":["youtube"],"youtube":{"live":true,"videoId":"SBXtRZ48TPY","startedAt":"2025-11-17T12:50:57Z"}},"createdAt":"2025-11-17T06:33:22.979369Z","updatedAt":"2025-11-17T12:51:12.31203Z"},{"streamer":{"id":"0a9d7ce8255f441198a6ed3461d320f4","alias":"Sharpen Right Services LLC - Mike White","description":"Sharpen Right Services LLC - Mike White located in League City, Texas.  We are a home based, mobile and mail order sharpening service; specializing in sharpe...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@sharpenrightservicesllc","channelId":"UC7d6BuAfHKTLR1l2SSg6HkA","hubSecret":"2pEuC4RTukNuWMTEJdMjjZDoP3gVhMFi","hubLeaseRenewalDue":"2025-11-17T06:37:11Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UC7d6BuAfHKTLR1l2SSg6HkA","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-17T06:37:10.946941Z","updatedAt":"2025-11-17T06:37:11.960348Z"},{"streamer":{"id":"4dd203ee36d046e0b686600358c1de65","alias":"Judge Jeffrey Middleton","description":"Share your videos with friends, family and the world","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@judgejeffreymiddleton7573","channelId":"UCS8gM5S889oBPyN6K07ZC6A","hubSecret":"IuAbxIHgV-tw2KHChFPJ9-bOuNW66Nnx","hubLeaseRenewalDue":"2025-11-17T06:37:38Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCS8gM5S889oBPyN6K07ZC6A","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-17T06:37:36.873738Z","updatedAt":"2025-11-17T06:37:38.001056Z"}]}
+
+2025/11/18 00:05:22 ---- Incoming request from 127.0.0.1:54116 ----
+GET /api/streamers/watch HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: text/event-stream
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Cache-Control: no-cache
+Referer: http://127.0.0.1:4173/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/18 00:05:22 ---- Response for GET /api/streamers/watch (500 Internal Server Error) ----
+streaming unsupported
+
+2025/11/18 00:06:03 ---- Incoming request from 127.0.0.1:54129 ----
+POST /alerts HTTP/1.1
+Host: sharpen.live
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Cache-Control: no-cache,max-age=0
+Content-Length: 883
+Content-Type: application/atom+xml
+From: googlebot(at)googlebot.com
+Link: <https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCvwGfRXMzs2ey1h3opwK2zw>; rel=self, <http://pubsubhubbub.appspot.com/>; rel=hub
+Pragma: no-cache
+User-Agent: FeedFetcher-Google; (+http://www.google.com/feedfetcher.html)
+Via: 1.1 Caddy
+X-Forwarded-For: 74.125.209.34
+X-Forwarded-Host: sharpen.live
+X-Forwarded-Proto: https
+X-Hub-Signature: sha1=743fd632b8779ded127a2046e2b96434e7b6f28b
+X-Request-Id: {http.request_id.header}
+
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:yt="http://www.youtube.com/xml/schemas/2015" xmlns="http://www.w3.org/2005/Atom"><link rel="hub" href="https://pubsubhubbub.appspot.com"/><link rel="self" href="https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCvwGfRXMzs2ey1h3opwK2zw"/><title>YouTube video feed</title><updated>2025-11-17T13:06:00.752696462+00:00</updated><entry>
+  <id>yt:video:SBXtRZ48TPY</id>
+  <yt:videoId>SBXtRZ48TPY</yt:videoId>
+  <yt:channelId>UCvwGfRXMzs2ey1h3opwK2zw</yt:channelId>
+  <title>dsfgfdsgdgf</title>
+  <link rel="alternate" href="https://www.youtube.com/watch?v=SBXtRZ48TPY"/>
+  <author>
+   <name>I will shave my eyebrows</name>
+   <uri>https://www.youtube.com/channel/UCvwGfRXMzs2ey1h3opwK2zw</uri>
+  </author>
+  <published>2025-11-17T12:49:44+00:00</published>
+  <updated>2025-11-17T13:06:00.752696462+00:00</updated>
+ </entry></feed>
+
+2025/11/18 00:06:03 YouTube livestream offline: dsfgfdsgdgf (video=SBXtRZ48TPY liveNow=false status=OK)
+
+2025/11/18 00:06:04 ---- Response for POST /alerts (204 No Content) ----
+
+2025/11/18 00:10:11 ---- Incoming request from 127.0.0.1:54333 ----
+POST /alerts HTTP/1.1
+Host: sharpen.live
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Cache-Control: no-cache,max-age=0
+Content-Length: 960
+Content-Type: application/atom+xml
+From: googlebot(at)googlebot.com
+Link: <https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCS8gM5S889oBPyN6K07ZC6A>; rel=self, <http://pubsubhubbub.appspot.com/>; rel=hub
+Pragma: no-cache
+User-Agent: FeedFetcher-Google; (+http://www.google.com/feedfetcher.html)
+Via: 1.1 Caddy
+X-Forwarded-For: 66.102.8.102
+X-Forwarded-Host: sharpen.live
+X-Forwarded-Proto: https
+X-Hub-Signature: sha1=3b6363b1153ace282f156ddb967dfdc341248545
+X-Request-Id: {http.request_id.header}
+
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:yt="http://www.youtube.com/xml/schemas/2015" xmlns="http://www.w3.org/2005/Atom"><link rel="hub" href="https://pubsubhubbub.appspot.com"/><link rel="self" href="https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCS8gM5S889oBPyN6K07ZC6A"/><title>YouTube video feed</title><updated>2025-11-17T13:10:08.533364193+00:00</updated><entry>
+  <id>yt:video:9HqM9d_ucWA</id>
+  <yt:videoId>9HqM9d_ucWA</yt:videoId>
+  <yt:channelId>UCS8gM5S889oBPyN6K07ZC6A</yt:channelId>
+  <title>Misdemeanor Arraignments and General Civil Pre-Trials 3B District Court November 17, 2025</title>
+  <link rel="alternate" href="https://www.youtube.com/watch?v=9HqM9d_ucWA"/>
+  <author>
+   <name>Judge Jeffrey Middleton</name>
+   <uri>https://www.youtube.com/channel/UCS8gM5S889oBPyN6K07ZC6A</uri>
+  </author>
+  <published>2025-11-17T13:10:05+00:00</published>
+  <updated>2025-11-17T13:10:08.533364193+00:00</updated>
+ </entry></feed>
+
+2025/11/18 00:10:11 YouTube livestream offline: Misdemeanor Arraignments and General Civil Pre-Trials 3B District Court November 17, 2025 (video=9HqM9d_ucWA liveNow=false status=LIVE_STREAM_OFFLINE)
+
+2025/11/18 00:10:11 ---- Response for POST /alerts (204 No Content) ----
+
+2025/11/18 00:11:10 ---- Incoming request from 127.0.0.1:54333 ----
+POST /alerts HTTP/1.1
+Host: sharpen.live
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Cache-Control: no-cache,max-age=0
+Content-Length: 960
+Content-Type: application/atom+xml
+From: googlebot(at)googlebot.com
+Link: <https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCS8gM5S889oBPyN6K07ZC6A>; rel=self, <http://pubsubhubbub.appspot.com/>; rel=hub
+Pragma: no-cache
+User-Agent: FeedFetcher-Google; (+http://www.google.com/feedfetcher.html)
+Via: 1.1 Caddy
+X-Forwarded-For: 66.102.8.102
+X-Forwarded-Host: sharpen.live
+X-Forwarded-Proto: https
+X-Hub-Signature: sha1=cd8508b5ba9e0b529e597767fc31a8542ea261ab
+X-Request-Id: {http.request_id.header}
+
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:yt="http://www.youtube.com/xml/schemas/2015" xmlns="http://www.w3.org/2005/Atom"><link rel="hub" href="https://pubsubhubbub.appspot.com"/><link rel="self" href="https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCS8gM5S889oBPyN6K07ZC6A"/><title>YouTube video feed</title><updated>2025-11-17T13:11:09.659422963+00:00</updated><entry>
+  <id>yt:video:9HqM9d_ucWA</id>
+  <yt:videoId>9HqM9d_ucWA</yt:videoId>
+  <yt:channelId>UCS8gM5S889oBPyN6K07ZC6A</yt:channelId>
+  <title>Misdemeanor Arraignments and General Civil Pre-Trials 3B District Court November 17, 2025</title>
+  <link rel="alternate" href="https://www.youtube.com/watch?v=9HqM9d_ucWA"/>
+  <author>
+   <name>Judge Jeffrey Middleton</name>
+   <uri>https://www.youtube.com/channel/UCS8gM5S889oBPyN6K07ZC6A</uri>
+  </author>
+  <published>2025-11-17T13:10:05+00:00</published>
+  <updated>2025-11-17T13:11:09.659422963+00:00</updated>
+ </entry></feed>
+
+2025/11/18 00:11:10 YouTube livestream online: Misdemeanor Arraignments and General Civil Pre-Trials 3B District Court November 17, 2025 (video=9HqM9d_ucWA channel=UCS8gM5S889oBPyN6K07ZC6A)
+
+2025/11/18 00:11:10 ---- Response for POST /alerts (204 No Content) ----
+
+2025/11/18 00:17:45 ---- Incoming request from 127.0.0.1:54496 ----
+GET /api/streamers HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Referer: http://127.0.0.1:4173/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/18 00:17:45 ---- Response for GET /api/streamers (200 OK) ----
+{"streamers":[{"streamer":{"id":"JordanMatter","alias":"Jordan Matter","description":"My daughter has taken over my channel!","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@jordanmatter","channelId":"UCI3szCgzGTRBTF_2dVaTZdQ","hubSecret":"GmtXT02Gnu7-R3iVcAIBUc1pOsOZkfwQ","hubLeaseRenewalDue":"2025-11-16T07:32:44Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCI3szCgzGTRBTF_2dVaTZdQ","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-16T07:32:43.278917Z","updatedAt":"2025-11-16T07:32:44.755495Z"},{"streamer":{"id":"73569d15ffeb4bd8bea1ef56f56dc34d","alias":"Ted Coningsby","description":"Oii oii! Ladies, gents and teddy bears, welcome to the Ted Coningsby channel, the fun but serious military aviation channel. This is not your usual aviation ...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@TedConingsby","channelId":"UCCVgP53k4WCUnFg9yFA_YbA","hubSecret":"wGQweFSvZQznZOQhZJSCYlddYuWmIPOq","hubLeaseRenewalDue":"2025-11-17T06:32:20Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCCVgP53k4WCUnFg9yFA_YbA","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-17T06:32:19.638136Z","updatedAt":"2025-11-17T06:32:20.561455Z"},{"streamer":{"id":"231eaca2f22744e49793f395430d15d1","alias":"I will shave my eyebrows","description":"Share your videos with friends, family and the world","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@I-will-shave-my-eyebrows","channelId":"UCvwGfRXMzs2ey1h3opwK2zw","hubSecret":"-uhGIkMq159tXNozrBJImXdR9X9YUhq2","hubLeaseRenewalDue":"2025-11-17T06:33:24Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCvwGfRXMzs2ey1h3opwK2zw","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-17T06:33:22.979369Z","updatedAt":"2025-11-17T06:33:24.155418Z"},{"streamer":{"id":"0a9d7ce8255f441198a6ed3461d320f4","alias":"Sharpen Right Services LLC - Mike White","description":"Sharpen Right Services LLC - Mike White located in League City, Texas.  We are a home based, mobile and mail order sharpening service; specializing in sharpe...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@sharpenrightservicesllc","channelId":"UC7d6BuAfHKTLR1l2SSg6HkA","hubSecret":"2pEuC4RTukNuWMTEJdMjjZDoP3gVhMFi","hubLeaseRenewalDue":"2025-11-17T06:37:11Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UC7d6BuAfHKTLR1l2SSg6HkA","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-17T06:37:10.946941Z","updatedAt":"2025-11-17T06:37:11.960348Z"},{"streamer":{"id":"4dd203ee36d046e0b686600358c1de65","alias":"Judge Jeffrey Middleton","description":"Share your videos with friends, family and the world","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@judgejeffreymiddleton7573","channelId":"UCS8gM5S889oBPyN6K07ZC6A","hubSecret":"IuAbxIHgV-tw2KHChFPJ9-bOuNW66Nnx","hubLeaseRenewalDue":"2025-11-17T06:37:38Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCS8gM5S889oBPyN6K07ZC6A","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-17T06:37:36.873738Z","updatedAt":"2025-11-17T06:37:38.001056Z"}]}
+
+2025/11/18 00:17:46 ---- Incoming request from 127.0.0.1:54496 ----
+GET /api/streamers/watch HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: text/event-stream
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Cache-Control: no-cache
+Referer: http://127.0.0.1:4173/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/18 00:17:46 ---- Response for GET /api/streamers/watch (500 Internal Server Error) ----
+streaming unsupported
+
+2025/11/18 00:18:16 ---- Incoming request from 127.0.0.1:54515 ----
+POST /alerts HTTP/1.1
+Host: sharpen.live
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Cache-Control: no-cache,max-age=0
+Content-Length: 882
+Content-Type: application/atom+xml
+From: googlebot(at)googlebot.com
+Link: <https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCvwGfRXMzs2ey1h3opwK2zw>; rel=self, <http://pubsubhubbub.appspot.com/>; rel=hub
+Pragma: no-cache
+User-Agent: FeedFetcher-Google; (+http://www.google.com/feedfetcher.html)
+Via: 1.1 Caddy
+X-Forwarded-For: 74.125.209.32
+X-Forwarded-Host: sharpen.live
+X-Forwarded-Proto: https
+X-Hub-Signature: sha1=ef358443ef81baf6a1c35f586c91179961b78d3e
+X-Request-Id: {http.request_id.header}
+
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:yt="http://www.youtube.com/xml/schemas/2015" xmlns="http://www.w3.org/2005/Atom"><link rel="hub" href="https://pubsubhubbub.appspot.com"/><link rel="self" href="https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCvwGfRXMzs2ey1h3opwK2zw"/><title>YouTube video feed</title><updated>2025-11-17T13:18:13.927664242+00:00</updated><entry>
+  <id>yt:video:LSYZlRaiRTQ</id>
+  <yt:videoId>LSYZlRaiRTQ</yt:videoId>
+  <yt:channelId>UCvwGfRXMzs2ey1h3opwK2zw</yt:channelId>
+  <title>asdfsfdsda</title>
+  <link rel="alternate" href="https://www.youtube.com/watch?v=LSYZlRaiRTQ"/>
+  <author>
+   <name>I will shave my eyebrows</name>
+   <uri>https://www.youtube.com/channel/UCvwGfRXMzs2ey1h3opwK2zw</uri>
+  </author>
+  <published>2025-11-17T13:18:11+00:00</published>
+  <updated>2025-11-17T13:18:13.927664242+00:00</updated>
+ </entry></feed>
+
+2025/11/18 00:18:16 YouTube livestream offline: asdfsfdsda (video=LSYZlRaiRTQ liveNow=false status=LIVE_STREAM_OFFLINE)
+
+2025/11/18 00:18:16 ---- Response for POST /alerts (204 No Content) ----
+
+2025/11/18 00:18:57 ---- Incoming request from 127.0.0.1:54515 ----
+POST /alerts HTTP/1.1
+Host: sharpen.live
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Cache-Control: no-cache,max-age=0
+Content-Length: 882
+Content-Type: application/atom+xml
+From: googlebot(at)googlebot.com
+Link: <https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCvwGfRXMzs2ey1h3opwK2zw>; rel=self, <http://pubsubhubbub.appspot.com/>; rel=hub
+Pragma: no-cache
+User-Agent: FeedFetcher-Google; (+http://www.google.com/feedfetcher.html)
+Via: 1.1 Caddy
+X-Forwarded-For: 74.125.209.34
+X-Forwarded-Host: sharpen.live
+X-Forwarded-Proto: https
+X-Hub-Signature: sha1=d25add0fa404c45fd5e7e3cbdfa12274dcff722f
+X-Request-Id: {http.request_id.header}
+
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:yt="http://www.youtube.com/xml/schemas/2015" xmlns="http://www.w3.org/2005/Atom"><link rel="hub" href="https://pubsubhubbub.appspot.com"/><link rel="self" href="https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCvwGfRXMzs2ey1h3opwK2zw"/><title>YouTube video feed</title><updated>2025-11-17T13:18:56.852431696+00:00</updated><entry>
+  <id>yt:video:LSYZlRaiRTQ</id>
+  <yt:videoId>LSYZlRaiRTQ</yt:videoId>
+  <yt:channelId>UCvwGfRXMzs2ey1h3opwK2zw</yt:channelId>
+  <title>asdfsfdsda</title>
+  <link rel="alternate" href="https://www.youtube.com/watch?v=LSYZlRaiRTQ"/>
+  <author>
+   <name>I will shave my eyebrows</name>
+   <uri>https://www.youtube.com/channel/UCvwGfRXMzs2ey1h3opwK2zw</uri>
+  </author>
+  <published>2025-11-17T13:18:11+00:00</published>
+  <updated>2025-11-17T13:18:56.852431696+00:00</updated>
+ </entry></feed>
+
+2025/11/18 00:18:58 YouTube livestream online: asdfsfdsda (video=LSYZlRaiRTQ channel=UCvwGfRXMzs2ey1h3opwK2zw)
+
+2025/11/18 00:18:58 ---- Response for POST /alerts (204 No Content) ----
+
+2025/11/18 00:22:22 ---- Incoming request from 127.0.0.1:54614 ----
+GET /api/streamers HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate
+Accept-Language: en-AU,en;q=0.9
+Priority: u=3, i
+Referer: http://127.0.0.1:4173/
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/18 00:22:22 ---- Response for GET /api/streamers (200 OK) ----
+{"streamers":[{"streamer":{"id":"JordanMatter","alias":"Jordan Matter","description":"My daughter has taken over my channel!","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@jordanmatter","channelId":"UCI3szCgzGTRBTF_2dVaTZdQ","hubSecret":"GmtXT02Gnu7-R3iVcAIBUc1pOsOZkfwQ","hubLeaseRenewalDue":"2025-11-16T07:32:44Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCI3szCgzGTRBTF_2dVaTZdQ","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-16T07:32:43.278917Z","updatedAt":"2025-11-16T07:32:44.755495Z"},{"streamer":{"id":"73569d15ffeb4bd8bea1ef56f56dc34d","alias":"Ted Coningsby","description":"Oii oii! Ladies, gents and teddy bears, welcome to the Ted Coningsby channel, the fun but serious military aviation channel. This is not your usual aviation ...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@TedConingsby","channelId":"UCCVgP53k4WCUnFg9yFA_YbA","hubSecret":"wGQweFSvZQznZOQhZJSCYlddYuWmIPOq","hubLeaseRenewalDue":"2025-11-17T06:32:20Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCCVgP53k4WCUnFg9yFA_YbA","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-17T06:32:19.638136Z","updatedAt":"2025-11-17T06:32:20.561455Z"},{"streamer":{"id":"231eaca2f22744e49793f395430d15d1","alias":"I will shave my eyebrows","description":"Share your videos with friends, family and the world","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@I-will-shave-my-eyebrows","channelId":"UCvwGfRXMzs2ey1h3opwK2zw","hubSecret":"-uhGIkMq159tXNozrBJImXdR9X9YUhq2","hubLeaseRenewalDue":"2025-11-17T06:33:24Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCvwGfRXMzs2ey1h3opwK2zw","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"status":{"live":true,"platforms":["youtube"],"youtube":{"live":true,"videoId":"LSYZlRaiRTQ","startedAt":"2025-11-17T13:18:53Z"}},"createdAt":"2025-11-17T06:33:22.979369Z","updatedAt":"2025-11-17T13:18:58.165632Z"},{"streamer":{"id":"0a9d7ce8255f441198a6ed3461d320f4","alias":"Sharpen Right Services LLC - Mike White","description":"Sharpen Right Services LLC - Mike White located in League City, Texas.  We are a home based, mobile and mail order sharpening service; specializing in sharpe...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@sharpenrightservicesllc","channelId":"UC7d6BuAfHKTLR1l2SSg6HkA","hubSecret":"2pEuC4RTukNuWMTEJdMjjZDoP3gVhMFi","hubLeaseRenewalDue":"2025-11-17T06:37:11Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UC7d6BuAfHKTLR1l2SSg6HkA","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"status":{"live":true,"platforms":["youtube"],"youtube":{"live":true,"videoId":"LSYZlRaiRTQ","startedAt":"2025-11-17T13:18:53Z"}},"createdAt":"2025-11-17T06:37:10.946941Z","updatedAt":"2025-11-17T06:37:11.960348Z"},{"streamer":{"id":"4dd203ee36d046e0b686600358c1de65","alias":"Judge Jeffrey Middleton","description":"Share your videos with friends, family and the world","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@judgejeffreymiddleton7573","channelId":"UCS8gM5S889oBPyN6K07ZC6A","hubSecret":"IuAbxIHgV-tw2KHChFPJ9-bOuNW66Nnx","hubLeaseRenewalDue":"2025-11-17T06:37:38Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCS8gM5S889oBPyN6K07ZC6A","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-17T06:37:36.873738Z","updatedAt":"2025-11-17T06:37:38.001056Z"}]}
+
+2025/11/18 00:22:22 ---- Incoming request from 127.0.0.1:54614 ----
+GET /api/streamers/watch HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: text/event-stream
+Accept-Encoding: gzip, deflate
+Accept-Language: en-AU,en;q=0.9
+Cache-Control: no-cache
+Pragma: no-cache
+Priority: u=3, i
+Referer: http://127.0.0.1:4173/
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/18 00:22:22 ---- Response for GET /api/streamers/watch (500 Internal Server Error) ----
+streaming unsupported
+
+2025/11/18 00:24:33 ---- Incoming request from 127.0.0.1:54683 ----
+GET /api/streamers HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Referer: http://127.0.0.1:4173/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/18 00:24:33 ---- Response for GET /api/streamers (200 OK) ----
+{"streamers":[{"streamer":{"id":"JordanMatter","alias":"Jordan Matter","description":"My daughter has taken over my channel!","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@jordanmatter","channelId":"UCI3szCgzGTRBTF_2dVaTZdQ","hubSecret":"GmtXT02Gnu7-R3iVcAIBUc1pOsOZkfwQ","hubLeaseRenewalDue":"2025-11-16T07:32:44Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCI3szCgzGTRBTF_2dVaTZdQ","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-16T07:32:43.278917Z","updatedAt":"2025-11-16T07:32:44.755495Z"},{"streamer":{"id":"73569d15ffeb4bd8bea1ef56f56dc34d","alias":"Ted Coningsby","description":"Oii oii! Ladies, gents and teddy bears, welcome to the Ted Coningsby channel, the fun but serious military aviation channel. This is not your usual aviation ...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@TedConingsby","channelId":"UCCVgP53k4WCUnFg9yFA_YbA","hubSecret":"wGQweFSvZQznZOQhZJSCYlddYuWmIPOq","hubLeaseRenewalDue":"2025-11-17T06:32:20Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCCVgP53k4WCUnFg9yFA_YbA","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-17T06:32:19.638136Z","updatedAt":"2025-11-17T06:32:20.561455Z"},{"streamer":{"id":"231eaca2f22744e49793f395430d15d1","alias":"I will shave my eyebrows","description":"Share your videos with friends, family and the world","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@I-will-shave-my-eyebrows","channelId":"UCvwGfRXMzs2ey1h3opwK2zw","hubSecret":"-uhGIkMq159tXNozrBJImXdR9X9YUhq2","hubLeaseRenewalDue":"2025-11-17T06:33:24Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCvwGfRXMzs2ey1h3opwK2zw","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"status":{"live":true,"platforms":["youtube"],"youtube":{"live":true,"videoId":"LSYZlRaiRTQ","startedAt":"2025-11-17T13:18:53Z"}},"createdAt":"2025-11-17T06:33:22.979369Z","updatedAt":"2025-11-17T13:18:58.165632Z"},{"streamer":{"id":"0a9d7ce8255f441198a6ed3461d320f4","alias":"Sharpen Right Services LLC - Mike White","description":"Sharpen Right Services LLC - Mike White located in League City, Texas.  We are a home based, mobile and mail order sharpening service; specializing in sharpe...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@sharpenrightservicesllc","channelId":"UC7d6BuAfHKTLR1l2SSg6HkA","hubSecret":"2pEuC4RTukNuWMTEJdMjjZDoP3gVhMFi","hubLeaseRenewalDue":"2025-11-17T06:37:11Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UC7d6BuAfHKTLR1l2SSg6HkA","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-17T06:37:10.946941Z","updatedAt":"2025-11-17T06:37:11.960348Z"},{"streamer":{"id":"4dd203ee36d046e0b686600358c1de65","alias":"Judge Jeffrey Middleton","description":"Share your videos with friends, family and the world","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@judgejeffreymiddleton7573","channelId":"UCS8gM5S889oBPyN6K07ZC6A","hubSecret":"IuAbxIHgV-tw2KHChFPJ9-bOuNW66Nnx","hubLeaseRenewalDue":"2025-11-17T06:37:38Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCS8gM5S889oBPyN6K07ZC6A","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-17T06:37:36.873738Z","updatedAt":"2025-11-17T06:37:38.001056Z"}]}
+
+2025/11/18 00:24:33 ---- Incoming request from 127.0.0.1:54683 ----
+GET /api/streamers/watch HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: text/event-stream
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Cache-Control: no-cache
+Referer: http://127.0.0.1:4173/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/18 00:24:33 ---- Response for GET /api/streamers/watch (500 Internal Server Error) ----
+streaming unsupported
+
+2025/11/18 00:30:04 ---- Incoming request from 127.0.0.1:55403 ----
+GET /api/streamers HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Referer: http://127.0.0.1:4173/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/18 00:30:04 ---- Response for GET /api/streamers (200 OK) ----
+{"streamers":[{"streamer":{"id":"JordanMatter","alias":"Jordan Matter","description":"My daughter has taken over my channel!","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@jordanmatter","channelId":"UCI3szCgzGTRBTF_2dVaTZdQ","hubSecret":"GmtXT02Gnu7-R3iVcAIBUc1pOsOZkfwQ","hubLeaseRenewalDue":"2025-11-16T07:32:44Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCI3szCgzGTRBTF_2dVaTZdQ","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-16T07:32:43.278917Z","updatedAt":"2025-11-16T07:32:44.755495Z"},{"streamer":{"id":"73569d15ffeb4bd8bea1ef56f56dc34d","alias":"Ted Coningsby","description":"Oii oii! Ladies, gents and teddy bears, welcome to the Ted Coningsby channel, the fun but serious military aviation channel. This is not your usual aviation ...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@TedConingsby","channelId":"UCCVgP53k4WCUnFg9yFA_YbA","hubSecret":"wGQweFSvZQznZOQhZJSCYlddYuWmIPOq","hubLeaseRenewalDue":"2025-11-17T06:32:20Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCCVgP53k4WCUnFg9yFA_YbA","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-17T06:32:19.638136Z","updatedAt":"2025-11-17T06:32:20.561455Z"},{"streamer":{"id":"231eaca2f22744e49793f395430d15d1","alias":"I will shave my eyebrows","description":"Share your videos with friends, family and the world","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@I-will-shave-my-eyebrows","channelId":"UCvwGfRXMzs2ey1h3opwK2zw","hubSecret":"-uhGIkMq159tXNozrBJImXdR9X9YUhq2","hubLeaseRenewalDue":"2025-11-17T06:33:24Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCvwGfRXMzs2ey1h3opwK2zw","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"status":{"live":true,"platforms":["youtube"],"youtube":{"live":true,"videoId":"LSYZlRaiRTQ","startedAt":"2025-11-17T13:18:53Z"}},"createdAt":"2025-11-17T06:33:22.979369Z","updatedAt":"2025-11-17T13:18:58.165632Z"},{"streamer":{"id":"0a9d7ce8255f441198a6ed3461d320f4","alias":"Sharpen Right Services LLC - Mike White","description":"Sharpen Right Services LLC - Mike White located in League City, Texas.  We are a home based, mobile and mail order sharpening service; specializing in sharpe...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@sharpenrightservicesllc","channelId":"UC7d6BuAfHKTLR1l2SSg6HkA","hubSecret":"2pEuC4RTukNuWMTEJdMjjZDoP3gVhMFi","hubLeaseRenewalDue":"2025-11-17T06:37:11Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UC7d6BuAfHKTLR1l2SSg6HkA","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-17T06:37:10.946941Z","updatedAt":"2025-11-17T06:37:11.960348Z"},{"streamer":{"id":"4dd203ee36d046e0b686600358c1de65","alias":"Judge Jeffrey Middleton","description":"Share your videos with friends, family and the world","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@judgejeffreymiddleton7573","channelId":"UCS8gM5S889oBPyN6K07ZC6A","hubSecret":"IuAbxIHgV-tw2KHChFPJ9-bOuNW66Nnx","hubLeaseRenewalDue":"2025-11-17T06:37:38Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCS8gM5S889oBPyN6K07ZC6A","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-17T06:37:36.873738Z","updatedAt":"2025-11-17T06:37:38.001056Z"}]}
+
+2025/11/18 00:30:05 ---- Incoming request from 127.0.0.1:55403 ----
+GET /api/streamers HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Referer: http://127.0.0.1:4173/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/18 00:30:05 ---- Response for GET /api/streamers (200 OK) ----
+{"streamers":[{"streamer":{"id":"JordanMatter","alias":"Jordan Matter","description":"My daughter has taken over my channel!","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@jordanmatter","channelId":"UCI3szCgzGTRBTF_2dVaTZdQ","hubSecret":"GmtXT02Gnu7-R3iVcAIBUc1pOsOZkfwQ","hubLeaseRenewalDue":"2025-11-16T07:32:44Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCI3szCgzGTRBTF_2dVaTZdQ","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-16T07:32:43.278917Z","updatedAt":"2025-11-16T07:32:44.755495Z"},{"streamer":{"id":"73569d15ffeb4bd8bea1ef56f56dc34d","alias":"Ted Coningsby","description":"Oii oii! Ladies, gents and teddy bears, welcome to the Ted Coningsby channel, the fun but serious military aviation channel. This is not your usual aviation ...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@TedConingsby","channelId":"UCCVgP53k4WCUnFg9yFA_YbA","hubSecret":"wGQweFSvZQznZOQhZJSCYlddYuWmIPOq","hubLeaseRenewalDue":"2025-11-17T06:32:20Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCCVgP53k4WCUnFg9yFA_YbA","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-17T06:32:19.638136Z","updatedAt":"2025-11-17T06:32:20.561455Z"},{"streamer":{"id":"231eaca2f22744e49793f395430d15d1","alias":"I will shave my eyebrows","description":"Share your videos with friends, family and the world","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@I-will-shave-my-eyebrows","channelId":"UCvwGfRXMzs2ey1h3opwK2zw","hubSecret":"-uhGIkMq159tXNozrBJImXdR9X9YUhq2","hubLeaseRenewalDue":"2025-11-17T06:33:24Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCvwGfRXMzs2ey1h3opwK2zw","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"status":{"live":true,"platforms":["youtube"],"youtube":{"live":true,"videoId":"LSYZlRaiRTQ","startedAt":"2025-11-17T13:18:53Z"}},"createdAt":"2025-11-17T06:33:22.979369Z","updatedAt":"2025-11-17T13:18:58.165632Z"},{"streamer":{"id":"0a9d7ce8255f441198a6ed3461d320f4","alias":"Sharpen Right Services LLC - Mike White","description":"Sharpen Right Services LLC - Mike White located in League City, Texas.  We are a home based, mobile and mail order sharpening service; specializing in sharpe...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@sharpenrightservicesllc","channelId":"UC7d6BuAfHKTLR1l2SSg6HkA","hubSecret":"2pEuC4RTukNuWMTEJdMjjZDoP3gVhMFi","hubLeaseRenewalDue":"2025-11-17T06:37:11Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UC7d6BuAfHKTLR1l2SSg6HkA","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-17T06:37:10.946941Z","updatedAt":"2025-11-17T06:37:11.960348Z"},{"streamer":{"id":"4dd203ee36d046e0b686600358c1de65","alias":"Judge Jeffrey Middleton","description":"Share your videos with friends, family and the world","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@judgejeffreymiddleton7573","channelId":"UCS8gM5S889oBPyN6K07ZC6A","hubSecret":"IuAbxIHgV-tw2KHChFPJ9-bOuNW66Nnx","hubLeaseRenewalDue":"2025-11-17T06:37:38Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCS8gM5S889oBPyN6K07ZC6A","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-17T06:37:36.873738Z","updatedAt":"2025-11-17T06:37:38.001056Z"}]}
+
+2025/11/18 00:30:21 ---- Incoming request from 127.0.0.1:55403 ----
+GET /api/streamers HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Referer: http://127.0.0.1:4173/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/18 00:30:21 ---- Response for GET /api/streamers (200 OK) ----
+{"streamers":[{"streamer":{"id":"JordanMatter","alias":"Jordan Matter","description":"My daughter has taken over my channel!","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@jordanmatter","channelId":"UCI3szCgzGTRBTF_2dVaTZdQ","hubSecret":"GmtXT02Gnu7-R3iVcAIBUc1pOsOZkfwQ","hubLeaseRenewalDue":"2025-11-16T07:32:44Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCI3szCgzGTRBTF_2dVaTZdQ","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-16T07:32:43.278917Z","updatedAt":"2025-11-16T07:32:44.755495Z"},{"streamer":{"id":"73569d15ffeb4bd8bea1ef56f56dc34d","alias":"Ted Coningsby","description":"Oii oii! Ladies, gents and teddy bears, welcome to the Ted Coningsby channel, the fun but serious military aviation channel. This is not your usual aviation ...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@TedConingsby","channelId":"UCCVgP53k4WCUnFg9yFA_YbA","hubSecret":"wGQweFSvZQznZOQhZJSCYlddYuWmIPOq","hubLeaseRenewalDue":"2025-11-17T06:32:20Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCCVgP53k4WCUnFg9yFA_YbA","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-17T06:32:19.638136Z","updatedAt":"2025-11-17T06:32:20.561455Z"},{"streamer":{"id":"231eaca2f22744e49793f395430d15d1","alias":"I will shave my eyebrows","description":"Share your videos with friends, family and the world","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@I-will-shave-my-eyebrows","channelId":"UCvwGfRXMzs2ey1h3opwK2zw","hubSecret":"-uhGIkMq159tXNozrBJImXdR9X9YUhq2","hubLeaseRenewalDue":"2025-11-17T06:33:24Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCvwGfRXMzs2ey1h3opwK2zw","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"status":{"live":true,"platforms":["youtube"],"youtube":{"live":true,"videoId":"LSYZlRaiRTQ","startedAt":"2025-11-17T13:18:53Z"}},"createdAt":"2025-11-17T06:33:22.979369Z","updatedAt":"2025-11-17T13:18:58.165632Z"},{"streamer":{"id":"0a9d7ce8255f441198a6ed3461d320f4","alias":"Sharpen Right Services LLC - Mike White","description":"Sharpen Right Services LLC - Mike White located in League City, Texas.  We are a home based, mobile and mail order sharpening service; specializing in sharpe...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@sharpenrightservicesllc","channelId":"UC7d6BuAfHKTLR1l2SSg6HkA","hubSecret":"2pEuC4RTukNuWMTEJdMjjZDoP3gVhMFi","hubLeaseRenewalDue":"2025-11-17T06:37:11Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UC7d6BuAfHKTLR1l2SSg6HkA","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-17T06:37:10.946941Z","updatedAt":"2025-11-17T06:37:11.960348Z"},{"streamer":{"id":"4dd203ee36d046e0b686600358c1de65","alias":"Judge Jeffrey Middleton","description":"Share your videos with friends, family and the world","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@judgejeffreymiddleton7573","channelId":"UCS8gM5S889oBPyN6K07ZC6A","hubSecret":"IuAbxIHgV-tw2KHChFPJ9-bOuNW66Nnx","hubLeaseRenewalDue":"2025-11-17T06:37:38Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCS8gM5S889oBPyN6K07ZC6A","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-17T06:37:36.873738Z","updatedAt":"2025-11-17T06:37:38.001056Z"}]}
+
+2025/11/18 00:30:23 ---- Incoming request from 127.0.0.1:55403 ----
+GET /api/streamers HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Referer: http://127.0.0.1:4173/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/18 00:30:23 ---- Response for GET /api/streamers (200 OK) ----
+{"streamers":[{"streamer":{"id":"JordanMatter","alias":"Jordan Matter","description":"My daughter has taken over my channel!","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@jordanmatter","channelId":"UCI3szCgzGTRBTF_2dVaTZdQ","hubSecret":"GmtXT02Gnu7-R3iVcAIBUc1pOsOZkfwQ","hubLeaseRenewalDue":"2025-11-16T07:32:44Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCI3szCgzGTRBTF_2dVaTZdQ","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-16T07:32:43.278917Z","updatedAt":"2025-11-16T07:32:44.755495Z"},{"streamer":{"id":"73569d15ffeb4bd8bea1ef56f56dc34d","alias":"Ted Coningsby","description":"Oii oii! Ladies, gents and teddy bears, welcome to the Ted Coningsby channel, the fun but serious military aviation channel. This is not your usual aviation ...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@TedConingsby","channelId":"UCCVgP53k4WCUnFg9yFA_YbA","hubSecret":"wGQweFSvZQznZOQhZJSCYlddYuWmIPOq","hubLeaseRenewalDue":"2025-11-17T06:32:20Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCCVgP53k4WCUnFg9yFA_YbA","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-17T06:32:19.638136Z","updatedAt":"2025-11-17T06:32:20.561455Z"},{"streamer":{"id":"231eaca2f22744e49793f395430d15d1","alias":"I will shave my eyebrows","description":"Share your videos with friends, family and the world","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@I-will-shave-my-eyebrows","channelId":"UCvwGfRXMzs2ey1h3opwK2zw","hubSecret":"-uhGIkMq159tXNozrBJImXdR9X9YUhq2","hubLeaseRenewalDue":"2025-11-17T06:33:24Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCvwGfRXMzs2ey1h3opwK2zw","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"status":{"live":true,"platforms":["youtube"],"youtube":{"live":true,"videoId":"LSYZlRaiRTQ","startedAt":"2025-11-17T13:18:53Z"}},"createdAt":"2025-11-17T06:33:22.979369Z","updatedAt":"2025-11-17T13:18:58.165632Z"},{"streamer":{"id":"0a9d7ce8255f441198a6ed3461d320f4","alias":"Sharpen Right Services LLC - Mike White","description":"Sharpen Right Services LLC - Mike White located in League City, Texas.  We are a home based, mobile and mail order sharpening service; specializing in sharpe...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@sharpenrightservicesllc","channelId":"UC7d6BuAfHKTLR1l2SSg6HkA","hubSecret":"2pEuC4RTukNuWMTEJdMjjZDoP3gVhMFi","hubLeaseRenewalDue":"2025-11-17T06:37:11Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UC7d6BuAfHKTLR1l2SSg6HkA","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-17T06:37:10.946941Z","updatedAt":"2025-11-17T06:37:11.960348Z"},{"streamer":{"id":"4dd203ee36d046e0b686600358c1de65","alias":"Judge Jeffrey Middleton","description":"Share your videos with friends, family and the world","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@judgejeffreymiddleton7573","channelId":"UCS8gM5S889oBPyN6K07ZC6A","hubSecret":"IuAbxIHgV-tw2KHChFPJ9-bOuNW66Nnx","hubLeaseRenewalDue":"2025-11-17T06:37:38Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCS8gM5S889oBPyN6K07ZC6A","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-17T06:37:36.873738Z","updatedAt":"2025-11-17T06:37:38.001056Z"}]}
+
+2025/11/18 00:30:52 ---- Incoming request from 127.0.0.1:55403 ----
+GET /api/streamers HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Referer: http://127.0.0.1:4173/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/18 00:30:52 ---- Response for GET /api/streamers (200 OK) ----
+{"streamers":[{"streamer":{"id":"JordanMatter","alias":"Jordan Matter","description":"My daughter has taken over my channel!","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@jordanmatter","channelId":"UCI3szCgzGTRBTF_2dVaTZdQ","hubSecret":"GmtXT02Gnu7-R3iVcAIBUc1pOsOZkfwQ","hubLeaseRenewalDue":"2025-11-16T07:32:44Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCI3szCgzGTRBTF_2dVaTZdQ","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-16T07:32:43.278917Z","updatedAt":"2025-11-16T07:32:44.755495Z"},{"streamer":{"id":"73569d15ffeb4bd8bea1ef56f56dc34d","alias":"Ted Coningsby","description":"Oii oii! Ladies, gents and teddy bears, welcome to the Ted Coningsby channel, the fun but serious military aviation channel. This is not your usual aviation ...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@TedConingsby","channelId":"UCCVgP53k4WCUnFg9yFA_YbA","hubSecret":"wGQweFSvZQznZOQhZJSCYlddYuWmIPOq","hubLeaseRenewalDue":"2025-11-17T06:32:20Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCCVgP53k4WCUnFg9yFA_YbA","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-17T06:32:19.638136Z","updatedAt":"2025-11-17T06:32:20.561455Z"},{"streamer":{"id":"231eaca2f22744e49793f395430d15d1","alias":"I will shave my eyebrows","description":"Share your videos with friends, family and the world","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@I-will-shave-my-eyebrows","channelId":"UCvwGfRXMzs2ey1h3opwK2zw","hubSecret":"-uhGIkMq159tXNozrBJImXdR9X9YUhq2","hubLeaseRenewalDue":"2025-11-17T06:33:24Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCvwGfRXMzs2ey1h3opwK2zw","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"status":{"live":true,"platforms":["youtube"],"youtube":{"live":true,"videoId":"LSYZlRaiRTQ","startedAt":"2025-11-17T13:18:53Z"}},"createdAt":"2025-11-17T06:33:22.979369Z","updatedAt":"2025-11-17T13:18:58.165632Z"},{"streamer":{"id":"0a9d7ce8255f441198a6ed3461d320f4","alias":"Sharpen Right Services LLC - Mike White","description":"Sharpen Right Services LLC - Mike White located in League City, Texas.  We are a home based, mobile and mail order sharpening service; specializing in sharpe...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@sharpenrightservicesllc","channelId":"UC7d6BuAfHKTLR1l2SSg6HkA","hubSecret":"2pEuC4RTukNuWMTEJdMjjZDoP3gVhMFi","hubLeaseRenewalDue":"2025-11-17T06:37:11Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UC7d6BuAfHKTLR1l2SSg6HkA","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-17T06:37:10.946941Z","updatedAt":"2025-11-17T06:37:11.960348Z"},{"streamer":{"id":"4dd203ee36d046e0b686600358c1de65","alias":"Judge Jeffrey Middleton","description":"Share your videos with friends, family and the world","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@judgejeffreymiddleton7573","channelId":"UCS8gM5S889oBPyN6K07ZC6A","hubSecret":"IuAbxIHgV-tw2KHChFPJ9-bOuNW66Nnx","hubLeaseRenewalDue":"2025-11-17T06:37:38Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCS8gM5S889oBPyN6K07ZC6A","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-17T06:37:36.873738Z","updatedAt":"2025-11-17T06:37:38.001056Z"}]}
+
+2025/11/18 00:30:55 ---- Incoming request from 127.0.0.1:55403 ----
+GET /api/streamers HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Referer: http://127.0.0.1:4173/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/18 00:30:55 ---- Response for GET /api/streamers (200 OK) ----
+{"streamers":[{"streamer":{"id":"JordanMatter","alias":"Jordan Matter","description":"My daughter has taken over my channel!","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@jordanmatter","channelId":"UCI3szCgzGTRBTF_2dVaTZdQ","hubSecret":"GmtXT02Gnu7-R3iVcAIBUc1pOsOZkfwQ","hubLeaseRenewalDue":"2025-11-16T07:32:44Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCI3szCgzGTRBTF_2dVaTZdQ","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-16T07:32:43.278917Z","updatedAt":"2025-11-16T07:32:44.755495Z"},{"streamer":{"id":"73569d15ffeb4bd8bea1ef56f56dc34d","alias":"Ted Coningsby","description":"Oii oii! Ladies, gents and teddy bears, welcome to the Ted Coningsby channel, the fun but serious military aviation channel. This is not your usual aviation ...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@TedConingsby","channelId":"UCCVgP53k4WCUnFg9yFA_YbA","hubSecret":"wGQweFSvZQznZOQhZJSCYlddYuWmIPOq","hubLeaseRenewalDue":"2025-11-17T06:32:20Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCCVgP53k4WCUnFg9yFA_YbA","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-17T06:32:19.638136Z","updatedAt":"2025-11-17T06:32:20.561455Z"},{"streamer":{"id":"231eaca2f22744e49793f395430d15d1","alias":"I will shave my eyebrows","description":"Share your videos with friends, family and the world","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@I-will-shave-my-eyebrows","channelId":"UCvwGfRXMzs2ey1h3opwK2zw","hubSecret":"-uhGIkMq159tXNozrBJImXdR9X9YUhq2","hubLeaseRenewalDue":"2025-11-17T06:33:24Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCvwGfRXMzs2ey1h3opwK2zw","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"status":{"live":true,"platforms":["youtube"],"youtube":{"live":true,"videoId":"LSYZlRaiRTQ","startedAt":"2025-11-17T13:18:53Z"}},"createdAt":"2025-11-17T06:33:22.979369Z","updatedAt":"2025-11-17T13:18:58.165632Z"},{"streamer":{"id":"0a9d7ce8255f441198a6ed3461d320f4","alias":"Sharpen Right Services LLC - Mike White","description":"Sharpen Right Services LLC - Mike White located in League City, Texas.  We are a home based, mobile and mail order sharpening service; specializing in sharpe...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@sharpenrightservicesllc","channelId":"UC7d6BuAfHKTLR1l2SSg6HkA","hubSecret":"2pEuC4RTukNuWMTEJdMjjZDoP3gVhMFi","hubLeaseRenewalDue":"2025-11-17T06:37:11Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UC7d6BuAfHKTLR1l2SSg6HkA","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-17T06:37:10.946941Z","updatedAt":"2025-11-17T06:37:11.960348Z"},{"streamer":{"id":"4dd203ee36d046e0b686600358c1de65","alias":"Judge Jeffrey Middleton","description":"Share your videos with friends, family and the world","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@judgejeffreymiddleton7573","channelId":"UCS8gM5S889oBPyN6K07ZC6A","hubSecret":"IuAbxIHgV-tw2KHChFPJ9-bOuNW66Nnx","hubLeaseRenewalDue":"2025-11-17T06:37:38Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCS8gM5S889oBPyN6K07ZC6A","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-17T06:37:36.873738Z","updatedAt":"2025-11-17T06:37:38.001056Z"}]}
+
+2025/11/18 00:31:13 ---- Incoming request from 127.0.0.1:55403 ----
+GET /api/streamers HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Referer: http://127.0.0.1:4173/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/18 00:31:13 ---- Response for GET /api/streamers (200 OK) ----
+{"streamers":[{"streamer":{"id":"JordanMatter","alias":"Jordan Matter","description":"My daughter has taken over my channel!","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@jordanmatter","channelId":"UCI3szCgzGTRBTF_2dVaTZdQ","hubSecret":"GmtXT02Gnu7-R3iVcAIBUc1pOsOZkfwQ","hubLeaseRenewalDue":"2025-11-16T07:32:44Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCI3szCgzGTRBTF_2dVaTZdQ","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-16T07:32:43.278917Z","updatedAt":"2025-11-16T07:32:44.755495Z"},{"streamer":{"id":"73569d15ffeb4bd8bea1ef56f56dc34d","alias":"Ted Coningsby","description":"Oii oii! Ladies, gents and teddy bears, welcome to the Ted Coningsby channel, the fun but serious military aviation channel. This is not your usual aviation ...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@TedConingsby","channelId":"UCCVgP53k4WCUnFg9yFA_YbA","hubSecret":"wGQweFSvZQznZOQhZJSCYlddYuWmIPOq","hubLeaseRenewalDue":"2025-11-17T06:32:20Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCCVgP53k4WCUnFg9yFA_YbA","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-17T06:32:19.638136Z","updatedAt":"2025-11-17T06:32:20.561455Z"},{"streamer":{"id":"231eaca2f22744e49793f395430d15d1","alias":"I will shave my eyebrows","description":"Share your videos with friends, family and the world","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@I-will-shave-my-eyebrows","channelId":"UCvwGfRXMzs2ey1h3opwK2zw","hubSecret":"-uhGIkMq159tXNozrBJImXdR9X9YUhq2","hubLeaseRenewalDue":"2025-11-17T06:33:24Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCvwGfRXMzs2ey1h3opwK2zw","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"status":{"live":true,"platforms":["youtube"],"youtube":{"live":true,"videoId":"LSYZlRaiRTQ","startedAt":"2025-11-17T13:18:53Z"}},"createdAt":"2025-11-17T06:33:22.979369Z","updatedAt":"2025-11-17T13:18:58.165632Z"},{"streamer":{"id":"0a9d7ce8255f441198a6ed3461d320f4","alias":"Sharpen Right Services LLC - Mike White","description":"Sharpen Right Services LLC - Mike White located in League City, Texas.  We are a home based, mobile and mail order sharpening service; specializing in sharpe...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@sharpenrightservicesllc","channelId":"UC7d6BuAfHKTLR1l2SSg6HkA","hubSecret":"2pEuC4RTukNuWMTEJdMjjZDoP3gVhMFi","hubLeaseRenewalDue":"2025-11-17T06:37:11Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UC7d6BuAfHKTLR1l2SSg6HkA","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-17T06:37:10.946941Z","updatedAt":"2025-11-17T06:37:11.960348Z"},{"streamer":{"id":"4dd203ee36d046e0b686600358c1de65","alias":"Judge Jeffrey Middleton","description":"Share your videos with friends, family and the world","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@judgejeffreymiddleton7573","channelId":"UCS8gM5S889oBPyN6K07ZC6A","hubSecret":"IuAbxIHgV-tw2KHChFPJ9-bOuNW66Nnx","hubLeaseRenewalDue":"2025-11-17T06:37:38Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCS8gM5S889oBPyN6K07ZC6A","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-17T06:37:36.873738Z","updatedAt":"2025-11-17T06:37:38.001056Z"}]}
+
+2025/11/18 00:31:14 ---- Incoming request from 127.0.0.1:55403 ----
+GET /api/streamers HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Referer: http://127.0.0.1:4173/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/18 00:31:14 ---- Response for GET /api/streamers (200 OK) ----
+{"streamers":[{"streamer":{"id":"JordanMatter","alias":"Jordan Matter","description":"My daughter has taken over my channel!","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@jordanmatter","channelId":"UCI3szCgzGTRBTF_2dVaTZdQ","hubSecret":"GmtXT02Gnu7-R3iVcAIBUc1pOsOZkfwQ","hubLeaseRenewalDue":"2025-11-16T07:32:44Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCI3szCgzGTRBTF_2dVaTZdQ","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-16T07:32:43.278917Z","updatedAt":"2025-11-16T07:32:44.755495Z"},{"streamer":{"id":"73569d15ffeb4bd8bea1ef56f56dc34d","alias":"Ted Coningsby","description":"Oii oii! Ladies, gents and teddy bears, welcome to the Ted Coningsby channel, the fun but serious military aviation channel. This is not your usual aviation ...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@TedConingsby","channelId":"UCCVgP53k4WCUnFg9yFA_YbA","hubSecret":"wGQweFSvZQznZOQhZJSCYlddYuWmIPOq","hubLeaseRenewalDue":"2025-11-17T06:32:20Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCCVgP53k4WCUnFg9yFA_YbA","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-17T06:32:19.638136Z","updatedAt":"2025-11-17T06:32:20.561455Z"},{"streamer":{"id":"231eaca2f22744e49793f395430d15d1","alias":"I will shave my eyebrows","description":"Share your videos with friends, family and the world","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@I-will-shave-my-eyebrows","channelId":"UCvwGfRXMzs2ey1h3opwK2zw","hubSecret":"-uhGIkMq159tXNozrBJImXdR9X9YUhq2","hubLeaseRenewalDue":"2025-11-17T06:33:24Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCvwGfRXMzs2ey1h3opwK2zw","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"status":{"live":true,"platforms":["youtube"],"youtube":{"live":true,"videoId":"LSYZlRaiRTQ","startedAt":"2025-11-17T13:18:53Z"}},"createdAt":"2025-11-17T06:33:22.979369Z","updatedAt":"2025-11-17T13:18:58.165632Z"},{"streamer":{"id":"0a9d7ce8255f441198a6ed3461d320f4","alias":"Sharpen Right Services LLC - Mike White","description":"Sharpen Right Services LLC - Mike White located in League City, Texas.  We are a home based, mobile and mail order sharpening service; specializing in sharpe...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@sharpenrightservicesllc","channelId":"UC7d6BuAfHKTLR1l2SSg6HkA","hubSecret":"2pEuC4RTukNuWMTEJdMjjZDoP3gVhMFi","hubLeaseRenewalDue":"2025-11-17T06:37:11Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UC7d6BuAfHKTLR1l2SSg6HkA","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-17T06:37:10.946941Z","updatedAt":"2025-11-17T06:37:11.960348Z"},{"streamer":{"id":"4dd203ee36d046e0b686600358c1de65","alias":"Judge Jeffrey Middleton","description":"Share your videos with friends, family and the world","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@judgejeffreymiddleton7573","channelId":"UCS8gM5S889oBPyN6K07ZC6A","hubSecret":"IuAbxIHgV-tw2KHChFPJ9-bOuNW66Nnx","hubLeaseRenewalDue":"2025-11-17T06:37:38Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCS8gM5S889oBPyN6K07ZC6A","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-17T06:37:36.873738Z","updatedAt":"2025-11-17T06:37:38.001056Z"}]}
+
+2025/11/18 00:31:18 ---- Incoming request from 127.0.0.1:55403 ----
+GET /api/streamers HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Referer: http://127.0.0.1:4173/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/18 00:31:18 ---- Response for GET /api/streamers (200 OK) ----
+{"streamers":[{"streamer":{"id":"JordanMatter","alias":"Jordan Matter","description":"My daughter has taken over my channel!","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@jordanmatter","channelId":"UCI3szCgzGTRBTF_2dVaTZdQ","hubSecret":"GmtXT02Gnu7-R3iVcAIBUc1pOsOZkfwQ","hubLeaseRenewalDue":"2025-11-16T07:32:44Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCI3szCgzGTRBTF_2dVaTZdQ","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-16T07:32:43.278917Z","updatedAt":"2025-11-16T07:32:44.755495Z"},{"streamer":{"id":"73569d15ffeb4bd8bea1ef56f56dc34d","alias":"Ted Coningsby","description":"Oii oii! Ladies, gents and teddy bears, welcome to the Ted Coningsby channel, the fun but serious military aviation channel. This is not your usual aviation ...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@TedConingsby","channelId":"UCCVgP53k4WCUnFg9yFA_YbA","hubSecret":"wGQweFSvZQznZOQhZJSCYlddYuWmIPOq","hubLeaseRenewalDue":"2025-11-17T06:32:20Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCCVgP53k4WCUnFg9yFA_YbA","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-17T06:32:19.638136Z","updatedAt":"2025-11-17T06:32:20.561455Z"},{"streamer":{"id":"231eaca2f22744e49793f395430d15d1","alias":"I will shave my eyebrows","description":"Share your videos with friends, family and the world","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@I-will-shave-my-eyebrows","channelId":"UCvwGfRXMzs2ey1h3opwK2zw","hubSecret":"-uhGIkMq159tXNozrBJImXdR9X9YUhq2","hubLeaseRenewalDue":"2025-11-17T06:33:24Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCvwGfRXMzs2ey1h3opwK2zw","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"status":{"live":true,"platforms":["youtube"],"youtube":{"live":true,"videoId":"LSYZlRaiRTQ","startedAt":"2025-11-17T13:18:53Z"}},"createdAt":"2025-11-17T06:33:22.979369Z","updatedAt":"2025-11-17T13:18:58.165632Z"},{"streamer":{"id":"0a9d7ce8255f441198a6ed3461d320f4","alias":"Sharpen Right Services LLC - Mike White","description":"Sharpen Right Services LLC - Mike White located in League City, Texas.  We are a home based, mobile and mail order sharpening service; specializing in sharpe...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@sharpenrightservicesllc","channelId":"UC7d6BuAfHKTLR1l2SSg6HkA","hubSecret":"2pEuC4RTukNuWMTEJdMjjZDoP3gVhMFi","hubLeaseRenewalDue":"2025-11-17T06:37:11Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UC7d6BuAfHKTLR1l2SSg6HkA","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-17T06:37:10.946941Z","updatedAt":"2025-11-17T06:37:11.960348Z"},{"streamer":{"id":"4dd203ee36d046e0b686600358c1de65","alias":"Judge Jeffrey Middleton","description":"Share your videos with friends, family and the world","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@judgejeffreymiddleton7573","channelId":"UCS8gM5S889oBPyN6K07ZC6A","hubSecret":"IuAbxIHgV-tw2KHChFPJ9-bOuNW66Nnx","hubLeaseRenewalDue":"2025-11-17T06:37:38Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCS8gM5S889oBPyN6K07ZC6A","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-17T06:37:36.873738Z","updatedAt":"2025-11-17T06:37:38.001056Z"}]}
+
+2025/11/18 00:31:26 ---- Incoming request from 127.0.0.1:55403 ----
+GET /api/streamers HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Referer: http://127.0.0.1:4173/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/18 00:31:26 ---- Response for GET /api/streamers (200 OK) ----
+{"streamers":[{"streamer":{"id":"JordanMatter","alias":"Jordan Matter","description":"My daughter has taken over my channel!","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@jordanmatter","channelId":"UCI3szCgzGTRBTF_2dVaTZdQ","hubSecret":"GmtXT02Gnu7-R3iVcAIBUc1pOsOZkfwQ","hubLeaseRenewalDue":"2025-11-16T07:32:44Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCI3szCgzGTRBTF_2dVaTZdQ","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-16T07:32:43.278917Z","updatedAt":"2025-11-16T07:32:44.755495Z"},{"streamer":{"id":"73569d15ffeb4bd8bea1ef56f56dc34d","alias":"Ted Coningsby","description":"Oii oii! Ladies, gents and teddy bears, welcome to the Ted Coningsby channel, the fun but serious military aviation channel. This is not your usual aviation ...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@TedConingsby","channelId":"UCCVgP53k4WCUnFg9yFA_YbA","hubSecret":"wGQweFSvZQznZOQhZJSCYlddYuWmIPOq","hubLeaseRenewalDue":"2025-11-17T06:32:20Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCCVgP53k4WCUnFg9yFA_YbA","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-17T06:32:19.638136Z","updatedAt":"2025-11-17T06:32:20.561455Z"},{"streamer":{"id":"231eaca2f22744e49793f395430d15d1","alias":"I will shave my eyebrows","description":"Share your videos with friends, family and the world","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@I-will-shave-my-eyebrows","channelId":"UCvwGfRXMzs2ey1h3opwK2zw","hubSecret":"-uhGIkMq159tXNozrBJImXdR9X9YUhq2","hubLeaseRenewalDue":"2025-11-17T06:33:24Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCvwGfRXMzs2ey1h3opwK2zw","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"status":{"live":true,"platforms":["youtube"],"youtube":{"live":true,"videoId":"LSYZlRaiRTQ","startedAt":"2025-11-17T13:18:53Z"}},"createdAt":"2025-11-17T06:33:22.979369Z","updatedAt":"2025-11-17T13:18:58.165632Z"},{"streamer":{"id":"0a9d7ce8255f441198a6ed3461d320f4","alias":"Sharpen Right Services LLC - Mike White","description":"Sharpen Right Services LLC - Mike White located in League City, Texas.  We are a home based, mobile and mail order sharpening service; specializing in sharpe...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@sharpenrightservicesllc","channelId":"UC7d6BuAfHKTLR1l2SSg6HkA","hubSecret":"2pEuC4RTukNuWMTEJdMjjZDoP3gVhMFi","hubLeaseRenewalDue":"2025-11-17T06:37:11Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UC7d6BuAfHKTLR1l2SSg6HkA","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-17T06:37:10.946941Z","updatedAt":"2025-11-17T06:37:11.960348Z"},{"streamer":{"id":"4dd203ee36d046e0b686600358c1de65","alias":"Judge Jeffrey Middleton","description":"Share your videos with friends, family and the world","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@judgejeffreymiddleton7573","channelId":"UCS8gM5S889oBPyN6K07ZC6A","hubSecret":"IuAbxIHgV-tw2KHChFPJ9-bOuNW66Nnx","hubLeaseRenewalDue":"2025-11-17T06:37:38Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCS8gM5S889oBPyN6K07ZC6A","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-17T06:37:36.873738Z","updatedAt":"2025-11-17T06:37:38.001056Z"}]}
+
+2025/11/18 00:31:38 ---- Incoming request from 127.0.0.1:55403 ----
+GET /api/streamers HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Referer: http://127.0.0.1:4173/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/18 00:31:38 ---- Response for GET /api/streamers (200 OK) ----
+{"streamers":[{"streamer":{"id":"JordanMatter","alias":"Jordan Matter","description":"My daughter has taken over my channel!","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@jordanmatter","channelId":"UCI3szCgzGTRBTF_2dVaTZdQ","hubSecret":"GmtXT02Gnu7-R3iVcAIBUc1pOsOZkfwQ","hubLeaseRenewalDue":"2025-11-16T07:32:44Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCI3szCgzGTRBTF_2dVaTZdQ","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-16T07:32:43.278917Z","updatedAt":"2025-11-16T07:32:44.755495Z"},{"streamer":{"id":"73569d15ffeb4bd8bea1ef56f56dc34d","alias":"Ted Coningsby","description":"Oii oii! Ladies, gents and teddy bears, welcome to the Ted Coningsby channel, the fun but serious military aviation channel. This is not your usual aviation ...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@TedConingsby","channelId":"UCCVgP53k4WCUnFg9yFA_YbA","hubSecret":"wGQweFSvZQznZOQhZJSCYlddYuWmIPOq","hubLeaseRenewalDue":"2025-11-17T06:32:20Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCCVgP53k4WCUnFg9yFA_YbA","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-17T06:32:19.638136Z","updatedAt":"2025-11-17T06:32:20.561455Z"},{"streamer":{"id":"231eaca2f22744e49793f395430d15d1","alias":"I will shave my eyebrows","description":"Share your videos with friends, family and the world","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@I-will-shave-my-eyebrows","channelId":"UCvwGfRXMzs2ey1h3opwK2zw","hubSecret":"-uhGIkMq159tXNozrBJImXdR9X9YUhq2","hubLeaseRenewalDue":"2025-11-17T06:33:24Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCvwGfRXMzs2ey1h3opwK2zw","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"status":{"live":true,"platforms":["youtube"],"youtube":{"live":true,"videoId":"LSYZlRaiRTQ","startedAt":"2025-11-17T13:18:53Z"}},"createdAt":"2025-11-17T06:33:22.979369Z","updatedAt":"2025-11-17T13:18:58.165632Z"},{"streamer":{"id":"0a9d7ce8255f441198a6ed3461d320f4","alias":"Sharpen Right Services LLC - Mike White","description":"Sharpen Right Services LLC - Mike White located in League City, Texas.  We are a home based, mobile and mail order sharpening service; specializing in sharpe...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@sharpenrightservicesllc","channelId":"UC7d6BuAfHKTLR1l2SSg6HkA","hubSecret":"2pEuC4RTukNuWMTEJdMjjZDoP3gVhMFi","hubLeaseRenewalDue":"2025-11-17T06:37:11Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UC7d6BuAfHKTLR1l2SSg6HkA","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-17T06:37:10.946941Z","updatedAt":"2025-11-17T06:37:11.960348Z"},{"streamer":{"id":"4dd203ee36d046e0b686600358c1de65","alias":"Judge Jeffrey Middleton","description":"Share your videos with friends, family and the world","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@judgejeffreymiddleton7573","channelId":"UCS8gM5S889oBPyN6K07ZC6A","hubSecret":"IuAbxIHgV-tw2KHChFPJ9-bOuNW66Nnx","hubLeaseRenewalDue":"2025-11-17T06:37:38Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCS8gM5S889oBPyN6K07ZC6A","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-17T06:37:36.873738Z","updatedAt":"2025-11-17T06:37:38.001056Z"}]}
+
+2025/11/18 00:31:42 ---- Incoming request from 127.0.0.1:55403 ----
+GET /api/streamers HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Referer: http://127.0.0.1:4173/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/18 00:31:42 ---- Response for GET /api/streamers (200 OK) ----
+{"streamers":[{"streamer":{"id":"JordanMatter","alias":"Jordan Matter","description":"My daughter has taken over my channel!","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@jordanmatter","channelId":"UCI3szCgzGTRBTF_2dVaTZdQ","hubSecret":"GmtXT02Gnu7-R3iVcAIBUc1pOsOZkfwQ","hubLeaseRenewalDue":"2025-11-16T07:32:44Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCI3szCgzGTRBTF_2dVaTZdQ","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-16T07:32:43.278917Z","updatedAt":"2025-11-16T07:32:44.755495Z"},{"streamer":{"id":"73569d15ffeb4bd8bea1ef56f56dc34d","alias":"Ted Coningsby","description":"Oii oii! Ladies, gents and teddy bears, welcome to the Ted Coningsby channel, the fun but serious military aviation channel. This is not your usual aviation ...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@TedConingsby","channelId":"UCCVgP53k4WCUnFg9yFA_YbA","hubSecret":"wGQweFSvZQznZOQhZJSCYlddYuWmIPOq","hubLeaseRenewalDue":"2025-11-17T06:32:20Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCCVgP53k4WCUnFg9yFA_YbA","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-17T06:32:19.638136Z","updatedAt":"2025-11-17T06:32:20.561455Z"},{"streamer":{"id":"231eaca2f22744e49793f395430d15d1","alias":"I will shave my eyebrows","description":"Share your videos with friends, family and the world","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@I-will-shave-my-eyebrows","channelId":"UCvwGfRXMzs2ey1h3opwK2zw","hubSecret":"-uhGIkMq159tXNozrBJImXdR9X9YUhq2","hubLeaseRenewalDue":"2025-11-17T06:33:24Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCvwGfRXMzs2ey1h3opwK2zw","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"status":{"live":true,"platforms":["youtube"],"youtube":{"live":true,"videoId":"LSYZlRaiRTQ","startedAt":"2025-11-17T13:18:53Z"}},"createdAt":"2025-11-17T06:33:22.979369Z","updatedAt":"2025-11-17T13:18:58.165632Z"},{"streamer":{"id":"0a9d7ce8255f441198a6ed3461d320f4","alias":"Sharpen Right Services LLC - Mike White","description":"Sharpen Right Services LLC - Mike White located in League City, Texas.  We are a home based, mobile and mail order sharpening service; specializing in sharpe...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@sharpenrightservicesllc","channelId":"UC7d6BuAfHKTLR1l2SSg6HkA","hubSecret":"2pEuC4RTukNuWMTEJdMjjZDoP3gVhMFi","hubLeaseRenewalDue":"2025-11-17T06:37:11Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UC7d6BuAfHKTLR1l2SSg6HkA","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-17T06:37:10.946941Z","updatedAt":"2025-11-17T06:37:11.960348Z"},{"streamer":{"id":"4dd203ee36d046e0b686600358c1de65","alias":"Judge Jeffrey Middleton","description":"Share your videos with friends, family and the world","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@judgejeffreymiddleton7573","channelId":"UCS8gM5S889oBPyN6K07ZC6A","hubSecret":"IuAbxIHgV-tw2KHChFPJ9-bOuNW66Nnx","hubLeaseRenewalDue":"2025-11-17T06:37:38Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCS8gM5S889oBPyN6K07ZC6A","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-17T06:37:36.873738Z","updatedAt":"2025-11-17T06:37:38.001056Z"}]}
+
+2025/11/18 00:31:45 ---- Incoming request from 127.0.0.1:55403 ----
+GET /api/streamers HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Referer: http://127.0.0.1:4173/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/18 00:31:45 ---- Response for GET /api/streamers (200 OK) ----
+{"streamers":[{"streamer":{"id":"JordanMatter","alias":"Jordan Matter","description":"My daughter has taken over my channel!","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@jordanmatter","channelId":"UCI3szCgzGTRBTF_2dVaTZdQ","hubSecret":"GmtXT02Gnu7-R3iVcAIBUc1pOsOZkfwQ","hubLeaseRenewalDue":"2025-11-16T07:32:44Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCI3szCgzGTRBTF_2dVaTZdQ","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-16T07:32:43.278917Z","updatedAt":"2025-11-16T07:32:44.755495Z"},{"streamer":{"id":"73569d15ffeb4bd8bea1ef56f56dc34d","alias":"Ted Coningsby","description":"Oii oii! Ladies, gents and teddy bears, welcome to the Ted Coningsby channel, the fun but serious military aviation channel. This is not your usual aviation ...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@TedConingsby","channelId":"UCCVgP53k4WCUnFg9yFA_YbA","hubSecret":"wGQweFSvZQznZOQhZJSCYlddYuWmIPOq","hubLeaseRenewalDue":"2025-11-17T06:32:20Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCCVgP53k4WCUnFg9yFA_YbA","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-17T06:32:19.638136Z","updatedAt":"2025-11-17T06:32:20.561455Z"},{"streamer":{"id":"231eaca2f22744e49793f395430d15d1","alias":"I will shave my eyebrows","description":"Share your videos with friends, family and the world","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@I-will-shave-my-eyebrows","channelId":"UCvwGfRXMzs2ey1h3opwK2zw","hubSecret":"-uhGIkMq159tXNozrBJImXdR9X9YUhq2","hubLeaseRenewalDue":"2025-11-17T06:33:24Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCvwGfRXMzs2ey1h3opwK2zw","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"status":{"live":true,"platforms":["youtube"],"youtube":{"live":true,"videoId":"LSYZlRaiRTQ","startedAt":"2025-11-17T13:18:53Z"}},"createdAt":"2025-11-17T06:33:22.979369Z","updatedAt":"2025-11-17T13:18:58.165632Z"},{"streamer":{"id":"0a9d7ce8255f441198a6ed3461d320f4","alias":"Sharpen Right Services LLC - Mike White","description":"Sharpen Right Services LLC - Mike White located in League City, Texas.  We are a home based, mobile and mail order sharpening service; specializing in sharpe...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@sharpenrightservicesllc","channelId":"UC7d6BuAfHKTLR1l2SSg6HkA","hubSecret":"2pEuC4RTukNuWMTEJdMjjZDoP3gVhMFi","hubLeaseRenewalDue":"2025-11-17T06:37:11Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UC7d6BuAfHKTLR1l2SSg6HkA","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-17T06:37:10.946941Z","updatedAt":"2025-11-17T06:37:11.960348Z"},{"streamer":{"id":"4dd203ee36d046e0b686600358c1de65","alias":"Judge Jeffrey Middleton","description":"Share your videos with friends, family and the world","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@judgejeffreymiddleton7573","channelId":"UCS8gM5S889oBPyN6K07ZC6A","hubSecret":"IuAbxIHgV-tw2KHChFPJ9-bOuNW66Nnx","hubLeaseRenewalDue":"2025-11-17T06:37:38Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCS8gM5S889oBPyN6K07ZC6A","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-17T06:37:36.873738Z","updatedAt":"2025-11-17T06:37:38.001056Z"}]}
+
+2025/11/18 00:31:46 ---- Incoming request from 127.0.0.1:55403 ----
+GET /api/streamers HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Referer: http://127.0.0.1:4173/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/18 00:31:46 ---- Response for GET /api/streamers (200 OK) ----
+{"streamers":[{"streamer":{"id":"JordanMatter","alias":"Jordan Matter","description":"My daughter has taken over my channel!","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@jordanmatter","channelId":"UCI3szCgzGTRBTF_2dVaTZdQ","hubSecret":"GmtXT02Gnu7-R3iVcAIBUc1pOsOZkfwQ","hubLeaseRenewalDue":"2025-11-16T07:32:44Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCI3szCgzGTRBTF_2dVaTZdQ","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-16T07:32:43.278917Z","updatedAt":"2025-11-16T07:32:44.755495Z"},{"streamer":{"id":"73569d15ffeb4bd8bea1ef56f56dc34d","alias":"Ted Coningsby","description":"Oii oii! Ladies, gents and teddy bears, welcome to the Ted Coningsby channel, the fun but serious military aviation channel. This is not your usual aviation ...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@TedConingsby","channelId":"UCCVgP53k4WCUnFg9yFA_YbA","hubSecret":"wGQweFSvZQznZOQhZJSCYlddYuWmIPOq","hubLeaseRenewalDue":"2025-11-17T06:32:20Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCCVgP53k4WCUnFg9yFA_YbA","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-17T06:32:19.638136Z","updatedAt":"2025-11-17T06:32:20.561455Z"},{"streamer":{"id":"231eaca2f22744e49793f395430d15d1","alias":"I will shave my eyebrows","description":"Share your videos with friends, family and the world","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@I-will-shave-my-eyebrows","channelId":"UCvwGfRXMzs2ey1h3opwK2zw","hubSecret":"-uhGIkMq159tXNozrBJImXdR9X9YUhq2","hubLeaseRenewalDue":"2025-11-17T06:33:24Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCvwGfRXMzs2ey1h3opwK2zw","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"status":{"live":true,"platforms":["youtube"],"youtube":{"live":true,"videoId":"LSYZlRaiRTQ","startedAt":"2025-11-17T13:18:53Z"}},"createdAt":"2025-11-17T06:33:22.979369Z","updatedAt":"2025-11-17T13:18:58.165632Z"},{"streamer":{"id":"0a9d7ce8255f441198a6ed3461d320f4","alias":"Sharpen Right Services LLC - Mike White","description":"Sharpen Right Services LLC - Mike White located in League City, Texas.  We are a home based, mobile and mail order sharpening service; specializing in sharpe...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@sharpenrightservicesllc","channelId":"UC7d6BuAfHKTLR1l2SSg6HkA","hubSecret":"2pEuC4RTukNuWMTEJdMjjZDoP3gVhMFi","hubLeaseRenewalDue":"2025-11-17T06:37:11Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UC7d6BuAfHKTLR1l2SSg6HkA","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-17T06:37:10.946941Z","updatedAt":"2025-11-17T06:37:11.960348Z"},{"streamer":{"id":"4dd203ee36d046e0b686600358c1de65","alias":"Judge Jeffrey Middleton","description":"Share your videos with friends, family and the world","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@judgejeffreymiddleton7573","channelId":"UCS8gM5S889oBPyN6K07ZC6A","hubSecret":"IuAbxIHgV-tw2KHChFPJ9-bOuNW66Nnx","hubLeaseRenewalDue":"2025-11-17T06:37:38Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCS8gM5S889oBPyN6K07ZC6A","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-17T06:37:36.873738Z","updatedAt":"2025-11-17T06:37:38.001056Z"}]}
+
+2025/11/18 00:31:48 ---- Incoming request from 127.0.0.1:55403 ----
+GET /api/streamers HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Referer: http://127.0.0.1:4173/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/18 00:31:48 ---- Response for GET /api/streamers (200 OK) ----
+{"streamers":[{"streamer":{"id":"JordanMatter","alias":"Jordan Matter","description":"My daughter has taken over my channel!","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@jordanmatter","channelId":"UCI3szCgzGTRBTF_2dVaTZdQ","hubSecret":"GmtXT02Gnu7-R3iVcAIBUc1pOsOZkfwQ","hubLeaseRenewalDue":"2025-11-16T07:32:44Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCI3szCgzGTRBTF_2dVaTZdQ","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-16T07:32:43.278917Z","updatedAt":"2025-11-16T07:32:44.755495Z"},{"streamer":{"id":"73569d15ffeb4bd8bea1ef56f56dc34d","alias":"Ted Coningsby","description":"Oii oii! Ladies, gents and teddy bears, welcome to the Ted Coningsby channel, the fun but serious military aviation channel. This is not your usual aviation ...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@TedConingsby","channelId":"UCCVgP53k4WCUnFg9yFA_YbA","hubSecret":"wGQweFSvZQznZOQhZJSCYlddYuWmIPOq","hubLeaseRenewalDue":"2025-11-17T06:32:20Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCCVgP53k4WCUnFg9yFA_YbA","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-17T06:32:19.638136Z","updatedAt":"2025-11-17T06:32:20.561455Z"},{"streamer":{"id":"231eaca2f22744e49793f395430d15d1","alias":"I will shave my eyebrows","description":"Share your videos with friends, family and the world","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@I-will-shave-my-eyebrows","channelId":"UCvwGfRXMzs2ey1h3opwK2zw","hubSecret":"-uhGIkMq159tXNozrBJImXdR9X9YUhq2","hubLeaseRenewalDue":"2025-11-17T06:33:24Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCvwGfRXMzs2ey1h3opwK2zw","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"status":{"live":true,"platforms":["youtube"],"youtube":{"live":true,"videoId":"LSYZlRaiRTQ","startedAt":"2025-11-17T13:18:53Z"}},"createdAt":"2025-11-17T06:33:22.979369Z","updatedAt":"2025-11-17T13:18:58.165632Z"},{"streamer":{"id":"0a9d7ce8255f441198a6ed3461d320f4","alias":"Sharpen Right Services LLC - Mike White","description":"Sharpen Right Services LLC - Mike White located in League City, Texas.  We are a home based, mobile and mail order sharpening service; specializing in sharpe...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@sharpenrightservicesllc","channelId":"UC7d6BuAfHKTLR1l2SSg6HkA","hubSecret":"2pEuC4RTukNuWMTEJdMjjZDoP3gVhMFi","hubLeaseRenewalDue":"2025-11-17T06:37:11Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UC7d6BuAfHKTLR1l2SSg6HkA","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-17T06:37:10.946941Z","updatedAt":"2025-11-17T06:37:11.960348Z"},{"streamer":{"id":"4dd203ee36d046e0b686600358c1de65","alias":"Judge Jeffrey Middleton","description":"Share your videos with friends, family and the world","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@judgejeffreymiddleton7573","channelId":"UCS8gM5S889oBPyN6K07ZC6A","hubSecret":"IuAbxIHgV-tw2KHChFPJ9-bOuNW66Nnx","hubLeaseRenewalDue":"2025-11-17T06:37:38Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCS8gM5S889oBPyN6K07ZC6A","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-17T06:37:36.873738Z","updatedAt":"2025-11-17T06:37:38.001056Z"}]}
+
+2025/11/18 00:31:49 ---- Incoming request from 127.0.0.1:55403 ----
+GET /api/streamers HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Referer: http://127.0.0.1:4173/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/18 00:31:49 ---- Response for GET /api/streamers (200 OK) ----
+{"streamers":[{"streamer":{"id":"JordanMatter","alias":"Jordan Matter","description":"My daughter has taken over my channel!","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@jordanmatter","channelId":"UCI3szCgzGTRBTF_2dVaTZdQ","hubSecret":"GmtXT02Gnu7-R3iVcAIBUc1pOsOZkfwQ","hubLeaseRenewalDue":"2025-11-16T07:32:44Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCI3szCgzGTRBTF_2dVaTZdQ","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-16T07:32:43.278917Z","updatedAt":"2025-11-16T07:32:44.755495Z"},{"streamer":{"id":"73569d15ffeb4bd8bea1ef56f56dc34d","alias":"Ted Coningsby","description":"Oii oii! Ladies, gents and teddy bears, welcome to the Ted Coningsby channel, the fun but serious military aviation channel. This is not your usual aviation ...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@TedConingsby","channelId":"UCCVgP53k4WCUnFg9yFA_YbA","hubSecret":"wGQweFSvZQznZOQhZJSCYlddYuWmIPOq","hubLeaseRenewalDue":"2025-11-17T06:32:20Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCCVgP53k4WCUnFg9yFA_YbA","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-17T06:32:19.638136Z","updatedAt":"2025-11-17T06:32:20.561455Z"},{"streamer":{"id":"231eaca2f22744e49793f395430d15d1","alias":"I will shave my eyebrows","description":"Share your videos with friends, family and the world","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@I-will-shave-my-eyebrows","channelId":"UCvwGfRXMzs2ey1h3opwK2zw","hubSecret":"-uhGIkMq159tXNozrBJImXdR9X9YUhq2","hubLeaseRenewalDue":"2025-11-17T06:33:24Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCvwGfRXMzs2ey1h3opwK2zw","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"status":{"live":true,"platforms":["youtube"],"youtube":{"live":true,"videoId":"LSYZlRaiRTQ","startedAt":"2025-11-17T13:18:53Z"}},"createdAt":"2025-11-17T06:33:22.979369Z","updatedAt":"2025-11-17T13:18:58.165632Z"},{"streamer":{"id":"0a9d7ce8255f441198a6ed3461d320f4","alias":"Sharpen Right Services LLC - Mike White","description":"Sharpen Right Services LLC - Mike White located in League City, Texas.  We are a home based, mobile and mail order sharpening service; specializing in sharpe...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@sharpenrightservicesllc","channelId":"UC7d6BuAfHKTLR1l2SSg6HkA","hubSecret":"2pEuC4RTukNuWMTEJdMjjZDoP3gVhMFi","hubLeaseRenewalDue":"2025-11-17T06:37:11Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UC7d6BuAfHKTLR1l2SSg6HkA","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-17T06:37:10.946941Z","updatedAt":"2025-11-17T06:37:11.960348Z"},{"streamer":{"id":"4dd203ee36d046e0b686600358c1de65","alias":"Judge Jeffrey Middleton","description":"Share your videos with friends, family and the world","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@judgejeffreymiddleton7573","channelId":"UCS8gM5S889oBPyN6K07ZC6A","hubSecret":"IuAbxIHgV-tw2KHChFPJ9-bOuNW66Nnx","hubLeaseRenewalDue":"2025-11-17T06:37:38Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCS8gM5S889oBPyN6K07ZC6A","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-17T06:37:36.873738Z","updatedAt":"2025-11-17T06:37:38.001056Z"}]}
+
+2025/11/18 00:32:01 ---- Incoming request from 127.0.0.1:55403 ----
+GET /api/streamers HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Referer: http://127.0.0.1:4173/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/18 00:32:01 ---- Response for GET /api/streamers (200 OK) ----
+{"streamers":[{"streamer":{"id":"JordanMatter","alias":"Jordan Matter","description":"My daughter has taken over my channel!","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@jordanmatter","channelId":"UCI3szCgzGTRBTF_2dVaTZdQ","hubSecret":"GmtXT02Gnu7-R3iVcAIBUc1pOsOZkfwQ","hubLeaseRenewalDue":"2025-11-16T07:32:44Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCI3szCgzGTRBTF_2dVaTZdQ","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-16T07:32:43.278917Z","updatedAt":"2025-11-16T07:32:44.755495Z"},{"streamer":{"id":"73569d15ffeb4bd8bea1ef56f56dc34d","alias":"Ted Coningsby","description":"Oii oii! Ladies, gents and teddy bears, welcome to the Ted Coningsby channel, the fun but serious military aviation channel. This is not your usual aviation ...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@TedConingsby","channelId":"UCCVgP53k4WCUnFg9yFA_YbA","hubSecret":"wGQweFSvZQznZOQhZJSCYlddYuWmIPOq","hubLeaseRenewalDue":"2025-11-17T06:32:20Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCCVgP53k4WCUnFg9yFA_YbA","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-17T06:32:19.638136Z","updatedAt":"2025-11-17T06:32:20.561455Z"},{"streamer":{"id":"231eaca2f22744e49793f395430d15d1","alias":"I will shave my eyebrows","description":"Share your videos with friends, family and the world","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@I-will-shave-my-eyebrows","channelId":"UCvwGfRXMzs2ey1h3opwK2zw","hubSecret":"-uhGIkMq159tXNozrBJImXdR9X9YUhq2","hubLeaseRenewalDue":"2025-11-17T06:33:24Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCvwGfRXMzs2ey1h3opwK2zw","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"status":{"live":true,"platforms":["youtube"],"youtube":{"live":true,"videoId":"LSYZlRaiRTQ","startedAt":"2025-11-17T13:18:53Z"}},"createdAt":"2025-11-17T06:33:22.979369Z","updatedAt":"2025-11-17T13:18:58.165632Z"},{"streamer":{"id":"0a9d7ce8255f441198a6ed3461d320f4","alias":"Sharpen Right Services LLC - Mike White","description":"Sharpen Right Services LLC - Mike White located in League City, Texas.  We are a home based, mobile and mail order sharpening service; specializing in sharpe...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@sharpenrightservicesllc","channelId":"UC7d6BuAfHKTLR1l2SSg6HkA","hubSecret":"2pEuC4RTukNuWMTEJdMjjZDoP3gVhMFi","hubLeaseRenewalDue":"2025-11-17T06:37:11Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UC7d6BuAfHKTLR1l2SSg6HkA","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-17T06:37:10.946941Z","updatedAt":"2025-11-17T06:37:11.960348Z"},{"streamer":{"id":"4dd203ee36d046e0b686600358c1de65","alias":"Judge Jeffrey Middleton","description":"Share your videos with friends, family and the world","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@judgejeffreymiddleton7573","channelId":"UCS8gM5S889oBPyN6K07ZC6A","hubSecret":"IuAbxIHgV-tw2KHChFPJ9-bOuNW66Nnx","hubLeaseRenewalDue":"2025-11-17T06:37:38Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCS8gM5S889oBPyN6K07ZC6A","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-17T06:37:36.873738Z","updatedAt":"2025-11-17T06:37:38.001056Z"}]}
+
+2025/11/18 00:32:05 ---- Incoming request from 127.0.0.1:55403 ----
+GET /api/streamers HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Referer: http://127.0.0.1:4173/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/18 00:32:05 ---- Response for GET /api/streamers (200 OK) ----
+{"streamers":[{"streamer":{"id":"JordanMatter","alias":"Jordan Matter","description":"My daughter has taken over my channel!","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@jordanmatter","channelId":"UCI3szCgzGTRBTF_2dVaTZdQ","hubSecret":"GmtXT02Gnu7-R3iVcAIBUc1pOsOZkfwQ","hubLeaseRenewalDue":"2025-11-16T07:32:44Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCI3szCgzGTRBTF_2dVaTZdQ","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-16T07:32:43.278917Z","updatedAt":"2025-11-16T07:32:44.755495Z"},{"streamer":{"id":"73569d15ffeb4bd8bea1ef56f56dc34d","alias":"Ted Coningsby","description":"Oii oii! Ladies, gents and teddy bears, welcome to the Ted Coningsby channel, the fun but serious military aviation channel. This is not your usual aviation ...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@TedConingsby","channelId":"UCCVgP53k4WCUnFg9yFA_YbA","hubSecret":"wGQweFSvZQznZOQhZJSCYlddYuWmIPOq","hubLeaseRenewalDue":"2025-11-17T06:32:20Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCCVgP53k4WCUnFg9yFA_YbA","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-17T06:32:19.638136Z","updatedAt":"2025-11-17T06:32:20.561455Z"},{"streamer":{"id":"231eaca2f22744e49793f395430d15d1","alias":"I will shave my eyebrows","description":"Share your videos with friends, family and the world","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@I-will-shave-my-eyebrows","channelId":"UCvwGfRXMzs2ey1h3opwK2zw","hubSecret":"-uhGIkMq159tXNozrBJImXdR9X9YUhq2","hubLeaseRenewalDue":"2025-11-17T06:33:24Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCvwGfRXMzs2ey1h3opwK2zw","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"status":{"live":true,"platforms":["youtube"],"youtube":{"live":true,"videoId":"LSYZlRaiRTQ","startedAt":"2025-11-17T13:18:53Z"}},"createdAt":"2025-11-17T06:33:22.979369Z","updatedAt":"2025-11-17T13:18:58.165632Z"},{"streamer":{"id":"0a9d7ce8255f441198a6ed3461d320f4","alias":"Sharpen Right Services LLC - Mike White","description":"Sharpen Right Services LLC - Mike White located in League City, Texas.  We are a home based, mobile and mail order sharpening service; specializing in sharpe...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@sharpenrightservicesllc","channelId":"UC7d6BuAfHKTLR1l2SSg6HkA","hubSecret":"2pEuC4RTukNuWMTEJdMjjZDoP3gVhMFi","hubLeaseRenewalDue":"2025-11-17T06:37:11Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UC7d6BuAfHKTLR1l2SSg6HkA","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-17T06:37:10.946941Z","updatedAt":"2025-11-17T06:37:11.960348Z"},{"streamer":{"id":"4dd203ee36d046e0b686600358c1de65","alias":"Judge Jeffrey Middleton","description":"Share your videos with friends, family and the world","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@judgejeffreymiddleton7573","channelId":"UCS8gM5S889oBPyN6K07ZC6A","hubSecret":"IuAbxIHgV-tw2KHChFPJ9-bOuNW66Nnx","hubLeaseRenewalDue":"2025-11-17T06:37:38Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCS8gM5S889oBPyN6K07ZC6A","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-17T06:37:36.873738Z","updatedAt":"2025-11-17T06:37:38.001056Z"}]}
+
+2025/11/18 00:32:43 ---- Incoming request from 127.0.0.1:55403 ----
+GET /api/streamers HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Referer: http://127.0.0.1:4173/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/18 00:32:43 ---- Response for GET /api/streamers (200 OK) ----
+{"streamers":[{"streamer":{"id":"JordanMatter","alias":"Jordan Matter","description":"My daughter has taken over my channel!","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@jordanmatter","channelId":"UCI3szCgzGTRBTF_2dVaTZdQ","hubSecret":"GmtXT02Gnu7-R3iVcAIBUc1pOsOZkfwQ","hubLeaseRenewalDue":"2025-11-16T07:32:44Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCI3szCgzGTRBTF_2dVaTZdQ","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-16T07:32:43.278917Z","updatedAt":"2025-11-16T07:32:44.755495Z"},{"streamer":{"id":"73569d15ffeb4bd8bea1ef56f56dc34d","alias":"Ted Coningsby","description":"Oii oii! Ladies, gents and teddy bears, welcome to the Ted Coningsby channel, the fun but serious military aviation channel. This is not your usual aviation ...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@TedConingsby","channelId":"UCCVgP53k4WCUnFg9yFA_YbA","hubSecret":"wGQweFSvZQznZOQhZJSCYlddYuWmIPOq","hubLeaseRenewalDue":"2025-11-17T06:32:20Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCCVgP53k4WCUnFg9yFA_YbA","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-17T06:32:19.638136Z","updatedAt":"2025-11-17T06:32:20.561455Z"},{"streamer":{"id":"231eaca2f22744e49793f395430d15d1","alias":"I will shave my eyebrows","description":"Share your videos with friends, family and the world","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@I-will-shave-my-eyebrows","channelId":"UCvwGfRXMzs2ey1h3opwK2zw","hubSecret":"-uhGIkMq159tXNozrBJImXdR9X9YUhq2","hubLeaseRenewalDue":"2025-11-17T06:33:24Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCvwGfRXMzs2ey1h3opwK2zw","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"status":{"live":true,"platforms":["youtube"],"youtube":{"live":true,"videoId":"LSYZlRaiRTQ","startedAt":"2025-11-17T13:18:53Z"}},"createdAt":"2025-11-17T06:33:22.979369Z","updatedAt":"2025-11-17T13:18:58.165632Z"},{"streamer":{"id":"0a9d7ce8255f441198a6ed3461d320f4","alias":"Sharpen Right Services LLC - Mike White","description":"Sharpen Right Services LLC - Mike White located in League City, Texas.  We are a home based, mobile and mail order sharpening service; specializing in sharpe...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@sharpenrightservicesllc","channelId":"UC7d6BuAfHKTLR1l2SSg6HkA","hubSecret":"2pEuC4RTukNuWMTEJdMjjZDoP3gVhMFi","hubLeaseRenewalDue":"2025-11-17T06:37:11Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UC7d6BuAfHKTLR1l2SSg6HkA","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-17T06:37:10.946941Z","updatedAt":"2025-11-17T06:37:11.960348Z"},{"streamer":{"id":"4dd203ee36d046e0b686600358c1de65","alias":"Judge Jeffrey Middleton","description":"Share your videos with friends, family and the world","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@judgejeffreymiddleton7573","channelId":"UCS8gM5S889oBPyN6K07ZC6A","hubSecret":"IuAbxIHgV-tw2KHChFPJ9-bOuNW66Nnx","hubLeaseRenewalDue":"2025-11-17T06:37:38Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCS8gM5S889oBPyN6K07ZC6A","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-17T06:37:36.873738Z","updatedAt":"2025-11-17T06:37:38.001056Z"}]}
+
+2025/11/18 00:32:46 ---- Incoming request from 127.0.0.1:55403 ----
+GET /api/streamers HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Referer: http://127.0.0.1:4173/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/18 00:32:46 ---- Response for GET /api/streamers (200 OK) ----
+{"streamers":[{"streamer":{"id":"JordanMatter","alias":"Jordan Matter","description":"My daughter has taken over my channel!","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@jordanmatter","channelId":"UCI3szCgzGTRBTF_2dVaTZdQ","hubSecret":"GmtXT02Gnu7-R3iVcAIBUc1pOsOZkfwQ","hubLeaseRenewalDue":"2025-11-16T07:32:44Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCI3szCgzGTRBTF_2dVaTZdQ","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-16T07:32:43.278917Z","updatedAt":"2025-11-16T07:32:44.755495Z"},{"streamer":{"id":"73569d15ffeb4bd8bea1ef56f56dc34d","alias":"Ted Coningsby","description":"Oii oii! Ladies, gents and teddy bears, welcome to the Ted Coningsby channel, the fun but serious military aviation channel. This is not your usual aviation ...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@TedConingsby","channelId":"UCCVgP53k4WCUnFg9yFA_YbA","hubSecret":"wGQweFSvZQznZOQhZJSCYlddYuWmIPOq","hubLeaseRenewalDue":"2025-11-17T06:32:20Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCCVgP53k4WCUnFg9yFA_YbA","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-17T06:32:19.638136Z","updatedAt":"2025-11-17T06:32:20.561455Z"},{"streamer":{"id":"231eaca2f22744e49793f395430d15d1","alias":"I will shave my eyebrows","description":"Share your videos with friends, family and the world","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@I-will-shave-my-eyebrows","channelId":"UCvwGfRXMzs2ey1h3opwK2zw","hubSecret":"-uhGIkMq159tXNozrBJImXdR9X9YUhq2","hubLeaseRenewalDue":"2025-11-17T06:33:24Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCvwGfRXMzs2ey1h3opwK2zw","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"status":{"live":true,"platforms":["youtube"],"youtube":{"live":true,"videoId":"LSYZlRaiRTQ","startedAt":"2025-11-17T13:18:53Z"}},"createdAt":"2025-11-17T06:33:22.979369Z","updatedAt":"2025-11-17T13:18:58.165632Z"},{"streamer":{"id":"0a9d7ce8255f441198a6ed3461d320f4","alias":"Sharpen Right Services LLC - Mike White","description":"Sharpen Right Services LLC - Mike White located in League City, Texas.  We are a home based, mobile and mail order sharpening service; specializing in sharpe...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@sharpenrightservicesllc","channelId":"UC7d6BuAfHKTLR1l2SSg6HkA","hubSecret":"2pEuC4RTukNuWMTEJdMjjZDoP3gVhMFi","hubLeaseRenewalDue":"2025-11-17T06:37:11Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UC7d6BuAfHKTLR1l2SSg6HkA","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-17T06:37:10.946941Z","updatedAt":"2025-11-17T06:37:11.960348Z"},{"streamer":{"id":"4dd203ee36d046e0b686600358c1de65","alias":"Judge Jeffrey Middleton","description":"Share your videos with friends, family and the world","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@judgejeffreymiddleton7573","channelId":"UCS8gM5S889oBPyN6K07ZC6A","hubSecret":"IuAbxIHgV-tw2KHChFPJ9-bOuNW66Nnx","hubLeaseRenewalDue":"2025-11-17T06:37:38Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCS8gM5S889oBPyN6K07ZC6A","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-17T06:37:36.873738Z","updatedAt":"2025-11-17T06:37:38.001056Z"}]}
+
+2025/11/18 00:33:01 ---- Incoming request from 127.0.0.1:55403 ----
+GET /api/streamers HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Referer: http://127.0.0.1:4173/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/18 00:33:01 ---- Response for GET /api/streamers (200 OK) ----
+{"streamers":[{"streamer":{"id":"JordanMatter","alias":"Jordan Matter","description":"My daughter has taken over my channel!","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@jordanmatter","channelId":"UCI3szCgzGTRBTF_2dVaTZdQ","hubSecret":"GmtXT02Gnu7-R3iVcAIBUc1pOsOZkfwQ","hubLeaseRenewalDue":"2025-11-16T07:32:44Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCI3szCgzGTRBTF_2dVaTZdQ","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-16T07:32:43.278917Z","updatedAt":"2025-11-16T07:32:44.755495Z"},{"streamer":{"id":"73569d15ffeb4bd8bea1ef56f56dc34d","alias":"Ted Coningsby","description":"Oii oii! Ladies, gents and teddy bears, welcome to the Ted Coningsby channel, the fun but serious military aviation channel. This is not your usual aviation ...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@TedConingsby","channelId":"UCCVgP53k4WCUnFg9yFA_YbA","hubSecret":"wGQweFSvZQznZOQhZJSCYlddYuWmIPOq","hubLeaseRenewalDue":"2025-11-17T06:32:20Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCCVgP53k4WCUnFg9yFA_YbA","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-17T06:32:19.638136Z","updatedAt":"2025-11-17T06:32:20.561455Z"},{"streamer":{"id":"231eaca2f22744e49793f395430d15d1","alias":"I will shave my eyebrows","description":"Share your videos with friends, family and the world","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@I-will-shave-my-eyebrows","channelId":"UCvwGfRXMzs2ey1h3opwK2zw","hubSecret":"-uhGIkMq159tXNozrBJImXdR9X9YUhq2","hubLeaseRenewalDue":"2025-11-17T06:33:24Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCvwGfRXMzs2ey1h3opwK2zw","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"status":{"live":true,"platforms":["youtube"],"youtube":{"live":true,"videoId":"LSYZlRaiRTQ","startedAt":"2025-11-17T13:18:53Z"}},"createdAt":"2025-11-17T06:33:22.979369Z","updatedAt":"2025-11-17T13:18:58.165632Z"},{"streamer":{"id":"0a9d7ce8255f441198a6ed3461d320f4","alias":"Sharpen Right Services LLC - Mike White","description":"Sharpen Right Services LLC - Mike White located in League City, Texas.  We are a home based, mobile and mail order sharpening service; specializing in sharpe...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@sharpenrightservicesllc","channelId":"UC7d6BuAfHKTLR1l2SSg6HkA","hubSecret":"2pEuC4RTukNuWMTEJdMjjZDoP3gVhMFi","hubLeaseRenewalDue":"2025-11-17T06:37:11Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UC7d6BuAfHKTLR1l2SSg6HkA","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-17T06:37:10.946941Z","updatedAt":"2025-11-17T06:37:11.960348Z"},{"streamer":{"id":"4dd203ee36d046e0b686600358c1de65","alias":"Judge Jeffrey Middleton","description":"Share your videos with friends, family and the world","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@judgejeffreymiddleton7573","channelId":"UCS8gM5S889oBPyN6K07ZC6A","hubSecret":"IuAbxIHgV-tw2KHChFPJ9-bOuNW66Nnx","hubLeaseRenewalDue":"2025-11-17T06:37:38Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCS8gM5S889oBPyN6K07ZC6A","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-17T06:37:36.873738Z","updatedAt":"2025-11-17T06:37:38.001056Z"}]}
+
+2025/11/18 00:33:01 ---- Incoming request from 127.0.0.1:56175 ----
+GET /api/streamers/watch HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: text/event-stream
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Cache-Control: no-cache
+Referer: http://127.0.0.1:4173/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/18 00:33:01 ---- Response for GET /api/streamers/watch (500 Internal Server Error) ----
+streaming unsupported
+
+2025/11/18 00:35:03 ---- Incoming request from 127.0.0.1:56375 ----
+POST /alerts HTTP/1.1
+Host: sharpen.live
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Cache-Control: no-cache,max-age=0
+Content-Length: 880
+Content-Type: application/atom+xml
+From: googlebot(at)googlebot.com
+Link: <https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCvwGfRXMzs2ey1h3opwK2zw>; rel=self, <http://pubsubhubbub.appspot.com/>; rel=hub
+Pragma: no-cache
+User-Agent: FeedFetcher-Google; (+http://www.google.com/feedfetcher.html)
+Via: 1.1 Caddy
+X-Forwarded-For: 74.125.209.32
+X-Forwarded-Host: sharpen.live
+X-Forwarded-Proto: https
+X-Hub-Signature: sha1=24ec5d8bda6f69e64467fafea3dad9ce012a4e59
+X-Request-Id: {http.request_id.header}
+
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:yt="http://www.youtube.com/xml/schemas/2015" xmlns="http://www.w3.org/2005/Atom"><link rel="hub" href="https://pubsubhubbub.appspot.com"/><link rel="self" href="https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCvwGfRXMzs2ey1h3opwK2zw"/><title>YouTube video feed</title><updated>2025-11-17T13:35:01.52351558+00:00</updated><entry>
+  <id>yt:video:LSYZlRaiRTQ</id>
+  <yt:videoId>LSYZlRaiRTQ</yt:videoId>
+  <yt:channelId>UCvwGfRXMzs2ey1h3opwK2zw</yt:channelId>
+  <title>asdfsfdsda</title>
+  <link rel="alternate" href="https://www.youtube.com/watch?v=LSYZlRaiRTQ"/>
+  <author>
+   <name>I will shave my eyebrows</name>
+   <uri>https://www.youtube.com/channel/UCvwGfRXMzs2ey1h3opwK2zw</uri>
+  </author>
+  <published>2025-11-17T13:18:11+00:00</published>
+  <updated>2025-11-17T13:35:01.52351558+00:00</updated>
+ </entry></feed>
+
+2025/11/18 00:35:03 YouTube livestream offline: asdfsfdsda (video=LSYZlRaiRTQ liveNow=false status=OK)
+
+2025/11/18 00:35:03 ---- Response for POST /alerts (204 No Content) ----
+
+2025/11/18 00:40:14 ---- Incoming request from 127.0.0.1:56503 ----
+GET /api/streamers HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate
+Accept-Language: en-AU,en;q=0.9
+Priority: u=3, i
+Referer: http://127.0.0.1:4173/
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/18 00:40:14 ---- Response for GET /api/streamers (200 OK) ----
+{"streamers":[{"streamer":{"id":"JordanMatter","alias":"Jordan Matter","description":"My daughter has taken over my channel!","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@jordanmatter","channelId":"UCI3szCgzGTRBTF_2dVaTZdQ","hubSecret":"GmtXT02Gnu7-R3iVcAIBUc1pOsOZkfwQ","hubLeaseRenewalDue":"2025-11-16T07:32:44Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCI3szCgzGTRBTF_2dVaTZdQ","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-16T07:32:43.278917Z","updatedAt":"2025-11-16T07:32:44.755495Z"},{"streamer":{"id":"73569d15ffeb4bd8bea1ef56f56dc34d","alias":"Ted Coningsby","description":"Oii oii! Ladies, gents and teddy bears, welcome to the Ted Coningsby channel, the fun but serious military aviation channel. This is not your usual aviation ...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@TedConingsby","channelId":"UCCVgP53k4WCUnFg9yFA_YbA","hubSecret":"wGQweFSvZQznZOQhZJSCYlddYuWmIPOq","hubLeaseRenewalDue":"2025-11-17T06:32:20Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCCVgP53k4WCUnFg9yFA_YbA","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"status":{"live":true,"platforms":["youtube"],"youtube":{"live":true,"videoId":"LSYZlRaiRTQ","startedAt":"2025-11-17T13:18:53Z"}},"createdAt":"2025-11-17T06:32:19.638136Z","updatedAt":"2025-11-17T06:32:20.561455Z"},{"streamer":{"id":"231eaca2f22744e49793f395430d15d1","alias":"I will shave my eyebrows","description":"Share your videos with friends, family and the world","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@I-will-shave-my-eyebrows","channelId":"UCvwGfRXMzs2ey1h3opwK2zw","hubSecret":"-uhGIkMq159tXNozrBJImXdR9X9YUhq2","hubLeaseRenewalDue":"2025-11-17T06:33:24Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCvwGfRXMzs2ey1h3opwK2zw","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"status":{"live":false,"youtube":{"live":false,"startedAt":"0001-01-01T00:00:00Z"}},"createdAt":"2025-11-17T06:33:22.979369Z","updatedAt":"2025-11-17T13:35:03.587286Z"},{"streamer":{"id":"0a9d7ce8255f441198a6ed3461d320f4","alias":"Sharpen Right Services LLC - Mike White","description":"Sharpen Right Services LLC - Mike White located in League City, Texas.  We are a home based, mobile and mail order sharpening service; specializing in sharpe...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@sharpenrightservicesllc","channelId":"UC7d6BuAfHKTLR1l2SSg6HkA","hubSecret":"2pEuC4RTukNuWMTEJdMjjZDoP3gVhMFi","hubLeaseRenewalDue":"2025-11-17T06:37:11Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UC7d6BuAfHKTLR1l2SSg6HkA","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-17T06:37:10.946941Z","updatedAt":"2025-11-17T06:37:11.960348Z"},{"streamer":{"id":"4dd203ee36d046e0b686600358c1de65","alias":"Judge Jeffrey Middleton","description":"Share your videos with friends, family and the world","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@judgejeffreymiddleton7573","channelId":"UCS8gM5S889oBPyN6K07ZC6A","hubSecret":"IuAbxIHgV-tw2KHChFPJ9-bOuNW66Nnx","hubLeaseRenewalDue":"2025-11-17T06:37:38Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCS8gM5S889oBPyN6K07ZC6A","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-17T06:37:36.873738Z","updatedAt":"2025-11-17T06:37:38.001056Z"}]}
+
+2025/11/18 00:40:14 ---- Incoming request from 127.0.0.1:56503 ----
+GET /api/streamers/watch HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: text/event-stream
+Accept-Encoding: gzip, deflate
+Accept-Language: en-AU,en;q=0.9
+Cache-Control: no-cache
+Pragma: no-cache
+Priority: u=3, i
+Referer: http://127.0.0.1:4173/
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/18 00:40:14 ---- Response for GET /api/streamers/watch (500 Internal Server Error) ----
+streaming unsupported
+
+2025/11/18 00:42:49 ---- Incoming request from 127.0.0.1:56571 ----
+GET /api/streamers HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Referer: http://127.0.0.1:4173/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/18 00:42:49 ---- Response for GET /api/streamers (200 OK) ----
+{"streamers":[{"streamer":{"id":"JordanMatter","alias":"Jordan Matter","description":"My daughter has taken over my channel!","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@jordanmatter","channelId":"UCI3szCgzGTRBTF_2dVaTZdQ","hubSecret":"GmtXT02Gnu7-R3iVcAIBUc1pOsOZkfwQ","hubLeaseRenewalDue":"2025-11-16T07:32:44Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCI3szCgzGTRBTF_2dVaTZdQ","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-16T07:32:43.278917Z","updatedAt":"2025-11-16T07:32:44.755495Z"},{"streamer":{"id":"73569d15ffeb4bd8bea1ef56f56dc34d","alias":"Ted Coningsby","description":"Oii oii! Ladies, gents and teddy bears, welcome to the Ted Coningsby channel, the fun but serious military aviation channel. This is not your usual aviation ...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@TedConingsby","channelId":"UCCVgP53k4WCUnFg9yFA_YbA","hubSecret":"wGQweFSvZQznZOQhZJSCYlddYuWmIPOq","hubLeaseRenewalDue":"2025-11-17T06:32:20Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCCVgP53k4WCUnFg9yFA_YbA","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"status":{"live":true,"platforms":["youtube"],"youtube":{"live":true,"videoId":"LSYZlRaiRTQ","startedAt":"2025-11-17T13:18:53Z"}},"createdAt":"2025-11-17T06:32:19.638136Z","updatedAt":"2025-11-17T06:32:20.561455Z"},{"streamer":{"id":"231eaca2f22744e49793f395430d15d1","alias":"I will shave my eyebrows","description":"Share your videos with friends, family and the world","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@I-will-shave-my-eyebrows","channelId":"UCvwGfRXMzs2ey1h3opwK2zw","hubSecret":"-uhGIkMq159tXNozrBJImXdR9X9YUhq2","hubLeaseRenewalDue":"2025-11-17T06:33:24Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCvwGfRXMzs2ey1h3opwK2zw","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"status":{"live":true,"platforms":["youtube"],"youtube":{"live":true,"videoId":"LSYZlRaiRTQ","startedAt":"2025-11-17T13:18:53Z"}},"createdAt":"2025-11-17T06:33:22.979369Z","updatedAt":"2025-11-17T13:35:03.587286Z"},{"streamer":{"id":"0a9d7ce8255f441198a6ed3461d320f4","alias":"Sharpen Right Services LLC - Mike White","description":"Sharpen Right Services LLC - Mike White located in League City, Texas.  We are a home based, mobile and mail order sharpening service; specializing in sharpe...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@sharpenrightservicesllc","channelId":"UC7d6BuAfHKTLR1l2SSg6HkA","hubSecret":"2pEuC4RTukNuWMTEJdMjjZDoP3gVhMFi","hubLeaseRenewalDue":"2025-11-17T06:37:11Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UC7d6BuAfHKTLR1l2SSg6HkA","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-17T06:37:10.946941Z","updatedAt":"2025-11-17T06:37:11.960348Z"},{"streamer":{"id":"4dd203ee36d046e0b686600358c1de65","alias":"Judge Jeffrey Middleton","description":"Share your videos with friends, family and the world","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@judgejeffreymiddleton7573","channelId":"UCS8gM5S889oBPyN6K07ZC6A","hubSecret":"IuAbxIHgV-tw2KHChFPJ9-bOuNW66Nnx","hubLeaseRenewalDue":"2025-11-17T06:37:38Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCS8gM5S889oBPyN6K07ZC6A","callbackUrl":"https://sharpen.live/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-17T06:37:36.873738Z","updatedAt":"2025-11-17T06:37:38.001056Z"}]}
+
+2025/11/18 00:42:49 ---- Incoming request from 127.0.0.1:56570 ----
+GET /api/streamers/watch HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: text/event-stream
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Cache-Control: no-cache
+Referer: http://127.0.0.1:4173/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/18 00:42:49 ---- Response for GET /api/streamers/watch (500 Internal Server Error) ----
+streaming unsupported
+
+2025/11/18 00:45:19 Shutting down...

@@ -1,0 +1,52 @@
+
+2025/11/17 16:18:20 Listening on 127.0.0.1:8880
+
+2025/11/17 16:18:37 ---- Incoming request from 127.0.0.1:59826 ----
+POST /api/streamers HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Connection: keep-alive
+Content-Length: 253
+Content-Type: application/json
+Postman-Token: 0e7a4d66-9c73-46bc-b439-979dbea53156
+User-Agent: PostmanRuntime/7.49.1
+
+{
+  "streamer": {
+    "alias": "I will shave my eyebrows",
+    "description": "Share your videos with friends, family and the world",
+    "languages": ["English"]
+  },
+  "platforms": {
+    "url": "https://www.youtube.com/@I-will-shave-my-eyebrows"
+  }
+}
+
+2025/11/17 16:18:38 Outbound WebSub request:
+POST /subscribe HTTP/1.1
+Host: pubsubhubbub.appspot.com
+User-Agent: live-stream-alerts-client/1.0
+Content-Length: 310
+Content-Type: application/x-www-form-urlencoded
+Accept-Encoding: gzip
+
+hub.callback=https%3A%2F%2Fsharpen.live%2Falerts&hub.lease_seconds=864000&hub.mode=subscribe&hub.secret=bd_TDLwAA5dR_9HBMMuVtloncazzBXDR&hub.topic=https%3A%2F%2Fwww.youtube.com%2Fxml%2Ffeeds%2Fvideos.xml%3Fchannel_id%3DUCvwGfRXMzs2ey1h3opwK2zw&hub.verify=async&hub.verify_token=f32f8c49263a43aafe4fc20fa94824a3
+
+2025/11/17 16:18:39 Raw WebSub response struct: &http.Response{Status:"202 Accepted", StatusCode:202, Proto:"HTTP/2.0", ProtoMajor:2, ProtoMinor:0, Header:http.Header{"Alt-Svc":[]string{"h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000"}, "Cache-Control":[]string{"no-cache"}, "Content-Length":[]string{"0"}, "Content-Type":[]string{"text/plain; charset=utf-8"}, "Date":[]string{"Mon, 17 Nov 2025 05:18:39 GMT"}, "Server":[]string{"Google Frontend"}, "X-Cloud-Trace-Context":[]string{"3f5fe43edb3fed93c6a23a1152ba4a73"}}, Body:io.nopCloserWriterTo{Reader:(*bytes.Reader)(0xc0002027b0)}, ContentLength:0, TransferEncoding:[]string(nil), Close:false, Uncompressed:false, Trailer:http.Header(nil), Request:(*http.Request)(0xc0004fe000), TLS:(*tls.ConnectionState)(0xc00015c180)}
+
+2025/11/17 16:18:39 Inbound WebSub response:
+HTTP/2.0 202 Accepted
+Content-Length: 0
+Alt-Svc: h3=":443"; ma=2592000,h3-29=":443"; ma=2592000
+Cache-Control: no-cache
+Content-Type: text/plain; charset=utf-8
+Date: Mon, 17 Nov 2025 05:18:39 GMT
+Server: Google Frontend
+X-Cloud-Trace-Context: 3f5fe43edb3fed93c6a23a1152ba4a73
+
+
+2025/11/17 16:18:39 YouTube hub accepted subscribe for I will shave my eyebrows (topic=https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCvwGfRXMzs2ey1h3opwK2zw, callback=https://sharpen.live/alerts, status=202 Accepted). Awaiting hub challenge with token f32f8c49263a43aafe4fc20fa94824a3.
+
+2025/11/17 16:18:39 ---- Response for POST /api/streamers (201 Created) ----
+{"streamer":{"id":"747edbbace734ae4ba9f6f65bc304d6d","alias":"I will shave my eyebrows","description":"Share your videos with friends, family and the world","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{},"createdAt":"2025-11-17T05:18:37.5121Z","updatedAt":"2025-11-17T05:18:37.5121Z"}

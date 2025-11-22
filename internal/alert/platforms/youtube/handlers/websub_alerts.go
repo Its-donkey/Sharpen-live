@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"net/http/httputil"
 	"net/url"
+	"regexp"
 	"strconv"
 	"strings"
 	"time"
@@ -93,6 +94,9 @@ func parseHubRequest(query url.Values) (hubRequest, ValidationResult) {
 
 	if req.Challenge == "" {
 		return req, ValidationResult{IsValid: false, Error: "missing hub.challenge"}
+	}
+	if !validChallenge(req.Challenge) {
+		return req, ValidationResult{IsValid: false, Error: "invalid hub.challenge"}
 	}
 	if req.VerifyToken == "" {
 		return req, ValidationResult{IsValid: false, Error: "missing hub.verify_token"}
@@ -235,4 +239,10 @@ func logSubscriptionResult(logger logging.Logger, finalExp, originalExp websub.E
 	} else {
 		logger.Printf("YouTube alerts subscribed for %s (%s)", alias, displayTopic)
 	}
+}
+
+var challengePattern = regexp.MustCompile(`^[A-Za-z0-9._~-]{1,200}$`)
+
+func validChallenge(challenge string) bool {
+	return challengePattern.MatchString(challenge)
 }

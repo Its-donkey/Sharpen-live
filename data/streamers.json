@@ -33,12 +33,12 @@
         ],
         "youtube": {
           "live": true,
-          "videoId": "Y5miLbZDYkA",
-          "startedAt": "2025-11-20T13:02:29Z"
+          "videoId": "NUgqyaICDm0",
+          "startedAt": "2025-11-21T12:59:17Z"
         }
       },
       "createdAt": "2025-11-18T08:56:57.714492Z",
-      "updatedAt": "2025-11-21T06:49:41.511912Z"
+      "updatedAt": "2025-11-21T23:32:38.372133Z"
     },
     {
       "streamer": {
@@ -72,12 +72,12 @@
         ],
         "youtube": {
           "live": true,
-          "videoId": "1bVyYYSUjao",
-          "startedAt": "2025-11-20T21:17:11Z"
+          "videoId": "GoXi_xJu2gE",
+          "startedAt": "2025-11-21T18:45:21Z"
         }
       },
       "createdAt": "2025-11-18T10:07:12.769107Z",
-      "updatedAt": "2025-11-21T06:58:28.977417Z"
+      "updatedAt": "2025-11-21T23:55:45.661328Z"
     },
     {
       "streamer": {
@@ -112,12 +112,40 @@
         ],
         "youtube": {
           "live": true,
-          "videoId": "75IEo14jep0",
-          "startedAt": "2025-11-20T10:57:56Z"
+          "videoId": "MIvcWoG99G4",
+          "startedAt": "2025-11-21T10:26:41Z"
         }
       },
       "createdAt": "2025-11-18T17:22:53.507193Z",
-      "updatedAt": "2025-11-21T08:02:49.263637Z"
+      "updatedAt": "2025-11-22T01:37:59.425667Z"
+    },
+    {
+      "streamer": {
+        "id": "8d6f7076e0e3402d9dd2daca0e0fbfdc",
+        "alias": "Nate The Lawyer",
+        "description": "Like, Share and Subscribe to Nate The Lawyer This Channel focuses on four topics Comics, Pop Culture, Life, and Law. Subscribe and join the movement.  Nothin...",
+        "firstName": "",
+        "lastName": "",
+        "email": "",
+        "languages": [
+          "English"
+        ]
+      },
+      "platforms": {
+        "youtube": {
+          "handle": "@NateTheLawyer",
+          "channelId": "UCzGiDDKdphJ0GFvEd82WfYQ",
+          "hubSecret": "asUckl6yNIq_o-SyWB37HPxnOA3tCFkV",
+          "hubLeaseDate": "2025-11-21T13:44:39Z",
+          "topic": "https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCzGiDDKdphJ0GFvEd82WfYQ",
+          "callbackUrl": "https://sharpen.live/dev/alerts",
+          "hubUrl": "https://pubsubhubbub.appspot.com/subscribe",
+          "verifyMode": "async",
+          "leaseSeconds": 864000
+        }
+      },
+      "createdAt": "2025-11-21T13:44:38.110809Z",
+      "updatedAt": "2025-11-21T13:44:39.937854Z"
     }
   ]
 }

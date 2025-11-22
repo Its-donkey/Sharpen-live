@@ -1,0 +1,567 @@
+
+2025/11/21 23:03:13 Listening on 127.0.0.1:8880
+
+2025/11/21 23:03:43 ---- Incoming request from 127.0.0.1:54360 ----
+GET /api/streamers/watch HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: text/event-stream
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Cache-Control: no-cache
+Referer: http://127.0.0.1:4173/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/21 23:03:43 ---- Incoming request from 127.0.0.1:54359 ----
+GET /api/streamers HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Referer: http://127.0.0.1:4173/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/21 23:03:43 ---- Response for GET /api/streamers (404 Not Found) ----
+404 page not found
+
+2025/11/21 23:03:43 ---- Response for GET /api/streamers/watch (404 Not Found) ----
+404 page not found
+
+2025/11/21 23:04:13 ---- Incoming request from 127.0.0.1:54359 ----
+GET /api/streamers HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate
+Accept-Language: en-AU,en;q=0.9
+Priority: u=3, i
+Referer: http://127.0.0.1:4173/
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/21 23:04:13 ---- Response for GET /api/streamers (404 Not Found) ----
+404 page not found
+
+2025/11/21 23:04:13 ---- Incoming request from 127.0.0.1:54360 ----
+GET /api/streamers/watch HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: text/event-stream
+Accept-Encoding: gzip, deflate
+Accept-Language: en-AU,en;q=0.9
+Cache-Control: no-cache
+Pragma: no-cache
+Priority: u=3, i
+Referer: http://127.0.0.1:4173/
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/21 23:04:13 ---- Response for GET /api/streamers/watch (404 Not Found) ----
+404 page not found
+
+2025/11/21 23:04:15 ---- Incoming request from 127.0.0.1:54359 ----
+GET /api/streamers HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate
+Accept-Language: en-AU,en;q=0.9
+Priority: u=3, i
+Referer: http://127.0.0.1:4173/
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/21 23:04:15 ---- Response for GET /api/streamers (404 Not Found) ----
+404 page not found
+
+2025/11/21 23:04:15 ---- Incoming request from 127.0.0.1:54359 ----
+GET /api/streamers/watch HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: text/event-stream
+Accept-Encoding: gzip, deflate
+Accept-Language: en-AU,en;q=0.9
+Cache-Control: no-cache
+Pragma: no-cache
+Priority: u=3, i
+Referer: http://127.0.0.1:4173/
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/21 23:04:15 ---- Response for GET /api/streamers/watch (404 Not Found) ----
+404 page not found
+
+2025/11/21 23:04:23 ---- Incoming request from 127.0.0.1:54359 ----
+POST /api/youtube/metadata HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate
+Accept-Language: en-AU,en;q=0.9
+Content-Length: 48
+Content-Type: application/json
+Origin: http://127.0.0.1:4173
+Priority: u=3, i
+Referer: http://127.0.0.1:4173/
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15
+X-Forwarded-For: 127.0.0.1
+
+{"url":"https://www.youtube.com/@NateTheLawyer"}
+
+2025/11/21 23:04:24 ---- Response for POST /api/youtube/metadata (200 OK) ----
+{"description":"Like, Share and Subscribe to Nate The Lawyer This Channel focuses on four topics Comics, Pop Culture, Life, and Law. Subscribe and join the movement.  Nothin...","title":"Nate The Lawyer","handle":"@NateTheLawyer","channelId":"UCD5_QIM67BZJdh9AwZv3soA"}
+
+2025/11/21 23:04:47 ---- Incoming request from 127.0.0.1:54359 ----
+POST /api/streamers HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate
+Accept-Language: en-AU,en;q=0.9
+Content-Length: 302
+Content-Type: application/json
+Origin: http://127.0.0.1:4173
+Priority: u=3, i
+Referer: http://127.0.0.1:4173/
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15
+X-Forwarded-For: 127.0.0.1
+
+{"streamer":{"alias":"Nate The Lawyer","description":"Like, Share and Subscribe to Nate The Lawyer This Channel focuses on four topics Comics, Pop Culture, Life, and Law. Subscribe and join the movement.  Nothin...","languages":["English"]},"platforms":{"url":"https://www.youtube.com/@NateTheLawyer"}}
+
+2025/11/21 23:04:47 ---- Response for POST /api/streamers (404 Not Found) ----
+404 page not found
+
+2025/11/21 23:05:27 ---- Incoming request from 127.0.0.1:54359 ----
+GET /api/streamers HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Referer: http://localhost:4173/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/21 23:05:27 ---- Response for GET /api/streamers (404 Not Found) ----
+404 page not found
+
+2025/11/21 23:05:27 ---- Incoming request from 127.0.0.1:54359 ----
+GET /api/streamers/watch HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: text/event-stream
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Cache-Control: no-cache
+Referer: http://localhost:4173/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/21 23:05:27 ---- Response for GET /api/streamers/watch (404 Not Found) ----
+404 page not found
+
+2025/11/21 23:06:02 ---- Incoming request from 127.0.0.1:54359 ----
+GET /api/streamers HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Referer: http://localhost:4173/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/21 23:06:02 ---- Response for GET /api/streamers (404 Not Found) ----
+404 page not found
+
+2025/11/21 23:06:02 ---- Incoming request from 127.0.0.1:54359 ----
+GET /api/streamers/watch HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: text/event-stream
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Cache-Control: no-cache
+Referer: http://localhost:4173/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/21 23:06:02 ---- Response for GET /api/streamers/watch (404 Not Found) ----
+404 page not found
+
+2025/11/21 23:06:05 ---- Incoming request from 127.0.0.1:54359 ----
+GET /api/streamers HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Referer: http://localhost:4173/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/21 23:06:05 ---- Response for GET /api/streamers (404 Not Found) ----
+404 page not found
+
+2025/11/21 23:06:05 ---- Incoming request from 127.0.0.1:54359 ----
+GET /api/streamers/watch HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: text/event-stream
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Cache-Control: no-cache
+Referer: http://localhost:4173/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/21 23:06:05 ---- Response for GET /api/streamers/watch (404 Not Found) ----
+404 page not found
+
+2025/11/21 23:09:40 ---- Incoming request from 127.0.0.1:55153 ----
+GET /api/streamers HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Referer: http://localhost:4173/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/21 23:09:40 ---- Response for GET /api/streamers (404 Not Found) ----
+404 page not found
+
+2025/11/21 23:09:40 ---- Incoming request from 127.0.0.1:55153 ----
+GET /api/streamers/watch HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: text/event-stream
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Cache-Control: no-cache
+Referer: http://localhost:4173/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/21 23:09:40 ---- Response for GET /api/streamers/watch (404 Not Found) ----
+404 page not found
+
+2025/11/21 23:10:33 ---- Incoming request from 127.0.0.1:55153 ----
+GET /api/streamers HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Referer: http://localhost:4173/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/21 23:10:33 ---- Response for GET /api/streamers (404 Not Found) ----
+404 page not found
+
+2025/11/21 23:10:33 ---- Incoming request from 127.0.0.1:55153 ----
+GET /api/streamers/watch HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: text/event-stream
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Cache-Control: no-cache
+Referer: http://localhost:4173/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/21 23:10:33 ---- Response for GET /api/streamers/watch (404 Not Found) ----
+404 page not found
+
+2025/11/21 23:20:44 ---- Incoming request from 127.0.0.1:55571 ----
+GET /api/streamers HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Referer: http://localhost:4173/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/21 23:20:44 ---- Response for GET /api/streamers (404 Not Found) ----
+404 page not found
+
+2025/11/21 23:20:44 ---- Incoming request from 127.0.0.1:55571 ----
+GET /api/streamers/watch HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: text/event-stream
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Cache-Control: no-cache
+Referer: http://localhost:4173/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/21 23:20:44 ---- Response for GET /api/streamers/watch (404 Not Found) ----
+404 page not found
+
+2025/11/21 23:20:56 ---- Incoming request from 127.0.0.1:55571 ----
+POST /api/youtube/metadata HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Content-Length: 48
+Content-Type: application/json
+Origin: http://localhost:4173
+Referer: http://localhost:4173/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+{"url":"https://www.youtube.com/@NateTheLawyer"}
+
+2025/11/21 23:20:57 ---- Response for POST /api/youtube/metadata (200 OK) ----
+{"description":"Like, Share and Subscribe to Nate The Lawyer This Channel focuses on four topics Comics, Pop Culture, Life, and Law. Subscribe and join the movement.  Nothin...","title":"Nate The Lawyer","handle":"@NateTheLawyer","channelId":"UCD5_QIM67BZJdh9AwZv3soA"}
+
+2025/11/21 23:23:28 ---- Incoming request from 127.0.0.1:55693 ----
+POST /api/streamers HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate
+Accept-Language: en-AU,en;q=0.9
+Content-Length: 302
+Content-Type: application/json
+Origin: http://127.0.0.1:4173
+Priority: u=3, i
+Referer: http://127.0.0.1:4173/
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15
+X-Forwarded-For: 127.0.0.1
+
+{"streamer":{"alias":"Nate The Lawyer","description":"Like, Share and Subscribe to Nate The Lawyer This Channel focuses on four topics Comics, Pop Culture, Life, and Law. Subscribe and join the movement.  Nothin...","languages":["English"]},"platforms":{"url":"https://www.youtube.com/@NateTheLawyer"}}
+
+2025/11/21 23:23:28 ---- Response for POST /api/streamers (404 Not Found) ----
+404 page not found
+
+2025/11/21 23:24:17 ---- Incoming request from 127.0.0.1:55693 ----
+POST /api/streamers HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate
+Accept-Language: en-AU,en;q=0.9
+Content-Length: 302
+Content-Type: application/json
+Origin: http://127.0.0.1:4173
+Priority: u=3, i
+Referer: http://127.0.0.1:4173/
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/18.6 Safari/605.1.15
+X-Forwarded-For: 127.0.0.1
+
+{"streamer":{"alias":"Nate The Lawyer","description":"Like, Share and Subscribe to Nate The Lawyer This Channel focuses on four topics Comics, Pop Culture, Life, and Law. Subscribe and join the movement.  Nothin...","languages":["English"]},"platforms":{"url":"https://www.youtube.com/@NateTheLawyer"}}
+
+2025/11/21 23:24:17 ---- Response for POST /api/streamers (404 Not Found) ----
+404 page not found
+
+2025/11/21 23:24:19 ---- Incoming request from 127.0.0.1:55711 ----
+POST /alerts HTTP/1.1
+Host: sharpen.live
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Cache-Control: no-cache,max-age=0
+Content-Length: 893
+Content-Type: application/atom+xml
+From: googlebot(at)googlebot.com
+Link: <https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCoW3NnFgnDATwU9eUOswisg>; rel=self, <http://pubsubhubbub.appspot.com/>; rel=hub
+Pragma: no-cache
+User-Agent: FeedFetcher-Google; (+http://www.google.com/feedfetcher.html)
+Via: 1.1 Caddy
+X-Forwarded-For: 66.102.8.101
+X-Forwarded-Host: sharpen.live
+X-Forwarded-Proto: https
+X-Hub-Signature: sha1=4877056ceede61b4bcefea479bd2752ecddf3fa8
+X-Request-Id: {http.request.id}
+
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:yt="http://www.youtube.com/xml/schemas/2015" xmlns="http://www.w3.org/2005/Atom"><link rel="hub" href="https://pubsubhubbub.appspot.com"/><link rel="self" href="https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCoW3NnFgnDATwU9eUOswisg"/><title>YouTube video feed</title><updated>2025-11-21T12:24:17.592773462+00:00</updated><entry>
+  <id>yt:video:MIvcWoG99G4</id>
+  <yt:videoId>MIvcWoG99G4</yt:videoId>
+  <yt:channelId>UCoW3NnFgnDATwU9eUOswisg</yt:channelId>
+  <title>Magic Moments with Arnaldo🔥</title>
+  <link rel="alternate" href="https://www.youtube.com/watch?v=MIvcWoG99G4"/>
+  <author>
+   <name>Arnaldo Mangini</name>
+   <uri>https://www.youtube.com/channel/UCoW3NnFgnDATwU9eUOswisg</uri>
+  </author>
+  <published>2025-11-21T10:03:52+00:00</published>
+  <updated>2025-11-21T12:24:17.592773462+00:00</updated>
+ </entry></feed>
+
+2025/11/21 23:24:19 Fetching live metadata for 1 video(s): MIvcWoG99G4
+
+2025/11/21 23:24:19 Requesting watch page for MIvcWoG99G4: https://www.youtube.com/watch?v=MIvcWoG99G4
+
+2025/11/21 23:24:20 Fetched metadata for MIvcWoG99G4: channel=UCoW3NnFgnDATwU9eUOswisg title="Magic Moments with Arnaldo🔥" live=true start=2025-11-21 10:26:41 +0000 +0000
+
+2025/11/21 23:24:20 Processed alert notification (1 entries); live streams=1 videos=MIvcWoG99G4
+
+2025/11/21 23:24:20 ---- Response for POST /alerts (204 No Content) ----
+
+2025/11/21 23:24:26 ---- Incoming request from 127.0.0.1:55711 ----
+POST /alerts HTTP/1.1
+Host: sharpen.live
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Cache-Control: no-cache,max-age=0
+Content-Length: 890
+Content-Type: application/atom+xml
+From: googlebot(at)googlebot.com
+Link: <https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCoW3NnFgnDATwU9eUOswisg>; rel=self, <http://pubsubhubbub.appspot.com/>; rel=hub
+Pragma: no-cache
+User-Agent: FeedFetcher-Google; (+http://www.google.com/feedfetcher.html)
+Via: 1.1 Caddy
+X-Forwarded-For: 66.102.8.101
+X-Forwarded-Host: sharpen.live
+X-Forwarded-Proto: https
+X-Hub-Signature: sha1=53bf0d2d4634ebda809e2a0c398580815690cbb7
+X-Request-Id: {http.request.id}
+
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:yt="http://www.youtube.com/xml/schemas/2015" xmlns="http://www.w3.org/2005/Atom"><link rel="hub" href="https://pubsubhubbub.appspot.com"/><link rel="self" href="https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCoW3NnFgnDATwU9eUOswisg"/><title>YouTube video feed</title><updated>2025-11-21T12:24:24.312676388+00:00</updated><entry>
+  <id>yt:video:JFnxwCb47vc</id>
+  <yt:videoId>JFnxwCb47vc</yt:videoId>
+  <yt:channelId>UCoW3NnFgnDATwU9eUOswisg</yt:channelId>
+  <title>Magic Moments with Arnaldo!</title>
+  <link rel="alternate" href="https://www.youtube.com/watch?v=JFnxwCb47vc"/>
+  <author>
+   <name>Arnaldo Mangini</name>
+   <uri>https://www.youtube.com/channel/UCoW3NnFgnDATwU9eUOswisg</uri>
+  </author>
+  <published>2025-11-21T10:04:43+00:00</published>
+  <updated>2025-11-21T12:24:24.312676388+00:00</updated>
+ </entry></feed>
+
+2025/11/21 23:24:26 Fetching live metadata for 1 video(s): JFnxwCb47vc
+
+2025/11/21 23:24:26 Requesting watch page for JFnxwCb47vc: https://www.youtube.com/watch?v=JFnxwCb47vc
+
+2025/11/21 23:24:27 Fetched metadata for JFnxwCb47vc: channel=UCoW3NnFgnDATwU9eUOswisg title="Magic Moments with Arnaldo!" live=true start=2025-11-21 10:26:46 +0000 +0000
+
+2025/11/21 23:24:27 Processed alert notification (1 entries); live streams=1 videos=JFnxwCb47vc
+
+2025/11/21 23:24:27 ---- Response for POST /alerts (204 No Content) ----
+
+2025/11/21 23:29:21 Shutting down...

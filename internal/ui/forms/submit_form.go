@@ -24,6 +24,15 @@ var (
 	runtimeDocument js.Value
 )
 
+var platformHandleOptions = []struct {
+	Value string
+	Label string
+}{
+	{Value: "youtube", Label: "YouTube"},
+	{Value: "twitch", Label: "Twitch"},
+	{Value: "facebook", Label: "Facebook"},
+}
+
 func formDocument() js.Value {
 	if !runtimeDocument.Truthy() {
 		runtimeDocument = js.Global().Get("document")
@@ -82,11 +91,27 @@ func RenderSubmitForm() {
 			if errors.Channel {
 				channelWrapper += " form-field-error"
 			}
-			builder.WriteString(`<div class="platform-row" data-platform-row="` + row.ID + `">`)
-			builder.WriteString(`<label class="` + channelWrapper + `" id="platform-url-field-` + row.ID + `"><span>Channel URL</span>`)
-			builder.WriteString(`<input type="url" placeholder="https://example.com/live or @handle" value="` + html.EscapeString(row.ChannelURL) + `" data-platform-channel data-row="` + row.ID + `" required />`)
+			builder.WriteString(`<div class="platform-row" data-platform-row="` + row.ID + `" style="display:flex;flex-wrap:wrap;gap:0.75rem;align-items:flex-end;">`)
+			builder.WriteString(`<div class="platform-row-fields" style="display:flex;flex-wrap:wrap;gap:0.75rem;align-items:flex-end;flex:1 1 0%;">`)
+			builder.WriteString(`<label class="` + channelWrapper + `" id="platform-url-field-` + row.ID + `" style="flex:1 1 0%;min-width:240px;"><span>Channel URL</span>`)
+			builder.WriteString(`<input type="url" class="channel-url-input" placeholder="https://example.com/live or @handle" value="` + html.EscapeString(row.ChannelURL) + `" data-platform-channel data-row="` + row.ID + `" required />`)
 			builder.WriteString(`</label>`)
 
+			if strings.TrimSpace(row.Handle) != "" || strings.TrimSpace(row.Preset) != "" {
+				selected := resolvePlatformPreset(row.Preset)
+				builder.WriteString(`<label class="form-field form-field-inline platform-select" style="flex:0 0 50%;max-width:50%;min-width:180px;"><span>Handle platform</span>`)
+				builder.WriteString(`<select data-platform-choice data-row="` + row.ID + `">`)
+				for _, option := range platformHandleOptions {
+					builder.WriteString(`<option value="` + option.Value + `"`)
+					if selected == option.Value {
+						builder.WriteString(` selected`)
+					}
+					builder.WriteString(`>` + option.Label + `</option>`)
+				}
+				builder.WriteString(`</select></label>`)
+			}
+
+			builder.WriteString(`</div>`)
 			builder.WriteString(`<button type="button" class="remove-platform-button" data-remove-platform="` + row.ID + `">Remove</button>`)
 			if errors.Channel {
 				builder.WriteString(`<p class="field-error-text">Provide a valid channel URL.</p>`)
@@ -312,14 +337,44 @@ func bindSubmitFormEvents() {
 	forEachNode(platformInputs, func(node js.Value) {
 		addFormHandler(node, "input", func(this js.Value, _ []js.Value) any {
 			rowID := this.Get("dataset").Get("row").String()
-			value := this.Get("value").String()
-			normalized := CanonicalizeChannelInput(value)
-			if normalized != value {
-				this.Set("value", normalized)
-			}
+			rawValue := strings.TrimSpace(this.Get("value").String())
 			for index := range state.Submit.Platforms {
 				row := &state.Submit.Platforms[index]
 				if row.ID == rowID {
+					if rawValue == "" {
+						row.ChannelURL = ""
+						row.Handle = ""
+						row.Preset = ""
+						row.Name = ""
+						RenderSubmitForm()
+						return nil
+					}
+
+					if handle := extractHandle(rawValue); handle != "" {
+						row.Handle = handle
+						row.Preset = resolvePlatformPreset(row.Preset)
+						normalized := buildURLFromHandle(handle, row.Preset)
+						row.ChannelURL = normalized
+						row.Name = DerivePlatformLabel(normalized)
+						this.Set("value", normalized)
+						if strings.TrimSpace(normalized) != "" {
+							clearPlatformError(rowID, "channel")
+						}
+						currentValue := normalized
+						rowIndex := index
+						fetchChannelMetadataAsync(rowIndex, currentValue)
+						RenderSubmitForm()
+						return nil
+					}
+
+					normalized := CanonicalizeChannelInput(rawValue)
+					if normalized != rawValue {
+						this.Set("value", normalized)
+					}
+					if row.Handle != "" && normalized != buildURLFromHandle(row.Handle, row.Preset) {
+						row.Handle = ""
+						row.Preset = ""
+					}
 					row.ChannelURL = normalized
 					row.Name = DerivePlatformLabel(normalized)
 					if strings.TrimSpace(normalized) != "" {
@@ -327,46 +382,33 @@ func bindSubmitFormEvents() {
 					}
 					currentValue := normalized
 					rowIndex := index
-					go func(target string) {
-						ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-						defer cancel()
-						desc, title, handle, channelID, err := requestChannelDescription(ctx, target)
-						if err != nil {
-							return
-						}
-						metaDesc := strings.TrimSpace(desc)
-						metaTitle := strings.TrimSpace(title)
-						metaHandle := strings.TrimSpace(handle)
-						metaChannelID := strings.TrimSpace(channelID)
-						updated := false
-						if metaDesc != "" && strings.TrimSpace(state.Submit.Description) == "" {
-							state.Submit.Description = metaDesc
-							state.Submit.Errors.Description = false
-							updated = true
-						}
-						if metaTitle != "" && strings.TrimSpace(state.Submit.Name) == "" {
-							state.Submit.Name = metaTitle
-							state.Submit.Errors.Name = false
-							updated = true
-						}
-						if metaHandle != "" {
-							state.Submit.Platforms[rowIndex].Handle = metaHandle
-							updated = true
-						}
-						if metaChannelID != "" {
-							state.Submit.Platforms[rowIndex].ChannelID = metaChannelID
-							updated = true
-						}
-						if state.Submit.Platforms[rowIndex].HubSecret == "" {
-							state.Submit.Platforms[rowIndex].HubSecret = GenerateHubSecret()
-							updated = true
-						}
-						if updated {
-							scheduleRender()
-						}
-					}(currentValue)
+					fetchChannelMetadataAsync(rowIndex, currentValue)
 					break
 				}
+			}
+			return nil
+		})
+	})
+
+	platformChoices := formDocument().Call("querySelectorAll", "[data-platform-choice]")
+	forEachNode(platformChoices, func(node js.Value) {
+		addFormHandler(node, "change", func(this js.Value, _ []js.Value) any {
+			rowID := this.Get("dataset").Get("row").String()
+			choice := resolvePlatformPreset(this.Get("value").String())
+			for index := range state.Submit.Platforms {
+				row := &state.Submit.Platforms[index]
+				if row.ID != rowID {
+					continue
+				}
+				row.Preset = choice
+				if row.Handle != "" {
+					row.ChannelURL = buildURLFromHandle(row.Handle, row.Preset)
+					row.Name = DerivePlatformLabel(row.ChannelURL)
+					clearPlatformError(rowID, "channel")
+					fetchChannelMetadataAsync(index, row.ChannelURL)
+				}
+				RenderSubmitForm()
+				break
 			}
 			return nil
 		})
@@ -539,6 +581,49 @@ func handleSubmit() {
 		ClearFormFields()
 		RenderSubmitForm()
 	}()
+}
+
+func fetchChannelMetadataAsync(rowIndex int, target string) {
+	go func(target string, idx int) {
+		ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+		defer cancel()
+		desc, title, handle, channelID, err := requestChannelDescription(ctx, target)
+		if err != nil {
+			return
+		}
+		metaDesc := strings.TrimSpace(desc)
+		metaTitle := strings.TrimSpace(title)
+		metaHandle := strings.TrimSpace(handle)
+		metaChannelID := strings.TrimSpace(channelID)
+		updated := false
+		row := &state.Submit.Platforms[idx]
+		if metaDesc != "" && strings.TrimSpace(state.Submit.Description) == "" {
+			state.Submit.Description = metaDesc
+			state.Submit.Errors.Description = false
+			updated = true
+		}
+		if metaTitle != "" && strings.TrimSpace(state.Submit.Name) == "" {
+			state.Submit.Name = metaTitle
+			state.Submit.Errors.Name = false
+			updated = true
+		}
+		hasHandleInput := extractHandle(row.Handle) != "" || extractHandle(row.ChannelURL) != ""
+		if metaHandle != "" && hasHandleInput {
+			row.Handle = metaHandle
+			updated = true
+		}
+		if metaChannelID != "" {
+			row.ChannelID = metaChannelID
+			updated = true
+		}
+		if row.HubSecret == "" {
+			row.HubSecret = GenerateHubSecret()
+			updated = true
+		}
+		if updated {
+			scheduleRender()
+		}
+	}(target, rowIndex)
 }
 
 func submitStreamerRequest(ctx context.Context, payload model.CreateStreamerRequest) (string, error) {

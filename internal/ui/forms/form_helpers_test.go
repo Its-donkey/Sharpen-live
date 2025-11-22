@@ -51,3 +51,30 @@ func TestAvailableLanguageOptions(t *testing.T) {
 		}
 	}
 }
+
+func TestBuildURLFromHandle(t *testing.T) {
+	cases := []struct {
+		handle  string
+		preset  string
+		wantURL string
+	}{
+		{handle: "@edge", preset: "youtube", wantURL: "https://www.youtube.com/@edge"},
+		{handle: "@edge", preset: "twitch", wantURL: "https://www.twitch.tv/edge"},
+		{handle: "@edge", preset: "facebook", wantURL: "https://www.facebook.com/edge"},
+		{handle: " @edge ", preset: "unknown", wantURL: "https://www.youtube.com/@edge"},
+	}
+	for _, tc := range cases {
+		if got := buildURLFromHandle(tc.handle, tc.preset); got != tc.wantURL {
+			t.Fatalf("handle %q preset %q: want %q got %q", tc.handle, tc.preset, tc.wantURL, got)
+		}
+	}
+}
+
+func TestResolvePlatformPreset(t *testing.T) {
+	if got := resolvePlatformPreset("TWITCH"); got != "twitch" {
+		t.Fatalf("expected twitch got %q", got)
+	}
+	if got := resolvePlatformPreset("  "); got != "youtube" {
+		t.Fatalf("blank should default to youtube, got %q", got)
+	}
+}

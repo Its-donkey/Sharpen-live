@@ -4,6 +4,7 @@
 
 ### Added
 - Admin: add roster “Check online status” action and API to refresh channel state on demand.
+- Submit form: detect @handles, prompt for platform, and expand to full channel URLs.
 
 ### Fixed
 - Guard WebSub hub.challenge and reject malformed values to avoid reflected content.

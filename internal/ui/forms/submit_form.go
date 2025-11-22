@@ -93,7 +93,7 @@ func RenderSubmitForm() {
 			}
 			builder.WriteString(`<div class="platform-row" data-platform-row="` + row.ID + `" style="display:flex;flex-wrap:wrap;gap:0.75rem;align-items:flex-end;">`)
 			builder.WriteString(`<div class="platform-row-fields" style="display:flex;flex-wrap:wrap;gap:0.75rem;align-items:flex-end;flex:1 1 0%;">`)
-			builder.WriteString(`<label class="` + channelWrapper + `" id="platform-url-field-` + row.ID + `" style="flex:1 1 0%;min-width:240px;"><span>Channel URL</span>`)
+			builder.WriteString(`<label class="` + channelWrapper + `" id="platform-url-field-` + row.ID + `" style="flex:1 1 50%;max-width:50%;min-width:240px;"><span>Channel URL</span>`)
 			builder.WriteString(`<input type="url" class="channel-url-input" placeholder="https://example.com/live or @handle" value="` + html.EscapeString(row.ChannelURL) + `" data-platform-channel data-row="` + row.ID + `" required />`)
 			builder.WriteString(`</label>`)
 

@@ -97,7 +97,11 @@ func RenderSubmitForm() {
 			builder.WriteString(`<input type="url" class="channel-url-input" placeholder="https://example.com/live or @handle" value="` + html.EscapeString(row.ChannelURL) + `" data-platform-channel data-row="` + row.ID + `" required />`)
 			builder.WriteString(`</label>`)
 
-			if strings.TrimSpace(row.Handle) != "" || strings.TrimSpace(row.Preset) != "" {
+			handleValue := strings.TrimSpace(row.Handle)
+			if handleValue == "" {
+				handleValue = inferHandleFromURL(row.ChannelURL)
+			}
+			if handleValue != "" || strings.TrimSpace(row.Preset) != "" {
 				selected := resolvePlatformPreset(row.Preset)
 				builder.WriteString(`<label class="form-field form-field-inline platform-select" style="flex:0 0 50%;max-width:50%;min-width:180px;"><span>Handle platform</span>`)
 				builder.WriteString(`<select data-platform-choice data-row="` + row.ID + `">`)
@@ -352,7 +356,9 @@ func bindSubmitFormEvents() {
 
 					if handle := extractHandle(rawValue); handle != "" {
 						row.Handle = handle
-						row.Preset = resolvePlatformPreset(row.Preset)
+						if row.Preset == "" {
+							row.Preset = "youtube"
+						}
 						normalized := buildURLFromHandle(handle, row.Preset)
 						row.ChannelURL = normalized
 						row.Name = DerivePlatformLabel(normalized)
@@ -370,6 +376,14 @@ func bindSubmitFormEvents() {
 					normalized := CanonicalizeChannelInput(rawValue)
 					if normalized != rawValue {
 						this.Set("value", normalized)
+					}
+					if row.Handle == "" {
+						if inferred := inferHandleFromURL(normalized); inferred != "" {
+							row.Handle = inferred
+							if row.Preset == "" {
+								row.Preset = "youtube"
+							}
+						}
 					}
 					if row.Handle != "" && normalized != buildURLFromHandle(row.Handle, row.Preset) {
 						row.Handle = ""

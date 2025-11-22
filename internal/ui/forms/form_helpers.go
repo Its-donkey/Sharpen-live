@@ -78,6 +78,25 @@ func extractHandle(raw string) string {
 	return ""
 }
 
+func inferHandleFromURL(raw string) string {
+	trimmed := strings.TrimSpace(raw)
+	if trimmed == "" {
+		return ""
+	}
+	if strings.HasPrefix(trimmed, "@") {
+		return trimmed
+	}
+	if parsed, err := url.Parse(trimmed); err == nil {
+		segments := strings.Split(strings.Trim(parsed.Path, "/"), "/")
+		for _, segment := range segments {
+			if strings.HasPrefix(segment, "@") && len(segment) > 1 {
+				return segment
+			}
+		}
+	}
+	return ""
+}
+
 func resolvePlatformPreset(raw string) string {
 	switch strings.ToLower(strings.TrimSpace(raw)) {
 	case "twitch":

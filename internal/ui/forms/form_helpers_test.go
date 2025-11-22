@@ -78,3 +78,21 @@ func TestResolvePlatformPreset(t *testing.T) {
 		t.Fatalf("blank should default to youtube, got %q", got)
 	}
 }
+
+func TestInferHandleFromURL(t *testing.T) {
+	cases := []struct {
+		raw  string
+		want string
+	}{
+		{raw: "", want: ""},
+		{raw: "@edge", want: "@edge"},
+		{raw: "https://www.youtube.com/@edge", want: "@edge"},
+		{raw: "https://twitch.tv/edge", want: ""},
+		{raw: "https://youtube.com/channel/abc/@edge", want: "@edge"},
+	}
+	for _, tc := range cases {
+		if got := inferHandleFromURL(tc.raw); got != tc.want {
+			t.Fatalf("raw %q: want %q got %q", tc.raw, tc.want, got)
+		}
+	}
+}

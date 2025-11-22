@@ -22,11 +22,10 @@
               <label class="form-field form-field-inline platform-select">
                 <span>Platform</span>
                 <select name="platform_name">
-                  {{ $current := default "YouTube" $row.Name }}
-                  <option value="YouTube" {{if eq $current "YouTube"}}selected{{end}}>YouTube</option>
-                  <option value="Twitch" {{if eq $current "Twitch"}}selected{{end}}>Twitch</option>
-                  <option value="Facebook" {{if eq $current "Facebook"}}selected{{end}}>Facebook</option>
-                  <option value="Other" {{if eq $current "Other"}}selected{{end}}>Other</option>
+                  <option value="YouTube" {{if or (eq $row.Name "YouTube") (eq $row.Name "")}}selected{{end}}>YouTube</option>
+                  <option value="Twitch" {{if eq $row.Name "Twitch"}}selected{{end}}>Twitch</option>
+                  <option value="Facebook" {{if eq $row.Name "Facebook"}}selected{{end}}>Facebook</option>
+                  <option value="Other" {{if eq $row.Name "Other"}}selected{{end}}>Other</option>
                 </select>
               </label>
               {{if gt (len $.State.Platforms) 1}}

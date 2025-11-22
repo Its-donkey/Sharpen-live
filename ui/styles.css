@@ -373,7 +373,7 @@ tbody tr:hover {
 }
 
 .platform-row-grid {
-  grid-template-columns: 1fr;
+  grid-template-columns: minmax(260px, 1fr) minmax(180px, 220px);
   align-items: flex-end;
   gap: 0.75rem;
 }

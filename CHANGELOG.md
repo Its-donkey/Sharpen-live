@@ -6,6 +6,7 @@
 - Admin: add roster “Check online status” action and API to refresh channel state on demand.
 
 ### Fixed
+- Submit form: align channel URL fields to the same grid sizing as other inputs.
 - Guard WebSub hub.challenge and reject malformed values to avoid reflected content.
 - Harden YouTube WebSub requests by validating hub, topic, and callback URLs.
 - Admin: validate admin tokens for settings/log streams instead of accepting any non-empty value.

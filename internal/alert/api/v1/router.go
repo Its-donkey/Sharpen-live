@@ -63,18 +63,25 @@ func NewRouter(opts Options) http.Handler {
 	})
 	authSvc := adminservice.AuthService{Manager: adminMgr}
 
+	validateToken := func(raw string) bool {
+		token := strings.TrimSpace(raw)
+		if token == "" {
+			return false
+		}
+		return adminMgr.Validate(token)
+	}
+
 	adminAuthorized := func(r *http.Request) bool {
 		if r == nil {
 			return false
 		}
-		if token := strings.TrimSpace(r.URL.Query().Get("token")); token != "" {
+		if token := strings.TrimSpace(r.URL.Query().Get("token")); validateToken(token) {
 			return true
 		}
 		header := strings.TrimSpace(r.Header.Get("Authorization"))
 		if strings.HasPrefix(strings.ToLower(header), "bearer ") {
-			if strings.TrimSpace(strings.TrimPrefix(header, "Bearer ")) != "" {
-				return true
-			}
+			token := strings.TrimSpace(strings.TrimPrefix(header, "Bearer "))
+			return validateToken(token)
 		}
 		return false
 	}

@@ -57,16 +57,31 @@ func SubscribeYouTube(
 	if hubURL == "" {
 		return nil, nil, req, errors.New("hubURL is required")
 	}
+	parsedHub, err := url.Parse(hubURL)
+	if err != nil || !parsedHub.IsAbs() || parsedHub.Host == "" || parsedHub.User != nil || (parsedHub.Scheme != "http" && parsedHub.Scheme != "https") {
+		return nil, nil, req, fmt.Errorf("%w: hubURL must be absolute http/https URL without credentials", ErrValidation)
+	}
+	hubURL = parsedHub.String()
 
 	if strings.TrimSpace(req.Topic) == "" {
 		return nil, nil, req, fmt.Errorf("%w: topic is required", ErrValidation)
 	}
+	parsedTopic, err := url.Parse(strings.TrimSpace(req.Topic))
+	if err != nil || !parsedTopic.IsAbs() || parsedTopic.Host == "" || parsedTopic.User != nil {
+		return nil, nil, req, fmt.Errorf("%w: topic must be absolute URL without credentials", ErrValidation)
+	}
+	req.Topic = parsedTopic.String()
 
 	// Resolve callback.
 	callback := strings.TrimSpace(req.Callback)
 	if callback == "" {
 		return nil, nil, req, errors.New("callback is required")
 	}
+	parsedCallback, err := url.Parse(callback)
+	if err != nil || !parsedCallback.IsAbs() || parsedCallback.Host == "" || parsedCallback.User != nil || parsedCallback.Scheme != "https" {
+		return nil, nil, req, fmt.Errorf("%w: callback must be absolute https URL without credentials", ErrValidation)
+	}
+	callback = parsedCallback.String()
 
 	mode := strings.TrimSpace(req.Mode)
 	if mode == "" {

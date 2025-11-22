@@ -1,0 +1,52 @@
+
+2025/11/22 00:40:06 Listening on 127.0.0.1:8880
+
+2025/11/22 00:40:37 ---- Incoming request from 127.0.0.1:50815 ----
+POST /api/admin/login HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Content-Length: 53
+Content-Type: application/json
+Origin: http://127.0.0.1:4173
+Referer: http://127.0.0.1:4173/admin/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+{"email":"admin@sharpen.live","password":"change-me"}
+
+2025/11/22 00:40:37 ---- Response for POST /api/admin/login (401 Unauthorized) ----
+invalid credentials
+
+2025/11/22 00:40:47 ---- Incoming request from 127.0.0.1:50815 ----
+POST /api/admin/login HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Content-Length: 53
+Content-Type: application/json
+Origin: http://127.0.0.1:4173
+Referer: http://127.0.0.1:4173/admin/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+{"email":"admin@sharpen.live","password":"change-me"}
+
+2025/11/22 00:40:47 ---- Response for POST /api/admin/login (401 Unauthorized) ----
+invalid credentials
+
+2025/11/22 00:44:15 Shutting down...

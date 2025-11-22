@@ -34,6 +34,7 @@ type newlineWriter struct {
 var (
 	defaultWriter   io.Writer = os.Stdout
 	defaultWriterMu sync.RWMutex
+	logStream       = newLogStream()
 )
 
 const maxLoggedResponseBody = 4096
@@ -127,7 +128,9 @@ func WithHTTPLogging(next http.Handler, logger Logger) http.Handler {
 
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if dump, err := httputil.DumpRequest(r, true); err == nil {
-			logger.Printf("---- Incoming request from %s ----\n%s", r.RemoteAddr, dump)
+			entry := fmt.Sprintf("---- Incoming request from %s ----\n%s", r.RemoteAddr, dump)
+			logger.Printf(entry)
+			logStream.Broadcast([]byte(entry))
 		} else {
 			logger.Printf("failed to dump request from %s: %v", r.RemoteAddr, err)
 		}
@@ -136,15 +139,85 @@ func WithHTTPLogging(next http.Handler, logger Logger) http.Handler {
 		next.ServeHTTP(lrw, r)
 
 		status := lrw.StatusCode()
-		logger.Printf(
-			"---- Response for %s %s (%d %s) ----\n%s",
+		entry := fmt.Sprintf("---- Response for %s %s (%d %s) ----\n%s",
 			r.Method,
 			r.URL.Path,
 			status,
 			http.StatusText(status),
 			lrw.LoggedBody(),
 		)
+		logger.Printf("%s", entry)
+		logStream.Broadcast([]byte(entry))
 	})
+}
+
+// Subscribe returns a channel of log entries and a snapshot of current logs.
+func Subscribe() (chan []byte, [][]byte) { return logStream.Subscribe() }
+
+// Unsubscribe removes a previously subscribed channel.
+func Unsubscribe(ch chan []byte) { logStream.Unsubscribe(ch) }
+
+type logStreamState struct {
+	mu          sync.RWMutex
+	buffer      [][]byte
+	subscribers map[chan []byte]struct{}
+}
+
+func newLogStream() *logStreamState {
+	return &logStreamState{
+		buffer:      make([][]byte, 0, maxStoredLogEntries),
+		subscribers: make(map[chan []byte]struct{}),
+	}
+}
+
+const maxStoredLogEntries = 300
+
+func (l *logStreamState) Broadcast(entry []byte) {
+	if l == nil || entry == nil {
+		return
+	}
+	l.mu.Lock()
+	defer l.mu.Unlock()
+
+	if len(l.buffer) >= maxStoredLogEntries {
+		copy(l.buffer, l.buffer[1:])
+		l.buffer[len(l.buffer)-1] = append([]byte(nil), entry...)
+	} else {
+		l.buffer = append(l.buffer, append([]byte(nil), entry...))
+	}
+	for ch := range l.subscribers {
+		select {
+		case ch <- entry:
+		default:
+		}
+	}
+}
+
+func (l *logStreamState) Subscribe() (chan []byte, [][]byte) {
+	ch := make(chan []byte, 64)
+	l.mu.RLock()
+	snapshot := make([][]byte, len(l.buffer))
+	for i := range l.buffer {
+		snapshot[i] = append([]byte(nil), l.buffer[i]...)
+	}
+	l.mu.RUnlock()
+
+	l.mu.Lock()
+	l.subscribers[ch] = struct{}{}
+	l.mu.Unlock()
+	return ch, snapshot
+}
+
+func (l *logStreamState) Unsubscribe(ch chan []byte) {
+	if l == nil || ch == nil {
+		return
+	}
+	l.mu.Lock()
+	if _, ok := l.subscribers[ch]; ok {
+		delete(l.subscribers, ch)
+		close(ch)
+	}
+	l.mu.Unlock()
 }
 
 type loggingResponseWriter struct {

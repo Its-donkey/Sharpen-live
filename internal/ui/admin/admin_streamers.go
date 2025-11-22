@@ -243,3 +243,39 @@ func adminPlatformPayloads(rows []model.PlatformFormRow) []model.Platform {
 	}
 	return payloads
 }
+
+func handleRosterStatusCheck() {
+	if strings.TrimSpace(adminState.Token) == "" {
+		setAdminStatus(model.AdminStatus{Tone: "error", Message: "Log in to refresh channel status."})
+		return
+	}
+	if adminState.StatusCheckRunning {
+		return
+	}
+	adminState.StatusCheckRunning = true
+	setAdminStatus(model.AdminStatus{Tone: "info", Message: "Checking channel status…"})
+	scheduleAdminRender()
+
+	go func() {
+		ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
+		defer cancel()
+		result, err := adminCheckChannelStatus(ctx)
+		adminState.StatusCheckRunning = false
+		if err != nil {
+			setAdminStatus(model.AdminStatus{Tone: "error", Message: err.Error()})
+			scheduleAdminRender()
+			return
+		}
+		msg := fmt.Sprintf(
+			"Checked %d channel(s): online %d, offline %d, updated %d, failed %d.",
+			result.Checked,
+			result.Online,
+			result.Offline,
+			result.Updated,
+			result.Failed,
+		)
+		setTransientStatus(model.AdminStatus{Tone: "success", Message: msg})
+		scheduleAdminRender()
+		refreshAdminData()
+	}()
+}

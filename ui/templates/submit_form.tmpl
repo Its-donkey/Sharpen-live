@@ -5,7 +5,7 @@
     <p class="submit-streamer-help">Share the details below and our team will review the submission before adding the streamer to the roster. No additional access is required.</p>
   </div>
 
-  <form class="submit-streamer-form" method="post" action="{{if .FormAction}}{{.FormAction}}{{else}}/submit{{end}}">
+  <form class="submit-streamer-form" id="submit-streamer-form" method="post" action="{{if .FormAction}}{{.FormAction}}{{else}}/submit{{end}}">
     <div class="form-grid">
       <fieldset class="platform-fieldset form-field-wide">
         <legend>Streaming platforms *</legend>
@@ -46,9 +46,10 @@
         <span>Languages *</span>
         <p class="submit-streamer-help">Select every language the streamer uses on their channel.</p>
         <div class="language-picker">
-          <select class="language-select" id="language-select" name="languages" multiple size="8">
+          <select class="language-select" id="language-select" name="language-picker">
+            <option value="">Select a language…</option>
             {{range .LanguageOptions}}
-              <option value="{{.Value}}" {{if contains $.State.Languages .Value}}selected{{end}}>{{.Label}}</option>
+              <option value="{{.Value}}" {{if contains $.State.Languages .Value}}data-selected="true"{{end}}>{{.Label}}</option>
             {{end}}
           </select>
           <div class="language-tags">

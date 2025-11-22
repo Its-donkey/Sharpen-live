@@ -11,6 +11,7 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"net/http/httputil"
 	"net/url"
 	"path/filepath"
 	"strings"
@@ -70,6 +71,12 @@ func main() {
 	assetsDir := flag.String("assets", "ui", "path where styles.css is located")
 	flag.Parse()
 
+	apiURL, err := url.Parse(strings.TrimSpace(*apiBase))
+	if err != nil || apiURL.Scheme == "" {
+		log.Fatalf("invalid api url %q: %v", *apiBase, err)
+	}
+	apiURL.Path = strings.TrimSuffix(apiURL.Path, "/")
+
 	templateRoot, err := filepath.Abs(*templatesDir)
 	if err != nil {
 		log.Fatalf("resolve templates dir: %v", err)
@@ -99,7 +106,20 @@ func main() {
 	mux.HandleFunc("/", srv.handleHome)
 	mux.HandleFunc("/streamers/", srv.handleStreamer)
 	mux.HandleFunc("/submit", srv.handleSubmit)
-	mux.Handle("/styles.css", srv.stylesHandler())
+	mux.Handle("/styles.css", srv.assetHandler("styles.css", "text/css"))
+	mux.Handle("/submit.js", srv.assetHandler("submit.js", "application/javascript"))
+	mux.Handle("/wasm_exec.js", srv.assetHandler("wasm_exec.js", "application/javascript"))
+	mux.Handle("/main.wasm", srv.assetHandler("main.wasm", "application/wasm"))
+	mux.HandleFunc("/admin", srv.handleAdmin)
+	mux.HandleFunc("/admin/", srv.handleAdmin)
+	mux.Handle("/admin/logs", singleProxyHandler(apiURL))
+	mux.Handle("/api/", apiProxyHandler(apiURL))
+	mux.HandleFunc("/favicon.ico", func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusNoContent)
+	})
+	mux.HandleFunc("/login", func(w http.ResponseWriter, r *http.Request) {
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+	})
 
 	log.Printf("Serving Sharpen.Live UI on http://%s (API: %s)", *listen, srv.apiBase)
 	if err := http.ListenAndServe(*listen, logRequests(mux)); err != nil {
@@ -134,9 +154,12 @@ func loadTemplates(dir string) (map[string]*template.Template, error) {
 	}, nil
 }
 
-func (s *server) stylesHandler() http.Handler {
+func (s *server) assetHandler(name, contentType string) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		path := filepath.Join(s.assetsDir, "styles.css")
+		path := filepath.Join(s.assetsDir, name)
+		if contentType != "" {
+			w.Header().Set("Content-Type", contentType)
+		}
 		http.ServeFile(w, r, path)
 	})
 }
@@ -244,6 +267,8 @@ func (s *server) handleSubmit(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	maybeEnrichMetadata(r.Context(), s.apiBase, s.client, &formState)
+
 	ctx, cancel := context.WithTimeout(r.Context(), 10*time.Second)
 	defer cancel()
 	message, err := submitStreamer(ctx, s.client, s.apiBase, formState)
@@ -327,6 +352,10 @@ func ensureSubmitDefaults(state *model.SubmitFormState) {
 func parseSubmitForm(r *http.Request) model.SubmitFormState {
 	ids := r.Form["platform_id"]
 	urls := r.Form["platform_url"]
+	langs := r.Form["languages"]
+	if len(langs) == 0 {
+		langs = r.Form["languages[]"]
+	}
 	platforms := make([]model.PlatformFormRow, 0, len(urls))
 	for i, raw := range urls {
 		normalized := forms.CanonicalizeChannelInput(raw)
@@ -350,7 +379,7 @@ func parseSubmitForm(r *http.Request) model.SubmitFormState {
 	return model.SubmitFormState{
 		Name:        strings.TrimSpace(r.FormValue("name")),
 		Description: strings.TrimSpace(r.FormValue("description")),
-		Languages:   normalizeLanguages(r.Form["languages"]),
+		Languages:   normalizeLanguages(langs),
 		Platforms:   platforms,
 		Errors: model.SubmitFormErrors{
 			Platforms: make(map[string]model.PlatformFieldError),
@@ -395,6 +424,71 @@ func removePlatformRow(rows []model.PlatformFormRow, removeID string) []model.Pl
 		return []model.PlatformFormRow{forms.NewPlatformRow()}
 	}
 	return next
+}
+
+func maybeEnrichMetadata(ctx context.Context, apiBase string, client *http.Client, form *model.SubmitFormState) {
+	if form == nil {
+		return
+	}
+	target := ""
+	for _, p := range form.Platforms {
+		if url := strings.TrimSpace(p.ChannelURL); url != "" {
+			target = url
+			break
+		}
+	}
+	if target == "" {
+		return
+	}
+	desc := strings.TrimSpace(form.Description)
+	name := strings.TrimSpace(form.Name)
+	if desc != "" && name != "" {
+		return
+	}
+
+	timeoutCtx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+	payload, err := json.Marshal(model.MetadataRequest{URL: target})
+	if err != nil {
+		return
+	}
+	endpoint := strings.TrimSuffix(strings.TrimSpace(apiBase), "/") + "/api/youtube/metadata"
+	req, err := http.NewRequestWithContext(timeoutCtx, http.MethodPost, endpoint, bytes.NewReader(payload))
+	if err != nil {
+		return
+	}
+	req.Header.Set("Content-Type", "application/json")
+
+	httpClient := client
+	if httpClient == nil {
+		httpClient = http.DefaultClient
+	}
+	resp, err := httpClient.Do(req)
+	if err != nil {
+		return
+	}
+	defer resp.Body.Close()
+	if resp.StatusCode < 200 || resp.StatusCode >= 300 {
+		return
+	}
+	var meta model.MetadataResponse
+	if err := json.NewDecoder(resp.Body).Decode(&meta); err != nil {
+		return
+	}
+
+	if desc == "" {
+		if trimmed := strings.TrimSpace(meta.Description); trimmed != "" {
+			form.Description = trimmed
+			desc = trimmed
+		} else if title := strings.TrimSpace(meta.Title); desc == "" && title != "" {
+			form.Description = title
+		}
+	}
+	if name == "" {
+		if title := strings.TrimSpace(meta.Title); title != "" {
+			form.Name = title
+		}
+	}
 }
 
 func submitStreamer(ctx context.Context, client *http.Client, apiBase string, form model.SubmitFormState) (string, error) {
@@ -484,10 +578,31 @@ func statusLabel(status, label string) string {
 	return strings.ToUpper(key[:1]) + key[1:]
 }
 
+func apiProxyHandler(target *url.URL) http.Handler {
+	proxy := httputil.NewSingleHostReverseProxy(target)
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		r.Host = target.Host
+		proxy.ServeHTTP(w, r)
+	})
+}
+
 func logRequests(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		start := time.Now()
 		next.ServeHTTP(w, r)
 		log.Printf("%s %s (%s)", r.Method, r.URL.Path, time.Since(start).Truncate(time.Millisecond))
+	})
+}
+
+func (s *server) handleAdmin(w http.ResponseWriter, r *http.Request) {
+	adminIndex := filepath.Join(s.assetsDir, "admin", "index.html")
+	http.ServeFile(w, r, adminIndex)
+}
+
+func singleProxyHandler(target *url.URL) http.Handler {
+	proxy := httputil.NewSingleHostReverseProxy(target)
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		r.Host = target.Host
+		proxy.ServeHTTP(w, r)
 	})
 }

@@ -60,6 +60,7 @@ func Run(ctx context.Context, opts Options) error {
 		StreamersPath:  streamerStore.Path(),
 		StreamersStore: streamerStore,
 		YouTube:        appCfg.YouTube,
+		Admin:          appCfg.Admin,
 	})
 
 	serverCfg := httpserver.Config{

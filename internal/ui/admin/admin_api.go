@@ -262,3 +262,15 @@ func convertMonitorResponse(resp adminMonitorResponse) []model.AdminMonitorEvent
 	}
 	return events
 }
+
+func adminCheckChannelStatus(ctx context.Context) (model.AdminStatusCheckResult, error) {
+	body, _, err := adminAPIRequest(ctx, http.MethodPost, "/api/admin/streamers/status", nil, true)
+	if err != nil {
+		return model.AdminStatusCheckResult{}, err
+	}
+	var result model.AdminStatusCheckResult
+	if err := json.Unmarshal(body, &result); err != nil {
+		return model.AdminStatusCheckResult{}, err
+	}
+	return result, nil
+}

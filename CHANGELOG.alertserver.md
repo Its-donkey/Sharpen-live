@@ -2,6 +2,7 @@
 
 ## [Unreleased]
 ### Added
+- Added POST `/api/admin/streamers/status` and an admin console trigger that refreshes the online status of every stored channel on demand.
 - Added the `internal/app` bootstrap package (with dedicated logging helpers and unit tests) so `cmd/alertserver/main.go` only wires its context and delegates to a single entrypoint.
 - Added regression tests for the config loader to verify default resolution/override precedence now that `config.Load` returns structured errors instead of terminating the process.
 - Added a typed config loader plus JSON schema that accepts a nested `server` block (with `addr`/`port`) and `youtube` overrides inside `config.json`, falling back to the historic flat keys so operators can retarget the HTTP listener without recompiling.

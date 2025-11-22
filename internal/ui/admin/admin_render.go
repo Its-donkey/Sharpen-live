@@ -258,7 +258,15 @@ func renderSubmissionCard(sub model.AdminSubmission) string {
 func renderAdminRosterSection() string {
 	var builder strings.Builder
 	builder.WriteString(`<section aria-labelledby="admin-streamers-title">`)
-	builder.WriteString(`<div class="admin-streamers-header"><h3 id="admin-streamers-title">Current roster</h3></div>`)
+	statusCheckLabel := "Check online status"
+	if state.AdminConsole.StatusCheckRunning {
+		statusCheckLabel = "Checking…"
+	}
+	disableCheck := ""
+	if state.AdminConsole.StatusCheckRunning || state.AdminConsole.Loading {
+		disableCheck = " disabled"
+	}
+	builder.WriteString(`<div class="admin-streamers-header"><h3 id="admin-streamers-title">Current roster</h3><button type="button" class="secondary-button" id="admin-status-check"` + disableCheck + `>` + html.EscapeString(statusCheckLabel) + `</button></div>`)
 	builder.WriteString(`<p class="admin-help">Use the public submission form on the main dashboard to add new streamers. Pending submissions will appear above for approval.</p>`)
 	if len(state.AdminConsole.Streamers) == 0 {
 		if state.AdminConsole.Loading {

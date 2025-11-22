@@ -7,6 +7,7 @@
 
 ### Fixed
 - Submit form: align channel URL fields to the same grid sizing as other inputs.
+- Submit form: render channel URL inputs full width within the platform fieldset.
 - Guard WebSub hub.challenge and reject malformed values to avoid reflected content.
 - Harden YouTube WebSub requests by validating hub, topic, and callback URLs.
 - Admin: validate admin tokens for settings/log streams instead of accepting any non-empty value.

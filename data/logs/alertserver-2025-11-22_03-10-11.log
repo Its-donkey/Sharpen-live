@@ -1,0 +1,4218 @@
+
+2025/11/22 01:24:32 Listening on 127.0.0.1:8880
+
+2025/11/22 01:24:34 ---- Incoming request from 127.0.0.1:63663 ----
+GET /admin/logs?token=08fd4f3d036e671a5160addd3f07585f388f76e5345297aee4d260ef04572515 HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: text/event-stream
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Cache-Control: no-cache
+Referer: http://127.0.0.1:4173/admin/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/22 01:24:46 ---- Response for GET /admin/logs (200 OK) ----
+data: ---- Incoming request from 127.0.0.1:63663 ----
+GET /admin/logs?token=08fd4f3d036e671a5160addd3f07585f388f76e5345297aee4d260ef04572515 HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: text/event-stream
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Cache-Control: no-cache
+Referer: http://127.0.0.1:4173/admin/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+
+
+2025/11/22 01:24:49 ---- Incoming request from 127.0.0.1:63741 ----
+GET /api/admin/monitor/youtube HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Authorization: Bearer 08fd4f3d036e671a5160addd3f07585f388f76e5345297aee4d260ef04572515
+Referer: http://127.0.0.1:4173/admin/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/22 01:24:49 ---- Response for GET /api/admin/monitor/youtube (401 Unauthorized) ----
+unauthorized
+
+2025/11/22 01:25:08 ---- Incoming request from 127.0.0.1:63741 ----
+POST /api/admin/login HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Content-Length: 52
+Content-Type: application/json
+Origin: http://127.0.0.1:4173
+Referer: http://127.0.0.1:4173/admin/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+{"email":"admin@sharpen.live","password":"chane-me"}
+
+2025/11/22 01:25:08 ---- Response for POST /api/admin/login (401 Unauthorized) ----
+invalid credentials
+
+2025/11/22 01:25:17 ---- Incoming request from 127.0.0.1:63741 ----
+POST /api/admin/login HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Content-Length: 53
+Content-Type: application/json
+Origin: http://127.0.0.1:4173
+Referer: http://127.0.0.1:4173/admin/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+{"email":"admin@sharpen.live","password":"change-me"}
+
+2025/11/22 01:25:17 ---- Response for POST /api/admin/login (200 OK) ----
+{"token":"379bf4636912d904837b81e86dbb39c1c1299894e80f210d9a42e6da57c597fe","expiresAt":"2025-11-22T14:25:17Z"}
+
+2025/11/22 01:25:17 ---- Incoming request from 127.0.0.1:63741 ----
+GET /api/admin/submissions HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Authorization: Bearer 379bf4636912d904837b81e86dbb39c1c1299894e80f210d9a42e6da57c597fe
+Referer: http://127.0.0.1:4173/admin/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/22 01:25:17 ---- Response for GET /api/admin/submissions (200 OK) ----
+{"submissions":[]}
+
+2025/11/22 01:25:17 ---- Incoming request from 127.0.0.1:63741 ----
+GET /api/streamers HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Referer: http://127.0.0.1:4173/admin/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/22 01:25:17 ---- Response for GET /api/streamers (200 OK) ----
+{"streamers":[{"streamer":{"id":"395848a32c2c47c2a231c1b59f2b93d4","alias":"JonSiiN","description":"Hello everyone Welcome to the official JRK Knives channel. Knives have been used since prehistoric times for a plethora of activities from weapons and tools ...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@JRKKnives","channelId":"UCbT1jA8RTEHk7y6rn2vHNGw","hubSecret":"9C_7M8CuW959d3PFQ6fZ-FRaj3yzSvel","hubLeaseDate":"2025-11-18T08:56:59Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCbT1jA8RTEHk7y6rn2vHNGw","callbackUrl":"https://sharpen.live/dev/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"status":{"live":true,"platforms":["youtube"],"youtube":{"live":true,"videoId":"NUgqyaICDm0","startedAt":"2025-11-21T12:59:17Z"}},"createdAt":"2025-11-18T08:56:57.714492Z","updatedAt":"2025-11-21T13:00:20.550671Z"},{"streamer":{"id":"4b8e82c4a16e49e58c1ac2993e7f85e0","alias":"Attorney Melanie Little","description":"Melanie Little is a New York lawyer with over 30 years experience as a trial attorney and litigator in state and federal courts, who is now a legal analyst a...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@AttorneyMelanieLittle","channelId":"UCFSlI8Y3Zdoq5buNW_40AAA","hubSecret":"nlXDE9expkcuWHJ4vXXe3UOjfDRYwRvy","hubLeaseDate":"2025-11-18T10:07:14Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCFSlI8Y3Zdoq5buNW_40AAA","callbackUrl":"https://sharpen.live/dev/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"status":{"live":true,"platforms":["youtube"],"youtube":{"live":true,"videoId":"1bVyYYSUjao","startedAt":"2025-11-20T21:17:11Z"}},"createdAt":"2025-11-18T10:07:12.769107Z","updatedAt":"2025-11-21T06:58:28.977417Z"},{"streamer":{"id":"816a93baffdc4102a959dc0875d74657","alias":"Arnaldo Mangini","description":"Arnaldo Mangini, comico, clown, fantasista","firstName":"","lastName":"","email":"","languages":["English","Italian"]},"platforms":{"youtube":{"handle":"@arnaldomangini","channelId":"UCoW3NnFgnDATwU9eUOswisg","hubSecret":"wSduM3o6zSJNs8LvdpuoADBL0b7g4mlT","hubLeaseDate":"2025-11-18T17:22:55Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCoW3NnFgnDATwU9eUOswisg","callbackUrl":"https://sharpen.live/dev/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"status":{"live":true,"platforms":["youtube"],"youtube":{"live":true,"videoId":"JFnxwCb47vc","startedAt":"2025-11-21T10:26:46Z"}},"createdAt":"2025-11-18T17:22:53.507193Z","updatedAt":"2025-11-21T13:04:55.810126Z"},{"streamer":{"id":"8d6f7076e0e3402d9dd2daca0e0fbfdc","alias":"Nate The Lawyer","description":"Like, Share and Subscribe to Nate The Lawyer This Channel focuses on four topics Comics, Pop Culture, Life, and Law. Subscribe and join the movement.  Nothin...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@NateTheLawyer","channelId":"UCzGiDDKdphJ0GFvEd82WfYQ","hubSecret":"asUckl6yNIq_o-SyWB37HPxnOA3tCFkV","hubLeaseDate":"2025-11-21T13:44:39Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCzGiDDKdphJ0GFvEd82WfYQ","callbackUrl":"https://sharpen.live/dev/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-21T13:44:38.110809Z","updatedAt":"2025-11-21T13:44:39.937854Z"}]}
+
+2025/11/22 01:25:17 ---- Incoming request from 127.0.0.1:63741 ----
+GET /api/admin/settings HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Authorization: Bearer 379bf4636912d904837b81e86dbb39c1c1299894e80f210d9a42e6da57c597fe
+Referer: http://127.0.0.1:4173/admin/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/22 01:25:17 ---- Response for GET /api/admin/settings (200 OK) ----
+{"listenAddr":"https://sharpen.live/dev/alerts","adminEmail":"admin@sharpen.live","streamersFile":"data/streamers.json","submissionsFile":"data/submissions.json"}
+
+2025/11/22 01:25:17 ---- Incoming request from 127.0.0.1:63741 ----
+GET /api/admin/monitor/youtube HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Authorization: Bearer 379bf4636912d904837b81e86dbb39c1c1299894e80f210d9a42e6da57c597fe
+Referer: http://127.0.0.1:4173/admin/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/22 01:25:17 ---- Response for GET /api/admin/monitor/youtube (200 OK) ----
+{"summary":{"total":4,"healthy":4,"renewing":0,"expired":0,"pending":0},"records":[{"streamerId":"395848a32c2c47c2a231c1b59f2b93d4","alias":"JonSiiN","channelId":"UCbT1jA8RTEHk7y6rn2vHNGw","handle":"@JRKKnives","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","callbackUrl":"https://sharpen.live/dev/alerts","leaseSeconds":864000,"leaseStart":"2025-11-18T08:56:59Z","leaseExpires":"2025-11-28T08:56:59Z","renewAt":"2025-11-27T20:56:59Z","renewWindowSeconds":43200,"status":"healthy"},{"streamerId":"4b8e82c4a16e49e58c1ac2993e7f85e0","alias":"Attorney Melanie Little","channelId":"UCFSlI8Y3Zdoq5buNW_40AAA","handle":"@AttorneyMelanieLittle","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","callbackUrl":"https://sharpen.live/dev/alerts","leaseSeconds":864000,"leaseStart":"2025-11-18T10:07:14Z","leaseExpires":"2025-11-28T10:07:14Z","renewAt":"2025-11-27T22:07:14Z","renewWindowSeconds":43200,"status":"healthy"},{"streamerId":"816a93baffdc4102a959dc0875d74657","alias":"Arnaldo Mangini","channelId":"UCoW3NnFgnDATwU9eUOswisg","handle":"@arnaldomangini","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","callbackUrl":"https://sharpen.live/dev/alerts","leaseSeconds":864000,"leaseStart":"2025-11-18T17:22:55Z","leaseExpires":"2025-11-28T17:22:55Z","renewAt":"2025-11-28T05:22:55Z","renewWindowSeconds":43200,"status":"healthy"},{"streamerId":"8d6f7076e0e3402d9dd2daca0e0fbfdc","alias":"Nate The Lawyer","channelId":"UCzGiDDKdphJ0GFvEd82WfYQ","handle":"@NateTheLawyer","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","callbackUrl":"https://sharpen.live/dev/alerts","leaseSeconds":864000,"leaseStart":"2025-11-21T13:44:39Z","leaseExpires":"2025-12-01T13:44:39Z","renewAt":"2025-12-01T01:44:39Z","renewWindowSeconds":43200,"status":"healthy"}]}
+
+2025/11/22 01:25:20 ---- Incoming request from 127.0.0.1:63741 ----
+GET /admin/logs?token=379bf4636912d904837b81e86dbb39c1c1299894e80f210d9a42e6da57c597fe HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: text/event-stream
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Cache-Control: no-cache
+Referer: http://127.0.0.1:4173/admin/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/22 01:30:21 ---- Incoming request from 127.0.0.1:65337 ----
+GET /api/admin/monitor/youtube HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: document
+Sec-Fetch-Mode: navigate
+Sec-Fetch-Site: cross-site
+Sec-Fetch-User: ?1
+Upgrade-Insecure-Requests: 1
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/22 01:30:21 ---- Response for GET /api/admin/monitor/youtube (401 Unauthorized) ----
+unauthorized
+
+2025/11/22 01:30:32 ---- Incoming request from 127.0.0.1:65337 ----
+GET /api/admin/settings HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: document
+Sec-Fetch-Mode: navigate
+Sec-Fetch-Site: cross-site
+Sec-Fetch-User: ?1
+Upgrade-Insecure-Requests: 1
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/22 01:30:32 ---- Response for GET /api/admin/settings (401 Unauthorized) ----
+unauthorized
+
+2025/11/22 01:30:42 ---- Incoming request from 127.0.0.1:65337 ----
+GET /api/streamers HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: document
+Sec-Fetch-Mode: navigate
+Sec-Fetch-Site: cross-site
+Sec-Fetch-User: ?1
+Upgrade-Insecure-Requests: 1
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/22 01:30:42 ---- Response for GET /api/streamers (200 OK) ----
+{"streamers":[{"streamer":{"id":"395848a32c2c47c2a231c1b59f2b93d4","alias":"JonSiiN","description":"Hello everyone Welcome to the official JRK Knives channel. Knives have been used since prehistoric times for a plethora of activities from weapons and tools ...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@JRKKnives","channelId":"UCbT1jA8RTEHk7y6rn2vHNGw","hubSecret":"9C_7M8CuW959d3PFQ6fZ-FRaj3yzSvel","hubLeaseDate":"2025-11-18T08:56:59Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCbT1jA8RTEHk7y6rn2vHNGw","callbackUrl":"https://sharpen.live/dev/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"status":{"live":true,"platforms":["youtube"],"youtube":{"live":true,"videoId":"NUgqyaICDm0","startedAt":"2025-11-21T12:59:17Z"}},"createdAt":"2025-11-18T08:56:57.714492Z","updatedAt":"2025-11-21T13:00:20.550671Z"},{"streamer":{"id":"4b8e82c4a16e49e58c1ac2993e7f85e0","alias":"Attorney Melanie Little","description":"Melanie Little is a New York lawyer with over 30 years experience as a trial attorney and litigator in state and federal courts, who is now a legal analyst a...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@AttorneyMelanieLittle","channelId":"UCFSlI8Y3Zdoq5buNW_40AAA","hubSecret":"nlXDE9expkcuWHJ4vXXe3UOjfDRYwRvy","hubLeaseDate":"2025-11-18T10:07:14Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCFSlI8Y3Zdoq5buNW_40AAA","callbackUrl":"https://sharpen.live/dev/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"status":{"live":true,"platforms":["youtube"],"youtube":{"live":true,"videoId":"1bVyYYSUjao","startedAt":"2025-11-20T21:17:11Z"}},"createdAt":"2025-11-18T10:07:12.769107Z","updatedAt":"2025-11-21T06:58:28.977417Z"},{"streamer":{"id":"816a93baffdc4102a959dc0875d74657","alias":"Arnaldo Mangini","description":"Arnaldo Mangini, comico, clown, fantasista","firstName":"","lastName":"","email":"","languages":["English","Italian"]},"platforms":{"youtube":{"handle":"@arnaldomangini","channelId":"UCoW3NnFgnDATwU9eUOswisg","hubSecret":"wSduM3o6zSJNs8LvdpuoADBL0b7g4mlT","hubLeaseDate":"2025-11-18T17:22:55Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCoW3NnFgnDATwU9eUOswisg","callbackUrl":"https://sharpen.live/dev/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"status":{"live":true,"platforms":["youtube"],"youtube":{"live":true,"videoId":"JFnxwCb47vc","startedAt":"2025-11-21T10:26:46Z"}},"createdAt":"2025-11-18T17:22:53.507193Z","updatedAt":"2025-11-21T13:04:55.810126Z"},{"streamer":{"id":"8d6f7076e0e3402d9dd2daca0e0fbfdc","alias":"Nate The Lawyer","description":"Like, Share and Subscribe to Nate The Lawyer This Channel focuses on four topics Comics, Pop Culture, Life, and Law. Subscribe and join the movement.  Nothin...","firstName":"","lastName":"","email":"","languages":["English"]},"platforms":{"youtube":{"handle":"@NateTheLawyer","channelId":"UCzGiDDKdphJ0GFvEd82WfYQ","hubSecret":"asUckl6yNIq_o-SyWB37HPxnOA3tCFkV","hubLeaseDate":"2025-11-21T13:44:39Z","topic":"https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCzGiDDKdphJ0GFvEd82WfYQ","callbackUrl":"https://sharpen.live/dev/alerts","hubUrl":"https://pubsubhubbub.appspot.com/subscribe","verifyMode":"async","leaseSeconds":864000}},"createdAt":"2025-11-21T13:44:38.110809Z","updatedAt":"2025-11-21T13:44:39.937854Z"}]}
+
+2025/11/22 01:31:03 ---- Incoming request from 127.0.0.1:65337 ----
+GET /api/admin/submissions HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: document
+Sec-Fetch-Mode: navigate
+Sec-Fetch-Site: cross-site
+Sec-Fetch-User: ?1
+Upgrade-Insecure-Requests: 1
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/22 01:31:03 ---- Response for GET /api/admin/submissions (401 Unauthorized) ----
+unauthorized
+
+2025/11/22 01:31:14 ---- Incoming request from 127.0.0.1:65337 ----
+GET /api/admin/login HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: document
+Sec-Fetch-Mode: navigate
+Sec-Fetch-Site: cross-site
+Sec-Fetch-User: ?1
+Upgrade-Insecure-Requests: 1
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/22 01:31:14 ---- Response for GET /api/admin/login (405 Method Not Allowed) ----
+method not allowed
+
+2025/11/22 01:33:17 ---- Incoming request from 127.0.0.1:49825 ----
+GET /api/admin/submissions HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Authorization: Bearer 379bf4636912d904837b81e86dbb39c1c1299894e80f210d9a42e6da57c597fe
+Referer: http://127.0.0.1:4173/admin/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/22 01:33:17 ---- Response for GET /admin/logs (200 OK) ----
+data: ---- Incoming request from 127.0.0.1:63663 ----
+GET /admin/logs?token=08fd4f3d036e671a5160addd3f07585f388f76e5345297aee4d260ef04572515 HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: text/event-stream
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Cache-Control: no-cache
+Referer: http://127.0.0.1:4173/admin/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+
+data: ---- Response for GET /admin/logs (200 OK) ----
+data: ---- Incoming request from 127.0.0.1:63663 ----
+GET /admin/logs?token=08fd4f3d036e671a5160addd3f07585f388f76e5345297aee4d260ef04572515 HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: text/event-stream
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Cache-Control: no-cache
+Referer: http://127.0.0.1:4173/admin/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+
+
+
+data: ---- Incoming request from 127.0.0.1:63741 ----
+GET /api/admin/monitor/youtube HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Authorization: Bearer 08fd4f3d036e671a5160addd3f07585f388f76e5345297aee4d260ef04572515
+Referer: http://127.0.0.1:4173/admin/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+
+data: ---- Response for GET /api/admin/monitor/youtube (401 Unauthorized) ----
+unauthorized
+
+
+data: ---- Incoming request from 127.0.0.1:63741 ----
+POST /api/admin/login HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Content-Length: 52
+Content-Type: application/json
+Origin: http://127.0.0.1:4173
+Referer: http://127.0.0.1:4173/admin/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+{"email":"admin@sharpen.live","password":"chane-me"}
+
+data: ---- Response for POST /api/admin/login (401 Unauthorized) ----
+invalid credentials
+
+
+data: ---- Incoming request from 127.0.0.1:63741 ----
+POST /api/admin/login HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Content-Length: 53
+Content-Type: application/json
+Origin: http://127.0.0.1:4173
+Referer: http://127.0.0.1:4173/admin/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+{"email":"admin@sharpen.live","password":"change-me"}
+
+data: ---- Response for POST /api/admin/login (200 OK) ----
+{"token":"379bf4636912d904837b81e86dbb39c1c1299894e80f210d9a42e6da57c597fe","expiresAt":"2025-11-22T14:25:17Z"}
+
+
+data: ---- Incoming request from 127.0.
+-- response truncated after 4096 bytes --
+
+2025/11/22 01:33:17 ---- Response for GET /api/admin/submissions (200 OK) ----
+{"submissions":[]}
+
+2025/11/22 01:33:20 ---- Incoming request from 127.0.0.1:49825 ----
+GET /admin/logs?token=379bf4636912d904837b81e86dbb39c1c1299894e80f210d9a42e6da57c597fe HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: text/event-stream
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Cache-Control: no-cache
+Referer: http://127.0.0.1:4173/admin/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/22 01:33:52 ---- Response for GET /admin/logs (200 OK) ----
+data: ---- Incoming request from 127.0.0.1:63663 ----
+GET /admin/logs?token=08fd4f3d036e671a5160addd3f07585f388f76e5345297aee4d260ef04572515 HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: text/event-stream
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Cache-Control: no-cache
+Referer: http://127.0.0.1:4173/admin/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+
+data: ---- Response for GET /admin/logs (200 OK) ----
+data: ---- Incoming request from 127.0.0.1:63663 ----
+GET /admin/logs?token=08fd4f3d036e671a5160addd3f07585f388f76e5345297aee4d260ef04572515 HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: text/event-stream
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Cache-Control: no-cache
+Referer: http://127.0.0.1:4173/admin/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+
+
+
+data: ---- Incoming request from 127.0.0.1:63741 ----
+GET /api/admin/monitor/youtube HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Authorization: Bearer 08fd4f3d036e671a5160addd3f07585f388f76e5345297aee4d260ef04572515
+Referer: http://127.0.0.1:4173/admin/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+
+data: ---- Response for GET /api/admin/monitor/youtube (401 Unauthorized) ----
+unauthorized
+
+
+data: ---- Incoming request from 127.0.0.1:63741 ----
+POST /api/admin/login HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Content-Length: 52
+Content-Type: application/json
+Origin: http://127.0.0.1:4173
+Referer: http://127.0.0.1:4173/admin/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+{"email":"admin@sharpen.live","password":"chane-me"}
+
+data: ---- Response for POST /api/admin/login (401 Unauthorized) ----
+invalid credentials
+
+
+data: ---- Incoming request from 127.0.0.1:63741 ----
+POST /api/admin/login HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Content-Length: 53
+Content-Type: application/json
+Origin: http://127.0.0.1:4173
+Referer: http://127.0.0.1:4173/admin/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+{"email":"admin@sharpen.live","password":"change-me"}
+
+data: ---- Response for POST /api/admin/login (200 OK) ----
+{"token":"379bf4636912d904837b81e86dbb39c1c1299894e80f210d9a42e6da57c597fe","expiresAt":"2025-11-22T14:25:17Z"}
+
+
+data: ---- Incoming request from 127.0.
+-- response truncated after 4096 bytes --
+
+2025/11/22 01:33:52 ---- Incoming request from 127.0.0.1:50020 ----
+GET /api/admin/submissions HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Authorization: Bearer 379bf4636912d904837b81e86dbb39c1c1299894e80f210d9a42e6da57c597fe
+Referer: http://127.0.0.1:4173/admin/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/22 01:33:52 ---- Response for GET /api/admin/submissions (200 OK) ----
+{"submissions":[]}
+
+2025/11/22 01:33:55 ---- Incoming request from 127.0.0.1:50020 ----
+GET /admin/logs?token=379bf4636912d904837b81e86dbb39c1c1299894e80f210d9a42e6da57c597fe HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: text/event-stream
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Cache-Control: no-cache
+Referer: http://127.0.0.1:4173/admin/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/22 03:34:33 ---- Incoming request from 127.0.0.1:53514 ----
+POST /alerts HTTP/1.1
+Host: sharpen.live
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Cache-Control: no-cache,max-age=0
+Content-Length: 939
+Content-Type: application/atom+xml
+From: googlebot(at)googlebot.com
+Link: <https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCFSlI8Y3Zdoq5buNW_40AAA>; rel=self, <http://pubsubhubbub.appspot.com/>; rel=hub
+Pragma: no-cache
+User-Agent: FeedFetcher-Google; (+http://www.google.com/feedfetcher.html)
+Via: 1.1 Caddy
+X-Forwarded-For: 74.125.209.34
+X-Forwarded-Host: sharpen.live
+X-Forwarded-Proto: https
+X-Hub-Signature: sha1=a031ebc1dd268b8f96ee2e7498132e379578a740
+X-Request-Id: {http.request.id}
+
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:yt="http://www.youtube.com/xml/schemas/2015" xmlns="http://www.w3.org/2005/Atom"><link rel="hub" href="https://pubsubhubbub.appspot.com"/><link rel="self" href="https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCFSlI8Y3Zdoq5buNW_40AAA"/><title>YouTube video feed</title><updated>2025-11-21T16:30:18.279683034+00:00</updated><entry>
+  <id>yt:video:GoXi_xJu2gE</id>
+  <yt:videoId>GoXi_xJu2gE</yt:videoId>
+  <yt:channelId>UCFSlI8Y3Zdoq5buNW_40AAA</yt:channelId>
+  <title>LIVE : KAREN READ Status Conference in Civil Case of O'Keefes v Read</title>
+  <link rel="alternate" href="https://www.youtube.com/watch?v=GoXi_xJu2gE"/>
+  <author>
+   <name>Attorney Melanie Little</name>
+   <uri>https://www.youtube.com/channel/UCFSlI8Y3Zdoq5buNW_40AAA</uri>
+  </author>
+  <published>2025-11-20T20:17:17+00:00</published>
+  <updated>2025-11-21T16:30:18.279683034+00:00</updated>
+ </entry></feed>
+
+2025/11/22 03:34:33 Fetching live metadata for 1 video(s): GoXi_xJu2gE
+
+2025/11/22 03:34:33 Requesting watch page for GoXi_xJu2gE: https://www.youtube.com/watch?v=GoXi_xJu2gE
+
+2025/11/22 03:34:33 Fetch for video GoXi_xJu2gE failed: Get "https://www.youtube.com/watch?v=GoXi_xJu2gE": context canceled
+
+2025/11/22 03:34:33 failed to fetch live metadata for videos GoXi_xJu2gE: video lookup failed: fetch GoXi_xJu2gE: Get "https://www.youtube.com/watch?v=GoXi_xJu2gE": context canceled
+
+2025/11/22 03:34:33 ---- Response for POST /alerts (202 Accepted) ----
+
+2025/11/22 03:34:34 ---- Incoming request from 127.0.0.1:53515 ----
+POST /alerts HTTP/1.1
+Host: sharpen.live
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Cache-Control: no-cache,max-age=0
+Content-Length: 939
+Content-Type: application/atom+xml
+From: googlebot(at)googlebot.com
+Link: <https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCFSlI8Y3Zdoq5buNW_40AAA>; rel=self, <http://pubsubhubbub.appspot.com/>; rel=hub
+Pragma: no-cache
+User-Agent: FeedFetcher-Google; (+http://www.google.com/feedfetcher.html)
+Via: 1.1 Caddy
+X-Forwarded-For: 74.125.209.33
+X-Forwarded-Host: sharpen.live
+X-Forwarded-Proto: https
+X-Hub-Signature: sha1=13e4a18a648a64398bafc84d76406c5800cd211f
+X-Request-Id: {http.request.id}
+
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:yt="http://www.youtube.com/xml/schemas/2015" xmlns="http://www.w3.org/2005/Atom"><link rel="hub" href="https://pubsubhubbub.appspot.com"/><link rel="self" href="https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCFSlI8Y3Zdoq5buNW_40AAA"/><title>YouTube video feed</title><updated>2025-11-21T16:30:18.488840974+00:00</updated><entry>
+  <id>yt:video:GoXi_xJu2gE</id>
+  <yt:videoId>GoXi_xJu2gE</yt:videoId>
+  <yt:channelId>UCFSlI8Y3Zdoq5buNW_40AAA</yt:channelId>
+  <title>LIVE : KAREN READ Status Conference in Civil Case of O'Keefes v Read</title>
+  <link rel="alternate" href="https://www.youtube.com/watch?v=GoXi_xJu2gE"/>
+  <author>
+   <name>Attorney Melanie Little</name>
+   <uri>https://www.youtube.com/channel/UCFSlI8Y3Zdoq5buNW_40AAA</uri>
+  </author>
+  <published>2025-11-20T20:17:17+00:00</published>
+  <updated>2025-11-21T16:30:18.488840974+00:00</updated>
+ </entry></feed>
+
+2025/11/22 03:34:34 ---- Incoming request from 127.0.0.1:53516 ----
+POST /alerts HTTP/1.1
+Host: sharpen.live
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Cache-Control: no-cache,max-age=0
+Content-Length: 948
+Content-Type: application/atom+xml
+From: googlebot(at)googlebot.com
+Link: <https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCbT1jA8RTEHk7y6rn2vHNGw>; rel=self, <http://pubsubhubbub.appspot.com/>; rel=hub
+Pragma: no-cache
+User-Agent: FeedFetcher-Google; (+http://www.google.com/feedfetcher.html)
+Via: 1.1 Caddy
+X-Forwarded-For: 142.250.32.1
+X-Forwarded-Host: sharpen.live
+X-Forwarded-Proto: https
+X-Hub-Signature: sha1=5b0a6cec63cba33af237ca681cf37d6375b375e5
+X-Request-Id: {http.request.id}
+
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:yt="http://www.youtube.com/xml/schemas/2015" xmlns="http://www.w3.org/2005/Atom"><link rel="hub" href="https://pubsubhubbub.appspot.com"/><link rel="self" href="https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCbT1jA8RTEHk7y6rn2vHNGw"/><title>YouTube video feed</title><updated>2025-11-21T16:32:01.194840492+00:00</updated><entry>
+  <id>yt:video:NUgqyaICDm0</id>
+  <yt:videoId>NUgqyaICDm0</yt:videoId>
+  <yt:channelId>UCbT1jA8RTEHk7y6rn2vHNGw</yt:channelId>
+  <title>SiiNs Workshop - Let the fun begin, new month new goal, new knives.  Lets make something epic</title>
+  <link rel="alternate" href="https://www.youtube.com/watch?v=NUgqyaICDm0"/>
+  <author>
+   <name>JonSiiN</name>
+   <uri>https://www.youtube.com/channel/UCbT1jA8RTEHk7y6rn2vHNGw</uri>
+  </author>
+  <published>2025-11-19T13:04:39+00:00</published>
+  <updated>2025-11-21T16:32:01.194840492+00:00</updated>
+ </entry></feed>
+
+2025/11/22 03:34:34 Fetching live metadata for 1 video(s): GoXi_xJu2gE
+
+2025/11/22 03:34:34 Requesting watch page for GoXi_xJu2gE: https://www.youtube.com/watch?v=GoXi_xJu2gE
+
+2025/11/22 03:34:34 Fetching live metadata for 1 video(s): NUgqyaICDm0
+
+2025/11/22 03:34:34 Requesting watch page for NUgqyaICDm0: https://www.youtube.com/watch?v=NUgqyaICDm0
+
+2025/11/22 03:34:34 Fetch for video GoXi_xJu2gE failed: Get "https://www.youtube.com/watch?v=GoXi_xJu2gE": context canceled
+
+2025/11/22 03:34:34 failed to fetch live metadata for videos GoXi_xJu2gE: video lookup failed: fetch GoXi_xJu2gE: Get "https://www.youtube.com/watch?v=GoXi_xJu2gE": context canceled
+
+2025/11/22 03:34:34 ---- Response for POST /alerts (202 Accepted) ----
+
+2025/11/22 03:34:34 Fetch for video NUgqyaICDm0 failed: Get "https://www.youtube.com/watch?v=NUgqyaICDm0": context canceled
+
+2025/11/22 03:34:34 failed to fetch live metadata for videos NUgqyaICDm0: video lookup failed: fetch NUgqyaICDm0: Get "https://www.youtube.com/watch?v=NUgqyaICDm0": context canceled
+
+2025/11/22 03:34:34 ---- Response for POST /alerts (202 Accepted) ----
+
+2025/11/22 03:34:34 ---- Incoming request from 127.0.0.1:53517 ----
+POST /alerts HTTP/1.1
+Host: sharpen.live
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Cache-Control: no-cache,max-age=0
+Content-Length: 939
+Content-Type: application/atom+xml
+From: googlebot(at)googlebot.com
+Link: <https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCFSlI8Y3Zdoq5buNW_40AAA>; rel=self, <http://pubsubhubbub.appspot.com/>; rel=hub
+Pragma: no-cache
+User-Agent: FeedFetcher-Google; (+http://www.google.com/feedfetcher.html)
+Via: 1.1 Caddy
+X-Forwarded-For: 74.125.209.32
+X-Forwarded-Host: sharpen.live
+X-Forwarded-Proto: https
+X-Hub-Signature: sha1=231e2efe2889f690bc2a5664929e7e3de4bcc90d
+X-Request-Id: {http.request.id}
+
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:yt="http://www.youtube.com/xml/schemas/2015" xmlns="http://www.w3.org/2005/Atom"><link rel="hub" href="https://pubsubhubbub.appspot.com"/><link rel="self" href="https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCFSlI8Y3Zdoq5buNW_40AAA"/><title>YouTube video feed</title><updated>2025-11-21T16:34:00.440226583+00:00</updated><entry>
+  <id>yt:video:GoXi_xJu2gE</id>
+  <yt:videoId>GoXi_xJu2gE</yt:videoId>
+  <yt:channelId>UCFSlI8Y3Zdoq5buNW_40AAA</yt:channelId>
+  <title>LIVE : KAREN READ Status Conference in Civil Case of O'Keefes v Read</title>
+  <link rel="alternate" href="https://www.youtube.com/watch?v=GoXi_xJu2gE"/>
+  <author>
+   <name>Attorney Melanie Little</name>
+   <uri>https://www.youtube.com/channel/UCFSlI8Y3Zdoq5buNW_40AAA</uri>
+  </author>
+  <published>2025-11-20T20:17:17+00:00</published>
+  <updated>2025-11-21T16:34:00.440226583+00:00</updated>
+ </entry></feed>
+
+2025/11/22 03:34:34 Fetching live metadata for 1 video(s): GoXi_xJu2gE
+
+2025/11/22 03:34:34 Requesting watch page for GoXi_xJu2gE: https://www.youtube.com/watch?v=GoXi_xJu2gE
+
+2025/11/22 03:34:34 Fetch for video GoXi_xJu2gE failed: Get "https://www.youtube.com/watch?v=GoXi_xJu2gE": context canceled
+
+2025/11/22 03:34:34 failed to fetch live metadata for videos GoXi_xJu2gE: video lookup failed: fetch GoXi_xJu2gE: Get "https://www.youtube.com/watch?v=GoXi_xJu2gE": context canceled
+
+2025/11/22 03:34:34 ---- Response for POST /alerts (202 Accepted) ----
+
+2025/11/22 03:55:45 ---- Incoming request from 127.0.0.1:54442 ----
+POST /alerts HTTP/1.1
+Host: sharpen.live
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Cache-Control: no-cache,max-age=0
+Content-Length: 939
+Content-Type: application/atom+xml
+From: googlebot(at)googlebot.com
+Link: <https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCFSlI8Y3Zdoq5buNW_40AAA>; rel=self, <http://pubsubhubbub.appspot.com/>; rel=hub
+Pragma: no-cache
+User-Agent: FeedFetcher-Google; (+http://www.google.com/feedfetcher.html)
+Via: 1.1 Caddy
+X-Forwarded-For: 74.125.209.34
+X-Forwarded-Host: sharpen.live
+X-Forwarded-Proto: https
+X-Hub-Signature: sha1=d04d823117d8aec3efb45f42b9ce5278307d8675
+X-Request-Id: {http.request.id}
+
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:yt="http://www.youtube.com/xml/schemas/2015" xmlns="http://www.w3.org/2005/Atom"><link rel="hub" href="https://pubsubhubbub.appspot.com"/><link rel="self" href="https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCFSlI8Y3Zdoq5buNW_40AAA"/><title>YouTube video feed</title><updated>2025-11-21T16:55:07.901079673+00:00</updated><entry>
+  <id>yt:video:GoXi_xJu2gE</id>
+  <yt:videoId>GoXi_xJu2gE</yt:videoId>
+  <yt:channelId>UCFSlI8Y3Zdoq5buNW_40AAA</yt:channelId>
+  <title>LIVE : KAREN READ Status Conference in Civil Case of O'Keefes v Read</title>
+  <link rel="alternate" href="https://www.youtube.com/watch?v=GoXi_xJu2gE"/>
+  <author>
+   <name>Attorney Melanie Little</name>
+   <uri>https://www.youtube.com/channel/UCFSlI8Y3Zdoq5buNW_40AAA</uri>
+  </author>
+  <published>2025-11-20T20:17:17+00:00</published>
+  <updated>2025-11-21T16:55:07.901079673+00:00</updated>
+ </entry></feed>
+
+2025/11/22 03:55:45 Fetching live metadata for 1 video(s): GoXi_xJu2gE
+
+2025/11/22 03:55:45 Requesting watch page for GoXi_xJu2gE: https://www.youtube.com/watch?v=GoXi_xJu2gE
+
+2025/11/22 03:55:45 Fetch for video GoXi_xJu2gE failed: Get "https://www.youtube.com/watch?v=GoXi_xJu2gE": context canceled
+
+2025/11/22 03:55:45 failed to fetch live metadata for videos GoXi_xJu2gE: video lookup failed: fetch GoXi_xJu2gE: Get "https://www.youtube.com/watch?v=GoXi_xJu2gE": context canceled
+
+2025/11/22 03:55:45 ---- Response for POST /alerts (202 Accepted) ----
+
+2025/11/22 03:55:45 ---- Incoming request from 127.0.0.1:54453 ----
+POST /alerts HTTP/1.1
+Host: sharpen.live
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Cache-Control: no-cache,max-age=0
+Content-Length: 939
+Content-Type: application/atom+xml
+From: googlebot(at)googlebot.com
+Link: <https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCFSlI8Y3Zdoq5buNW_40AAA>; rel=self, <http://pubsubhubbub.appspot.com/>; rel=hub
+Pragma: no-cache
+User-Agent: FeedFetcher-Google; (+http://www.google.com/feedfetcher.html)
+Via: 1.1 Caddy
+X-Forwarded-For: 74.125.209.32
+X-Forwarded-Host: sharpen.live
+X-Forwarded-Proto: https
+X-Hub-Signature: sha1=22a96d9027ce3bfafe22b70bbd01b7313a915ae8
+X-Request-Id: {http.request.id}
+
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:yt="http://www.youtube.com/xml/schemas/2015" xmlns="http://www.w3.org/2005/Atom"><link rel="hub" href="https://pubsubhubbub.appspot.com"/><link rel="self" href="https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCFSlI8Y3Zdoq5buNW_40AAA"/><title>YouTube video feed</title><updated>2025-11-21T16:55:08.516153009+00:00</updated><entry>
+  <id>yt:video:GoXi_xJu2gE</id>
+  <yt:videoId>GoXi_xJu2gE</yt:videoId>
+  <yt:channelId>UCFSlI8Y3Zdoq5buNW_40AAA</yt:channelId>
+  <title>LIVE : KAREN READ Status Conference in Civil Case of O'Keefes v Read</title>
+  <link rel="alternate" href="https://www.youtube.com/watch?v=GoXi_xJu2gE"/>
+  <author>
+   <name>Attorney Melanie Little</name>
+   <uri>https://www.youtube.com/channel/UCFSlI8Y3Zdoq5buNW_40AAA</uri>
+  </author>
+  <published>2025-11-20T20:17:17+00:00</published>
+  <updated>2025-11-21T16:55:08.516153009+00:00</updated>
+ </entry></feed>
+
+2025/11/22 03:55:45 Fetching live metadata for 1 video(s): GoXi_xJu2gE
+
+2025/11/22 03:55:45 Requesting watch page for GoXi_xJu2gE: https://www.youtube.com/watch?v=GoXi_xJu2gE
+
+2025/11/22 03:55:45 Fetch for video GoXi_xJu2gE failed: Get "https://www.youtube.com/watch?v=GoXi_xJu2gE": context canceled
+
+2025/11/22 03:55:45 failed to fetch live metadata for videos GoXi_xJu2gE: video lookup failed: fetch GoXi_xJu2gE: Get "https://www.youtube.com/watch?v=GoXi_xJu2gE": context canceled
+
+2025/11/22 03:55:45 ---- Response for POST /alerts (202 Accepted) ----
+
+2025/11/22 03:56:55 ---- Incoming request from 127.0.0.1:54798 ----
+POST /alerts HTTP/1.1
+Host: sharpen.live
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Cache-Control: no-cache,max-age=0
+Content-Length: 953
+Content-Type: application/atom+xml
+From: googlebot(at)googlebot.com
+Link: <https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCzGiDDKdphJ0GFvEd82WfYQ>; rel=self, <http://pubsubhubbub.appspot.com/>; rel=hub
+Pragma: no-cache
+User-Agent: FeedFetcher-Google; (+http://www.google.com/feedfetcher.html)
+Via: 1.1 Caddy
+X-Forwarded-For: 142.250.32.1
+X-Forwarded-Host: sharpen.live
+X-Forwarded-Proto: https
+X-Hub-Signature: sha1=aa9858d22661ccfbd5e7e10abc0a8ed8cc08622a
+X-Request-Id: {http.request.id}
+
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:yt="http://www.youtube.com/xml/schemas/2015" xmlns="http://www.w3.org/2005/Atom"><link rel="hub" href="https://pubsubhubbub.appspot.com"/><link rel="self" href="https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCzGiDDKdphJ0GFvEd82WfYQ"/><title>YouTube video feed</title><updated>2025-11-21T16:56:53.899608544+00:00</updated><entry>
+  <id>yt:video:f86xAdN_cIk</id>
+  <yt:videoId>f86xAdN_cIk</yt:videoId>
+  <yt:channelId>UCzGiDDKdphJ0GFvEd82WfYQ</yt:channelId>
+  <title>First They Came for the Ostriches: Government Condition for Much Worse Things to Come! Viva Frei</title>
+  <link rel="alternate" href="https://www.youtube.com/watch?v=f86xAdN_cIk"/>
+  <author>
+   <name>Viva Frei</name>
+   <uri>https://www.youtube.com/channel/UCzGiDDKdphJ0GFvEd82WfYQ</uri>
+  </author>
+  <published>2025-11-21T16:56:51+00:00</published>
+  <updated>2025-11-21T16:56:53.899608544+00:00</updated>
+ </entry></feed>
+
+2025/11/22 03:56:55 Fetching live metadata for 1 video(s): f86xAdN_cIk
+
+2025/11/22 03:56:55 Requesting watch page for f86xAdN_cIk: https://www.youtube.com/watch?v=f86xAdN_cIk
+
+2025/11/22 03:56:56 Fetched metadata for f86xAdN_cIk: channel=UCzGiDDKdphJ0GFvEd82WfYQ title="First They Came for the Ostriches: Government Condition for Much Worse Things to Come! Viva Frei" live=false start=0001-01-01 00:00:00 +0000 UTC
+
+2025/11/22 03:56:56 Processed alert notification for 1 video(s); no live streams detected
+
+2025/11/22 03:56:56 ---- Response for POST /alerts (204 No Content) ----
+
+2025/11/22 04:13:24 ---- Incoming request from 127.0.0.1:55092 ----
+POST /alerts HTTP/1.1
+Host: sharpen.live
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Cache-Control: no-cache,max-age=0
+Content-Length: 956
+Content-Type: application/atom+xml
+From: googlebot(at)googlebot.com
+Link: <https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCzGiDDKdphJ0GFvEd82WfYQ>; rel=self, <http://pubsubhubbub.appspot.com/>; rel=hub
+Pragma: no-cache
+User-Agent: FeedFetcher-Google; (+http://www.google.com/feedfetcher.html)
+Via: 1.1 Caddy
+X-Forwarded-For: 142.250.32.3
+X-Forwarded-Host: sharpen.live
+X-Forwarded-Proto: https
+X-Hub-Signature: sha1=e8010483e58a33ed11764684412eb53969dd2109
+X-Request-Id: {http.request.id}
+
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:yt="http://www.youtube.com/xml/schemas/2015" xmlns="http://www.w3.org/2005/Atom"><link rel="hub" href="https://pubsubhubbub.appspot.com"/><link rel="self" href="https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCzGiDDKdphJ0GFvEd82WfYQ"/><title>YouTube video feed</title><updated>2025-11-21T16:59:28.689084507+00:00</updated><entry>
+  <id>yt:video:f86xAdN_cIk</id>
+  <yt:videoId>f86xAdN_cIk</yt:videoId>
+  <yt:channelId>UCzGiDDKdphJ0GFvEd82WfYQ</yt:channelId>
+  <title>First They Came for the Ostriches: Government Conditioning for Much Worse Things to Come! Viva Frei</title>
+  <link rel="alternate" href="https://www.youtube.com/watch?v=f86xAdN_cIk"/>
+  <author>
+   <name>Viva Frei</name>
+   <uri>https://www.youtube.com/channel/UCzGiDDKdphJ0GFvEd82WfYQ</uri>
+  </author>
+  <published>2025-11-21T16:56:51+00:00</published>
+  <updated>2025-11-21T16:59:28.689084507+00:00</updated>
+ </entry></feed>
+
+2025/11/22 04:13:24 Fetching live metadata for 1 video(s): f86xAdN_cIk
+
+2025/11/22 04:13:24 Requesting watch page for f86xAdN_cIk: https://www.youtube.com/watch?v=f86xAdN_cIk
+
+2025/11/22 04:13:24 Fetch for video f86xAdN_cIk failed: Get "https://www.youtube.com/watch?v=f86xAdN_cIk": context canceled
+
+2025/11/22 04:13:24 failed to fetch live metadata for videos f86xAdN_cIk: video lookup failed: fetch f86xAdN_cIk: Get "https://www.youtube.com/watch?v=f86xAdN_cIk": context canceled
+
+2025/11/22 04:13:24 ---- Response for POST /alerts (202 Accepted) ----
+
+2025/11/22 07:28:26 ---- Incoming request from 127.0.0.1:58303 ----
+POST /alerts HTTP/1.1
+Host: sharpen.live
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Cache-Control: no-cache,max-age=0
+Content-Length: 891
+Content-Type: application/atom+xml
+From: googlebot(at)googlebot.com
+Link: <https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCoW3NnFgnDATwU9eUOswisg>; rel=self, <http://pubsubhubbub.appspot.com/>; rel=hub
+Pragma: no-cache
+User-Agent: FeedFetcher-Google; (+http://www.google.com/feedfetcher.html)
+Via: 1.1 Caddy
+X-Forwarded-For: 66.102.6.72
+X-Forwarded-Host: sharpen.live
+X-Forwarded-Proto: https
+X-Hub-Signature: sha1=7da9989f134b02e7aaff51ea2cad2df7650ee2e5
+X-Request-Id: {http.request.id}
+
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:yt="http://www.youtube.com/xml/schemas/2015" xmlns="http://www.w3.org/2005/Atom"><link rel="hub" href="https://pubsubhubbub.appspot.com"/><link rel="self" href="https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCoW3NnFgnDATwU9eUOswisg"/><title>YouTube video feed</title><updated>2025-11-21T19:17:16.71431719+00:00</updated><entry>
+  <id>yt:video:Cs1vvrBVddI</id>
+  <yt:videoId>Cs1vvrBVddI</yt:videoId>
+  <yt:channelId>UCoW3NnFgnDATwU9eUOswisg</yt:channelId>
+  <title>Magic Moments with Arnaldo🔥</title>
+  <link rel="alternate" href="https://www.youtube.com/watch?v=Cs1vvrBVddI"/>
+  <author>
+   <name>Arnaldo Mangini</name>
+   <uri>https://www.youtube.com/channel/UCoW3NnFgnDATwU9eUOswisg</uri>
+  </author>
+  <published>2025-11-21T19:17:14+00:00</published>
+  <updated>2025-11-21T19:17:16.71431719+00:00</updated>
+ </entry></feed>
+
+2025/11/22 07:28:26 Fetching live metadata for 1 video(s): Cs1vvrBVddI
+
+2025/11/22 07:28:26 Requesting watch page for Cs1vvrBVddI: https://www.youtube.com/watch?v=Cs1vvrBVddI
+
+2025/11/22 07:28:26 Fetch for video Cs1vvrBVddI failed: Get "https://www.youtube.com/watch?v=Cs1vvrBVddI": context canceled
+
+2025/11/22 07:28:26 failed to fetch live metadata for videos Cs1vvrBVddI: video lookup failed: fetch Cs1vvrBVddI: Get "https://www.youtube.com/watch?v=Cs1vvrBVddI": context canceled
+
+2025/11/22 07:28:26 ---- Response for POST /alerts (202 Accepted) ----
+
+2025/11/22 07:28:27 ---- Incoming request from 127.0.0.1:58308 ----
+POST /alerts HTTP/1.1
+Host: sharpen.live
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Cache-Control: no-cache,max-age=0
+Content-Length: 890
+Content-Type: application/atom+xml
+From: googlebot(at)googlebot.com
+Link: <https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCoW3NnFgnDATwU9eUOswisg>; rel=self, <http://pubsubhubbub.appspot.com/>; rel=hub
+Pragma: no-cache
+User-Agent: FeedFetcher-Google; (+http://www.google.com/feedfetcher.html)
+Via: 1.1 Caddy
+X-Forwarded-For: 74.125.209.33
+X-Forwarded-Host: sharpen.live
+X-Forwarded-Proto: https
+X-Hub-Signature: sha1=0740d0f0a310af04973c6cd039e4d97cf00f39a4
+X-Request-Id: {http.request.id}
+
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:yt="http://www.youtube.com/xml/schemas/2015" xmlns="http://www.w3.org/2005/Atom"><link rel="hub" href="https://pubsubhubbub.appspot.com"/><link rel="self" href="https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCoW3NnFgnDATwU9eUOswisg"/><title>YouTube video feed</title><updated>2025-11-21T19:18:21.891277154+00:00</updated><entry>
+  <id>yt:video:N9i1GpcW5OQ</id>
+  <yt:videoId>N9i1GpcW5OQ</yt:videoId>
+  <yt:channelId>UCoW3NnFgnDATwU9eUOswisg</yt:channelId>
+  <title>Magic Moments with Arnaldo!</title>
+  <link rel="alternate" href="https://www.youtube.com/watch?v=N9i1GpcW5OQ"/>
+  <author>
+   <name>Arnaldo Mangini</name>
+   <uri>https://www.youtube.com/channel/UCoW3NnFgnDATwU9eUOswisg</uri>
+  </author>
+  <published>2025-11-21T19:18:19+00:00</published>
+  <updated>2025-11-21T19:18:21.891277154+00:00</updated>
+ </entry></feed>
+
+2025/11/22 07:28:27 Fetching live metadata for 1 video(s): N9i1GpcW5OQ
+
+2025/11/22 07:28:27 Requesting watch page for N9i1GpcW5OQ: https://www.youtube.com/watch?v=N9i1GpcW5OQ
+
+2025/11/22 07:28:27 Fetch for video N9i1GpcW5OQ failed: Get "https://www.youtube.com/watch?v=N9i1GpcW5OQ": context canceled
+
+2025/11/22 07:28:27 failed to fetch live metadata for videos N9i1GpcW5OQ: video lookup failed: fetch N9i1GpcW5OQ: Get "https://www.youtube.com/watch?v=N9i1GpcW5OQ": context canceled
+
+2025/11/22 07:28:27 ---- Response for POST /alerts (202 Accepted) ----
+
+2025/11/22 07:38:28 ---- Incoming request from 127.0.0.1:58672 ----
+POST /alerts HTTP/1.1
+Host: sharpen.live
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Cache-Control: no-cache,max-age=0
+Content-Length: 890
+Content-Type: application/atom+xml
+From: googlebot(at)googlebot.com
+Link: <https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCoW3NnFgnDATwU9eUOswisg>; rel=self, <http://pubsubhubbub.appspot.com/>; rel=hub
+Pragma: no-cache
+User-Agent: FeedFetcher-Google; (+http://www.google.com/feedfetcher.html)
+Via: 1.1 Caddy
+X-Forwarded-For: 66.102.8.101
+X-Forwarded-Host: sharpen.live
+X-Forwarded-Proto: https
+X-Hub-Signature: sha1=7dccd8600304774c71892bb7bd7cab7038dc3aa5
+X-Request-Id: {http.request.id}
+
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:yt="http://www.youtube.com/xml/schemas/2015" xmlns="http://www.w3.org/2005/Atom"><link rel="hub" href="https://pubsubhubbub.appspot.com"/><link rel="self" href="https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCoW3NnFgnDATwU9eUOswisg"/><title>YouTube video feed</title><updated>2025-11-21T19:33:26.085228365+00:00</updated><entry>
+  <id>yt:video:N9i1GpcW5OQ</id>
+  <yt:videoId>N9i1GpcW5OQ</yt:videoId>
+  <yt:channelId>UCoW3NnFgnDATwU9eUOswisg</yt:channelId>
+  <title>Magic Moments with Arnaldo!</title>
+  <link rel="alternate" href="https://www.youtube.com/watch?v=N9i1GpcW5OQ"/>
+  <author>
+   <name>Arnaldo Mangini</name>
+   <uri>https://www.youtube.com/channel/UCoW3NnFgnDATwU9eUOswisg</uri>
+  </author>
+  <published>2025-11-21T19:18:19+00:00</published>
+  <updated>2025-11-21T19:33:26.085228365+00:00</updated>
+ </entry></feed>
+
+2025/11/22 07:38:28 Fetching live metadata for 1 video(s): N9i1GpcW5OQ
+
+2025/11/22 07:38:28 Requesting watch page for N9i1GpcW5OQ: https://www.youtube.com/watch?v=N9i1GpcW5OQ
+
+2025/11/22 07:38:28 Fetch for video N9i1GpcW5OQ failed: Get "https://www.youtube.com/watch?v=N9i1GpcW5OQ": context canceled
+
+2025/11/22 07:38:28 failed to fetch live metadata for videos N9i1GpcW5OQ: video lookup failed: fetch N9i1GpcW5OQ: Get "https://www.youtube.com/watch?v=N9i1GpcW5OQ": context canceled
+
+2025/11/22 07:38:28 ---- Response for POST /alerts (202 Accepted) ----
+
+2025/11/22 07:38:29 ---- Incoming request from 127.0.0.1:58677 ----
+POST /alerts HTTP/1.1
+Host: sharpen.live
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Cache-Control: no-cache,max-age=0
+Content-Length: 893
+Content-Type: application/atom+xml
+From: googlebot(at)googlebot.com
+Link: <https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCoW3NnFgnDATwU9eUOswisg>; rel=self, <http://pubsubhubbub.appspot.com/>; rel=hub
+Pragma: no-cache
+User-Agent: FeedFetcher-Google; (+http://www.google.com/feedfetcher.html)
+Via: 1.1 Caddy
+X-Forwarded-For: 66.102.6.73
+X-Forwarded-Host: sharpen.live
+X-Forwarded-Proto: https
+X-Hub-Signature: sha1=c034ecafcb58a6aaec27e5c8153d4d27bfc5322e
+X-Request-Id: {http.request.id}
+
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:yt="http://www.youtube.com/xml/schemas/2015" xmlns="http://www.w3.org/2005/Atom"><link rel="hub" href="https://pubsubhubbub.appspot.com"/><link rel="self" href="https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCoW3NnFgnDATwU9eUOswisg"/><title>YouTube video feed</title><updated>2025-11-21T19:34:05.392765705+00:00</updated><entry>
+  <id>yt:video:Cs1vvrBVddI</id>
+  <yt:videoId>Cs1vvrBVddI</yt:videoId>
+  <yt:channelId>UCoW3NnFgnDATwU9eUOswisg</yt:channelId>
+  <title>Magic Moments with Arnaldo🔥</title>
+  <link rel="alternate" href="https://www.youtube.com/watch?v=Cs1vvrBVddI"/>
+  <author>
+   <name>Arnaldo Mangini</name>
+   <uri>https://www.youtube.com/channel/UCoW3NnFgnDATwU9eUOswisg</uri>
+  </author>
+  <published>2025-11-21T19:17:14+00:00</published>
+  <updated>2025-11-21T19:34:05.392765705+00:00</updated>
+ </entry></feed>
+
+2025/11/22 07:38:29 Fetching live metadata for 1 video(s): Cs1vvrBVddI
+
+2025/11/22 07:38:29 Requesting watch page for Cs1vvrBVddI: https://www.youtube.com/watch?v=Cs1vvrBVddI
+
+2025/11/22 07:38:29 Fetch for video Cs1vvrBVddI failed: Get "https://www.youtube.com/watch?v=Cs1vvrBVddI": context canceled
+
+2025/11/22 07:38:29 failed to fetch live metadata for videos Cs1vvrBVddI: video lookup failed: fetch Cs1vvrBVddI: Get "https://www.youtube.com/watch?v=Cs1vvrBVddI": context canceled
+
+2025/11/22 07:38:29 ---- Response for POST /alerts (202 Accepted) ----
+
+2025/11/22 07:38:37 ---- Response for GET /admin/logs (200 OK) ----
+data: ---- Incoming request from 127.0.0.1:63663 ----
+GET /admin/logs?token=08fd4f3d036e671a5160addd3f07585f388f76e5345297aee4d260ef04572515 HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: text/event-stream
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Cache-Control: no-cache
+Referer: http://127.0.0.1:4173/admin/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+
+data: ---- Response for GET /admin/logs (200 OK) ----
+data: ---- Incoming request from 127.0.0.1:63663 ----
+GET /admin/logs?token=08fd4f3d036e671a5160addd3f07585f388f76e5345297aee4d260ef04572515 HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: text/event-stream
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Cache-Control: no-cache
+Referer: http://127.0.0.1:4173/admin/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+
+
+
+data: ---- Incoming request from 127.0.0.1:63741 ----
+GET /api/admin/monitor/youtube HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Authorization: Bearer 08fd4f3d036e671a5160addd3f07585f388f76e5345297aee4d260ef04572515
+Referer: http://127.0.0.1:4173/admin/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+
+data: ---- Response for GET /api/admin/monitor/youtube (401 Unauthorized) ----
+unauthorized
+
+
+data: ---- Incoming request from 127.0.0.1:63741 ----
+POST /api/admin/login HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Content-Length: 52
+Content-Type: application/json
+Origin: http://127.0.0.1:4173
+Referer: http://127.0.0.1:4173/admin/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+{"email":"admin@sharpen.live","password":"chane-me"}
+
+data: ---- Response for POST /api/admin/login (401 Unauthorized) ----
+invalid credentials
+
+
+data: ---- Incoming request from 127.0.0.1:63741 ----
+POST /api/admin/login HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Content-Length: 53
+Content-Type: application/json
+Origin: http://127.0.0.1:4173
+Referer: http://127.0.0.1:4173/admin/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+{"email":"admin@sharpen.live","password":"change-me"}
+
+data: ---- Response for POST /api/admin/login (200 OK) ----
+{"token":"379bf4636912d904837b81e86dbb39c1c1299894e80f210d9a42e6da57c597fe","expiresAt":"2025-11-22T14:25:17Z"}
+
+
+data: ---- Incoming request from 127.0.
+-- response truncated after 4096 bytes --
+
+2025/11/22 07:38:38 ---- Incoming request from 127.0.0.1:58728 ----
+GET /api/admin/submissions HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Authorization: Bearer 379bf4636912d904837b81e86dbb39c1c1299894e80f210d9a42e6da57c597fe
+Referer: http://127.0.0.1:4173/admin/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/22 07:38:38 ---- Response for GET /api/admin/submissions (200 OK) ----
+{"submissions":[]}
+
+2025/11/22 07:38:40 ---- Incoming request from 127.0.0.1:58728 ----
+GET /admin/logs?token=379bf4636912d904837b81e86dbb39c1c1299894e80f210d9a42e6da57c597fe HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: text/event-stream
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Cache-Control: no-cache
+Referer: http://127.0.0.1:4173/admin/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/22 08:39:19 ---- Response for GET /admin/logs (200 OK) ----
+data: ---- Incoming request from 127.0.0.1:63663 ----
+GET /admin/logs?token=08fd4f3d036e671a5160addd3f07585f388f76e5345297aee4d260ef04572515 HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: text/event-stream
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Cache-Control: no-cache
+Referer: http://127.0.0.1:4173/admin/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+
+data: ---- Response for GET /admin/logs (200 OK) ----
+data: ---- Incoming request from 127.0.0.1:63663 ----
+GET /admin/logs?token=08fd4f3d036e671a5160addd3f07585f388f76e5345297aee4d260ef04572515 HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: text/event-stream
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Cache-Control: no-cache
+Referer: http://127.0.0.1:4173/admin/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+
+
+
+data: ---- Incoming request from 127.0.0.1:63741 ----
+GET /api/admin/monitor/youtube HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Authorization: Bearer 08fd4f3d036e671a5160addd3f07585f388f76e5345297aee4d260ef04572515
+Referer: http://127.0.0.1:4173/admin/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+
+data: ---- Response for GET /api/admin/monitor/youtube (401 Unauthorized) ----
+unauthorized
+
+
+data: ---- Incoming request from 127.0.0.1:63741 ----
+POST /api/admin/login HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Content-Length: 52
+Content-Type: application/json
+Origin: http://127.0.0.1:4173
+Referer: http://127.0.0.1:4173/admin/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+{"email":"admin@sharpen.live","password":"chane-me"}
+
+data: ---- Response for POST /api/admin/login (401 Unauthorized) ----
+invalid credentials
+
+
+data: ---- Incoming request from 127.0.0.1:63741 ----
+POST /api/admin/login HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Content-Length: 53
+Content-Type: application/json
+Origin: http://127.0.0.1:4173
+Referer: http://127.0.0.1:4173/admin/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+{"email":"admin@sharpen.live","password":"change-me"}
+
+data: ---- Response for POST /api/admin/login (200 OK) ----
+{"token":"379bf4636912d904837b81e86dbb39c1c1299894e80f210d9a42e6da57c597fe","expiresAt":"2025-11-22T14:25:17Z"}
+
+
+data: ---- Incoming request from 127.0.
+-- response truncated after 4096 bytes --
+
+2025/11/22 08:39:21 ---- Incoming request from 127.0.0.1:60098 ----
+GET /api/admin/submissions HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Authorization: Bearer 379bf4636912d904837b81e86dbb39c1c1299894e80f210d9a42e6da57c597fe
+Referer: http://127.0.0.1:4173/admin/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/22 08:39:21 ---- Response for GET /api/admin/submissions (200 OK) ----
+{"submissions":[]}
+
+2025/11/22 08:39:22 ---- Incoming request from 127.0.0.1:60098 ----
+GET /admin/logs?token=379bf4636912d904837b81e86dbb39c1c1299894e80f210d9a42e6da57c597fe HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: text/event-stream
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Cache-Control: no-cache
+Referer: http://127.0.0.1:4173/admin/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/22 08:56:22 ---- Incoming request from 127.0.0.1:60482 ----
+POST /alerts HTTP/1.1
+Host: sharpen.live
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Cache-Control: no-cache,max-age=0
+Content-Length: 893
+Content-Type: application/atom+xml
+From: googlebot(at)googlebot.com
+Link: <https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCoW3NnFgnDATwU9eUOswisg>; rel=self, <http://pubsubhubbub.appspot.com/>; rel=hub
+Pragma: no-cache
+User-Agent: FeedFetcher-Google; (+http://www.google.com/feedfetcher.html)
+Via: 1.1 Caddy
+X-Forwarded-For: 66.102.8.102
+X-Forwarded-Host: sharpen.live
+X-Forwarded-Proto: https
+X-Hub-Signature: sha1=d90df2e017a72990b2953f744d56f4a16fd65034
+X-Request-Id: {http.request.id}
+
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:yt="http://www.youtube.com/xml/schemas/2015" xmlns="http://www.w3.org/2005/Atom"><link rel="hub" href="https://pubsubhubbub.appspot.com"/><link rel="self" href="https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCoW3NnFgnDATwU9eUOswisg"/><title>YouTube video feed</title><updated>2025-11-21T21:43:53.939536125+00:00</updated><entry>
+  <id>yt:video:Cs1vvrBVddI</id>
+  <yt:videoId>Cs1vvrBVddI</yt:videoId>
+  <yt:channelId>UCoW3NnFgnDATwU9eUOswisg</yt:channelId>
+  <title>Magic Moments with Arnaldo🔥</title>
+  <link rel="alternate" href="https://www.youtube.com/watch?v=Cs1vvrBVddI"/>
+  <author>
+   <name>Arnaldo Mangini</name>
+   <uri>https://www.youtube.com/channel/UCoW3NnFgnDATwU9eUOswisg</uri>
+  </author>
+  <published>2025-11-21T19:17:14+00:00</published>
+  <updated>2025-11-21T21:43:53.939536125+00:00</updated>
+ </entry></feed>
+
+2025/11/22 08:56:22 ---- Incoming request from 127.0.0.1:60487 ----
+POST /alerts HTTP/1.1
+Host: sharpen.live
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Cache-Control: no-cache,max-age=0
+Content-Length: 890
+Content-Type: application/atom+xml
+From: googlebot(at)googlebot.com
+Link: <https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCoW3NnFgnDATwU9eUOswisg>; rel=self, <http://pubsubhubbub.appspot.com/>; rel=hub
+Pragma: no-cache
+User-Agent: FeedFetcher-Google; (+http://www.google.com/feedfetcher.html)
+Via: 1.1 Caddy
+X-Forwarded-For: 66.102.8.101
+X-Forwarded-Host: sharpen.live
+X-Forwarded-Proto: https
+X-Hub-Signature: sha1=c6b005c51b11c0e7d734f8a62bda3a5714637d16
+X-Request-Id: {http.request.id}
+
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:yt="http://www.youtube.com/xml/schemas/2015" xmlns="http://www.w3.org/2005/Atom"><link rel="hub" href="https://pubsubhubbub.appspot.com"/><link rel="self" href="https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCoW3NnFgnDATwU9eUOswisg"/><title>YouTube video feed</title><updated>2025-11-21T21:43:57.693048491+00:00</updated><entry>
+  <id>yt:video:N9i1GpcW5OQ</id>
+  <yt:videoId>N9i1GpcW5OQ</yt:videoId>
+  <yt:channelId>UCoW3NnFgnDATwU9eUOswisg</yt:channelId>
+  <title>Magic Moments with Arnaldo!</title>
+  <link rel="alternate" href="https://www.youtube.com/watch?v=N9i1GpcW5OQ"/>
+  <author>
+   <name>Arnaldo Mangini</name>
+   <uri>https://www.youtube.com/channel/UCoW3NnFgnDATwU9eUOswisg</uri>
+  </author>
+  <published>2025-11-21T19:18:19+00:00</published>
+  <updated>2025-11-21T21:43:57.693048491+00:00</updated>
+ </entry></feed>
+
+2025/11/22 08:56:22 ---- Incoming request from 127.0.0.1:60488 ----
+POST /alerts HTTP/1.1
+Host: sharpen.live
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Cache-Control: no-cache,max-age=0
+Content-Length: 939
+Content-Type: application/atom+xml
+From: googlebot(at)googlebot.com
+Link: <https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCFSlI8Y3Zdoq5buNW_40AAA>; rel=self, <http://pubsubhubbub.appspot.com/>; rel=hub
+Pragma: no-cache
+User-Agent: FeedFetcher-Google; (+http://www.google.com/feedfetcher.html)
+Via: 1.1 Caddy
+X-Forwarded-For: 66.102.6.74
+X-Forwarded-Host: sharpen.live
+X-Forwarded-Proto: https
+X-Hub-Signature: sha1=17fc6c680c386746c07ab18cbf3fde9e85cb1693
+X-Request-Id: {http.request.id}
+
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:yt="http://www.youtube.com/xml/schemas/2015" xmlns="http://www.w3.org/2005/Atom"><link rel="hub" href="https://pubsubhubbub.appspot.com"/><link rel="self" href="https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCFSlI8Y3Zdoq5buNW_40AAA"/><title>YouTube video feed</title><updated>2025-11-21T18:45:25.233623396+00:00</updated><entry>
+  <id>yt:video:GoXi_xJu2gE</id>
+  <yt:videoId>GoXi_xJu2gE</yt:videoId>
+  <yt:channelId>UCFSlI8Y3Zdoq5buNW_40AAA</yt:channelId>
+  <title>LIVE : KAREN READ Status Conference in Civil Case of O'Keefes v Read</title>
+  <link rel="alternate" href="https://www.youtube.com/watch?v=GoXi_xJu2gE"/>
+  <author>
+   <name>Attorney Melanie Little</name>
+   <uri>https://www.youtube.com/channel/UCFSlI8Y3Zdoq5buNW_40AAA</uri>
+  </author>
+  <published>2025-11-20T20:17:17+00:00</published>
+  <updated>2025-11-21T18:45:25.233623396+00:00</updated>
+ </entry></feed>
+
+2025/11/22 08:56:22 Fetching live metadata for 1 video(s): GoXi_xJu2gE
+
+2025/11/22 08:56:22 Requesting watch page for GoXi_xJu2gE: https://www.youtube.com/watch?v=GoXi_xJu2gE
+
+2025/11/22 08:56:22 Fetching live metadata for 1 video(s): Cs1vvrBVddI
+
+2025/11/22 08:56:22 Requesting watch page for Cs1vvrBVddI: https://www.youtube.com/watch?v=Cs1vvrBVddI
+
+2025/11/22 08:56:22 Fetching live metadata for 1 video(s): N9i1GpcW5OQ
+
+2025/11/22 08:56:22 Requesting watch page for N9i1GpcW5OQ: https://www.youtube.com/watch?v=N9i1GpcW5OQ
+
+2025/11/22 08:56:22 Fetch for video Cs1vvrBVddI failed: Get "https://www.youtube.com/watch?v=Cs1vvrBVddI": context canceled
+
+2025/11/22 08:56:22 failed to fetch live metadata for videos Cs1vvrBVddI: video lookup failed: fetch Cs1vvrBVddI: Get "https://www.youtube.com/watch?v=Cs1vvrBVddI": context canceled
+
+2025/11/22 08:56:22 ---- Response for POST /alerts (202 Accepted) ----
+
+2025/11/22 08:56:22 ---- Incoming request from 127.0.0.1:60489 ----
+POST /alerts HTTP/1.1
+Host: sharpen.live
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Cache-Control: no-cache,max-age=0
+Content-Length: 939
+Content-Type: application/atom+xml
+From: googlebot(at)googlebot.com
+Link: <https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCFSlI8Y3Zdoq5buNW_40AAA>; rel=self, <http://pubsubhubbub.appspot.com/>; rel=hub
+Pragma: no-cache
+User-Agent: FeedFetcher-Google; (+http://www.google.com/feedfetcher.html)
+Via: 1.1 Caddy
+X-Forwarded-For: 66.102.8.102
+X-Forwarded-Host: sharpen.live
+X-Forwarded-Proto: https
+X-Hub-Signature: sha1=1e9a86a0d8f201625fbb5d39ebc266e43b42afa8
+X-Request-Id: {http.request.id}
+
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:yt="http://www.youtube.com/xml/schemas/2015" xmlns="http://www.w3.org/2005/Atom"><link rel="hub" href="https://pubsubhubbub.appspot.com"/><link rel="self" href="https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCFSlI8Y3Zdoq5buNW_40AAA"/><title>YouTube video feed</title><updated>2025-11-21T18:46:15.180756664+00:00</updated><entry>
+  <id>yt:video:GoXi_xJu2gE</id>
+  <yt:videoId>GoXi_xJu2gE</yt:videoId>
+  <yt:channelId>UCFSlI8Y3Zdoq5buNW_40AAA</yt:channelId>
+  <title>LIVE : KAREN READ Status Conference in Civil Case of O'Keefes v Read</title>
+  <link rel="alternate" href="https://www.youtube.com/watch?v=GoXi_xJu2gE"/>
+  <author>
+   <name>Attorney Melanie Little</name>
+   <uri>https://www.youtube.com/channel/UCFSlI8Y3Zdoq5buNW_40AAA</uri>
+  </author>
+  <published>2025-11-20T20:17:17+00:00</published>
+  <updated>2025-11-21T18:46:15.180756664+00:00</updated>
+ </entry></feed>
+
+2025/11/22 08:56:22 ---- Incoming request from 127.0.0.1:60493 ----
+POST /alerts HTTP/1.1
+Host: sharpen.live
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Cache-Control: no-cache,max-age=0
+Content-Length: 939
+Content-Type: application/atom+xml
+From: googlebot(at)googlebot.com
+Link: <https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCFSlI8Y3Zdoq5buNW_40AAA>; rel=self, <http://pubsubhubbub.appspot.com/>; rel=hub
+Pragma: no-cache
+User-Agent: FeedFetcher-Google; (+http://www.google.com/feedfetcher.html)
+Via: 1.1 Caddy
+X-Forwarded-For: 66.102.6.74
+X-Forwarded-Host: sharpen.live
+X-Forwarded-Proto: https
+X-Hub-Signature: sha1=574412390f58111cc6075c6f67e87c03e34264cc
+X-Request-Id: {http.request.id}
+
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:yt="http://www.youtube.com/xml/schemas/2015" xmlns="http://www.w3.org/2005/Atom"><link rel="hub" href="https://pubsubhubbub.appspot.com"/><link rel="self" href="https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCFSlI8Y3Zdoq5buNW_40AAA"/><title>YouTube video feed</title><updated>2025-11-21T20:54:13.090280408+00:00</updated><entry>
+  <id>yt:video:GoXi_xJu2gE</id>
+  <yt:videoId>GoXi_xJu2gE</yt:videoId>
+  <yt:channelId>UCFSlI8Y3Zdoq5buNW_40AAA</yt:channelId>
+  <title>LIVE : KAREN READ Status Conference in Civil Case of O'Keefes v Read</title>
+  <link rel="alternate" href="https://www.youtube.com/watch?v=GoXi_xJu2gE"/>
+  <author>
+   <name>Attorney Melanie Little</name>
+   <uri>https://www.youtube.com/channel/UCFSlI8Y3Zdoq5buNW_40AAA</uri>
+  </author>
+  <published>2025-11-21T20:53:55+00:00</published>
+  <updated>2025-11-21T20:54:13.090280408+00:00</updated>
+ </entry></feed>
+
+2025/11/22 08:56:22 Fetching live metadata for 1 video(s): GoXi_xJu2gE
+
+2025/11/22 08:56:22 Requesting watch page for GoXi_xJu2gE: https://www.youtube.com/watch?v=GoXi_xJu2gE
+
+2025/11/22 08:56:22 ---- Incoming request from 127.0.0.1:60490 ----
+POST /alerts HTTP/1.1
+Host: sharpen.live
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Cache-Control: no-cache,max-age=0
+Content-Length: 939
+Content-Type: application/atom+xml
+From: googlebot(at)googlebot.com
+Link: <https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCFSlI8Y3Zdoq5buNW_40AAA>; rel=self, <http://pubsubhubbub.appspot.com/>; rel=hub
+Pragma: no-cache
+User-Agent: FeedFetcher-Google; (+http://www.google.com/feedfetcher.html)
+Via: 1.1 Caddy
+X-Forwarded-For: 66.102.8.101
+X-Forwarded-Host: sharpen.live
+X-Forwarded-Proto: https
+X-Hub-Signature: sha1=b1a6289eecc36cbb2b9c92aecb47a760f4d52eb8
+X-Request-Id: {http.request.id}
+
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:yt="http://www.youtube.com/xml/schemas/2015" xmlns="http://www.w3.org/2005/Atom"><link rel="hub" href="https://pubsubhubbub.appspot.com"/><link rel="self" href="https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCFSlI8Y3Zdoq5buNW_40AAA"/><title>YouTube video feed</title><updated>2025-11-21T18:46:20.419808804+00:00</updated><entry>
+  <id>yt:video:GoXi_xJu2gE</id>
+  <yt:videoId>GoXi_xJu2gE</yt:videoId>
+  <yt:channelId>UCFSlI8Y3Zdoq5buNW_40AAA</yt:channelId>
+  <title>LIVE : KAREN READ Status Conference in Civil Case of O'Keefes v Read</title>
+  <link rel="alternate" href="https://www.youtube.com/watch?v=GoXi_xJu2gE"/>
+  <author>
+   <name>Attorney Melanie Little</name>
+   <uri>https://www.youtube.com/channel/UCFSlI8Y3Zdoq5buNW_40AAA</uri>
+  </author>
+  <published>2025-11-20T20:17:17+00:00</published>
+  <updated>2025-11-21T18:46:20.419808804+00:00</updated>
+ </entry></feed>
+
+2025/11/22 08:56:22 Fetching live metadata for 1 video(s): GoXi_xJu2gE
+
+2025/11/22 08:56:22 Requesting watch page for GoXi_xJu2gE: https://www.youtube.com/watch?v=GoXi_xJu2gE
+
+2025/11/22 08:56:22 ---- Incoming request from 127.0.0.1:60492 ----
+POST /alerts HTTP/1.1
+Host: sharpen.live
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Cache-Control: no-cache,max-age=0
+Content-Length: 890
+Content-Type: application/atom+xml
+From: googlebot(at)googlebot.com
+Link: <https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCoW3NnFgnDATwU9eUOswisg>; rel=self, <http://pubsubhubbub.appspot.com/>; rel=hub
+Pragma: no-cache
+User-Agent: FeedFetcher-Google; (+http://www.google.com/feedfetcher.html)
+Via: 1.1 Caddy
+X-Forwarded-For: 66.102.8.102
+X-Forwarded-Host: sharpen.live
+X-Forwarded-Proto: https
+X-Hub-Signature: sha1=272958a7f325e952df0a20a14760c3e63a09edee
+X-Request-Id: {http.request.id}
+
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:yt="http://www.youtube.com/xml/schemas/2015" xmlns="http://www.w3.org/2005/Atom"><link rel="hub" href="https://pubsubhubbub.appspot.com"/><link rel="self" href="https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCoW3NnFgnDATwU9eUOswisg"/><title>YouTube video feed</title><updated>2025-11-21T21:52:59.135186177+00:00</updated><entry>
+  <id>yt:video:N9i1GpcW5OQ</id>
+  <yt:videoId>N9i1GpcW5OQ</yt:videoId>
+  <yt:channelId>UCoW3NnFgnDATwU9eUOswisg</yt:channelId>
+  <title>Magic Moments with Arnaldo!</title>
+  <link rel="alternate" href="https://www.youtube.com/watch?v=N9i1GpcW5OQ"/>
+  <author>
+   <name>Arnaldo Mangini</name>
+   <uri>https://www.youtube.com/channel/UCoW3NnFgnDATwU9eUOswisg</uri>
+  </author>
+  <published>2025-11-21T21:52:56+00:00</published>
+  <updated>2025-11-21T21:52:59.135186177+00:00</updated>
+ </entry></feed>
+
+2025/11/22 08:56:22 ---- Incoming request from 127.0.0.1:60491 ----
+POST /alerts HTTP/1.1
+Host: sharpen.live
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Cache-Control: no-cache,max-age=0
+Content-Length: 939
+Content-Type: application/atom+xml
+From: googlebot(at)googlebot.com
+Link: <https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCFSlI8Y3Zdoq5buNW_40AAA>; rel=self, <http://pubsubhubbub.appspot.com/>; rel=hub
+Pragma: no-cache
+User-Agent: FeedFetcher-Google; (+http://www.google.com/feedfetcher.html)
+Via: 1.1 Caddy
+X-Forwarded-For: 66.102.6.72
+X-Forwarded-Host: sharpen.live
+X-Forwarded-Proto: https
+X-Hub-Signature: sha1=74952a0e55d0c84a5d70088084249a514ce08dae
+X-Request-Id: {http.request.id}
+
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:yt="http://www.youtube.com/xml/schemas/2015" xmlns="http://www.w3.org/2005/Atom"><link rel="hub" href="https://pubsubhubbub.appspot.com"/><link rel="self" href="https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCFSlI8Y3Zdoq5buNW_40AAA"/><title>YouTube video feed</title><updated>2025-11-21T20:47:23.170607734+00:00</updated><entry>
+  <id>yt:video:GoXi_xJu2gE</id>
+  <yt:videoId>GoXi_xJu2gE</yt:videoId>
+  <yt:channelId>UCFSlI8Y3Zdoq5buNW_40AAA</yt:channelId>
+  <title>LIVE : KAREN READ Status Conference in Civil Case of O'Keefes v Read</title>
+  <link rel="alternate" href="https://www.youtube.com/watch?v=GoXi_xJu2gE"/>
+  <author>
+   <name>Attorney Melanie Little</name>
+   <uri>https://www.youtube.com/channel/UCFSlI8Y3Zdoq5buNW_40AAA</uri>
+  </author>
+  <published>2025-11-20T20:17:17+00:00</published>
+  <updated>2025-11-21T20:47:23.170607734+00:00</updated>
+ </entry></feed>
+
+2025/11/22 08:56:22 Fetching live metadata for 1 video(s): GoXi_xJu2gE
+
+2025/11/22 08:56:22 Requesting watch page for GoXi_xJu2gE: https://www.youtube.com/watch?v=GoXi_xJu2gE
+
+2025/11/22 08:56:22 Fetching live metadata for 1 video(s): GoXi_xJu2gE
+
+2025/11/22 08:56:22 Fetching live metadata for 1 video(s): N9i1GpcW5OQ
+
+2025/11/22 08:56:22 Requesting watch page for N9i1GpcW5OQ: https://www.youtube.com/watch?v=N9i1GpcW5OQ
+
+2025/11/22 08:56:22 Requesting watch page for GoXi_xJu2gE: https://www.youtube.com/watch?v=GoXi_xJu2gE
+
+2025/11/22 08:56:23 Fetch for video N9i1GpcW5OQ failed: context canceled
+
+2025/11/22 08:56:23 failed to fetch live metadata for videos N9i1GpcW5OQ: video lookup failed: fetch N9i1GpcW5OQ: context canceled
+
+2025/11/22 08:56:23 Fetch for video GoXi_xJu2gE failed: context canceled
+
+2025/11/22 08:56:23 failed to fetch live metadata for videos GoXi_xJu2gE: video lookup failed: fetch GoXi_xJu2gE: context canceled
+
+2025/11/22 08:56:23 Fetch for video GoXi_xJu2gE failed: Get "https://www.youtube.com/watch?v=GoXi_xJu2gE": context canceled
+
+2025/11/22 08:56:23 ---- Response for POST /alerts (202 Accepted) ----
+
+2025/11/22 08:56:23 Fetch for video GoXi_xJu2gE failed: Get "https://www.youtube.com/watch?v=GoXi_xJu2gE": context canceled
+
+2025/11/22 08:56:23 failed to fetch live metadata for videos GoXi_xJu2gE: video lookup failed: fetch GoXi_xJu2gE: Get "https://www.youtube.com/watch?v=GoXi_xJu2gE": context canceled
+
+2025/11/22 08:56:23 Fetch for video GoXi_xJu2gE failed: context canceled
+
+2025/11/22 08:56:23 Fetch for video N9i1GpcW5OQ failed: Get "https://www.youtube.com/watch?v=N9i1GpcW5OQ": context canceled
+
+2025/11/22 08:56:23 Fetch for video GoXi_xJu2gE failed: context canceled
+
+2025/11/22 08:56:23 ---- Incoming request from 127.0.0.1:60494 ----
+POST /alerts HTTP/1.1
+Host: sharpen.live
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Cache-Control: no-cache,max-age=0
+Content-Length: 937
+Content-Type: application/atom+xml
+From: googlebot(at)googlebot.com
+Link: <https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCFSlI8Y3Zdoq5buNW_40AAA>; rel=self, <http://pubsubhubbub.appspot.com/>; rel=hub
+Pragma: no-cache
+User-Agent: FeedFetcher-Google; (+http://www.google.com/feedfetcher.html)
+Via: 1.1 Caddy
+X-Forwarded-For: 66.102.6.72
+X-Forwarded-Host: sharpen.live
+X-Forwarded-Proto: https
+X-Hub-Signature: sha1=e1859a37f62854f84b358e6aee90e5c85433e981
+X-Request-Id: {http.request.id}
+
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:yt="http://www.youtube.com/xml/schemas/2015" xmlns="http://www.w3.org/2005/Atom"><link rel="hub" href="https://pubsubhubbub.appspot.com"/><link rel="self" href="https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCFSlI8Y3Zdoq5buNW_40AAA"/><title>YouTube video feed</title><updated>2025-11-21T20:54:13.92437948+00:00</updated><entry>
+  <id>yt:video:GoXi_xJu2gE</id>
+  <yt:videoId>GoXi_xJu2gE</yt:videoId>
+  <yt:channelId>UCFSlI8Y3Zdoq5buNW_40AAA</yt:channelId>
+  <title>LIVE : KAREN READ Status Conference in Civil Case of O'Keefes v Read</title>
+  <link rel="alternate" href="https://www.youtube.com/watch?v=GoXi_xJu2gE"/>
+  <author>
+   <name>Attorney Melanie Little</name>
+   <uri>https://www.youtube.com/channel/UCFSlI8Y3Zdoq5buNW_40AAA</uri>
+  </author>
+  <published>2025-11-21T20:53:55+00:00</published>
+  <updated>2025-11-21T20:54:13.92437948+00:00</updated>
+ </entry></feed>
+
+2025/11/22 08:56:23 ---- Response for POST /alerts (202 Accepted) ----
+
+2025/11/22 08:56:23 failed to fetch live metadata for videos GoXi_xJu2gE: video lookup failed: fetch GoXi_xJu2gE: Get "https://www.youtube.com/watch?v=GoXi_xJu2gE": context canceled
+
+2025/11/22 08:56:23 ---- Response for POST /alerts (202 Accepted) ----
+
+2025/11/22 08:56:23 failed to fetch live metadata for videos GoXi_xJu2gE: video lookup failed: fetch GoXi_xJu2gE: context canceled
+
+2025/11/22 08:56:23 failed to fetch live metadata for videos N9i1GpcW5OQ: video lookup failed: fetch N9i1GpcW5OQ: Get "https://www.youtube.com/watch?v=N9i1GpcW5OQ": context canceled
+
+2025/11/22 08:56:23 failed to fetch live metadata for videos GoXi_xJu2gE: video lookup failed: fetch GoXi_xJu2gE: context canceled
+
+2025/11/22 08:56:23 ---- Response for POST /alerts (202 Accepted) ----
+
+2025/11/22 08:56:23 Fetching live metadata for 1 video(s): GoXi_xJu2gE
+
+2025/11/22 08:56:23 ---- Response for POST /alerts (202 Accepted) ----
+
+2025/11/22 08:56:23 ---- Response for POST /alerts (202 Accepted) ----
+
+2025/11/22 08:56:23 Requesting watch page for GoXi_xJu2gE: https://www.youtube.com/watch?v=GoXi_xJu2gE
+
+2025/11/22 08:56:23 ---- Response for POST /alerts (202 Accepted) ----
+
+2025/11/22 08:56:23 Fetch for video GoXi_xJu2gE failed: Get "https://www.youtube.com/watch?v=GoXi_xJu2gE": context canceled
+
+2025/11/22 08:56:23 failed to fetch live metadata for videos GoXi_xJu2gE: video lookup failed: fetch GoXi_xJu2gE: Get "https://www.youtube.com/watch?v=GoXi_xJu2gE": context canceled
+
+2025/11/22 08:56:23 ---- Response for POST /alerts (202 Accepted) ----
+
+2025/11/22 09:40:05 ---- Response for GET /admin/logs (200 OK) ----
+data: ---- Incoming request from 127.0.0.1:63663 ----
+GET /admin/logs?token=08fd4f3d036e671a5160addd3f07585f388f76e5345297aee4d260ef04572515 HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: text/event-stream
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Cache-Control: no-cache
+Referer: http://127.0.0.1:4173/admin/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+
+data: ---- Response for GET /admin/logs (200 OK) ----
+data: ---- Incoming request from 127.0.0.1:63663 ----
+GET /admin/logs?token=08fd4f3d036e671a5160addd3f07585f388f76e5345297aee4d260ef04572515 HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: text/event-stream
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Cache-Control: no-cache
+Referer: http://127.0.0.1:4173/admin/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+
+
+
+data: ---- Incoming request from 127.0.0.1:63741 ----
+GET /api/admin/monitor/youtube HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Authorization: Bearer 08fd4f3d036e671a5160addd3f07585f388f76e5345297aee4d260ef04572515
+Referer: http://127.0.0.1:4173/admin/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+
+data: ---- Response for GET /api/admin/monitor/youtube (401 Unauthorized) ----
+unauthorized
+
+
+data: ---- Incoming request from 127.0.0.1:63741 ----
+POST /api/admin/login HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Content-Length: 52
+Content-Type: application/json
+Origin: http://127.0.0.1:4173
+Referer: http://127.0.0.1:4173/admin/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+{"email":"admin@sharpen.live","password":"chane-me"}
+
+data: ---- Response for POST /api/admin/login (401 Unauthorized) ----
+invalid credentials
+
+
+data: ---- Incoming request from 127.0.0.1:63741 ----
+POST /api/admin/login HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Content-Length: 53
+Content-Type: application/json
+Origin: http://127.0.0.1:4173
+Referer: http://127.0.0.1:4173/admin/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+{"email":"admin@sharpen.live","password":"change-me"}
+
+data: ---- Response for POST /api/admin/login (200 OK) ----
+{"token":"379bf4636912d904837b81e86dbb39c1c1299894e80f210d9a42e6da57c597fe","expiresAt":"2025-11-22T14:25:17Z"}
+
+
+data: ---- Incoming request from 127.0.
+-- response truncated after 4096 bytes --
+
+2025/11/22 09:40:06 ---- Incoming request from 127.0.0.1:61380 ----
+GET /api/admin/submissions HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Authorization: Bearer 379bf4636912d904837b81e86dbb39c1c1299894e80f210d9a42e6da57c597fe
+Referer: http://127.0.0.1:4173/admin/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/22 09:40:06 ---- Response for GET /api/admin/submissions (200 OK) ----
+{"submissions":[]}
+
+2025/11/22 09:40:08 ---- Incoming request from 127.0.0.1:61380 ----
+GET /admin/logs?token=379bf4636912d904837b81e86dbb39c1c1299894e80f210d9a42e6da57c597fe HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: text/event-stream
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Cache-Control: no-cache
+Referer: http://127.0.0.1:4173/admin/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/22 09:59:27 ---- Response for GET /admin/logs (200 OK) ----
+data: ---- Incoming request from 127.0.0.1:63663 ----
+GET /admin/logs?token=08fd4f3d036e671a5160addd3f07585f388f76e5345297aee4d260ef04572515 HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: text/event-stream
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Cache-Control: no-cache
+Referer: http://127.0.0.1:4173/admin/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+
+data: ---- Response for GET /admin/logs (200 OK) ----
+data: ---- Incoming request from 127.0.0.1:63663 ----
+GET /admin/logs?token=08fd4f3d036e671a5160addd3f07585f388f76e5345297aee4d260ef04572515 HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: text/event-stream
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Cache-Control: no-cache
+Referer: http://127.0.0.1:4173/admin/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+
+
+
+data: ---- Incoming request from 127.0.0.1:63741 ----
+GET /api/admin/monitor/youtube HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Authorization: Bearer 08fd4f3d036e671a5160addd3f07585f388f76e5345297aee4d260ef04572515
+Referer: http://127.0.0.1:4173/admin/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+
+data: ---- Response for GET /api/admin/monitor/youtube (401 Unauthorized) ----
+unauthorized
+
+
+data: ---- Incoming request from 127.0.0.1:63741 ----
+POST /api/admin/login HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Content-Length: 52
+Content-Type: application/json
+Origin: http://127.0.0.1:4173
+Referer: http://127.0.0.1:4173/admin/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+{"email":"admin@sharpen.live","password":"chane-me"}
+
+data: ---- Response for POST /api/admin/login (401 Unauthorized) ----
+invalid credentials
+
+
+data: ---- Incoming request from 127.0.0.1:63741 ----
+POST /api/admin/login HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Content-Length: 53
+Content-Type: application/json
+Origin: http://127.0.0.1:4173
+Referer: http://127.0.0.1:4173/admin/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+{"email":"admin@sharpen.live","password":"change-me"}
+
+data: ---- Response for POST /api/admin/login (200 OK) ----
+{"token":"379bf4636912d904837b81e86dbb39c1c1299894e80f210d9a42e6da57c597fe","expiresAt":"2025-11-22T14:25:17Z"}
+
+
+data: ---- Incoming request from 127.0.
+-- response truncated after 4096 bytes --
+
+2025/11/22 09:59:27 ---- Incoming request from 127.0.0.1:61938 ----
+GET /api/admin/submissions HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Authorization: Bearer 379bf4636912d904837b81e86dbb39c1c1299894e80f210d9a42e6da57c597fe
+Referer: http://127.0.0.1:4173/admin/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/22 09:59:27 ---- Response for GET /api/admin/submissions (200 OK) ----
+{"submissions":[]}
+
+2025/11/22 09:59:30 ---- Incoming request from 127.0.0.1:61938 ----
+GET /admin/logs?token=379bf4636912d904837b81e86dbb39c1c1299894e80f210d9a42e6da57c597fe HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: text/event-stream
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Cache-Control: no-cache
+Referer: http://127.0.0.1:4173/admin/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/22 10:16:13 ---- Incoming request from 127.0.0.1:64399 ----
+POST /alerts HTTP/1.1
+Host: sharpen.live
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Cache-Control: no-cache,max-age=0
+Content-Length: 874
+Content-Type: application/atom+xml
+From: googlebot(at)googlebot.com
+Link: <https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCPWknjnQNOwSD15nNh4rhLg>; rel=self, <http://pubsubhubbub.appspot.com/>; rel=hub
+Pragma: no-cache
+User-Agent: FeedFetcher-Google; (+http://www.google.com/feedfetcher.html)
+Via: 1.1 Caddy
+X-Forwarded-For: 142.250.32.1
+X-Forwarded-Host: sharpen.live
+X-Forwarded-Proto: https
+X-Hub-Signature: sha1=dc49d74256467704248e736129a23b5a87eb6f67
+X-Request-Id: {http.request.id}
+
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:yt="http://www.youtube.com/xml/schemas/2015" xmlns="http://www.w3.org/2005/Atom"><link rel="hub" href="https://pubsubhubbub.appspot.com"/><link rel="self" href="https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCPWknjnQNOwSD15nNh4rhLg"/><title>YouTube video feed</title><updated>2025-11-21T22:16:01.367571521+00:00</updated><entry>
+  <id>yt:video:Utg68zRbIxc</id>
+  <yt:videoId>Utg68zRbIxc</yt:videoId>
+  <yt:channelId>UCPWknjnQNOwSD15nNh4rhLg</yt:channelId>
+  <title>Bust a Boot</title>
+  <link rel="alternate" href="https://www.youtube.com/watch?v=Utg68zRbIxc"/>
+  <author>
+   <name>Computer Booter</name>
+   <uri>https://www.youtube.com/channel/UCPWknjnQNOwSD15nNh4rhLg</uri>
+  </author>
+  <published>2025-11-21T22:15:58+00:00</published>
+  <updated>2025-11-21T22:16:01.367571521+00:00</updated>
+ </entry></feed>
+
+2025/11/22 10:16:13 Fetching live metadata for 1 video(s): Utg68zRbIxc
+
+2025/11/22 10:16:13 Requesting watch page for Utg68zRbIxc: https://www.youtube.com/watch?v=Utg68zRbIxc
+
+2025/11/22 10:16:14 Fetched metadata for Utg68zRbIxc: channel=UCPWknjnQNOwSD15nNh4rhLg title="Bust a Boot" live=true start=2025-11-21 22:16:10 +0000 +0000
+
+2025/11/22 10:16:14 Processed alert notification for 1 video(s); no live streams detected
+
+2025/11/22 10:16:14 ---- Response for POST /alerts (204 No Content) ----
+
+2025/11/22 10:16:25 ---- Incoming request from 127.0.0.1:64399 ----
+POST /alerts HTTP/1.1
+Host: sharpen.live
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Cache-Control: no-cache,max-age=0
+Content-Length: 874
+Content-Type: application/atom+xml
+From: googlebot(at)googlebot.com
+Link: <https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCPWknjnQNOwSD15nNh4rhLg>; rel=self, <http://pubsubhubbub.appspot.com/>; rel=hub
+Pragma: no-cache
+User-Agent: FeedFetcher-Google; (+http://www.google.com/feedfetcher.html)
+Via: 1.1 Caddy
+X-Forwarded-For: 142.250.32.1
+X-Forwarded-Host: sharpen.live
+X-Forwarded-Proto: https
+X-Hub-Signature: sha1=451f982885cc4fdf5ee0430c60f5156411adf912
+X-Request-Id: {http.request.id}
+
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:yt="http://www.youtube.com/xml/schemas/2015" xmlns="http://www.w3.org/2005/Atom"><link rel="hub" href="https://pubsubhubbub.appspot.com"/><link rel="self" href="https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCPWknjnQNOwSD15nNh4rhLg"/><title>YouTube video feed</title><updated>2025-11-21T22:16:12.877527458+00:00</updated><entry>
+  <id>yt:video:Utg68zRbIxc</id>
+  <yt:videoId>Utg68zRbIxc</yt:videoId>
+  <yt:channelId>UCPWknjnQNOwSD15nNh4rhLg</yt:channelId>
+  <title>Bust a Boot</title>
+  <link rel="alternate" href="https://www.youtube.com/watch?v=Utg68zRbIxc"/>
+  <author>
+   <name>Computer Booter</name>
+   <uri>https://www.youtube.com/channel/UCPWknjnQNOwSD15nNh4rhLg</uri>
+  </author>
+  <published>2025-11-21T22:15:58+00:00</published>
+  <updated>2025-11-21T22:16:12.877527458+00:00</updated>
+ </entry></feed>
+
+2025/11/22 10:16:25 Fetching live metadata for 1 video(s): Utg68zRbIxc
+
+2025/11/22 10:16:25 Requesting watch page for Utg68zRbIxc: https://www.youtube.com/watch?v=Utg68zRbIxc
+
+2025/11/22 10:16:25 Fetched metadata for Utg68zRbIxc: channel=UCPWknjnQNOwSD15nNh4rhLg title="Bust a Boot" live=true start=2025-11-21 22:16:10 +0000 +0000
+
+2025/11/22 10:16:25 Processed alert notification for 1 video(s); no live streams detected
+
+2025/11/22 10:16:25 ---- Response for POST /alerts (204 No Content) ----
+
+2025/11/22 10:30:50 ---- Incoming request from 127.0.0.1:52222 ----
+POST /alerts HTTP/1.1
+Host: sharpen.live
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Cache-Control: no-cache,max-age=0
+Content-Length: 939
+Content-Type: application/atom+xml
+From: googlebot(at)googlebot.com
+Link: <https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCFSlI8Y3Zdoq5buNW_40AAA>; rel=self, <http://pubsubhubbub.appspot.com/>; rel=hub
+Pragma: no-cache
+User-Agent: FeedFetcher-Google; (+http://www.google.com/feedfetcher.html)
+Via: 1.1 Caddy
+X-Forwarded-For: 66.102.8.102
+X-Forwarded-Host: sharpen.live
+X-Forwarded-Proto: https
+X-Hub-Signature: sha1=a031ebc1dd268b8f96ee2e7498132e379578a740
+X-Request-Id: {http.request.id}
+
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:yt="http://www.youtube.com/xml/schemas/2015" xmlns="http://www.w3.org/2005/Atom"><link rel="hub" href="https://pubsubhubbub.appspot.com"/><link rel="self" href="https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCFSlI8Y3Zdoq5buNW_40AAA"/><title>YouTube video feed</title><updated>2025-11-21T16:30:18.279683034+00:00</updated><entry>
+  <id>yt:video:GoXi_xJu2gE</id>
+  <yt:videoId>GoXi_xJu2gE</yt:videoId>
+  <yt:channelId>UCFSlI8Y3Zdoq5buNW_40AAA</yt:channelId>
+  <title>LIVE : KAREN READ Status Conference in Civil Case of O'Keefes v Read</title>
+  <link rel="alternate" href="https://www.youtube.com/watch?v=GoXi_xJu2gE"/>
+  <author>
+   <name>Attorney Melanie Little</name>
+   <uri>https://www.youtube.com/channel/UCFSlI8Y3Zdoq5buNW_40AAA</uri>
+  </author>
+  <published>2025-11-20T20:17:17+00:00</published>
+  <updated>2025-11-21T16:30:18.279683034+00:00</updated>
+ </entry></feed>
+
+2025/11/22 10:30:50 Fetching live metadata for 1 video(s): GoXi_xJu2gE
+
+2025/11/22 10:30:50 Requesting watch page for GoXi_xJu2gE: https://www.youtube.com/watch?v=GoXi_xJu2gE
+
+2025/11/22 10:30:51 Fetched metadata for GoXi_xJu2gE: channel=UCFSlI8Y3Zdoq5buNW_40AAA title="LIVE : KAREN READ Status Conference in Civil Case of O'Keefes v Read" live=true start=2025-11-21 18:45:21 +0000 +0000
+
+2025/11/22 10:30:51 Processed alert notification (1 entries); live streams=1 videos=GoXi_xJu2gE
+
+2025/11/22 10:30:51 ---- Response for POST /alerts (204 No Content) ----
+
+2025/11/22 10:30:53 ---- Incoming request from 127.0.0.1:52222 ----
+POST /alerts HTTP/1.1
+Host: sharpen.live
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Cache-Control: no-cache,max-age=0
+Content-Length: 939
+Content-Type: application/atom+xml
+From: googlebot(at)googlebot.com
+Link: <https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCFSlI8Y3Zdoq5buNW_40AAA>; rel=self, <http://pubsubhubbub.appspot.com/>; rel=hub
+Pragma: no-cache
+User-Agent: FeedFetcher-Google; (+http://www.google.com/feedfetcher.html)
+Via: 1.1 Caddy
+X-Forwarded-For: 66.102.8.103
+X-Forwarded-Host: sharpen.live
+X-Forwarded-Proto: https
+X-Hub-Signature: sha1=13e4a18a648a64398bafc84d76406c5800cd211f
+X-Request-Id: {http.request.id}
+
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:yt="http://www.youtube.com/xml/schemas/2015" xmlns="http://www.w3.org/2005/Atom"><link rel="hub" href="https://pubsubhubbub.appspot.com"/><link rel="self" href="https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCFSlI8Y3Zdoq5buNW_40AAA"/><title>YouTube video feed</title><updated>2025-11-21T16:30:18.488840974+00:00</updated><entry>
+  <id>yt:video:GoXi_xJu2gE</id>
+  <yt:videoId>GoXi_xJu2gE</yt:videoId>
+  <yt:channelId>UCFSlI8Y3Zdoq5buNW_40AAA</yt:channelId>
+  <title>LIVE : KAREN READ Status Conference in Civil Case of O'Keefes v Read</title>
+  <link rel="alternate" href="https://www.youtube.com/watch?v=GoXi_xJu2gE"/>
+  <author>
+   <name>Attorney Melanie Little</name>
+   <uri>https://www.youtube.com/channel/UCFSlI8Y3Zdoq5buNW_40AAA</uri>
+  </author>
+  <published>2025-11-20T20:17:17+00:00</published>
+  <updated>2025-11-21T16:30:18.488840974+00:00</updated>
+ </entry></feed>
+
+2025/11/22 10:30:53 Fetching live metadata for 1 video(s): GoXi_xJu2gE
+
+2025/11/22 10:30:53 Requesting watch page for GoXi_xJu2gE: https://www.youtube.com/watch?v=GoXi_xJu2gE
+
+2025/11/22 10:30:54 Fetched metadata for GoXi_xJu2gE: channel=UCFSlI8Y3Zdoq5buNW_40AAA title="LIVE : KAREN READ Status Conference in Civil Case of O'Keefes v Read" live=true start=2025-11-21 18:45:21 +0000 +0000
+
+2025/11/22 10:30:54 Processed alert notification (1 entries); live streams=1 videos=GoXi_xJu2gE
+
+2025/11/22 10:30:54 ---- Response for POST /alerts (204 No Content) ----
+
+2025/11/22 10:32:37 ---- Incoming request from 127.0.0.1:52222 ----
+POST /alerts HTTP/1.1
+Host: sharpen.live
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Cache-Control: no-cache,max-age=0
+Content-Length: 948
+Content-Type: application/atom+xml
+From: googlebot(at)googlebot.com
+Link: <https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCbT1jA8RTEHk7y6rn2vHNGw>; rel=self, <http://pubsubhubbub.appspot.com/>; rel=hub
+Pragma: no-cache
+User-Agent: FeedFetcher-Google; (+http://www.google.com/feedfetcher.html)
+Via: 1.1 Caddy
+X-Forwarded-For: 74.125.209.34
+X-Forwarded-Host: sharpen.live
+X-Forwarded-Proto: https
+X-Hub-Signature: sha1=5b0a6cec63cba33af237ca681cf37d6375b375e5
+X-Request-Id: {http.request.id}
+
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:yt="http://www.youtube.com/xml/schemas/2015" xmlns="http://www.w3.org/2005/Atom"><link rel="hub" href="https://pubsubhubbub.appspot.com"/><link rel="self" href="https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCbT1jA8RTEHk7y6rn2vHNGw"/><title>YouTube video feed</title><updated>2025-11-21T16:32:01.194840492+00:00</updated><entry>
+  <id>yt:video:NUgqyaICDm0</id>
+  <yt:videoId>NUgqyaICDm0</yt:videoId>
+  <yt:channelId>UCbT1jA8RTEHk7y6rn2vHNGw</yt:channelId>
+  <title>SiiNs Workshop - Let the fun begin, new month new goal, new knives.  Lets make something epic</title>
+  <link rel="alternate" href="https://www.youtube.com/watch?v=NUgqyaICDm0"/>
+  <author>
+   <name>JonSiiN</name>
+   <uri>https://www.youtube.com/channel/UCbT1jA8RTEHk7y6rn2vHNGw</uri>
+  </author>
+  <published>2025-11-19T13:04:39+00:00</published>
+  <updated>2025-11-21T16:32:01.194840492+00:00</updated>
+ </entry></feed>
+
+2025/11/22 10:32:37 Fetching live metadata for 1 video(s): NUgqyaICDm0
+
+2025/11/22 10:32:37 Requesting watch page for NUgqyaICDm0: https://www.youtube.com/watch?v=NUgqyaICDm0
+
+2025/11/22 10:32:38 Fetched metadata for NUgqyaICDm0: channel=UCbT1jA8RTEHk7y6rn2vHNGw title="SiiNs Workshop - Let the fun begin, new month new goal, new knives.  Lets make something epic" live=true start=2025-11-21 12:59:17 +0000 +0000
+
+2025/11/22 10:32:38 Processed alert notification (1 entries); live streams=1 videos=NUgqyaICDm0
+
+2025/11/22 10:32:38 ---- Response for POST /alerts (204 No Content) ----
+
+2025/11/22 10:34:31 ---- Incoming request from 127.0.0.1:52222 ----
+POST /alerts HTTP/1.1
+Host: sharpen.live
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Cache-Control: no-cache,max-age=0
+Content-Length: 939
+Content-Type: application/atom+xml
+From: googlebot(at)googlebot.com
+Link: <https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCFSlI8Y3Zdoq5buNW_40AAA>; rel=self, <http://pubsubhubbub.appspot.com/>; rel=hub
+Pragma: no-cache
+User-Agent: FeedFetcher-Google; (+http://www.google.com/feedfetcher.html)
+Via: 1.1 Caddy
+X-Forwarded-For: 74.125.209.33
+X-Forwarded-Host: sharpen.live
+X-Forwarded-Proto: https
+X-Hub-Signature: sha1=231e2efe2889f690bc2a5664929e7e3de4bcc90d
+X-Request-Id: {http.request.id}
+
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:yt="http://www.youtube.com/xml/schemas/2015" xmlns="http://www.w3.org/2005/Atom"><link rel="hub" href="https://pubsubhubbub.appspot.com"/><link rel="self" href="https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCFSlI8Y3Zdoq5buNW_40AAA"/><title>YouTube video feed</title><updated>2025-11-21T16:34:00.440226583+00:00</updated><entry>
+  <id>yt:video:GoXi_xJu2gE</id>
+  <yt:videoId>GoXi_xJu2gE</yt:videoId>
+  <yt:channelId>UCFSlI8Y3Zdoq5buNW_40AAA</yt:channelId>
+  <title>LIVE : KAREN READ Status Conference in Civil Case of O'Keefes v Read</title>
+  <link rel="alternate" href="https://www.youtube.com/watch?v=GoXi_xJu2gE"/>
+  <author>
+   <name>Attorney Melanie Little</name>
+   <uri>https://www.youtube.com/channel/UCFSlI8Y3Zdoq5buNW_40AAA</uri>
+  </author>
+  <published>2025-11-20T20:17:17+00:00</published>
+  <updated>2025-11-21T16:34:00.440226583+00:00</updated>
+ </entry></feed>
+
+2025/11/22 10:34:31 Fetching live metadata for 1 video(s): GoXi_xJu2gE
+
+2025/11/22 10:34:31 Requesting watch page for GoXi_xJu2gE: https://www.youtube.com/watch?v=GoXi_xJu2gE
+
+2025/11/22 10:34:32 Fetched metadata for GoXi_xJu2gE: channel=UCFSlI8Y3Zdoq5buNW_40AAA title="LIVE : KAREN READ Status Conference in Civil Case of O'Keefes v Read" live=true start=2025-11-21 18:45:21 +0000 +0000
+
+2025/11/22 10:34:32 Processed alert notification (1 entries); live streams=1 videos=GoXi_xJu2gE
+
+2025/11/22 10:34:32 ---- Response for POST /alerts (204 No Content) ----
+
+2025/11/22 10:47:47 ---- Incoming request from 127.0.0.1:57039 ----
+POST /alerts HTTP/1.1
+Host: sharpen.live
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Cache-Control: no-cache,max-age=0
+Content-Length: 939
+Content-Type: application/atom+xml
+From: googlebot(at)googlebot.com
+Link: <https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCFSlI8Y3Zdoq5buNW_40AAA>; rel=self, <http://pubsubhubbub.appspot.com/>; rel=hub
+Pragma: no-cache
+User-Agent: FeedFetcher-Google; (+http://www.google.com/feedfetcher.html)
+Via: 1.1 Caddy
+X-Forwarded-For: 74.125.209.34
+X-Forwarded-Host: sharpen.live
+X-Forwarded-Proto: https
+X-Hub-Signature: sha1=74952a0e55d0c84a5d70088084249a514ce08dae
+X-Request-Id: {http.request.id}
+
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:yt="http://www.youtube.com/xml/schemas/2015" xmlns="http://www.w3.org/2005/Atom"><link rel="hub" href="https://pubsubhubbub.appspot.com"/><link rel="self" href="https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCFSlI8Y3Zdoq5buNW_40AAA"/><title>YouTube video feed</title><updated>2025-11-21T20:47:23.170607734+00:00</updated><entry>
+  <id>yt:video:GoXi_xJu2gE</id>
+  <yt:videoId>GoXi_xJu2gE</yt:videoId>
+  <yt:channelId>UCFSlI8Y3Zdoq5buNW_40AAA</yt:channelId>
+  <title>LIVE : KAREN READ Status Conference in Civil Case of O'Keefes v Read</title>
+  <link rel="alternate" href="https://www.youtube.com/watch?v=GoXi_xJu2gE"/>
+  <author>
+   <name>Attorney Melanie Little</name>
+   <uri>https://www.youtube.com/channel/UCFSlI8Y3Zdoq5buNW_40AAA</uri>
+  </author>
+  <published>2025-11-20T20:17:17+00:00</published>
+  <updated>2025-11-21T20:47:23.170607734+00:00</updated>
+ </entry></feed>
+
+2025/11/22 10:47:47 Fetching live metadata for 1 video(s): GoXi_xJu2gE
+
+2025/11/22 10:47:47 Requesting watch page for GoXi_xJu2gE: https://www.youtube.com/watch?v=GoXi_xJu2gE
+
+2025/11/22 10:47:48 Fetched metadata for GoXi_xJu2gE: channel=UCFSlI8Y3Zdoq5buNW_40AAA title="LIVE : KAREN READ Status Conference in Civil Case of O'Keefes v Read" live=true start=2025-11-21 18:45:21 +0000 +0000
+
+2025/11/22 10:47:48 Processed alert notification (1 entries); live streams=1 videos=GoXi_xJu2gE
+
+2025/11/22 10:47:48 ---- Response for POST /alerts (204 No Content) ----
+
+2025/11/22 10:54:40 ---- Incoming request from 127.0.0.1:59011 ----
+POST /alerts HTTP/1.1
+Host: sharpen.live
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Cache-Control: no-cache,max-age=0
+Content-Length: 939
+Content-Type: application/atom+xml
+From: googlebot(at)googlebot.com
+Link: <https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCFSlI8Y3Zdoq5buNW_40AAA>; rel=self, <http://pubsubhubbub.appspot.com/>; rel=hub
+Pragma: no-cache
+User-Agent: FeedFetcher-Google; (+http://www.google.com/feedfetcher.html)
+Via: 1.1 Caddy
+X-Forwarded-For: 142.250.32.3
+X-Forwarded-Host: sharpen.live
+X-Forwarded-Proto: https
+X-Hub-Signature: sha1=574412390f58111cc6075c6f67e87c03e34264cc
+X-Request-Id: {http.request.id}
+
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:yt="http://www.youtube.com/xml/schemas/2015" xmlns="http://www.w3.org/2005/Atom"><link rel="hub" href="https://pubsubhubbub.appspot.com"/><link rel="self" href="https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCFSlI8Y3Zdoq5buNW_40AAA"/><title>YouTube video feed</title><updated>2025-11-21T20:54:13.090280408+00:00</updated><entry>
+  <id>yt:video:GoXi_xJu2gE</id>
+  <yt:videoId>GoXi_xJu2gE</yt:videoId>
+  <yt:channelId>UCFSlI8Y3Zdoq5buNW_40AAA</yt:channelId>
+  <title>LIVE : KAREN READ Status Conference in Civil Case of O'Keefes v Read</title>
+  <link rel="alternate" href="https://www.youtube.com/watch?v=GoXi_xJu2gE"/>
+  <author>
+   <name>Attorney Melanie Little</name>
+   <uri>https://www.youtube.com/channel/UCFSlI8Y3Zdoq5buNW_40AAA</uri>
+  </author>
+  <published>2025-11-21T20:53:55+00:00</published>
+  <updated>2025-11-21T20:54:13.090280408+00:00</updated>
+ </entry></feed>
+
+2025/11/22 10:54:40 Fetching live metadata for 1 video(s): GoXi_xJu2gE
+
+2025/11/22 10:54:40 Requesting watch page for GoXi_xJu2gE: https://www.youtube.com/watch?v=GoXi_xJu2gE
+
+2025/11/22 10:54:41 Fetched metadata for GoXi_xJu2gE: channel=UCFSlI8Y3Zdoq5buNW_40AAA title="LIVE : KAREN READ Status Conference in Civil Case of O'Keefes v Read" live=true start=2025-11-21 18:45:21 +0000 +0000
+
+2025/11/22 10:54:41 Processed alert notification (1 entries); live streams=1 videos=GoXi_xJu2gE
+
+2025/11/22 10:54:41 ---- Response for POST /alerts (204 No Content) ----
+
+2025/11/22 10:54:42 ---- Incoming request from 127.0.0.1:59011 ----
+POST /alerts HTTP/1.1
+Host: sharpen.live
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Cache-Control: no-cache,max-age=0
+Content-Length: 937
+Content-Type: application/atom+xml
+From: googlebot(at)googlebot.com
+Link: <https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCFSlI8Y3Zdoq5buNW_40AAA>; rel=self, <http://pubsubhubbub.appspot.com/>; rel=hub
+Pragma: no-cache
+User-Agent: FeedFetcher-Google; (+http://www.google.com/feedfetcher.html)
+Via: 1.1 Caddy
+X-Forwarded-For: 142.250.32.3
+X-Forwarded-Host: sharpen.live
+X-Forwarded-Proto: https
+X-Hub-Signature: sha1=e1859a37f62854f84b358e6aee90e5c85433e981
+X-Request-Id: {http.request.id}
+
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:yt="http://www.youtube.com/xml/schemas/2015" xmlns="http://www.w3.org/2005/Atom"><link rel="hub" href="https://pubsubhubbub.appspot.com"/><link rel="self" href="https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCFSlI8Y3Zdoq5buNW_40AAA"/><title>YouTube video feed</title><updated>2025-11-21T20:54:13.92437948+00:00</updated><entry>
+  <id>yt:video:GoXi_xJu2gE</id>
+  <yt:videoId>GoXi_xJu2gE</yt:videoId>
+  <yt:channelId>UCFSlI8Y3Zdoq5buNW_40AAA</yt:channelId>
+  <title>LIVE : KAREN READ Status Conference in Civil Case of O'Keefes v Read</title>
+  <link rel="alternate" href="https://www.youtube.com/watch?v=GoXi_xJu2gE"/>
+  <author>
+   <name>Attorney Melanie Little</name>
+   <uri>https://www.youtube.com/channel/UCFSlI8Y3Zdoq5buNW_40AAA</uri>
+  </author>
+  <published>2025-11-21T20:53:55+00:00</published>
+  <updated>2025-11-21T20:54:13.92437948+00:00</updated>
+ </entry></feed>
+
+2025/11/22 10:54:42 Fetching live metadata for 1 video(s): GoXi_xJu2gE
+
+2025/11/22 10:54:42 Requesting watch page for GoXi_xJu2gE: https://www.youtube.com/watch?v=GoXi_xJu2gE
+
+2025/11/22 10:54:43 Fetched metadata for GoXi_xJu2gE: channel=UCFSlI8Y3Zdoq5buNW_40AAA title="LIVE : KAREN READ Status Conference in Civil Case of O'Keefes v Read" live=true start=2025-11-21 18:45:21 +0000 +0000
+
+2025/11/22 10:54:43 Processed alert notification (1 entries); live streams=1 videos=GoXi_xJu2gE
+
+2025/11/22 10:54:43 ---- Response for POST /alerts (204 No Content) ----
+
+2025/11/22 10:54:57 ---- Incoming request from 127.0.0.1:59101 ----
+GET /api/admin/submissions HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Authorization: Bearer 379bf4636912d904837b81e86dbb39c1c1299894e80f210d9a42e6da57c597fe
+Referer: http://127.0.0.1:4173/admin/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/22 10:54:57 ---- Response for GET /admin/logs (200 OK) ----
+data: ---- Incoming request from 127.0.0.1:63663 ----
+GET /admin/logs?token=08fd4f3d036e671a5160addd3f07585f388f76e5345297aee4d260ef04572515 HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: text/event-stream
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Cache-Control: no-cache
+Referer: http://127.0.0.1:4173/admin/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+
+data: ---- Response for GET /admin/logs (200 OK) ----
+data: ---- Incoming request from 127.0.0.1:63663 ----
+GET /admin/logs?token=08fd4f3d036e671a5160addd3f07585f388f76e5345297aee4d260ef04572515 HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: text/event-stream
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Cache-Control: no-cache
+Referer: http://127.0.0.1:4173/admin/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+
+
+
+data: ---- Incoming request from 127.0.0.1:63741 ----
+GET /api/admin/monitor/youtube HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Authorization: Bearer 08fd4f3d036e671a5160addd3f07585f388f76e5345297aee4d260ef04572515
+Referer: http://127.0.0.1:4173/admin/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+
+data: ---- Response for GET /api/admin/monitor/youtube (401 Unauthorized) ----
+unauthorized
+
+
+data: ---- Incoming request from 127.0.0.1:63741 ----
+POST /api/admin/login HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Content-Length: 52
+Content-Type: application/json
+Origin: http://127.0.0.1:4173
+Referer: http://127.0.0.1:4173/admin/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+{"email":"admin@sharpen.live","password":"chane-me"}
+
+data: ---- Response for POST /api/admin/login (401 Unauthorized) ----
+invalid credentials
+
+
+data: ---- Incoming request from 127.0.0.1:63741 ----
+POST /api/admin/login HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Content-Length: 53
+Content-Type: application/json
+Origin: http://127.0.0.1:4173
+Referer: http://127.0.0.1:4173/admin/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+{"email":"admin@sharpen.live","password":"change-me"}
+
+data: ---- Response for POST /api/admin/login (200 OK) ----
+{"token":"379bf4636912d904837b81e86dbb39c1c1299894e80f210d9a42e6da57c597fe","expiresAt":"2025-11-22T14:25:17Z"}
+
+
+data: ---- Incoming request from 127.0.
+-- response truncated after 4096 bytes --
+
+2025/11/22 10:54:57 ---- Response for GET /api/admin/submissions (200 OK) ----
+{"submissions":[]}
+
+2025/11/22 10:54:59 ---- Incoming request from 127.0.0.1:59101 ----
+GET /admin/logs?token=379bf4636912d904837b81e86dbb39c1c1299894e80f210d9a42e6da57c597fe HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: text/event-stream
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Cache-Control: no-cache
+Referer: http://127.0.0.1:4173/admin/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/22 10:55:42 ---- Incoming request from 127.0.0.1:59011 ----
+POST /alerts HTTP/1.1
+Host: sharpen.live
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Cache-Control: no-cache,max-age=0
+Content-Length: 939
+Content-Type: application/atom+xml
+From: googlebot(at)googlebot.com
+Link: <https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCFSlI8Y3Zdoq5buNW_40AAA>; rel=self, <http://pubsubhubbub.appspot.com/>; rel=hub
+Pragma: no-cache
+User-Agent: FeedFetcher-Google; (+http://www.google.com/feedfetcher.html)
+Via: 1.1 Caddy
+X-Forwarded-For: 74.125.209.32
+X-Forwarded-Host: sharpen.live
+X-Forwarded-Proto: https
+X-Hub-Signature: sha1=d04d823117d8aec3efb45f42b9ce5278307d8675
+X-Request-Id: {http.request.id}
+
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:yt="http://www.youtube.com/xml/schemas/2015" xmlns="http://www.w3.org/2005/Atom"><link rel="hub" href="https://pubsubhubbub.appspot.com"/><link rel="self" href="https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCFSlI8Y3Zdoq5buNW_40AAA"/><title>YouTube video feed</title><updated>2025-11-21T16:55:07.901079673+00:00</updated><entry>
+  <id>yt:video:GoXi_xJu2gE</id>
+  <yt:videoId>GoXi_xJu2gE</yt:videoId>
+  <yt:channelId>UCFSlI8Y3Zdoq5buNW_40AAA</yt:channelId>
+  <title>LIVE : KAREN READ Status Conference in Civil Case of O'Keefes v Read</title>
+  <link rel="alternate" href="https://www.youtube.com/watch?v=GoXi_xJu2gE"/>
+  <author>
+   <name>Attorney Melanie Little</name>
+   <uri>https://www.youtube.com/channel/UCFSlI8Y3Zdoq5buNW_40AAA</uri>
+  </author>
+  <published>2025-11-20T20:17:17+00:00</published>
+  <updated>2025-11-21T16:55:07.901079673+00:00</updated>
+ </entry></feed>
+
+2025/11/22 10:55:42 Fetching live metadata for 1 video(s): GoXi_xJu2gE
+
+2025/11/22 10:55:42 Requesting watch page for GoXi_xJu2gE: https://www.youtube.com/watch?v=GoXi_xJu2gE
+
+2025/11/22 10:55:43 Fetched metadata for GoXi_xJu2gE: channel=UCFSlI8Y3Zdoq5buNW_40AAA title="LIVE : KAREN READ Status Conference in Civil Case of O'Keefes v Read" live=true start=2025-11-21 18:45:21 +0000 +0000
+
+2025/11/22 10:55:43 Processed alert notification (1 entries); live streams=1 videos=GoXi_xJu2gE
+
+2025/11/22 10:55:43 ---- Response for POST /alerts (204 No Content) ----
+
+2025/11/22 10:55:44 ---- Incoming request from 127.0.0.1:59011 ----
+POST /alerts HTTP/1.1
+Host: sharpen.live
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Cache-Control: no-cache,max-age=0
+Content-Length: 939
+Content-Type: application/atom+xml
+From: googlebot(at)googlebot.com
+Link: <https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCFSlI8Y3Zdoq5buNW_40AAA>; rel=self, <http://pubsubhubbub.appspot.com/>; rel=hub
+Pragma: no-cache
+User-Agent: FeedFetcher-Google; (+http://www.google.com/feedfetcher.html)
+Via: 1.1 Caddy
+X-Forwarded-For: 74.125.209.32
+X-Forwarded-Host: sharpen.live
+X-Forwarded-Proto: https
+X-Hub-Signature: sha1=22a96d9027ce3bfafe22b70bbd01b7313a915ae8
+X-Request-Id: {http.request.id}
+
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:yt="http://www.youtube.com/xml/schemas/2015" xmlns="http://www.w3.org/2005/Atom"><link rel="hub" href="https://pubsubhubbub.appspot.com"/><link rel="self" href="https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCFSlI8Y3Zdoq5buNW_40AAA"/><title>YouTube video feed</title><updated>2025-11-21T16:55:08.516153009+00:00</updated><entry>
+  <id>yt:video:GoXi_xJu2gE</id>
+  <yt:videoId>GoXi_xJu2gE</yt:videoId>
+  <yt:channelId>UCFSlI8Y3Zdoq5buNW_40AAA</yt:channelId>
+  <title>LIVE : KAREN READ Status Conference in Civil Case of O'Keefes v Read</title>
+  <link rel="alternate" href="https://www.youtube.com/watch?v=GoXi_xJu2gE"/>
+  <author>
+   <name>Attorney Melanie Little</name>
+   <uri>https://www.youtube.com/channel/UCFSlI8Y3Zdoq5buNW_40AAA</uri>
+  </author>
+  <published>2025-11-20T20:17:17+00:00</published>
+  <updated>2025-11-21T16:55:08.516153009+00:00</updated>
+ </entry></feed>
+
+2025/11/22 10:55:44 Fetching live metadata for 1 video(s): GoXi_xJu2gE
+
+2025/11/22 10:55:44 Requesting watch page for GoXi_xJu2gE: https://www.youtube.com/watch?v=GoXi_xJu2gE
+
+2025/11/22 10:55:45 Fetched metadata for GoXi_xJu2gE: channel=UCFSlI8Y3Zdoq5buNW_40AAA title="LIVE : KAREN READ Status Conference in Civil Case of O'Keefes v Read" live=true start=2025-11-21 18:45:21 +0000 +0000
+
+2025/11/22 10:55:45 Processed alert notification (1 entries); live streams=1 videos=GoXi_xJu2gE
+
+2025/11/22 10:55:45 ---- Response for POST /alerts (204 No Content) ----
+
+2025/11/22 11:00:08 ---- Incoming request from 127.0.0.1:60660 ----
+POST /alerts HTTP/1.1
+Host: sharpen.live
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Cache-Control: no-cache,max-age=0
+Content-Length: 956
+Content-Type: application/atom+xml
+From: googlebot(at)googlebot.com
+Link: <https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCzGiDDKdphJ0GFvEd82WfYQ>; rel=self, <http://pubsubhubbub.appspot.com/>; rel=hub
+Pragma: no-cache
+User-Agent: FeedFetcher-Google; (+http://www.google.com/feedfetcher.html)
+Via: 1.1 Caddy
+X-Forwarded-For: 66.102.6.74
+X-Forwarded-Host: sharpen.live
+X-Forwarded-Proto: https
+X-Hub-Signature: sha1=e8010483e58a33ed11764684412eb53969dd2109
+X-Request-Id: {http.request.id}
+
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:yt="http://www.youtube.com/xml/schemas/2015" xmlns="http://www.w3.org/2005/Atom"><link rel="hub" href="https://pubsubhubbub.appspot.com"/><link rel="self" href="https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCzGiDDKdphJ0GFvEd82WfYQ"/><title>YouTube video feed</title><updated>2025-11-21T16:59:28.689084507+00:00</updated><entry>
+  <id>yt:video:f86xAdN_cIk</id>
+  <yt:videoId>f86xAdN_cIk</yt:videoId>
+  <yt:channelId>UCzGiDDKdphJ0GFvEd82WfYQ</yt:channelId>
+  <title>First They Came for the Ostriches: Government Conditioning for Much Worse Things to Come! Viva Frei</title>
+  <link rel="alternate" href="https://www.youtube.com/watch?v=f86xAdN_cIk"/>
+  <author>
+   <name>Viva Frei</name>
+   <uri>https://www.youtube.com/channel/UCzGiDDKdphJ0GFvEd82WfYQ</uri>
+  </author>
+  <published>2025-11-21T16:56:51+00:00</published>
+  <updated>2025-11-21T16:59:28.689084507+00:00</updated>
+ </entry></feed>
+
+2025/11/22 11:00:08 Fetching live metadata for 1 video(s): f86xAdN_cIk
+
+2025/11/22 11:00:08 Requesting watch page for f86xAdN_cIk: https://www.youtube.com/watch?v=f86xAdN_cIk
+
+2025/11/22 11:00:10 Fetched metadata for f86xAdN_cIk: channel=UCzGiDDKdphJ0GFvEd82WfYQ title="First They Came for the Ostriches: Government Conditioning for Much Worse Things to Come! Viva Frei" live=false start=0001-01-01 00:00:00 +0000 UTC
+
+2025/11/22 11:00:10 Processed alert notification for 1 video(s); no live streams detected
+
+2025/11/22 11:00:10 ---- Response for POST /alerts (204 No Content) ----
+
+2025/11/22 11:00:25 ---- Response for GET /admin/logs (200 OK) ----
+data: ---- Incoming request from 127.0.0.1:63663 ----
+GET /admin/logs?token=08fd4f3d036e671a5160addd3f07585f388f76e5345297aee4d260ef04572515 HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: text/event-stream
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Cache-Control: no-cache
+Referer: http://127.0.0.1:4173/admin/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+
+data: ---- Response for GET /admin/logs (200 OK) ----
+data: ---- Incoming request from 127.0.0.1:63663 ----
+GET /admin/logs?token=08fd4f3d036e671a5160addd3f07585f388f76e5345297aee4d260ef04572515 HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: text/event-stream
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Cache-Control: no-cache
+Referer: http://127.0.0.1:4173/admin/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+
+
+
+data: ---- Incoming request from 127.0.0.1:63741 ----
+GET /api/admin/monitor/youtube HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Authorization: Bearer 08fd4f3d036e671a5160addd3f07585f388f76e5345297aee4d260ef04572515
+Referer: http://127.0.0.1:4173/admin/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+
+data: ---- Response for GET /api/admin/monitor/youtube (401 Unauthorized) ----
+unauthorized
+
+
+data: ---- Incoming request from 127.0.0.1:63741 ----
+POST /api/admin/login HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Content-Length: 52
+Content-Type: application/json
+Origin: http://127.0.0.1:4173
+Referer: http://127.0.0.1:4173/admin/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+{"email":"admin@sharpen.live","password":"chane-me"}
+
+data: ---- Response for POST /api/admin/login (401 Unauthorized) ----
+invalid credentials
+
+
+data: ---- Incoming request from 127.0.0.1:63741 ----
+POST /api/admin/login HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Content-Length: 53
+Content-Type: application/json
+Origin: http://127.0.0.1:4173
+Referer: http://127.0.0.1:4173/admin/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+{"email":"admin@sharpen.live","password":"change-me"}
+
+data: ---- Response for POST /api/admin/login (200 OK) ----
+{"token":"379bf4636912d904837b81e86dbb39c1c1299894e80f210d9a42e6da57c597fe","expiresAt":"2025-11-22T14:25:17Z"}
+
+
+data: ---- Incoming request from 127.0.
+-- response truncated after 4096 bytes --
+
+2025/11/22 11:00:26 ---- Incoming request from 127.0.0.1:60747 ----
+GET /api/admin/submissions HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Authorization: Bearer 379bf4636912d904837b81e86dbb39c1c1299894e80f210d9a42e6da57c597fe
+Referer: http://127.0.0.1:4173/admin/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/22 11:00:26 ---- Response for GET /api/admin/submissions (200 OK) ----
+{"submissions":[]}
+
+2025/11/22 11:00:28 ---- Incoming request from 127.0.0.1:60747 ----
+GET /admin/logs?token=379bf4636912d904837b81e86dbb39c1c1299894e80f210d9a42e6da57c597fe HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: text/event-stream
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Cache-Control: no-cache
+Referer: http://127.0.0.1:4173/admin/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/22 11:08:53 ---- Response for GET /admin/logs (200 OK) ----
+data: ---- Incoming request from 127.0.0.1:63663 ----
+GET /admin/logs?token=08fd4f3d036e671a5160addd3f07585f388f76e5345297aee4d260ef04572515 HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: text/event-stream
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Cache-Control: no-cache
+Referer: http://127.0.0.1:4173/admin/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+
+data: ---- Response for GET /admin/logs (200 OK) ----
+data: ---- Incoming request from 127.0.0.1:63663 ----
+GET /admin/logs?token=08fd4f3d036e671a5160addd3f07585f388f76e5345297aee4d260ef04572515 HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: text/event-stream
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Cache-Control: no-cache
+Referer: http://127.0.0.1:4173/admin/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+
+
+
+data: ---- Incoming request from 127.0.0.1:63741 ----
+GET /api/admin/monitor/youtube HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Authorization: Bearer 08fd4f3d036e671a5160addd3f07585f388f76e5345297aee4d260ef04572515
+Referer: http://127.0.0.1:4173/admin/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+
+data: ---- Response for GET /api/admin/monitor/youtube (401 Unauthorized) ----
+unauthorized
+
+
+data: ---- Incoming request from 127.0.0.1:63741 ----
+POST /api/admin/login HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Content-Length: 52
+Content-Type: application/json
+Origin: http://127.0.0.1:4173
+Referer: http://127.0.0.1:4173/admin/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+{"email":"admin@sharpen.live","password":"chane-me"}
+
+data: ---- Response for POST /api/admin/login (401 Unauthorized) ----
+invalid credentials
+
+
+data: ---- Incoming request from 127.0.0.1:63741 ----
+POST /api/admin/login HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Content-Length: 53
+Content-Type: application/json
+Origin: http://127.0.0.1:4173
+Referer: http://127.0.0.1:4173/admin/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+{"email":"admin@sharpen.live","password":"change-me"}
+
+data: ---- Response for POST /api/admin/login (200 OK) ----
+{"token":"379bf4636912d904837b81e86dbb39c1c1299894e80f210d9a42e6da57c597fe","expiresAt":"2025-11-22T14:25:17Z"}
+
+
+data: ---- Incoming request from 127.0.
+-- response truncated after 4096 bytes --
+
+2025/11/22 11:08:55 ---- Incoming request from 127.0.0.1:63192 ----
+GET /api/admin/submissions HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Authorization: Bearer 379bf4636912d904837b81e86dbb39c1c1299894e80f210d9a42e6da57c597fe
+Referer: http://127.0.0.1:4173/admin/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/22 11:08:55 ---- Response for GET /api/admin/submissions (200 OK) ----
+{"submissions":[]}
+
+2025/11/22 11:08:56 ---- Incoming request from 127.0.0.1:63192 ----
+GET /admin/logs?token=379bf4636912d904837b81e86dbb39c1c1299894e80f210d9a42e6da57c597fe HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: text/event-stream
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Cache-Control: no-cache
+Referer: http://127.0.0.1:4173/admin/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/22 11:41:07 ---- Response for GET /admin/logs (200 OK) ----
+data: ---- Incoming request from 127.0.0.1:63663 ----
+GET /admin/logs?token=08fd4f3d036e671a5160addd3f07585f388f76e5345297aee4d260ef04572515 HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: text/event-stream
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Cache-Control: no-cache
+Referer: http://127.0.0.1:4173/admin/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+
+data: ---- Response for GET /admin/logs (200 OK) ----
+data: ---- Incoming request from 127.0.0.1:63663 ----
+GET /admin/logs?token=08fd4f3d036e671a5160addd3f07585f388f76e5345297aee4d260ef04572515 HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: text/event-stream
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Cache-Control: no-cache
+Referer: http://127.0.0.1:4173/admin/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+
+
+
+data: ---- Incoming request from 127.0.0.1:63741 ----
+GET /api/admin/monitor/youtube HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Authorization: Bearer 08fd4f3d036e671a5160addd3f07585f388f76e5345297aee4d260ef04572515
+Referer: http://127.0.0.1:4173/admin/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+
+data: ---- Response for GET /api/admin/monitor/youtube (401 Unauthorized) ----
+unauthorized
+
+
+data: ---- Incoming request from 127.0.0.1:63741 ----
+POST /api/admin/login HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Content-Length: 52
+Content-Type: application/json
+Origin: http://127.0.0.1:4173
+Referer: http://127.0.0.1:4173/admin/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+{"email":"admin@sharpen.live","password":"chane-me"}
+
+data: ---- Response for POST /api/admin/login (401 Unauthorized) ----
+invalid credentials
+
+
+data: ---- Incoming request from 127.0.0.1:63741 ----
+POST /api/admin/login HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Content-Length: 53
+Content-Type: application/json
+Origin: http://127.0.0.1:4173
+Referer: http://127.0.0.1:4173/admin/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+{"email":"admin@sharpen.live","password":"change-me"}
+
+data: ---- Response for POST /api/admin/login (200 OK) ----
+{"token":"379bf4636912d904837b81e86dbb39c1c1299894e80f210d9a42e6da57c597fe","expiresAt":"2025-11-22T14:25:17Z"}
+
+
+data: ---- Incoming request from 127.0.
+-- response truncated after 4096 bytes --
+
+2025/11/22 11:41:08 ---- Incoming request from 127.0.0.1:63983 ----
+GET /api/admin/submissions HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Authorization: Bearer 379bf4636912d904837b81e86dbb39c1c1299894e80f210d9a42e6da57c597fe
+Referer: http://127.0.0.1:4173/admin/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/22 11:41:08 ---- Response for GET /api/admin/submissions (200 OK) ----
+{"submissions":[]}
+
+2025/11/22 11:41:10 ---- Incoming request from 127.0.0.1:63983 ----
+GET /admin/logs?token=379bf4636912d904837b81e86dbb39c1c1299894e80f210d9a42e6da57c597fe HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: text/event-stream
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Cache-Control: no-cache
+Referer: http://127.0.0.1:4173/admin/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/22 11:42:03 ---- Incoming request from 127.0.0.1:64129 ----
+POST /alerts HTTP/1.1
+Host: sharpen.live
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Cache-Control: no-cache,max-age=0
+Content-Length: 893
+Content-Type: application/atom+xml
+From: googlebot(at)googlebot.com
+Link: <https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCoW3NnFgnDATwU9eUOswisg>; rel=self, <http://pubsubhubbub.appspot.com/>; rel=hub
+Pragma: no-cache
+User-Agent: FeedFetcher-Google; (+http://www.google.com/feedfetcher.html)
+Via: 1.1 Caddy
+X-Forwarded-For: 66.102.8.102
+X-Forwarded-Host: sharpen.live
+X-Forwarded-Proto: https
+X-Hub-Signature: sha1=9e9e26cc23669b1eff129dff2719d89742c4098c
+X-Request-Id: {http.request.id}
+
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:yt="http://www.youtube.com/xml/schemas/2015" xmlns="http://www.w3.org/2005/Atom"><link rel="hub" href="https://pubsubhubbub.appspot.com"/><link rel="self" href="https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCoW3NnFgnDATwU9eUOswisg"/><title>YouTube video feed</title><updated>2025-11-22T00:37:47.166131591+00:00</updated><entry>
+  <id>yt:video:MIvcWoG99G4</id>
+  <yt:videoId>MIvcWoG99G4</yt:videoId>
+  <yt:channelId>UCoW3NnFgnDATwU9eUOswisg</yt:channelId>
+  <title>Magic Moments with Arnaldo🔥</title>
+  <link rel="alternate" href="https://www.youtube.com/watch?v=MIvcWoG99G4"/>
+  <author>
+   <name>Arnaldo Mangini</name>
+   <uri>https://www.youtube.com/channel/UCoW3NnFgnDATwU9eUOswisg</uri>
+  </author>
+  <published>2025-11-22T00:37:44+00:00</published>
+  <updated>2025-11-22T00:37:47.166131591+00:00</updated>
+ </entry></feed>
+
+2025/11/22 11:42:03 Fetching live metadata for 1 video(s): MIvcWoG99G4
+
+2025/11/22 11:42:03 Requesting watch page for MIvcWoG99G4: https://www.youtube.com/watch?v=MIvcWoG99G4
+
+2025/11/22 11:42:03 Fetch for video MIvcWoG99G4 failed: Get "https://www.youtube.com/watch?v=MIvcWoG99G4": context canceled
+
+2025/11/22 11:42:03 failed to fetch live metadata for videos MIvcWoG99G4: video lookup failed: fetch MIvcWoG99G4: Get "https://www.youtube.com/watch?v=MIvcWoG99G4": context canceled
+
+2025/11/22 11:42:03 ---- Response for POST /alerts (202 Accepted) ----
+
+2025/11/22 12:35:47 ---- Response for GET /admin/logs (200 OK) ----
+data: ---- Incoming request from 127.0.0.1:63663 ----
+GET /admin/logs?token=08fd4f3d036e671a5160addd3f07585f388f76e5345297aee4d260ef04572515 HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: text/event-stream
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Cache-Control: no-cache
+Referer: http://127.0.0.1:4173/admin/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+
+data: ---- Response for GET /admin/logs (200 OK) ----
+data: ---- Incoming request from 127.0.0.1:63663 ----
+GET /admin/logs?token=08fd4f3d036e671a5160addd3f07585f388f76e5345297aee4d260ef04572515 HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: text/event-stream
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Cache-Control: no-cache
+Referer: http://127.0.0.1:4173/admin/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+
+
+
+data: ---- Incoming request from 127.0.0.1:63741 ----
+GET /api/admin/monitor/youtube HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Authorization: Bearer 08fd4f3d036e671a5160addd3f07585f388f76e5345297aee4d260ef04572515
+Referer: http://127.0.0.1:4173/admin/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+
+data: ---- Response for GET /api/admin/monitor/youtube (401 Unauthorized) ----
+unauthorized
+
+
+data: ---- Incoming request from 127.0.0.1:63741 ----
+POST /api/admin/login HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Content-Length: 52
+Content-Type: application/json
+Origin: http://127.0.0.1:4173
+Referer: http://127.0.0.1:4173/admin/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+{"email":"admin@sharpen.live","password":"chane-me"}
+
+data: ---- Response for POST /api/admin/login (401 Unauthorized) ----
+invalid credentials
+
+
+data: ---- Incoming request from 127.0.0.1:63741 ----
+POST /api/admin/login HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Content-Length: 53
+Content-Type: application/json
+Origin: http://127.0.0.1:4173
+Referer: http://127.0.0.1:4173/admin/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+{"email":"admin@sharpen.live","password":"change-me"}
+
+data: ---- Response for POST /api/admin/login (200 OK) ----
+{"token":"379bf4636912d904837b81e86dbb39c1c1299894e80f210d9a42e6da57c597fe","expiresAt":"2025-11-22T14:25:17Z"}
+
+
+data: ---- Incoming request from 127.0.
+-- response truncated after 4096 bytes --
+
+2025/11/22 12:35:47 ---- Incoming request from 127.0.0.1:65095 ----
+GET /api/admin/submissions HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Authorization: Bearer 379bf4636912d904837b81e86dbb39c1c1299894e80f210d9a42e6da57c597fe
+Referer: http://127.0.0.1:4173/admin/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/22 12:35:47 ---- Response for GET /api/admin/submissions (200 OK) ----
+{"submissions":[]}
+
+2025/11/22 12:35:50 ---- Incoming request from 127.0.0.1:65095 ----
+GET /admin/logs?token=379bf4636912d904837b81e86dbb39c1c1299894e80f210d9a42e6da57c597fe HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: text/event-stream
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Cache-Control: no-cache
+Referer: http://127.0.0.1:4173/admin/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/22 12:36:47 ---- Response for GET /admin/logs (200 OK) ----
+data: ---- Incoming request from 127.0.0.1:63663 ----
+GET /admin/logs?token=08fd4f3d036e671a5160addd3f07585f388f76e5345297aee4d260ef04572515 HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: text/event-stream
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Cache-Control: no-cache
+Referer: http://127.0.0.1:4173/admin/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+
+data: ---- Response for GET /admin/logs (200 OK) ----
+data: ---- Incoming request from 127.0.0.1:63663 ----
+GET /admin/logs?token=08fd4f3d036e671a5160addd3f07585f388f76e5345297aee4d260ef04572515 HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: text/event-stream
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Cache-Control: no-cache
+Referer: http://127.0.0.1:4173/admin/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+
+
+
+data: ---- Incoming request from 127.0.0.1:63741 ----
+GET /api/admin/monitor/youtube HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Authorization: Bearer 08fd4f3d036e671a5160addd3f07585f388f76e5345297aee4d260ef04572515
+Referer: http://127.0.0.1:4173/admin/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+
+data: ---- Response for GET /api/admin/monitor/youtube (401 Unauthorized) ----
+unauthorized
+
+
+data: ---- Incoming request from 127.0.0.1:63741 ----
+POST /api/admin/login HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Content-Length: 52
+Content-Type: application/json
+Origin: http://127.0.0.1:4173
+Referer: http://127.0.0.1:4173/admin/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+{"email":"admin@sharpen.live","password":"chane-me"}
+
+data: ---- Response for POST /api/admin/login (401 Unauthorized) ----
+invalid credentials
+
+
+data: ---- Incoming request from 127.0.0.1:63741 ----
+POST /api/admin/login HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Content-Length: 53
+Content-Type: application/json
+Origin: http://127.0.0.1:4173
+Referer: http://127.0.0.1:4173/admin/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+{"email":"admin@sharpen.live","password":"change-me"}
+
+data: ---- Response for POST /api/admin/login (200 OK) ----
+{"token":"379bf4636912d904837b81e86dbb39c1c1299894e80f210d9a42e6da57c597fe","expiresAt":"2025-11-22T14:25:17Z"}
+
+
+data: ---- Incoming request from 127.0.
+-- response truncated after 4096 bytes --
+
+2025/11/22 12:36:47 ---- Incoming request from 127.0.0.1:65356 ----
+GET /api/admin/submissions HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Authorization: Bearer 379bf4636912d904837b81e86dbb39c1c1299894e80f210d9a42e6da57c597fe
+Referer: http://127.0.0.1:4173/admin/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/22 12:36:47 ---- Response for GET /api/admin/submissions (200 OK) ----
+{"submissions":[]}
+
+2025/11/22 12:36:50 ---- Incoming request from 127.0.0.1:65356 ----
+GET /admin/logs?token=379bf4636912d904837b81e86dbb39c1c1299894e80f210d9a42e6da57c597fe HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: text/event-stream
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Cache-Control: no-cache
+Referer: http://127.0.0.1:4173/admin/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/22 12:37:58 ---- Incoming request from 127.0.0.1:49258 ----
+POST /alerts HTTP/1.1
+Host: sharpen.live
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Cache-Control: no-cache,max-age=0
+Content-Length: 893
+Content-Type: application/atom+xml
+From: googlebot(at)googlebot.com
+Link: <https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCoW3NnFgnDATwU9eUOswisg>; rel=self, <http://pubsubhubbub.appspot.com/>; rel=hub
+Pragma: no-cache
+User-Agent: FeedFetcher-Google; (+http://www.google.com/feedfetcher.html)
+Via: 1.1 Caddy
+X-Forwarded-For: 74.125.209.33
+X-Forwarded-Host: sharpen.live
+X-Forwarded-Proto: https
+X-Hub-Signature: sha1=9e9e26cc23669b1eff129dff2719d89742c4098c
+X-Request-Id: {http.request.id}
+
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:yt="http://www.youtube.com/xml/schemas/2015" xmlns="http://www.w3.org/2005/Atom"><link rel="hub" href="https://pubsubhubbub.appspot.com"/><link rel="self" href="https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCoW3NnFgnDATwU9eUOswisg"/><title>YouTube video feed</title><updated>2025-11-22T00:37:47.166131591+00:00</updated><entry>
+  <id>yt:video:MIvcWoG99G4</id>
+  <yt:videoId>MIvcWoG99G4</yt:videoId>
+  <yt:channelId>UCoW3NnFgnDATwU9eUOswisg</yt:channelId>
+  <title>Magic Moments with Arnaldo🔥</title>
+  <link rel="alternate" href="https://www.youtube.com/watch?v=MIvcWoG99G4"/>
+  <author>
+   <name>Arnaldo Mangini</name>
+   <uri>https://www.youtube.com/channel/UCoW3NnFgnDATwU9eUOswisg</uri>
+  </author>
+  <published>2025-11-22T00:37:44+00:00</published>
+  <updated>2025-11-22T00:37:47.166131591+00:00</updated>
+ </entry></feed>
+
+2025/11/22 12:37:58 Fetching live metadata for 1 video(s): MIvcWoG99G4
+
+2025/11/22 12:37:58 Requesting watch page for MIvcWoG99G4: https://www.youtube.com/watch?v=MIvcWoG99G4
+
+2025/11/22 12:37:59 Fetched metadata for MIvcWoG99G4: channel=UCoW3NnFgnDATwU9eUOswisg title="Magic Moments with Arnaldo🔥" live=true start=2025-11-21 10:26:41 +0000 +0000
+
+2025/11/22 12:37:59 Processed alert notification (1 entries); live streams=1 videos=MIvcWoG99G4
+
+2025/11/22 12:37:59 ---- Response for POST /alerts (204 No Content) ----
+
+2025/11/22 12:42:08 ---- Response for GET /admin/logs (200 OK) ----
+data: ---- Incoming request from 127.0.0.1:63663 ----
+GET /admin/logs?token=08fd4f3d036e671a5160addd3f07585f388f76e5345297aee4d260ef04572515 HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: text/event-stream
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Cache-Control: no-cache
+Referer: http://127.0.0.1:4173/admin/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+
+data: ---- Response for GET /admin/logs (200 OK) ----
+data: ---- Incoming request from 127.0.0.1:63663 ----
+GET /admin/logs?token=08fd4f3d036e671a5160addd3f07585f388f76e5345297aee4d260ef04572515 HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: text/event-stream
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Cache-Control: no-cache
+Referer: http://127.0.0.1:4173/admin/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+
+
+
+data: ---- Incoming request from 127.0.0.1:63741 ----
+GET /api/admin/monitor/youtube HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Authorization: Bearer 08fd4f3d036e671a5160addd3f07585f388f76e5345297aee4d260ef04572515
+Referer: http://127.0.0.1:4173/admin/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+
+data: ---- Response for GET /api/admin/monitor/youtube (401 Unauthorized) ----
+unauthorized
+
+
+data: ---- Incoming request from 127.0.0.1:63741 ----
+POST /api/admin/login HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Content-Length: 52
+Content-Type: application/json
+Origin: http://127.0.0.1:4173
+Referer: http://127.0.0.1:4173/admin/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+{"email":"admin@sharpen.live","password":"chane-me"}
+
+data: ---- Response for POST /api/admin/login (401 Unauthorized) ----
+invalid credentials
+
+
+data: ---- Incoming request from 127.0.0.1:63741 ----
+POST /api/admin/login HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Content-Length: 53
+Content-Type: application/json
+Origin: http://127.0.0.1:4173
+Referer: http://127.0.0.1:4173/admin/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+{"email":"admin@sharpen.live","password":"change-me"}
+
+data: ---- Response for POST /api/admin/login (200 OK) ----
+{"token":"379bf4636912d904837b81e86dbb39c1c1299894e80f210d9a42e6da57c597fe","expiresAt":"2025-11-22T14:25:17Z"}
+
+
+data: ---- Incoming request from 127.0.
+-- response truncated after 4096 bytes --
+
+2025/11/22 12:42:08 ---- Incoming request from 127.0.0.1:49577 ----
+GET /api/admin/submissions HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Authorization: Bearer 379bf4636912d904837b81e86dbb39c1c1299894e80f210d9a42e6da57c597fe
+Referer: http://127.0.0.1:4173/admin/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/22 12:42:09 ---- Response for GET /api/admin/submissions (200 OK) ----
+{"submissions":[]}
+
+2025/11/22 12:42:11 ---- Incoming request from 127.0.0.1:49577 ----
+GET /admin/logs?token=379bf4636912d904837b81e86dbb39c1c1299894e80f210d9a42e6da57c597fe HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: text/event-stream
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Cache-Control: no-cache
+Referer: http://127.0.0.1:4173/admin/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/22 13:18:12 ---- Incoming request from 127.0.0.1:50497 ----
+GET /api/admin/submissions HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Authorization: Bearer 379bf4636912d904837b81e86dbb39c1c1299894e80f210d9a42e6da57c597fe
+Referer: http://127.0.0.1:4173/admin/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/22 13:18:12 ---- Response for GET /api/admin/submissions (200 OK) ----
+{"submissions":[]}
+
+2025/11/22 13:18:12 ---- Response for GET /admin/logs (200 OK) ----
+data: ---- Incoming request from 127.0.0.1:63663 ----
+GET /admin/logs?token=08fd4f3d036e671a5160addd3f07585f388f76e5345297aee4d260ef04572515 HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: text/event-stream
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Cache-Control: no-cache
+Referer: http://127.0.0.1:4173/admin/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+
+data: ---- Response for GET /admin/logs (200 OK) ----
+data: ---- Incoming request from 127.0.0.1:63663 ----
+GET /admin/logs?token=08fd4f3d036e671a5160addd3f07585f388f76e5345297aee4d260ef04572515 HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: text/event-stream
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Cache-Control: no-cache
+Referer: http://127.0.0.1:4173/admin/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+
+
+
+data: ---- Incoming request from 127.0.0.1:63741 ----
+GET /api/admin/monitor/youtube HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Authorization: Bearer 08fd4f3d036e671a5160addd3f07585f388f76e5345297aee4d260ef04572515
+Referer: http://127.0.0.1:4173/admin/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+
+data: ---- Response for GET /api/admin/monitor/youtube (401 Unauthorized) ----
+unauthorized
+
+
+data: ---- Incoming request from 127.0.0.1:63741 ----
+POST /api/admin/login HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Content-Length: 52
+Content-Type: application/json
+Origin: http://127.0.0.1:4173
+Referer: http://127.0.0.1:4173/admin/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+{"email":"admin@sharpen.live","password":"chane-me"}
+
+data: ---- Response for POST /api/admin/login (401 Unauthorized) ----
+invalid credentials
+
+
+data: ---- Incoming request from 127.0.0.1:63741 ----
+POST /api/admin/login HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Content-Length: 53
+Content-Type: application/json
+Origin: http://127.0.0.1:4173
+Referer: http://127.0.0.1:4173/admin/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+{"email":"admin@sharpen.live","password":"change-me"}
+
+data: ---- Response for POST /api/admin/login (200 OK) ----
+{"token":"379bf4636912d904837b81e86dbb39c1c1299894e80f210d9a42e6da57c597fe","expiresAt":"2025-11-22T14:25:17Z"}
+
+
+data: ---- Incoming request from 127.0.
+-- response truncated after 4096 bytes --
+
+2025/11/22 13:18:15 ---- Incoming request from 127.0.0.1:50497 ----
+GET /admin/logs?token=379bf4636912d904837b81e86dbb39c1c1299894e80f210d9a42e6da57c597fe HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: text/event-stream
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Cache-Control: no-cache
+Referer: http://127.0.0.1:4173/admin/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+2025/11/22 13:19:13 ---- Incoming request from 127.0.0.1:50695 ----
+POST /alerts HTTP/1.1
+Host: sharpen.live
+Accept: */*
+Accept-Encoding: gzip, deflate, br
+Cache-Control: no-cache,max-age=0
+Content-Length: 890
+Content-Type: application/atom+xml
+From: googlebot(at)googlebot.com
+Link: <https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCoW3NnFgnDATwU9eUOswisg>; rel=self, <http://pubsubhubbub.appspot.com/>; rel=hub
+Pragma: no-cache
+User-Agent: FeedFetcher-Google; (+http://www.google.com/feedfetcher.html)
+Via: 1.1 Caddy
+X-Forwarded-For: 66.102.8.102
+X-Forwarded-Host: sharpen.live
+X-Forwarded-Proto: https
+X-Hub-Signature: sha1=0740d0f0a310af04973c6cd039e4d97cf00f39a4
+X-Request-Id: {http.request.id}
+
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:yt="http://www.youtube.com/xml/schemas/2015" xmlns="http://www.w3.org/2005/Atom"><link rel="hub" href="https://pubsubhubbub.appspot.com"/><link rel="self" href="https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCoW3NnFgnDATwU9eUOswisg"/><title>YouTube video feed</title><updated>2025-11-21T19:18:21.891277154+00:00</updated><entry>
+  <id>yt:video:N9i1GpcW5OQ</id>
+  <yt:videoId>N9i1GpcW5OQ</yt:videoId>
+  <yt:channelId>UCoW3NnFgnDATwU9eUOswisg</yt:channelId>
+  <title>Magic Moments with Arnaldo!</title>
+  <link rel="alternate" href="https://www.youtube.com/watch?v=N9i1GpcW5OQ"/>
+  <author>
+   <name>Arnaldo Mangini</name>
+   <uri>https://www.youtube.com/channel/UCoW3NnFgnDATwU9eUOswisg</uri>
+  </author>
+  <published>2025-11-21T19:18:19+00:00</published>
+  <updated>2025-11-21T19:18:21.891277154+00:00</updated>
+ </entry></feed>
+
+2025/11/22 13:19:13 Fetching live metadata for 1 video(s): N9i1GpcW5OQ
+
+2025/11/22 13:19:13 Requesting watch page for N9i1GpcW5OQ: https://www.youtube.com/watch?v=N9i1GpcW5OQ
+
+2025/11/22 13:19:13 Fetch for video N9i1GpcW5OQ failed: Get "https://www.youtube.com/watch?v=N9i1GpcW5OQ": context canceled
+
+2025/11/22 13:19:13 failed to fetch live metadata for videos N9i1GpcW5OQ: video lookup failed: fetch N9i1GpcW5OQ: Get "https://www.youtube.com/watch?v=N9i1GpcW5OQ": context canceled
+
+2025/11/22 13:19:13 ---- Response for POST /alerts (202 Accepted) ----
+
+2025/11/22 14:10:09 ---- Response for GET /admin/logs (200 OK) ----
+data: ---- Incoming request from 127.0.0.1:63663 ----
+GET /admin/logs?token=08fd4f3d036e671a5160addd3f07585f388f76e5345297aee4d260ef04572515 HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: text/event-stream
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Cache-Control: no-cache
+Referer: http://127.0.0.1:4173/admin/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+
+data: ---- Response for GET /admin/logs (200 OK) ----
+data: ---- Incoming request from 127.0.0.1:63663 ----
+GET /admin/logs?token=08fd4f3d036e671a5160addd3f07585f388f76e5345297aee4d260ef04572515 HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: text/event-stream
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Cache-Control: no-cache
+Referer: http://127.0.0.1:4173/admin/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+
+
+
+data: ---- Incoming request from 127.0.0.1:63741 ----
+GET /api/admin/monitor/youtube HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Authorization: Bearer 08fd4f3d036e671a5160addd3f07585f388f76e5345297aee4d260ef04572515
+Referer: http://127.0.0.1:4173/admin/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+
+
+data: ---- Response for GET /api/admin/monitor/youtube (401 Unauthorized) ----
+unauthorized
+
+
+data: ---- Incoming request from 127.0.0.1:63741 ----
+POST /api/admin/login HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Content-Length: 52
+Content-Type: application/json
+Origin: http://127.0.0.1:4173
+Referer: http://127.0.0.1:4173/admin/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+{"email":"admin@sharpen.live","password":"chane-me"}
+
+data: ---- Response for POST /api/admin/login (401 Unauthorized) ----
+invalid credentials
+
+
+data: ---- Incoming request from 127.0.0.1:63741 ----
+POST /api/admin/login HTTP/1.1
+Host: 127.0.0.1:8880
+Accept: */*
+Accept-Encoding: gzip, deflate, br, zstd
+Accept-Language: en-GB,en-US;q=0.9,en;q=0.8
+Content-Length: 53
+Content-Type: application/json
+Origin: http://127.0.0.1:4173
+Referer: http://127.0.0.1:4173/admin/
+Sec-Ch-Ua: "Chromium";v="142", "Google Chrome";v="142", "Not_A Brand";v="99"
+Sec-Ch-Ua-Mobile: ?0
+Sec-Ch-Ua-Platform: "macOS"
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36
+X-Forwarded-For: 127.0.0.1
+
+{"email":"admin@sharpen.live","password":"change-me"}
+
+data: ---- Response for POST /api/admin/login (200 OK) ----
+{"token":"379bf4636912d904837b81e86dbb39c1c1299894e80f210d9a42e6da57c597fe","expiresAt":"2025-11-22T14:25:17Z"}
+
+
+data: ---- Incoming request from 127.0.
+-- response truncated after 4096 bytes --
+
+2025/11/22 14:10:09 Shutting down...

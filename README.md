@@ -3,8 +3,7 @@ This repository houses both the alert server and the Sharpen.Live WebAssembly/UI
 
 ## Layout
 - `cmd/alertserver`: alert API/WebSub service.
-- `cmd/ui-serve`: static UI host and API/SSE proxy.
-- `cmd/ui-server`: server-rendered HTML variant of the UI.
+- `cmd/ui-server`: serves the UI (SSR) and static assets.
 - `cmd/ui-wasm`: WASM entrypoint that builds `ui/main.wasm`.
 - `internal/alert`: alertserver domain logic, handlers, and platform clients.
 - `internal/ui`: shared UI logic (forms, admin console, roster mapping, WASM helpers).
@@ -21,12 +20,8 @@ go run .
 ```bash
 go run ./cmd/alertserver
 ```
-2) Serve the UI (pick one):
+2) Serve the UI:
 ```bash
-# Static host + API proxy
-go run ./cmd/ui-serve -dir ui -api http://127.0.0.1:8880 -listen 127.0.0.1:4173
-
-# Server-rendered HTML
 go run ./cmd/ui-server -templates ui/templates -assets ui -api http://127.0.0.1:8880 -listen 127.0.0.1:4173
 ```
 3) Build the WASM bundle when needed:

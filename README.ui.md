@@ -3,8 +3,7 @@ Sharpen.Live UI is the WebAssembly dashboard for the alert server. It renders th
 
 ## Project layout
 - `cmd/ui-wasm`: browser entrypoint that compiles to the WASM bundle.
-- `cmd/ui-serve`: static asset server and API/SSE proxy for local development.
-- `cmd/ui-server`: server-rendered HTML variant sharing the same domain logic.
+- `cmd/ui-server`: serves the SSR HTML and static assets.
 - `internal/ui/...`: shared code for admin console, forms, roster mapping, and view state.
 - `ui/`: static assets (`index.html`, `styles.css`, templates, `wasm_exec.js`, generated `main.wasm`).
 
@@ -27,15 +26,14 @@ go run ./cmd/alertserver
 ```
 Then serve the UI bundle (from the repo root):
 ```bash
-go run ./cmd/ui-serve -dir ui -listen 127.0.0.1:4173 -api http://127.0.0.1:8880
+go run ./cmd/ui-server -templates ui/templates -assets ui -listen 127.0.0.1:4173 -api http://127.0.0.1:8880
 ```
-For server-rendered HTML, use `go run ./cmd/ui-server -templates ui/templates -assets ui`.
 
 ## Build tags & architecture
-Files that run in the browser begin with `//go:build js && wasm` (for example everything under `internal/ui/wasm`, `internal/ui/forms`, and `internal/ui/admin`). Host-only helpers such as `cmd/ui-serve` and `internal/ui/wasm/wasm_stub.go` use `//go:build !js && !wasm` so `GOOS=js GOARCH=wasm` builds only the UI logic while standard builds include the static-file server and helpers.
+Files that run in the browser begin with `//go:build js && wasm` (for example everything under `internal/ui/wasm`, `internal/ui/forms`, and `internal/ui/admin`). Host-only helpers such as `cmd/ui-server` and `internal/ui/wasm/wasm_stub.go` use `//go:build !js && !wasm` so `GOOS=js GOARCH=wasm` builds only the UI logic while standard builds include the static-file server and helpers.
 
 At runtime:
-- `cmd/ui-serve` hosts static assets and proxies `/api/*` calls to the alert server.
+- `cmd/ui-server` hosts static assets and proxies `/api/*` calls to the alert server.
 - The browser bundle (`main.wasm`, `index.html`, `styles.css`) renders the public roster and admin console, talking to the alert server via the proxy.
 - Admin handlers reuse the same data structures defined in `internal/ui/model/types.go` so the UI and server stay in sync.
 

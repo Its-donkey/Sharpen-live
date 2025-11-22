@@ -163,3 +163,16 @@ func TestHandleSubscriptionConfirmationMissingExpectation(t *testing.T) {
 		t.Fatalf("expected bad request when expectation missing")
 	}
 }
+
+func TestHandleSubscriptionConfirmationRejectsInvalidChallenge(t *testing.T) {
+	req := httptest.NewRequest(http.MethodGet, "/alerts?hub.challenge=<script>&hub.verify_token=tok&hub.topic=topic&hub.mode=subscribe", nil)
+	websub.RegisterExpectation(websub.Expectation{VerifyToken: "tok", Topic: "topic", Mode: "subscribe"})
+	rr := httptest.NewRecorder()
+	handled := HandleSubscriptionConfirmation(rr, req, SubscriptionConfirmationOptions{})
+	if !handled {
+		t.Fatalf("expected handled true")
+	}
+	if rr.Code != http.StatusBadRequest {
+		t.Fatalf("expected 400 for invalid challenge, got %d", rr.Code)
+	}
+}

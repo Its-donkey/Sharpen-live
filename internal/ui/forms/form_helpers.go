@@ -48,8 +48,8 @@ func CanonicalizeChannelInput(raw string) string {
 	if strings.HasPrefix(lower, "http://") || strings.HasPrefix(lower, "https://") {
 		return trimmed
 	}
-	if strings.HasPrefix(trimmed, "@") {
-		return "https://www.youtube.com/" + trimmed
+	if handle := extractHandle(trimmed); handle != "" {
+		return buildURLFromHandle(handle, "youtube")
 	}
 	if strings.HasPrefix(lower, "youtube.com/") || strings.HasPrefix(lower, "www.youtube.com/") || strings.HasPrefix(lower, "m.youtube.com/") {
 		return "https://" + trimmed
@@ -68,6 +68,59 @@ func FirstPlatformURL(rows []model.PlatformFormRow) string {
 		}
 	}
 	return ""
+}
+
+func extractHandle(raw string) string {
+	trimmed := strings.TrimSpace(raw)
+	if strings.HasPrefix(trimmed, "@") && len(trimmed) > 1 {
+		return trimmed
+	}
+	return ""
+}
+
+func inferHandleFromURL(raw string) string {
+	trimmed := strings.TrimSpace(raw)
+	if trimmed == "" {
+		return ""
+	}
+	if strings.HasPrefix(trimmed, "@") {
+		return trimmed
+	}
+	if parsed, err := url.Parse(trimmed); err == nil {
+		segments := strings.Split(strings.Trim(parsed.Path, "/"), "/")
+		for _, segment := range segments {
+			if strings.HasPrefix(segment, "@") && len(segment) > 1 {
+				return segment
+			}
+		}
+	}
+	return ""
+}
+
+func resolvePlatformPreset(raw string) string {
+	switch strings.ToLower(strings.TrimSpace(raw)) {
+	case "twitch":
+		return "twitch"
+	case "facebook":
+		return "facebook"
+	default:
+		return "youtube"
+	}
+}
+
+func buildURLFromHandle(handle, preset string) string {
+	handle = strings.TrimPrefix(strings.TrimSpace(handle), "@")
+	if handle == "" {
+		return ""
+	}
+	switch resolvePlatformPreset(preset) {
+	case "twitch":
+		return "https://www.twitch.tv/" + handle
+	case "facebook":
+		return "https://www.facebook.com/" + handle
+	default:
+		return "https://www.youtube.com/@" + handle
+	}
 }
 
 // GenerateHubSecret produces a random hub secret for PubSub subscriptions.

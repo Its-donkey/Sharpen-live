@@ -156,6 +156,7 @@ func handleAdminUnauthorizedResponse() {
 func performAdminLogout(status model.AdminStatus, transient bool) {
 	adminState.Token = ""
 	adminState.Loading = false
+	adminState.StatusCheckRunning = false
 	adminState.Submissions = nil
 	adminState.Streamers = nil
 	adminState.StreamerForms = make(map[string]*model.AdminStreamerForm)

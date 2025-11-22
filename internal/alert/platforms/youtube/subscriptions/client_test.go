@@ -87,3 +87,35 @@ func TestSubscribeYouTubePropagatesHubErrors(t *testing.T) {
 		t.Fatalf("expected hub body propagated")
 	}
 }
+
+func TestSubscribeYouTubeRejectsUnsafeURLs(t *testing.T) {
+	cases := []struct {
+		name string
+		req  YouTubeRequest
+	}{
+		{
+			name: "relative hub",
+			req:  YouTubeRequest{HubURL: "/relative", Callback: "https://callback.example.com/alerts", Topic: "https://www.youtube.com/xml/feeds/videos.xml?channel_id=UC123", Mode: "subscribe", Verify: "async"},
+		},
+		{
+			name: "hub with creds",
+			req:  YouTubeRequest{HubURL: "https://user:pw@pubsubhubbub.appspot.com/subscribe", Callback: "https://callback.example.com/alerts", Topic: "https://www.youtube.com/xml/feeds/videos.xml?channel_id=UC123", Mode: "subscribe", Verify: "async"},
+		},
+		{
+			name: "topic with creds",
+			req:  YouTubeRequest{HubURL: "http://pubsubhubbub.appspot.com/subscribe", Callback: "https://callback.example.com/alerts", Topic: "https://user:pw@youtube.com/xml/feeds/videos.xml?channel_id=UC123", Mode: "subscribe", Verify: "async"},
+		},
+		{
+			name: "callback not https",
+			req:  YouTubeRequest{HubURL: "http://pubsubhubbub.appspot.com/subscribe", Callback: "http://insecure.local/alerts", Topic: "https://www.youtube.com/xml/feeds/videos.xml?channel_id=UC123", Mode: "subscribe", Verify: "async"},
+		},
+	}
+
+	for _, tc := range cases {
+		t.Run(tc.name, func(t *testing.T) {
+			if _, _, _, err := SubscribeYouTube(context.Background(), nil, nil, tc.req); err == nil {
+				t.Fatalf("expected validation error")
+			}
+		})
+	}
+}

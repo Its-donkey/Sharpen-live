@@ -97,5 +97,6 @@ All HTTP routes are registered in `internal/api/v1/router.go`. Update the table 
 | POST   | `/api/admin/login`           | Issues a bearer token for administrative API calls. |
 | GET    | `/api/admin/submissions`     | Lists pending streamer submissions for review. |
 | POST   | `/api/admin/submissions`     | Approves or rejects a pending submission. |
+| POST   | `/api/admin/streamers/status` | Refreshes and records the online status for all stored channels. |
 | GET    | `/api/admin/monitor/youtube` | Summarises YouTube lease status for every stored channel. |
 | GET    | `/`                          | Returns placeholder text reminding you to host alGUI separately. |

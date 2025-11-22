@@ -1,0 +1,23 @@
+# OS / IDE
+.DS_Store
+Thumbs.db
+
+
+# Logs
+*.log
+*.log.*
+data/logs/
+
+# Build artifacts
+bin/
+dist/
+coverage.out
+
+# Generated UI assets
+ui/main.wasm
+ui/dist/
+ui/node_modules/
+live-stream-alerts/node_modules/
+
+# Local data snapshots
+data/

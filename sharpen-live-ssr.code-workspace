@@ -1,0 +1,96 @@
+{
+	"folders": [
+		{
+			"name": "sharpen-live",
+			"path": "."
+		}
+	],
+	"settings": {
+		"editor.formatOnSave": true,
+		"files.trimTrailingWhitespace": true,
+		"[go]": {
+			"editor.defaultFormatter": "golang.go",
+			"editor.codeActionsOnSave": {
+				"source.organizeImports": "explicit"
+			}
+		}
+	},
+	"extensions": {
+		"recommendations": [
+			"golang.go",
+			"ms-vscode.makefile-tools",
+			"esbenp.prettier-vscode"
+		]
+	},
+	"tasks": {
+		"version": "2.0.0",
+		"tasks": [
+			{
+				"label": "Run Sharpen UI server",
+				"type": "shell",
+				"command": "go run ./cmd/ui-server -listen 127.0.0.1:4173 -api http://127.0.0.1:8880 -assets ui -templates ui/templates",
+				"group": "build",
+				"problemMatcher": "$go",
+				"detail": "Start the server-rendered UI with API proxying to the alert server."
+			},
+			{
+				"label": "Run alertserver",
+				"type": "shell",
+				"command": "go run ./cmd/alertserver",
+				"group": "build",
+				"problemMatcher": "$go",
+				"detail": "Start the alert server so the UI can fetch roster data."
+			},
+			{
+				"label": "Test UI packages",
+				"type": "shell",
+				"command": "go test ./internal/ui/...",
+				"group": {
+					"kind": "test",
+					"isDefault": true
+				},
+				"problemMatcher": "$go",
+				"detail": "Run all tests for the UI module."
+			},
+			{
+				"label": "Test alert server",
+				"type": "shell",
+				"command": "go test ./internal/alert...",
+				"group": "test",
+				"problemMatcher": "$go",
+				"detail": "Run all tests for the alert server."
+			}
+		]
+	},
+	"launch": {
+		"version": "0.2.0",
+		"configurations": [
+			{
+				"name": "Debug UI server",
+				"type": "go",
+				"request": "launch",
+				"mode": "debug",
+				"program": "${workspaceFolder:sharpen-live}/cmd/ui-server/main.go",
+				"args": [
+					"-listen",
+					"127.0.0.1:4173",
+					"-api",
+					"http://127.0.0.1:8880",
+					"-assets",
+					"ui",
+					"-templates",
+					"ui/templates"
+				],
+				"cwd": "${workspaceFolder:sharpen-live}"
+			},
+			{
+				"name": "Debug alertserver",
+				"type": "go",
+				"request": "launch",
+				"mode": "debug",
+				"program": "${workspaceFolder:sharpen-live}/cmd/alertserver",
+				"cwd": "${workspaceFolder:sharpen-live}"
+			}
+		]
+	}
+}

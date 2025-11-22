@@ -1,0 +1,70 @@
+{{define "home"}}
+{{template "base" .}}
+{{end}}
+
+{{define "content"}}
+<main class="surface" id="home-view" aria-labelledby="streamers-title">
+  <section class="intro">
+    <h2 id="streamers-title">Live Knife Sharpening Studio</h2>
+    <p>
+      Discover bladesmiths and sharpening artists streaming in real time. Status indicators show who is live, who is prepping off camera, and who is offline.
+      Premium partners share their booking links so you can send in your knives for a professional edge.
+    </p>
+    {{if .RosterError}}
+      <div class="submit-streamer-result" data-state="error">{{.RosterError}}</div>
+    {{end}}
+  </section>
+
+  <section class="streamer-table" aria-label="Sharpen Live streamer roster">
+    <table>
+      <thead>
+        <tr>
+          <th scope="col">Status</th>
+          <th scope="col">Name</th>
+          <th scope="col">Streaming Platforms</th>
+          <th scope="col">Language</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{range .Streamers}}
+          <tr>
+            <td data-label="Status">
+              <span class="status {{statusClass .Status}}">{{statusLabel .Status .StatusLabel}}</span>
+            </td>
+            <td data-label="Name">
+              <strong><a class="platform-link" href="/streamers/{{.ID}}">{{.Name}}</a></strong>
+              {{if .Description}}
+                <div class="streamer-description">{{.Description}}</div>
+              {{end}}
+            </td>
+            <td data-label="Streaming Platforms">
+              {{if .Platforms}}
+                <ul class="platform-list">
+                  {{range .Platforms}}
+                    <li>
+                      {{if .ChannelURL}}
+                        <a class="platform-link" href="{{.ChannelURL}}" target="_blank" rel="noopener noreferrer">{{.Name}}</a>
+                      {{else}}
+                        <span class="platform-link" aria-disabled="true">{{.Name}}</span>
+                      {{end}}
+                    </li>
+                  {{end}}
+                </ul>
+              {{else}}—{{end}}
+            </td>
+            <td data-label="Language">
+              <span class="lang">
+                {{if .Languages}}{{join .Languages " · "}}{{else}}—{{end}}
+              </span>
+            </td>
+          </tr>
+        {{else}}
+          <tr><td colspan="4" class="table-status">No streamers available at the moment.</td></tr>
+        {{end}}
+      </tbody>
+    </table>
+  </section>
+
+  {{template "submit_form" .Submit}}
+</main>
+{{end}}

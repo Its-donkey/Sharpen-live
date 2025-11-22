@@ -113,6 +113,12 @@ func NewRouter(opts Options) http.Handler {
 		Logger:           logger,
 		YouTube:          opts.YouTube,
 	}))
+	mux.Handle("/api/admin/streamers/status", adminhttp.NewStatusHandler(adminhttp.StatusHandlerOptions{
+		Authorizer:     adminservice.AuthService{Manager: adminMgr},
+		Manager:        adminMgr,
+		Logger:         logger,
+		StreamersStore: streamersStore,
+	}))
 	mux.Handle("/api/admin/monitor/youtube", adminhttp.NewMonitorHandler(adminhttp.MonitorHandlerOptions{
 		Authorizer:     adminservice.AuthService{Manager: adminMgr},
 		Manager:        adminMgr,

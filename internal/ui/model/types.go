@@ -226,6 +226,15 @@ type AdminStatus struct {
 	Tone    string
 }
 
+// AdminStatusCheckResult summarises the outcome of a live-status refresh.
+type AdminStatusCheckResult struct {
+	Checked int `json:"checked"`
+	Online  int `json:"online"`
+	Offline int `json:"offline"`
+	Updated int `json:"updated"`
+	Failed  int `json:"failed"`
+}
+
 // AdminStreamerForm represents the editable streamer fields in the admin console.
 type AdminStreamerForm struct {
 	ID               string
@@ -248,6 +257,7 @@ type AdminViewState struct {
 	LoginPassword            string
 	Status                   AdminStatus
 	Loading                  bool
+	StatusCheckRunning       bool
 	ActiveTab                string
 	ActivityTab              string
 	ActivityLogs             []AdminActivityLog

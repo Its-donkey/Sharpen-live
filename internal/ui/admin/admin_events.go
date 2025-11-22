@@ -41,6 +41,11 @@ func bindAdminEvents() {
 		HandleAdminLogout()
 		return nil
 	})
+	statusCheck := getDocument().Call("getElementById", "admin-status-check")
+	addAdminHandler(statusCheck, "click", func(js.Value, []js.Value) any {
+		handleRosterStatusCheck()
+		return nil
+	})
 
 	tabButtons := getDocument().Call("querySelectorAll", "[data-admin-tab]")
 	forEachNode(tabButtons, func(node js.Value) {

@@ -69,15 +69,15 @@ func RenderAdminConsole() {
 	container.Set("innerHTML", builder.String())
 	bindAdminEvents()
 }
-	//----------------------------------------------------------------------------------
-	// The following lines need to be put back in below prior to going to production:
-	//
-    // <input type="password" id="admin-password" value="` + html.EscapeString(state.AdminConsole.LoginPassword) + `" placeholder="Enter your password" autocomplete="current-password" required />
-    // <input type="email" id="admin-email" value="` + html.EscapeString(state.AdminConsole.LoginEmail) + `" placeholder="you@example.com" autocomplete="username" required />
-	//
-	//----------------------------------------------------------------------------------
 
-	
+//----------------------------------------------------------------------------------
+// The following lines need to be put back in below prior to going to production:
+//
+// <input type="password" id="admin-password" value="` + html.EscapeString(state.AdminConsole.LoginPassword) + `" placeholder="Enter your password" autocomplete="current-password" required />
+// <input type="email" id="admin-email" value="` + html.EscapeString(state.AdminConsole.LoginEmail) + `" placeholder="you@example.com" autocomplete="username" required />
+//
+//----------------------------------------------------------------------------------
+
 func renderAdminLoginForm() string {
 	var builder strings.Builder
 	builder.WriteString(`

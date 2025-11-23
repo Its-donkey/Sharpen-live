@@ -13,8 +13,8 @@
         <div class="platform-rows">
           {{range $idx, $row := .State.Platforms}}
             {{$rowErr := index $.State.Errors.Platforms $row.ID}}
-            <div class="platform-row" data-platform-row="{{$row.ID}}">
-              <label class="form-field form-field-inline highlight-change {{if $rowErr.Channel}}form-field-error{{end}}" id="platform-url-field-{{$row.ID}}" style="flex:1 1 50%;max-width:50%;min-width:240px;">
+            <div class="platform-row form-grid platform-row-grid" data-platform-row="{{$row.ID}}">
+              <label class="form-field form-field-inline highlight-change {{if $rowErr.Channel}}form-field-error{{end}}" id="platform-url-field-{{$row.ID}}">
                 <span>Channel URL</span>
                 <input type="hidden" name="platform_id" value="{{$row.ID}}">
                 <input type="url" class="channel-url-input" name="platform_url" placeholder="https://example.com/live or @handle" value="{{$row.ChannelURL}}" required>

@@ -91,9 +91,8 @@ func RenderSubmitForm() {
 			if errors.Channel {
 				channelWrapper += " form-field-error"
 			}
-			builder.WriteString(`<div class="platform-row" data-platform-row="` + row.ID + `" style="display:flex;flex-wrap:wrap;gap:0.75rem;align-items:flex-end;">`)
-			builder.WriteString(`<div class="platform-row-fields" style="display:flex;flex-wrap:wrap;gap:0.75rem;align-items:flex-end;flex:1 1 0%;">`)
-			builder.WriteString(`<label class="` + channelWrapper + `" id="platform-url-field-` + row.ID + `" style="flex:1 1 50%;max-width:50%;min-width:240px;"><span>Channel URL</span>`)
+			builder.WriteString(`<div class="platform-row form-grid platform-row-grid" data-platform-row="` + row.ID + `">`)
+			builder.WriteString(`<label class="` + channelWrapper + `" id="platform-url-field-` + row.ID + `"><span>Channel URL</span>`)
 			builder.WriteString(`<input type="url" class="channel-url-input" placeholder="https://example.com/live or @handle" value="` + html.EscapeString(row.ChannelURL) + `" data-platform-channel data-row="` + row.ID + `" required />`)
 			builder.WriteString(`</label>`)
 
@@ -103,7 +102,7 @@ func RenderSubmitForm() {
 			}
 			if handleValue != "" || strings.TrimSpace(row.Preset) != "" {
 				selected := resolvePlatformPreset(row.Preset)
-				builder.WriteString(`<label class="form-field form-field-inline platform-select" style="flex:0 0 50%;max-width:50%;min-width:180px;"><span>Handle platform</span>`)
+				builder.WriteString(`<label class="form-field form-field-inline platform-select"><span>Handle platform</span>`)
 				builder.WriteString(`<select data-platform-choice data-row="` + row.ID + `">`)
 				for _, option := range platformHandleOptions {
 					builder.WriteString(`<option value="` + option.Value + `"`)
@@ -115,7 +114,6 @@ func RenderSubmitForm() {
 				builder.WriteString(`</select></label>`)
 			}
 
-			builder.WriteString(`</div>`)
 			builder.WriteString(`<button type="button" class="remove-platform-button" data-remove-platform="` + row.ID + `">Remove</button>`)
 			if errors.Channel {
 				builder.WriteString(`<p class="field-error-text">Provide a valid channel URL.</p>`)

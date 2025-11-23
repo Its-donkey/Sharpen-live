@@ -24,7 +24,7 @@
               {{range .Streamer.Platforms}}
                 <li>
                   {{if .ChannelURL}}
-                    <a class="platform-link" href="{{.ChannelURL}}" target="_blank" rel="noopener noreferrer">{{.Name}}</a>
+                    <a class="platform-link" href="{{.ChannelURL}}" target="_blank" rel="nofollow noopener noreferrer">{{.Name}}</a>
                   {{else}}
                     <span class="platform-link" aria-disabled="true">{{.Name}}</span>
                   {{end}}

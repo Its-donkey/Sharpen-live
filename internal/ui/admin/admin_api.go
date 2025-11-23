@@ -9,6 +9,7 @@ import (
 	"io"
 	"net/http"
 	"strings"
+	"time"
 
 	"github.com/Its-donkey/Sharpen-live/internal/ui/model"
 	"github.com/Its-donkey/Sharpen-live/internal/ui/state"
@@ -182,19 +183,20 @@ func adminUpdateSettings(ctx context.Context, updates model.AdminSettingsUpdate)
 	return err
 }
 
-func adminFetchMonitor(ctx context.Context) ([]model.AdminMonitorEvent, error) {
+func adminFetchMonitor(ctx context.Context) ([]model.AdminMonitorEvent, map[string]model.YouTubeLeaseStatus, error) {
 	body, status, err := adminAPIRequest(ctx, http.MethodGet, "/api/admin/monitor/youtube", nil, true)
 	if err != nil {
 		if status == http.StatusNotFound {
-			return nil, nil
+			return nil, nil, nil
 		}
-		return nil, err
+		return nil, nil, err
 	}
 	var resp adminMonitorResponse
 	if err := json.Unmarshal(body, &resp); err != nil {
-		return nil, err
+		return nil, nil, err
 	}
-	return convertMonitorResponse(resp), nil
+	events, leases := convertMonitorResponse(resp)
+	return events, leases, nil
 }
 
 type adminMonitorResponse struct {
@@ -225,11 +227,14 @@ type adminMonitorRecord struct {
 	Status             string `json:"status"`
 }
 
-func convertMonitorResponse(resp adminMonitorResponse) []model.AdminMonitorEvent {
+const leaseExpiringSoonWindow = 12 * time.Hour
+
+func convertMonitorResponse(resp adminMonitorResponse) ([]model.AdminMonitorEvent, map[string]model.YouTubeLeaseStatus) {
 	if len(resp.Records) == 0 && resp.Summary.Total == 0 {
-		return nil
+		return nil, nil
 	}
 	events := make([]model.AdminMonitorEvent, 0, len(resp.Records)+1)
+	leases := make(map[string]model.YouTubeLeaseStatus)
 	if resp.Summary.Total > 0 {
 		message := fmt.Sprintf(
 			"Total %d · healthy %d · renewing %d · expired %d · pending %d",
@@ -259,8 +264,78 @@ func convertMonitorResponse(resp adminMonitorResponse) []model.AdminMonitorEvent
 			Timestamp: strings.TrimSpace(record.LeaseStart),
 			Message:   message,
 		})
+		lease := buildLeaseStatus(record)
+		for _, key := range leaseKeys(record) {
+			if key == "" {
+				continue
+			}
+			leases[key] = lease
+		}
 	}
-	return events
+	if len(leases) == 0 {
+		return events, nil
+	}
+	return events, leases
+}
+
+func buildLeaseStatus(record adminMonitorRecord) model.YouTubeLeaseStatus {
+	now := time.Now().UTC()
+	expiryTime, _ := time.Parse(time.RFC3339, strings.TrimSpace(record.LeaseExpires))
+	expired := !expiryTime.IsZero() && now.After(expiryTime)
+	expiringSoon := !expired && !expiryTime.IsZero() && expiryTime.Sub(now) <= leaseExpiringSoonWindow
+
+	status := strings.ToLower(strings.TrimSpace(record.Status))
+	if status == "" {
+		switch {
+		case expired:
+			status = "expired"
+		case expiringSoon:
+			status = "expiring"
+		default:
+			status = "valid"
+		}
+	}
+
+	return model.YouTubeLeaseStatus{
+		Alias:        strings.TrimSpace(record.Alias),
+		Handle:       strings.TrimSpace(record.Handle),
+		ChannelID:    strings.TrimSpace(record.ChannelID),
+		LeaseStart:   strings.TrimSpace(record.LeaseStart),
+		LeaseExpires: strings.TrimSpace(record.LeaseExpires),
+		Status:       status,
+		Expired:      expired,
+		ExpiringSoon: expiringSoon,
+		StartDate:    formatLeaseDate(record.LeaseStart),
+	}
+}
+
+func formatLeaseDate(raw string) string {
+	raw = strings.TrimSpace(raw)
+	if raw == "" {
+		return ""
+	}
+	if t, err := time.Parse(time.RFC3339, raw); err == nil {
+		return t.Format("2006-01-02")
+	}
+	if len(raw) >= 10 {
+		return raw[:10]
+	}
+	return raw
+}
+
+func leaseKeys(record adminMonitorRecord) []string {
+	keys := []string{
+		normalizeLeaseKey(record.Alias),
+		normalizeLeaseKey(record.Handle),
+		normalizeLeaseKey(record.ChannelID),
+	}
+	return keys
+}
+
+func normalizeLeaseKey(raw string) string {
+	raw = strings.ToLower(strings.TrimSpace(raw))
+	raw = strings.TrimPrefix(raw, "@")
+	return raw
 }
 
 func adminCheckChannelStatus(ctx context.Context) (model.AdminStatusCheckResult, error) {

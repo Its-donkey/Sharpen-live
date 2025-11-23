@@ -22,12 +22,13 @@ func TestConfigureLoggingCreatesFile(t *testing.T) {
 	}
 	file.Close()
 
-	info, err := os.Stat(path)
+	content, err := os.ReadFile(path)
 	if err != nil {
-		t.Fatalf("stat log file: %v", err)
+		t.Fatalf("read log file: %v", err)
 	}
-	if info.Size() != 0 {
-		t.Fatalf("expected new log file to be empty, got %d", info.Size())
+	expected := `{"logevents":[]}` + "\n"
+	if string(content) != expected {
+		t.Fatalf("expected empty log envelope, got %q", string(content))
 	}
 }
 

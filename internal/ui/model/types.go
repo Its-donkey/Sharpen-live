@@ -158,12 +158,15 @@ type MetadataResponse struct {
 
 // AdminSubmission represents a pending roster submission awaiting moderation.
 type AdminSubmission struct {
-	ID          string                 `json:"id"`
-	SubmittedAt string                 `json:"submittedAt"`
-	Payload     AdminSubmissionPayload `json:"payload"`
+	ID          string   `json:"id"`
+	Alias       string   `json:"alias"`
+	Description string   `json:"description"`
+	Languages   []string `json:"languages"`
+	PlatformURL string   `json:"platformUrl"`
+	SubmittedAt string   `json:"submittedAt"`
 }
 
-// AdminSubmissionPayload mirrors how the admin console displays submission details.
+// AdminSubmissionPayload mirrors the editable fields used when updating a streamer from the admin console.
 type AdminSubmissionPayload struct {
 	Name        string     `json:"name"`
 	Description string     `json:"description"`
@@ -202,11 +205,24 @@ type AdminMonitorEvent struct {
 	Message   string `json:"message"`
 }
 
+// YouTubeLeaseStatus describes the subscription lease health for a YouTube channel.
+type YouTubeLeaseStatus struct {
+	Alias        string `json:"alias"`
+	Handle       string `json:"handle"`
+	ChannelID    string `json:"channelId"`
+	LeaseStart   string `json:"leaseStart"`
+	LeaseExpires string `json:"leaseExpires"`
+	Status       string `json:"status"`
+	Expired      bool   `json:"expired"`
+	ExpiringSoon bool   `json:"expiringSoon"`
+	StartDate    string `json:"startDate,omitempty"`
+}
+
 // AdminActivityLog stores the display text for stdout/stderr entries shown in the console.
 type AdminActivityLog struct {
-	Timestamp string
-	Message   string
-	Raw       string
+	Time    string `json:"time"`
+	Message string `json:"message"`
+	Raw     string `json:"raw"`
 }
 
 // LoginResponse holds the admin JWT returned by the alert server.
@@ -265,6 +281,7 @@ type AdminViewState struct {
 	ActivityLogsShouldScroll bool
 	Submissions              []AdminSubmission
 	Streamers                []Streamer
+	YouTubeLeases            map[string]YouTubeLeaseStatus
 	StreamerForms            map[string]*AdminStreamerForm
 	Settings                 *AdminSettings
 	SettingsDraft            *AdminSettings

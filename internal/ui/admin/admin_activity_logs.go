@@ -7,6 +7,7 @@ import (
 	"encoding/json"
 	"net/http"
 	"net/url"
+	"regexp"
 	"strings"
 	"syscall/js"
 	"time"
@@ -23,6 +24,7 @@ const (
 var (
 	websiteLogSource   js.Value
 	websiteLogHandlers []js.Func
+	logTimestampRegex  = regexp.MustCompile(`^(\d{4}/\d{2}/\d{2} \d{2}:\d{2}:\d{2})`)
 )
 
 func ensureWebsiteLogStream() {
@@ -86,25 +88,11 @@ func handleWebsiteLogMessage(payload string) {
 	if payload == "" {
 		return
 	}
-	entry := model.AdminActivityLog{Raw: payload}
-	var parsed map[string]any
-	if err := json.Unmarshal([]byte(payload), &parsed); err == nil {
-		if ts, ok := parsed["time"].(string); ok && ts != "" {
-			entry.Timestamp = ts
-		} else if ts, ok := parsed["datetime"].(string); ok && ts != "" {
-			entry.Timestamp = ts
-		}
-		if msg, ok := parsed["message"].(string); ok && msg != "" {
-			entry.Message = msg
-		}
+	entries := parseWebsiteLogEntries(payload)
+	if len(entries) == 0 {
+		return
 	}
-	if entry.Message == "" {
-		entry.Message = payload
-	}
-	if entry.Timestamp == "" {
-		entry.Timestamp = time.Now().UTC().Format(time.RFC3339Nano)
-	}
-	state.AdminConsole.ActivityLogs = append(state.AdminConsole.ActivityLogs, entry)
+	state.AdminConsole.ActivityLogs = append(state.AdminConsole.ActivityLogs, entries...)
 	if len(state.AdminConsole.ActivityLogs) > maxActivityLogEntries {
 		state.AdminConsole.ActivityLogs = state.AdminConsole.ActivityLogs[len(state.AdminConsole.ActivityLogs)-maxActivityLogEntries:]
 	}
@@ -125,7 +113,7 @@ func handleAdminLogsReconnect() {
 func scrollWebsiteLogFeed() {
 	feed := getDocument().Call("getElementById", "admin-log-feed")
 	if feed.Truthy() {
-		feed.Set("scrollTop", feed.Get("scrollHeight"))
+		feed.Set("scrollTop", 0)
 	}
 }
 
@@ -142,4 +130,82 @@ func verifyLogStreamAuthorization() {
 	if status == http.StatusUnauthorized {
 		handleAdminUnauthorizedResponse()
 	}
+}
+
+func parseTimestampFromLog(payload string) string {
+	matches := logTimestampRegex.FindStringSubmatch(payload)
+	if len(matches) > 1 {
+		return matches[1]
+	}
+	return ""
+}
+
+func parseWebsiteLogEntries(payload string) []model.AdminActivityLog {
+	var parsed map[string]any
+	if err := json.Unmarshal([]byte(payload), &parsed); err == nil {
+		if entries := extractLogEvents(parsed, payload); len(entries) > 0 {
+			return entries
+		}
+		return []model.AdminActivityLog{buildAdminLogEntry(parsed, payload)}
+	}
+	return []model.AdminActivityLog{buildAdminLogEntry(nil, payload)}
+}
+
+func extractLogEvents(parsed map[string]any, fallbackRaw string) []model.AdminActivityLog {
+	rawEvents, ok := parsed["logevents"]
+	if !ok {
+		return nil
+	}
+	events, ok := rawEvents.([]any)
+	if !ok || len(events) == 0 {
+		return nil
+	}
+	entries := make([]model.AdminActivityLog, 0, len(events))
+	for _, rawEvent := range events {
+		var (
+			eventMap map[string]any
+			eventRaw = fallbackRaw
+		)
+		switch ev := rawEvent.(type) {
+		case map[string]any:
+			eventMap = ev
+			if marshalled, err := json.Marshal(ev); err == nil {
+				eventRaw = string(marshalled)
+			}
+		case string:
+			eventRaw = ev
+			if strings.TrimSpace(ev) != "" {
+				var parsedEvent map[string]any
+				if err := json.Unmarshal([]byte(ev), &parsedEvent); err == nil {
+					eventMap = parsedEvent
+				}
+			}
+		}
+		entries = append(entries, buildAdminLogEntry(eventMap, eventRaw))
+	}
+	return entries
+}
+
+func buildAdminLogEntry(parsed map[string]any, raw string) model.AdminActivityLog {
+	entry := model.AdminActivityLog{Raw: raw}
+	if parsed != nil {
+		if ts, ok := parsed["time"].(string); ok && ts != "" {
+			entry.Time = ts
+		} else if ts, ok := parsed["datetime"].(string); ok && ts != "" {
+			entry.Time = ts
+		}
+		if msg, ok := parsed["message"].(string); ok && msg != "" {
+			entry.Message = msg
+		}
+	}
+	if entry.Message == "" {
+		entry.Message = raw
+	}
+	if entry.Time == "" {
+		entry.Time = parseTimestampFromLog(raw)
+	}
+	if entry.Time == "" {
+		entry.Time = time.Now().UTC().Format(time.RFC3339Nano)
+	}
+	return entry
 }

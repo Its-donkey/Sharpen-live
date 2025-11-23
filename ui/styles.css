@@ -267,6 +267,60 @@ tbody tr:hover {
   font-size: 0.92rem;
 }
 
+.platform-lease-hint {
+  font-size: 0.82rem;
+  color: var(--fg-muted);
+  margin-top: -0.2rem;
+  padding-left: 0.2rem;
+}
+
+.yt-lease-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.25rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  border: 1px solid transparent;
+}
+
+.yt-lease-dot {
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 50%;
+  background: currentColor;
+  box-shadow: 0 0 0 4px color-mix(in srgb, currentColor 18%, transparent);
+}
+
+.yt-lease-text {
+  text-transform: uppercase;
+}
+
+.yt-lease-date {
+  font-weight: 600;
+  color: var(--fg-muted);
+}
+
+.yt-lease-badge.valid {
+  color: var(--online);
+  background: rgba(34, 197, 94, 0.12);
+  border-color: rgba(34, 197, 94, 0.25);
+}
+
+.yt-lease-badge.expiring {
+  color: #f59e0b;
+  background: rgba(245, 158, 11, 0.14);
+  border-color: rgba(245, 158, 11, 0.28);
+}
+
+.yt-lease-badge.expired {
+  color: #ef4444;
+  background: rgba(239, 68, 68, 0.12);
+  border-color: rgba(239, 68, 68, 0.3);
+}
+
 .platform-link {
   display: inline-flex;
   align-items: center;
@@ -434,6 +488,14 @@ tbody tr:hover {
   border-color: rgba(34, 197, 94, 0.85);
   box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.25);
   color: var(--fg-primary);
+}
+
+.platform-select-wrapper {
+  display: none;
+}
+
+.platform-select-wrapper.is-visible {
+  display: block;
 }
 
 .language-picker,
@@ -770,7 +832,7 @@ tbody tr:hover {
 
 .admin-log-entry {
   border-bottom: 1px solid rgba(148, 163, 184, 0.2);
-  padding-bottom: 0.5rem;
+  padding: 0.35rem 0;
 }
 
 .admin-log-entry:last-child {
@@ -778,16 +840,74 @@ tbody tr:hover {
   padding-bottom: 0;
 }
 
+.admin-log-entry summary {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  cursor: pointer;
+}
+
+.admin-log-entry summary::-webkit-details-marker {
+  display: none;
+}
+
+.admin-log-summary {
+  display: flex;
+  gap: 0.65rem;
+  align-items: flex-start;
+}
+
+.admin-log-summary::before {
+  content: ">";
+  color: var(--fg-muted);
+  margin-top: 0.1rem;
+  display: inline-block;
+  width: 0.85rem;
+  font-size: 0.85rem;
+}
+
+.admin-log-entry[open] .admin-log-summary::before {
+  content: "v";
+}
+
+.admin-log-snippet {
+  flex: 1 1 auto;
+  color: var(--fg-primary);
+  font-size: 0.9rem;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  white-space: normal;
+  word-break: break-word;
+}
+
+.admin-log-entry[open] .admin-log-snippet {
+  -webkit-line-clamp: unset;
+}
+
+.admin-log-body {
+  margin-top: 0.5rem;
+  padding-top: 0.6rem;
+  border-top: 1px solid rgba(148, 163, 184, 0.15);
+  display: grid;
+  gap: 0.35rem;
+}
+
 .admin-log-time {
   font-size: 0.78rem;
   color: var(--fg-muted);
 }
 
-.admin-log-message {
-  margin: 0.25rem 0 0;
+.admin-log-full {
+  margin: 0;
   white-space: pre-wrap;
   word-break: break-word;
   color: var(--fg-primary);
+  font-size: 0.9rem;
+  line-height: 1.5;
 }
 
 .admin-log-raw {

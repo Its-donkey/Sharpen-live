@@ -2,6 +2,7 @@ package logging
 
 import (
 	"bytes"
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"net/http/httptest"
@@ -10,16 +11,23 @@ import (
 	"testing"
 )
 
-func TestNewWithWriterInsertsLeadingNewline(t *testing.T) {
+func TestNewWithWriterOutputsJSONEnvelope(t *testing.T) {
 	var buf bytes.Buffer
 	logger := NewWithWriter(&buf)
 	logger.Printf("hello %s", "world")
-	got := buf.String()
-	if got == "" || got[0] != '\n' {
-		t.Fatalf("expected leading newline, got %q", got)
+	raw := bytes.TrimSpace(buf.Bytes())
+	if bytes.HasPrefix(raw, []byte("\n")) {
+		t.Fatalf("expected first byte to be part of JSON, got leading newline: %q", raw)
 	}
-	if !bytes.Contains(buf.Bytes(), []byte("hello world")) {
-		t.Fatalf("expected log body to contain message, got %q", got)
+	var payload logPayload
+	if err := json.Unmarshal(raw, &payload); err != nil {
+		t.Fatalf("unmarshal log payload: %v", err)
+	}
+	if len(payload.LogEvents) != 1 {
+		t.Fatalf("expected one log event, got %d", len(payload.LogEvents))
+	}
+	if payload.LogEvents[0].Message != "hello world" {
+		t.Fatalf("expected message to be formatted, got %q", payload.LogEvents[0].Message)
 	}
 }
 
@@ -93,8 +101,18 @@ func TestWithHTTPLoggingWrapsHandler(t *testing.T) {
 	if rr.Code != http.StatusCreated {
 		t.Fatalf("expected 201, got %d", rr.Code)
 	}
-	if len(logger.entries) < 2 {
-		t.Fatalf("expected request/response logs to be recorded")
+	if len(logger.entries) != 1 {
+		t.Fatalf("expected single combined log entry, got %d", len(logger.entries))
+	}
+	var payload logPayload
+	if err := json.Unmarshal([]byte(logger.entries[0]), &payload); err != nil {
+		t.Fatalf("unmarshal log payload: %v", err)
+	}
+	if len(payload.LogEvents) != 2 {
+		t.Fatalf("expected request and response entries, got %d", len(payload.LogEvents))
+	}
+	if payload.LogEvents[0].Direction != "request" || payload.LogEvents[1].Direction != "response" {
+		t.Fatalf("expected first event to be request and second response, got %+v", payload.LogEvents)
 	}
 }
 

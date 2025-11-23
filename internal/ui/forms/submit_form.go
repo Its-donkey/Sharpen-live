@@ -425,7 +425,6 @@ func bindSubmitFormEvents() {
 			return nil
 		})
 	})
-
 	removeButtons := formDocument().Call("querySelectorAll", "[data-remove-platform]")
 	forEachNode(removeButtons, func(node js.Value) {
 		addFormHandler(node, "click", func(this js.Value, _ []js.Value) any {

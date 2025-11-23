@@ -3,8 +3,12 @@
 package admin
 
 import (
+	"bytes"
+	"encoding/json"
 	"html"
+	"net/url"
 	"strings"
+	"time"
 
 	"github.com/Its-donkey/Sharpen-live/internal/ui/model"
 	"github.com/Its-donkey/Sharpen-live/internal/ui/state"
@@ -185,8 +189,8 @@ func renderWebsiteActivityPanel() string {
 	if len(state.AdminConsole.ActivityLogs) == 0 {
 		builder.WriteString(`<div class="admin-empty admin-log-placeholder">Connecting to log stream…</div>`)
 	} else {
-		for _, entry := range state.AdminConsole.ActivityLogs {
-			builder.WriteString(renderLogEntry(entry))
+		for i := len(state.AdminConsole.ActivityLogs) - 1; i >= 0; i-- {
+			builder.WriteString(renderLogEntry(state.AdminConsole.ActivityLogs[i]))
 		}
 	}
 	builder.WriteString(`</div></div>`)
@@ -195,18 +199,33 @@ func renderWebsiteActivityPanel() string {
 
 func renderLogEntry(entry model.AdminActivityLog) string {
 	var builder strings.Builder
-	builder.WriteString(`<article class="admin-log-entry">`)
-	if entry.Timestamp != "" {
-		builder.WriteString(`<div class="admin-log-time">` + html.EscapeString(entry.Timestamp) + `</div>`)
-	}
 	message := strings.TrimSpace(entry.Message)
-	if message == "" {
-		message = strings.TrimSpace(entry.Raw)
+	raw := strings.TrimSpace(entry.Raw)
+	snippet := message
+	if snippet == "" {
+		snippet = summarizeLogMessage(raw)
 	}
-	if raw := strings.TrimSpace(entry.Raw); raw != "" && raw != message {
-		builder.WriteString(`<pre class="admin-log-raw">` + html.EscapeString(raw) + `</pre>`)
+	if snippet == "" {
+		snippet = "Log message"
 	}
-	builder.WriteString(`</article>`)
+	displayRaw := formatLogRaw(raw, message)
+
+	builder.WriteString(`<details class="admin-log-entry">`)
+	builder.WriteString(`<summary>`)
+	builder.WriteString(`<div class="admin-log-summary">`)
+	if entry.Time != "" {
+		builder.WriteString(`<div class="admin-log-time">` + html.EscapeString(entry.Time) + `</div>`)
+	}
+	builder.WriteString(`<div class="admin-log-snippet">` + html.EscapeString(snippet) + `</div>`)
+	builder.WriteString(`</div>`)
+	builder.WriteString(`</summary>`)
+	builder.WriteString(`<div class="admin-log-body">`)
+	if message != "" && message != raw {
+		builder.WriteString(`<div class="admin-log-full">` + html.EscapeString(message) + `</div>`)
+	}
+	builder.WriteString(`<pre class="admin-log-raw">` + html.EscapeString(displayRaw) + `</pre>`)
+	builder.WriteString(`</div>`)
+	builder.WriteString(`</details>`)
 	return builder.String()
 }
 
@@ -243,22 +262,18 @@ func renderAdminSubmissionsSection() string {
 func renderSubmissionCard(sub model.AdminSubmission) string {
 	var builder strings.Builder
 	builder.WriteString(`<article class="admin-card" data-submission-id="` + html.EscapeString(sub.ID) + `">`)
-	builder.WriteString(`<div class="admin-card-header"><h4>` + html.EscapeString(sub.Payload.Name) + `</h4><span class="admin-card-meta">Submitted ` + html.EscapeString(sub.SubmittedAt) + `</span></div>`)
-	builder.WriteString(`<section><strong>Description</strong><p>` + html.EscapeString(sub.Payload.Description) + `</p></section>`)
-	if len(sub.Payload.Languages) > 0 {
-		builder.WriteString(`<section><strong>Languages</strong><p>` + html.EscapeString(strings.Join(sub.Payload.Languages, " · ")) + `</p></section>`)
+	builder.WriteString(`<div class="admin-card-header"><h4>` + html.EscapeString(sub.Alias) + `</h4><span class="admin-card-meta">Submitted ` + html.EscapeString(sub.SubmittedAt) + `</span></div>`)
+	builder.WriteString(`<section><strong>Description</strong><p>` + html.EscapeString(sub.Description) + `</p></section>`)
+	if len(sub.Languages) > 0 {
+		builder.WriteString(`<section><strong>Languages</strong><p>` + html.EscapeString(strings.Join(sub.Languages, " · ")) + `</p></section>`)
 	}
-	if len(sub.Payload.Platforms) > 0 {
-		builder.WriteString(`<section><strong>Platforms</strong><ul class="platform-list">`)
-		for _, p := range sub.Payload.Platforms {
-			builder.WriteString(`<li>` + html.EscapeString(p.Name) + ` · ` + html.EscapeString(p.ChannelURL) + `</li>`)
-		}
-		builder.WriteString(`</ul></section>`)
+	if strings.TrimSpace(sub.PlatformURL) != "" {
+		builder.WriteString(`<section><strong>Platform</strong><p>` + html.EscapeString(sub.PlatformURL) + `</p></section>`)
 	}
 	builder.WriteString(`<div class="admin-card-actions">
-    <button type="button" data-moderate-action="approve" data-submission-id="` + html.EscapeString(sub.ID) + `">Approve</button>
-    <button type="button" data-moderate-action="reject" data-submission-id="` + html.EscapeString(sub.ID) + `">Reject</button>
-  </div>`)
+      <button type="button" data-moderate-action="approve" data-submission-id="` + html.EscapeString(sub.ID) + `">Approve</button>
+      <button type="button" data-moderate-action="reject" data-submission-id="` + html.EscapeString(sub.ID) + `">Reject</button>
+    </div>`)
 	builder.WriteString(`</article>`)
 	return builder.String()
 }
@@ -318,7 +333,15 @@ func renderStreamerCard(s model.Streamer, form *model.AdminStreamerForm) string 
 		if len(s.Platforms) > 0 {
 			builder.WriteString(`<div class="admin-card-meta"><strong>Platforms</strong><ul class="platform-list">`)
 			for _, p := range s.Platforms {
-				builder.WriteString(`<li>` + html.EscapeString(p.Name) + ` · ` + html.EscapeString(p.ChannelURL) + `</li>`)
+				badge := ""
+				if strings.EqualFold(p.Name, "youtube") {
+					badge = renderYouTubeLeaseBadge(s, p)
+				}
+				builder.WriteString(`<li>` + html.EscapeString(p.Name) + ` · ` + html.EscapeString(p.ChannelURL))
+				if badge != "" {
+					builder.WriteString(` ` + badge)
+				}
+				builder.WriteString(`</li>`)
 			}
 			builder.WriteString(`</ul></div>`)
 		}
@@ -367,6 +390,7 @@ func renderStreamerForm(form *model.AdminStreamerForm, key, heading, submitLabel
     <legend>Platforms</legend>
     <div class="platform-rows">`)
 	for _, row := range form.Platforms {
+		leaseHint := renderLeaseExpiryHint(formID, row)
 		builder.WriteString(`<div class="platform-row" data-platform-row="` + html.EscapeString(row.ID) + `">
         <label class="form-field form-field-inline">
           <span>Platform name</span>
@@ -376,6 +400,11 @@ func renderStreamerForm(form *model.AdminStreamerForm, key, heading, submitLabel
           <span>Channel URL</span>
           <input type="url" data-platform-field="channel" data-streamer-id="` + html.EscapeString(formID) + `" data-row-id="` + html.EscapeString(row.ID) + `" value="` + html.EscapeString(row.ChannelURL) + `" placeholder="https://example.com" required />
         </label>
+        `)
+		if leaseHint != "" {
+			builder.WriteString(`<div class="platform-lease-hint">Subscription lease expiry ` + html.EscapeString(leaseHint) + `</div>`)
+		}
+		builder.WriteString(`
         <button type="button" class="remove-platform-button" data-remove-platform="` + html.EscapeString(row.ID) + `" data-platform-owner="` + html.EscapeString(formID) + `">Remove</button>
       </div>`)
 	}
@@ -395,11 +424,184 @@ func renderStreamerForm(form *model.AdminStreamerForm, key, heading, submitLabel
 	return builder.String()
 }
 
+func renderYouTubeLeaseBadge(streamer model.Streamer, platform model.Platform) string {
+	lease := lookupLeaseStatus(streamer, platform)
+	if lease == nil {
+		return ""
+	}
+	class, label := leaseBadgePresentation(*lease)
+	var builder strings.Builder
+	builder.WriteString(`<span class="yt-lease-badge ` + class + `">`)
+	builder.WriteString(`<span class="yt-lease-dot"></span>`)
+	builder.WriteString(`<span class="yt-lease-text">` + html.EscapeString(label) + `</span>`)
+	if lease.Expired && lease.StartDate != "" {
+		builder.WriteString(`<span class="yt-lease-date">Leased ` + html.EscapeString(lease.StartDate) + `</span>`)
+	}
+	builder.WriteString(`</span>`)
+	return builder.String()
+}
+
+func lookupLeaseStatus(streamer model.Streamer, platform model.Platform) *model.YouTubeLeaseStatus {
+	leases := state.AdminConsole.YouTubeLeases
+	if len(leases) == 0 {
+		return nil
+	}
+	keys := []string{
+		normalizeLeaseLookupKey(streamer.Name),
+		normalizeLeaseLookupKey(streamer.ID),
+		normalizeLeaseLookupKey(platform.ID),
+		normalizeLeaseLookupKey(extractYouTubeHandle(platform.ChannelURL)),
+	}
+	for _, key := range keys {
+		if key == "" {
+			continue
+		}
+		if lease, ok := leases[key]; ok {
+			return &lease
+		}
+	}
+	return nil
+}
+
+func leaseBadgePresentation(status model.YouTubeLeaseStatus) (class string, label string) {
+	switch {
+	case status.Expired:
+		return "expired", "Expired"
+	case status.ExpiringSoon || strings.EqualFold(status.Status, "expiring"):
+		return "expiring", "Expiring soon"
+	default:
+		return "valid", "Valid"
+	}
+}
+
+func extractYouTubeHandle(raw string) string {
+	raw = strings.TrimSpace(raw)
+	if raw == "" {
+		return ""
+	}
+	if strings.HasPrefix(raw, "@") {
+		return raw
+	}
+	parsed, err := url.Parse(raw)
+	if err != nil {
+		return ""
+	}
+	segments := strings.Split(strings.Trim(parsed.Path, "/"), "/")
+	for _, part := range segments {
+		if strings.HasPrefix(part, "@") {
+			return part
+		}
+	}
+	return ""
+}
+
+func normalizeLeaseLookupKey(raw string) string {
+	raw = strings.ToLower(strings.TrimSpace(raw))
+	raw = strings.TrimPrefix(raw, "@")
+	return raw
+}
+
+func renderLeaseExpiryHint(formID string, row model.PlatformFormRow) string {
+	if !strings.EqualFold(strings.TrimSpace(row.Name), "youtube") {
+		return ""
+	}
+	lease := leaseForRow(formID, row)
+	if lease == nil {
+		return ""
+	}
+	expiry := strings.TrimSpace(lease.LeaseExpires)
+	if t, err := time.Parse(time.RFC3339, expiry); err == nil {
+		expiry = t.UTC().Format("2006-01-02 15:04 MST")
+	}
+	if expiry == "" {
+		expiry = "unknown"
+	}
+	return expiry
+}
+
+func leaseForRow(formID string, row model.PlatformFormRow) *model.YouTubeLeaseStatus {
+	leases := state.AdminConsole.YouTubeLeases
+	if len(leases) == 0 {
+		return nil
+	}
+	keys := []string{
+		normalizeLeaseLookupKey(formID),
+		normalizeLeaseLookupKey(row.ChannelID),
+		normalizeLeaseLookupKey(row.Handle),
+		normalizeLeaseLookupKey(extractYouTubeHandle(row.ChannelURL)),
+	}
+	if streamer := findStreamerByID(formID); streamer != nil {
+		keys = append(keys, normalizeLeaseLookupKey(streamer.Name))
+		keys = append(keys, normalizeLeaseLookupKey(streamer.ID))
+		for _, p := range streamer.Platforms {
+			if strings.EqualFold(p.Name, "youtube") {
+				keys = append(keys, normalizeLeaseLookupKey(extractYouTubeHandle(p.ChannelURL)))
+			}
+		}
+	}
+	for _, key := range keys {
+		if key == "" {
+			continue
+		}
+		if lease, ok := leases[key]; ok {
+			return &lease
+		}
+	}
+	return nil
+}
+
 func selectedAttr(ok bool) string {
 	if ok {
 		return ` selected`
 	}
 	return ""
+}
+
+func summarizeLogMessage(message string) string {
+	message = strings.TrimSpace(strings.ReplaceAll(message, "\r\n", "\n"))
+	if message == "" {
+		return "Log message"
+	}
+	lines := strings.Split(message, "\n")
+	summary := strings.TrimSpace(lines[0])
+	if summary == "" && len(lines) > 1 {
+		summary = strings.TrimSpace(lines[1])
+	}
+	const maxSummaryLen = 160
+	runes := []rune(summary)
+	if len(runes) > maxSummaryLen {
+		runes = append(runes[:maxSummaryLen-1], '…')
+	}
+	return string(runes)
+}
+
+func formatLogRaw(raw string, fallback string) string {
+	raw = strings.TrimSpace(raw)
+	if raw == "" {
+		raw = strings.TrimSpace(fallback)
+	}
+	if raw == "" {
+		return "(no message)"
+	}
+
+	if formatted, ok := indentJSON(raw); ok {
+		return formatted
+	}
+	return unescapeLogNewlines(raw)
+}
+
+func indentJSON(raw string) (string, bool) {
+	var buf bytes.Buffer
+	if err := json.Indent(&buf, []byte(raw), "", "  "); err != nil {
+		return "", false
+	}
+	return buf.String(), true
+}
+
+func unescapeLogNewlines(raw string) string {
+	raw = strings.ReplaceAll(raw, `\r\n`, "\n")
+	raw = strings.ReplaceAll(raw, `\n`, "\n")
+	return raw
 }
 
 func renderAdminSettingsTab() string {

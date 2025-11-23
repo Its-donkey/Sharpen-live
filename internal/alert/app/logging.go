@@ -1,17 +1,44 @@
 package app
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"io"
 	"os"
 	"path/filepath"
+	"sync"
 	"time"
 
 	"github.com/Its-donkey/Sharpen-live/internal/alert/logging"
 )
 
-func configureLogging(logPath string) (io.WriteCloser, error) {
+type logWriterHolder struct {
+	mu     sync.Mutex
+	writer io.WriteCloser
+}
+
+func (h *logWriterHolder) Close() error {
+	h.mu.Lock()
+	defer h.mu.Unlock()
+	if h.writer == nil {
+		return nil
+	}
+	err := h.writer.Close()
+	h.writer = nil
+	return err
+}
+
+func (h *logWriterHolder) Replace(next io.WriteCloser) {
+	h.mu.Lock()
+	defer h.mu.Unlock()
+	if h.writer != nil {
+		_ = h.writer.Close()
+	}
+	h.writer = next
+}
+
+func configureLogging(logPath string) (*logWriterHolder, error) {
 	started := time.Now().UTC()
 	if err := os.MkdirAll(filepath.Dir(logPath), 0o755); err != nil {
 		return nil, fmt.Errorf("create log directory: %w", err)
@@ -25,7 +52,35 @@ func configureLogging(logPath string) (io.WriteCloser, error) {
 	}
 	logWriter := logging.NewLogFileWriter(file)
 	logging.SetDefaultWriter(io.MultiWriter(os.Stdout, logWriter))
-	return logWriter, nil
+	return &logWriterHolder{writer: logWriter}, nil
+}
+
+func startLogRotation(ctx context.Context, logPath string, holder *logWriterHolder, interval time.Duration) {
+	if holder == nil {
+		return
+	}
+	go func() {
+		timer := time.NewTimer(interval)
+		defer timer.Stop()
+		select {
+		case <-ctx.Done():
+			return
+		case <-timer.C:
+		}
+
+		if err := rotateExistingLog(logPath, time.Now().UTC()); err != nil {
+			fmt.Fprintf(os.Stderr, "rotate log file: %v\n", err)
+			return
+		}
+		file, err := os.OpenFile(logPath, os.O_CREATE|os.O_WRONLY|os.O_TRUNC, 0o644)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "open rotated log file: %v\n", err)
+			return
+		}
+		next := logging.NewLogFileWriter(file)
+		logging.SetDefaultWriter(io.MultiWriter(os.Stdout, next))
+		holder.Replace(next)
+	}()
 }
 
 func rotateExistingLog(logPath string, started time.Time) error {

@@ -8,6 +8,7 @@ import (
 	"html"
 	"net/url"
 	"strings"
+	"time"
 
 	"github.com/Its-donkey/Sharpen-live/internal/ui/model"
 	"github.com/Its-donkey/Sharpen-live/internal/ui/state"
@@ -381,6 +382,7 @@ func renderStreamerForm(form *model.AdminStreamerForm, key, heading, submitLabel
     <legend>Platforms</legend>
     <div class="platform-rows">`)
 	for _, row := range form.Platforms {
+		leaseHint := renderLeaseExpiryHint(formID, row)
 		builder.WriteString(`<div class="platform-row" data-platform-row="` + html.EscapeString(row.ID) + `">
         <label class="form-field form-field-inline">
           <span>Platform name</span>
@@ -390,6 +392,11 @@ func renderStreamerForm(form *model.AdminStreamerForm, key, heading, submitLabel
           <span>Channel URL</span>
           <input type="url" data-platform-field="channel" data-streamer-id="` + html.EscapeString(formID) + `" data-row-id="` + html.EscapeString(row.ID) + `" value="` + html.EscapeString(row.ChannelURL) + `" placeholder="https://example.com" required />
         </label>
+        `)
+		if leaseHint != "" {
+			builder.WriteString(`<div class="platform-lease-hint">Subscription lease expiry ` + html.EscapeString(leaseHint) + `</div>`)
+		}
+		builder.WriteString(`
         <button type="button" class="remove-platform-button" data-remove-platform="` + html.EscapeString(row.ID) + `" data-platform-owner="` + html.EscapeString(formID) + `">Remove</button>
       </div>`)
 	}
@@ -484,6 +491,55 @@ func normalizeLeaseLookupKey(raw string) string {
 	raw = strings.ToLower(strings.TrimSpace(raw))
 	raw = strings.TrimPrefix(raw, "@")
 	return raw
+}
+
+func renderLeaseExpiryHint(formID string, row model.PlatformFormRow) string {
+	if !strings.EqualFold(strings.TrimSpace(row.Name), "youtube") {
+		return ""
+	}
+	lease := leaseForRow(formID, row)
+	if lease == nil {
+		return ""
+	}
+	expiry := strings.TrimSpace(lease.LeaseExpires)
+	if t, err := time.Parse(time.RFC3339, expiry); err == nil {
+		expiry = t.UTC().Format("2006-01-02 15:04 MST")
+	}
+	if expiry == "" {
+		expiry = "unknown"
+	}
+	return expiry
+}
+
+func leaseForRow(formID string, row model.PlatformFormRow) *model.YouTubeLeaseStatus {
+	leases := state.AdminConsole.YouTubeLeases
+	if len(leases) == 0 {
+		return nil
+	}
+	keys := []string{
+		normalizeLeaseLookupKey(formID),
+		normalizeLeaseLookupKey(row.ChannelID),
+		normalizeLeaseLookupKey(row.Handle),
+		normalizeLeaseLookupKey(extractYouTubeHandle(row.ChannelURL)),
+	}
+	if streamer := findStreamerByID(formID); streamer != nil {
+		keys = append(keys, normalizeLeaseLookupKey(streamer.Name))
+		keys = append(keys, normalizeLeaseLookupKey(streamer.ID))
+		for _, p := range streamer.Platforms {
+			if strings.EqualFold(p.Name, "youtube") {
+				keys = append(keys, normalizeLeaseLookupKey(extractYouTubeHandle(p.ChannelURL)))
+			}
+		}
+	}
+	for _, key := range keys {
+		if key == "" {
+			continue
+		}
+		if lease, ok := leases[key]; ok {
+			return &lease
+		}
+	}
+	return nil
 }
 
 func selectedAttr(ok bool) string {

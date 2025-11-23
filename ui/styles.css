@@ -267,6 +267,13 @@ tbody tr:hover {
   font-size: 0.92rem;
 }
 
+.platform-lease-hint {
+  font-size: 0.82rem;
+  color: var(--fg-muted);
+  margin-top: -0.2rem;
+  padding-left: 0.2rem;
+}
+
 .yt-lease-badge {
   display: inline-flex;
   align-items: center;

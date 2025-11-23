@@ -207,9 +207,9 @@ type AdminMonitorEvent struct {
 
 // AdminActivityLog stores the display text for stdout/stderr entries shown in the console.
 type AdminActivityLog struct {
-	Timestamp string
-	Message   string
-	Raw       string
+	Time    string `json:"time"`
+	Message string `json:"message"`
+	Raw     string `json:"raw"`
 }
 
 // LoginResponse holds the admin JWT returned by the alert server.

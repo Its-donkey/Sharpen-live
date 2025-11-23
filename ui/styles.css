@@ -778,7 +778,7 @@ tbody tr:hover {
 
 .admin-log-entry {
   border-bottom: 1px solid rgba(148, 163, 184, 0.2);
-  padding-bottom: 0.5rem;
+  padding: 0.35rem 0;
 }
 
 .admin-log-entry:last-child {
@@ -786,16 +786,74 @@ tbody tr:hover {
   padding-bottom: 0;
 }
 
+.admin-log-entry summary {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  cursor: pointer;
+}
+
+.admin-log-entry summary::-webkit-details-marker {
+  display: none;
+}
+
+.admin-log-summary {
+  display: flex;
+  gap: 0.65rem;
+  align-items: flex-start;
+}
+
+.admin-log-summary::before {
+  content: ">";
+  color: var(--fg-muted);
+  margin-top: 0.1rem;
+  display: inline-block;
+  width: 0.85rem;
+  font-size: 0.85rem;
+}
+
+.admin-log-entry[open] .admin-log-summary::before {
+  content: "v";
+}
+
+.admin-log-snippet {
+  flex: 1 1 auto;
+  color: var(--fg-primary);
+  font-size: 0.9rem;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  white-space: normal;
+  word-break: break-word;
+}
+
+.admin-log-entry[open] .admin-log-snippet {
+  -webkit-line-clamp: unset;
+}
+
+.admin-log-body {
+  margin-top: 0.5rem;
+  padding-top: 0.6rem;
+  border-top: 1px solid rgba(148, 163, 184, 0.15);
+  display: grid;
+  gap: 0.35rem;
+}
+
 .admin-log-time {
   font-size: 0.78rem;
   color: var(--fg-muted);
 }
 
-.admin-log-message {
-  margin: 0.25rem 0 0;
+.admin-log-full {
+  margin: 0;
   white-space: pre-wrap;
   word-break: break-word;
   color: var(--fg-primary);
+  font-size: 0.9rem;
+  line-height: 1.5;
 }
 
 .admin-log-raw {

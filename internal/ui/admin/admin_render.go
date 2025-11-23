@@ -177,8 +177,8 @@ func renderWebsiteActivityPanel() string {
 	if len(state.AdminConsole.ActivityLogs) == 0 {
 		builder.WriteString(`<div class="admin-empty admin-log-placeholder">Connecting to log stream…</div>`)
 	} else {
-		for _, entry := range state.AdminConsole.ActivityLogs {
-			builder.WriteString(renderLogEntry(entry))
+		for i := len(state.AdminConsole.ActivityLogs) - 1; i >= 0; i-- {
+			builder.WriteString(renderLogEntry(state.AdminConsole.ActivityLogs[i]))
 		}
 	}
 	builder.WriteString(`</div></div>`)
@@ -187,18 +187,39 @@ func renderWebsiteActivityPanel() string {
 
 func renderLogEntry(entry model.AdminActivityLog) string {
 	var builder strings.Builder
-	builder.WriteString(`<article class="admin-log-entry">`)
-	if entry.Timestamp != "" {
-		builder.WriteString(`<div class="admin-log-time">` + html.EscapeString(entry.Timestamp) + `</div>`)
-	}
 	message := strings.TrimSpace(entry.Message)
-	if message == "" {
-		message = strings.TrimSpace(entry.Raw)
+	raw := strings.TrimSpace(entry.Raw)
+	snippet := message
+	if snippet == "" {
+		snippet = summarizeLogMessage(raw)
 	}
-	if raw := strings.TrimSpace(entry.Raw); raw != "" && raw != message {
-		builder.WriteString(`<pre class="admin-log-raw">` + html.EscapeString(raw) + `</pre>`)
+	if snippet == "" {
+		snippet = "Log message"
 	}
-	builder.WriteString(`</article>`)
+	displayRaw := raw
+	if displayRaw == "" {
+		displayRaw = message
+	}
+	if strings.TrimSpace(displayRaw) == "" {
+		displayRaw = "(no message)"
+	}
+
+	builder.WriteString(`<details class="admin-log-entry">`)
+	builder.WriteString(`<summary>`)
+	builder.WriteString(`<div class="admin-log-summary">`)
+	if entry.Time != "" {
+		builder.WriteString(`<div class="admin-log-time">` + html.EscapeString(entry.Time) + `</div>`)
+	}
+	builder.WriteString(`<div class="admin-log-snippet">` + html.EscapeString(snippet) + `</div>`)
+	builder.WriteString(`</div>`)
+	builder.WriteString(`</summary>`)
+	builder.WriteString(`<div class="admin-log-body">`)
+	if message != "" && message != raw {
+		builder.WriteString(`<div class="admin-log-full">` + html.EscapeString(message) + `</div>`)
+	}
+	builder.WriteString(`<pre class="admin-log-raw">` + html.EscapeString(displayRaw) + `</pre>`)
+	builder.WriteString(`</div>`)
+	builder.WriteString(`</details>`)
 	return builder.String()
 }
 
@@ -235,22 +256,18 @@ func renderAdminSubmissionsSection() string {
 func renderSubmissionCard(sub model.AdminSubmission) string {
 	var builder strings.Builder
 	builder.WriteString(`<article class="admin-card" data-submission-id="` + html.EscapeString(sub.ID) + `">`)
-	builder.WriteString(`<div class="admin-card-header"><h4>` + html.EscapeString(sub.Payload.Name) + `</h4><span class="admin-card-meta">Submitted ` + html.EscapeString(sub.SubmittedAt) + `</span></div>`)
-	builder.WriteString(`<section><strong>Description</strong><p>` + html.EscapeString(sub.Payload.Description) + `</p></section>`)
-	if len(sub.Payload.Languages) > 0 {
-		builder.WriteString(`<section><strong>Languages</strong><p>` + html.EscapeString(strings.Join(sub.Payload.Languages, " · ")) + `</p></section>`)
+	builder.WriteString(`<div class="admin-card-header"><h4>` + html.EscapeString(sub.Alias) + `</h4><span class="admin-card-meta">Submitted ` + html.EscapeString(sub.SubmittedAt) + `</span></div>`)
+	builder.WriteString(`<section><strong>Description</strong><p>` + html.EscapeString(sub.Description) + `</p></section>`)
+	if len(sub.Languages) > 0 {
+		builder.WriteString(`<section><strong>Languages</strong><p>` + html.EscapeString(strings.Join(sub.Languages, " · ")) + `</p></section>`)
 	}
-	if len(sub.Payload.Platforms) > 0 {
-		builder.WriteString(`<section><strong>Platforms</strong><ul class="platform-list">`)
-		for _, p := range sub.Payload.Platforms {
-			builder.WriteString(`<li>` + html.EscapeString(p.Name) + ` · ` + html.EscapeString(p.ChannelURL) + `</li>`)
-		}
-		builder.WriteString(`</ul></section>`)
+	if strings.TrimSpace(sub.PlatformURL) != "" {
+		builder.WriteString(`<section><strong>Platform</strong><p>` + html.EscapeString(sub.PlatformURL) + `</p></section>`)
 	}
 	builder.WriteString(`<div class="admin-card-actions">
-    <button type="button" data-moderate-action="approve" data-submission-id="` + html.EscapeString(sub.ID) + `">Approve</button>
-    <button type="button" data-moderate-action="reject" data-submission-id="` + html.EscapeString(sub.ID) + `">Reject</button>
-  </div>`)
+      <button type="button" data-moderate-action="approve" data-submission-id="` + html.EscapeString(sub.ID) + `">Approve</button>
+      <button type="button" data-moderate-action="reject" data-submission-id="` + html.EscapeString(sub.ID) + `">Reject</button>
+    </div>`)
 	builder.WriteString(`</article>`)
 	return builder.String()
 }
@@ -392,6 +409,24 @@ func selectedAttr(ok bool) string {
 		return ` selected`
 	}
 	return ""
+}
+
+func summarizeLogMessage(message string) string {
+	message = strings.TrimSpace(strings.ReplaceAll(message, "\r\n", "\n"))
+	if message == "" {
+		return "Log message"
+	}
+	lines := strings.Split(message, "\n")
+	summary := strings.TrimSpace(lines[0])
+	if summary == "" && len(lines) > 1 {
+		summary = strings.TrimSpace(lines[1])
+	}
+	const maxSummaryLen = 160
+	runes := []rune(summary)
+	if len(runes) > maxSummaryLen {
+		runes = append(runes[:maxSummaryLen-1], '…')
+	}
+	return string(runes)
 }
 
 func renderAdminSettingsTab() string {

@@ -11,7 +11,7 @@ import (
 	"github.com/Its-donkey/Sharpen-live/internal/alert/logging"
 )
 
-func configureLogging(logPath string) (*os.File, error) {
+func configureLogging(logPath string) (io.WriteCloser, error) {
 	started := time.Now().UTC()
 	if err := os.MkdirAll(filepath.Dir(logPath), 0o755); err != nil {
 		return nil, fmt.Errorf("create log directory: %w", err)
@@ -23,8 +23,9 @@ func configureLogging(logPath string) (*os.File, error) {
 	if err != nil {
 		return nil, fmt.Errorf("open log file: %w", err)
 	}
-	logging.SetDefaultWriter(io.MultiWriter(os.Stdout, file))
-	return file, nil
+	logWriter := logging.NewLogFileWriter(file)
+	logging.SetDefaultWriter(io.MultiWriter(os.Stdout, logWriter))
+	return logWriter, nil
 }
 
 func rotateExistingLog(logPath string, started time.Time) error {

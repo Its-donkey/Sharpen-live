@@ -13,3 +13,6 @@
 - Harden YouTube WebSub requests by validating hub, topic, and callback URLs.
 - Admin: validate admin tokens for settings/log streams instead of accepting any non-empty value.
 - Admin: ensure `/admin/logs` streams valid server-sent events so the Activity tab shows live logs again.
+- Admin: emit a single `logevents` JSON envelope per logfile and render Activity summaries with just time + message.
+- Admin: escape log payloads, show newest entries first, and expand entries without injecting raw markup.
+- Streamer page: fix platform link markup so channel links render correctly.

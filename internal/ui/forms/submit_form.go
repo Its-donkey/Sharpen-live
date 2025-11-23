@@ -82,33 +82,10 @@ func RenderSubmitForm() {
 			if errors.Channel {
 				channelWrapper += " form-field-error"
 			}
-			builder.WriteString(`<div class="platform-row form-grid platform-row-grid" data-platform-row="` + row.ID + `">`)
+			builder.WriteString(`<div class="platform-row" data-platform-row="` + row.ID + `">`)
 			builder.WriteString(`<label class="` + channelWrapper + `" id="platform-url-field-` + row.ID + `"><span>Channel URL</span>`)
 			builder.WriteString(`<input type="url" placeholder="https://example.com/live or @handle" value="` + html.EscapeString(row.ChannelURL) + `" data-platform-channel data-row="` + row.ID + `" required />`)
 			builder.WriteString(`</label>`)
-			builder.WriteString(`<label class="form-field form-field-inline platform-select"><span>Platform</span>`)
-			builder.WriteString(`<select data-platform-name data-row="` + row.ID + `">`)
-			options := []struct {
-				Value string
-				Label string
-			}{
-				{Value: "YouTube", Label: "YouTube"},
-				{Value: "Twitch", Label: "Twitch"},
-				{Value: "Facebook", Label: "Facebook"},
-				{Value: "Other", Label: "Other"},
-			}
-			current := strings.TrimSpace(row.Name)
-			if current == "" {
-				current = "YouTube"
-			}
-			for _, opt := range options {
-				builder.WriteString(`<option value="` + opt.Value + `"`)
-				if current == opt.Value {
-					builder.WriteString(` selected`)
-				}
-				builder.WriteString(`>` + opt.Label + `</option>`)
-			}
-			builder.WriteString(`</select></label>`)
 
 			builder.WriteString(`<button type="button" class="remove-platform-button" data-remove-platform="` + row.ID + `">Remove</button>`)
 			if errors.Channel {
@@ -388,22 +365,6 @@ func bindSubmitFormEvents() {
 							scheduleRender()
 						}
 					}(currentValue)
-					break
-				}
-			}
-			return nil
-		})
-	})
-
-	platformSelects := formDocument().Call("querySelectorAll", "[data-platform-name]")
-	forEachNode(platformSelects, func(node js.Value) {
-		addFormHandler(node, "change", func(this js.Value, _ []js.Value) any {
-			rowID := this.Get("dataset").Get("row").String()
-			value := this.Get("value").String()
-			for idx := range state.Submit.Platforms {
-				row := &state.Submit.Platforms[idx]
-				if row.ID == rowID {
-					row.Name = value
 					break
 				}
 			}

@@ -20,7 +20,7 @@
                 <input type="url" class="channel-url-input" name="platform_url" placeholder="https://example.com/live or @handle" value="{{$row.ChannelURL}}" required>
               </label>
               {{if gt (len $.State.Platforms) 1}}
-                <button type="submit" class="remove-platform-button" name="remove_platform" value="{{$row.ID}}">Remove</button>
+                <button type="submit" class="remove-platform-button platform-remove-inline" name="remove_platform" value="{{$row.ID}}">Remove</button>
               {{end}}
               {{if $rowErr.Channel}}
                 <p class="field-error-text">Provide a valid channel URL.</p>

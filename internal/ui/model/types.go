@@ -158,12 +158,15 @@ type MetadataResponse struct {
 
 // AdminSubmission represents a pending roster submission awaiting moderation.
 type AdminSubmission struct {
-	ID          string                 `json:"id"`
-	SubmittedAt string                 `json:"submittedAt"`
-	Payload     AdminSubmissionPayload `json:"payload"`
+	ID          string   `json:"id"`
+	Alias       string   `json:"alias"`
+	Description string   `json:"description"`
+	Languages   []string `json:"languages"`
+	PlatformURL string   `json:"platformUrl"`
+	SubmittedAt string   `json:"submittedAt"`
 }
 
-// AdminSubmissionPayload mirrors how the admin console displays submission details.
+// AdminSubmissionPayload mirrors the editable fields used when updating a streamer from the admin console.
 type AdminSubmissionPayload struct {
 	Name        string     `json:"name"`
 	Description string     `json:"description"`

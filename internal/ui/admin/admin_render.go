@@ -59,14 +59,11 @@ func RenderAdminConsole() {
 		switch state.AdminConsole.ActiveTab {
 		case "activity":
 			builder.WriteString(renderAdminActivityTab())
-		case "monitor":
-			builder.WriteString(renderAdminMonitorTab())
 		case "settings":
 			builder.WriteString(renderAdminSettingsTab())
 		default:
 			builder.WriteString(renderAdminStreamersTab())
 		}
-		builder.WriteString(renderAdminActivitySubTabs())
 	}
 
 	builder.WriteString(`</section>`)
@@ -114,7 +111,6 @@ func renderAdminTabs() string {
 	tabs := []tab{
 		{Key: "streamers", Label: "Streamers"},
 		{Key: "activity", Label: "Activity"},
-		{Key: "monitor", Label: "Monitor"},
 		{Key: "settings", Label: "Settings"},
 	}
 	var builder strings.Builder

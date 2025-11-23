@@ -193,9 +193,6 @@ func handleAdminTabChange(tab string) {
 	if tab == "activity" && adminState.ActivityTab == "website" {
 		ensureWebsiteLogStream()
 	}
-	if tab == "monitor" && len(adminState.MonitorEvents) == 0 {
-		handleMonitorRefresh()
-	}
 }
 
 func handleActivityTabChange(tab string) {

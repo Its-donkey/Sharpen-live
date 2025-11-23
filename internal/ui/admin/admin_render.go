@@ -3,6 +3,8 @@
 package admin
 
 import (
+	"bytes"
+	"encoding/json"
 	"html"
 	"strings"
 
@@ -196,13 +198,7 @@ func renderLogEntry(entry model.AdminActivityLog) string {
 	if snippet == "" {
 		snippet = "Log message"
 	}
-	displayRaw := raw
-	if displayRaw == "" {
-		displayRaw = message
-	}
-	if strings.TrimSpace(displayRaw) == "" {
-		displayRaw = "(no message)"
-	}
+	displayRaw := formatLogRaw(raw, message)
 
 	builder.WriteString(`<details class="admin-log-entry">`)
 	builder.WriteString(`<summary>`)
@@ -427,6 +423,35 @@ func summarizeLogMessage(message string) string {
 		runes = append(runes[:maxSummaryLen-1], '…')
 	}
 	return string(runes)
+}
+
+func formatLogRaw(raw string, fallback string) string {
+	raw = strings.TrimSpace(raw)
+	if raw == "" {
+		raw = strings.TrimSpace(fallback)
+	}
+	if raw == "" {
+		return "(no message)"
+	}
+
+	if formatted, ok := indentJSON(raw); ok {
+		return formatted
+	}
+	return unescapeLogNewlines(raw)
+}
+
+func indentJSON(raw string) (string, bool) {
+	var buf bytes.Buffer
+	if err := json.Indent(&buf, []byte(raw), "", "  "); err != nil {
+		return "", false
+	}
+	return buf.String(), true
+}
+
+func unescapeLogNewlines(raw string) string {
+	raw = strings.ReplaceAll(raw, `\r\n`, "\n")
+	raw = strings.ReplaceAll(raw, `\n`, "\n")
+	return raw
 }
 
 func renderAdminSettingsTab() string {

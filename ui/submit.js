@@ -1,6 +1,14 @@
 (function () {
+  const section = document.getElementById('submit-streamer-section');
   const form = document.getElementById('submit-streamer-form');
+  const toggle = document.getElementById('submit-toggle');
   if (!form) return;
+
+  if (toggle && section) {
+    toggle.addEventListener('click', () => {
+      section.classList.toggle('is-collapsed');
+    });
+  }
 
   const nameInput = document.getElementById('streamer-name');
   const descInput = document.getElementById('streamer-description');

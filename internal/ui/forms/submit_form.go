@@ -58,7 +58,11 @@ func RenderSubmitForm() {
 	}
 
 	var builder strings.Builder
-	builder.WriteString(`<section class="submit-streamer" aria-labelledby="submit-streamer-title">`)
+	sectionClass := "submit-streamer"
+	if !state.Submit.Open {
+		sectionClass += " is-collapsed"
+	}
+	builder.WriteString(`<section class="` + sectionClass + `" aria-labelledby="submit-streamer-title">`)
 	builder.WriteString(`
   <div class="submit-streamer-header">
     <h2 id="submit-streamer-title">Know a streamer we should feature?</h2>

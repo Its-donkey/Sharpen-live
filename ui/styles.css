@@ -367,6 +367,10 @@ tbody tr:hover {
   gap: 1.5rem;
 }
 
+.submit-streamer.is-collapsed .submit-streamer-form {
+  display: none;
+}
+
 .submit-streamer-header {
   display: flex;
   flex-direction: column;

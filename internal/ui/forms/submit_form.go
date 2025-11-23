@@ -95,8 +95,7 @@ func RenderSubmitForm() {
 			if errors.Channel {
 				channelWrapper += " form-field-error"
 			}
-			builder.WriteString(`<div class="platform-row" data-platform-row="` + row.ID + `">`)
-			builder.WriteString(`<div class="platform-row-grid">`)
+			builder.WriteString(`<div class="platform-row form-grid platform-row-grid" data-platform-row="` + row.ID + `">`)
 			builder.WriteString(`<label class="form-field form-field-inline"><span>Platform name</span>`)
 			builder.WriteString(`<input type="text" value="` + html.EscapeString(row.Name) + `" data-platform-name data-row="` + row.ID + `" placeholder="YouTube" required />`)
 			builder.WriteString(`</label>`)

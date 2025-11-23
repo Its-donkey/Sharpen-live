@@ -438,7 +438,7 @@ tbody tr:hover {
 
 .platform-remove-inline {
   justify-self: start;
-  align-self: stretch;
+  align-self: center;
   margin-left: auto;
 }
 

@@ -64,16 +64,60 @@
     debounceTimer = setTimeout(() => fetchMetadata(value || ''), 300);
   }
 
+  function platformURLForHandle(platform, handle) {
+    const cleanHandle = (handle || '').trim().replace(/^@+/, '');
+    if (!cleanHandle) return '';
+    switch ((platform || '').toLowerCase()) {
+      case 'youtube':
+        return `https://youtube.com/@${cleanHandle}`;
+      case 'twitch':
+        return `https://twitch.tv/${cleanHandle}`;
+      case 'facebook':
+        return `https://facebook.com/${cleanHandle}`;
+      default:
+        return '';
+    }
+  }
+
+  function updatePlatformVisibility(input, selectWrapper) {
+    if (!selectWrapper) return;
+    const value = (input && input.value ? input.value : '').trim();
+    const show = value.startsWith('@');
+    selectWrapper.classList.toggle('is-visible', show);
+  }
+
   function bindPlatformInputs() {
     if (shouldSkipMetadata()) return;
     const inputs = form.querySelectorAll('.channel-url-input');
     if (!inputs.length) return;
     log('binding metadata handlers to', inputs.length, 'platform input(s)');
-    const handler = (e) => queueMetadataFetch(e.target.value || '');
     inputs.forEach((input) => {
-      input.addEventListener('blur', handler);
-      input.addEventListener('change', handler);
-      input.addEventListener('input', handler);
+      const row = input.closest('.platform-row');
+      const select = row ? row.querySelector('.platform-select') : null;
+      const selectWrapper = row ? row.querySelector('.platform-select-wrapper') : null;
+      const metadataHandler = (e) => queueMetadataFetch(e.target.value || '');
+      const visibilityHandler = () => updatePlatformVisibility(input, selectWrapper);
+
+      input.addEventListener('blur', metadataHandler);
+      input.addEventListener('change', metadataHandler);
+      input.addEventListener('input', (e) => {
+        visibilityHandler();
+        metadataHandler(e);
+      });
+
+      if (select) {
+        select.addEventListener('change', () => {
+          const current = (input.value || '').trim();
+          if (!current.startsWith('@')) return;
+          const url = platformURLForHandle(select.value, current);
+          if (!url) return;
+          input.value = url;
+          visibilityHandler();
+          queueMetadataFetch(url);
+        });
+      }
+
+      visibilityHandler();
     });
 
     const firstVal = inputs[0].value;

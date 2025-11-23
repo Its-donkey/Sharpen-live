@@ -19,9 +19,9 @@
                 <input type="hidden" name="platform_id" value="{{$row.ID}}">
                 <input type="url" class="channel-url-input" name="platform_url" placeholder="https://example.com/live or @handle" value="{{$row.ChannelURL}}" required>
               </label>
-              <label class="form-field form-field-inline platform-select">
+              <label class="form-field form-field-inline platform-select-wrapper">
                 <span>Platform</span>
-                <select name="platform_name">
+                <select name="platform_name" class="platform-select">
                   <option value="YouTube" {{if or (eq $row.Name "YouTube") (eq $row.Name "")}}selected{{end}}>YouTube</option>
                   <option value="Twitch" {{if eq $row.Name "Twitch"}}selected{{end}}>Twitch</option>
                   <option value="Facebook" {{if eq $row.Name "Facebook"}}selected{{end}}>Facebook</option>

@@ -436,6 +436,14 @@ tbody tr:hover {
   color: var(--fg-primary);
 }
 
+.platform-select-wrapper {
+  display: none;
+}
+
+.platform-select-wrapper.is-visible {
+  display: block;
+}
+
 .language-picker,
 .platform-picker {
   display: grid;

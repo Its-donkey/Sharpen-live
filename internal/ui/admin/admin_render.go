@@ -140,41 +140,16 @@ func renderAdminStreamersTab() string {
 }
 
 func renderAdminActivityTab() string {
-	if strings.TrimSpace(state.AdminConsole.ActivityTab) == "" {
-		state.AdminConsole.ActivityTab = "website"
-	}
+	state.AdminConsole.ActivityTab = "website"
 	var builder strings.Builder
 	builder.WriteString(`<section class="admin-activity" role="tabpanel" data-tab="activity">`)
-	builder.WriteString(renderAdminActivitySubTabs())
-	switch state.AdminConsole.ActivityTab {
-	case "api":
-		builder.WriteString(renderApiActivityPanel())
-	default:
-		builder.WriteString(renderWebsiteActivityPanel())
-	}
+	builder.WriteString(renderWebsiteActivityPanel())
 	builder.WriteString(`</section>`)
 	return builder.String()
 }
 
 func renderAdminActivitySubTabs() string {
-	subTabs := []struct {
-		Key   string
-		Label string
-	}{
-		{Key: "website", Label: "Website"},
-		{Key: "api", Label: "API server"},
-	}
-	var builder strings.Builder
-	builder.WriteString(`<div class="admin-tabs admin-tabs--sub" role="tablist">`)
-	for _, tab := range subTabs {
-		className := "admin-tab admin-subtab"
-		if state.AdminConsole.ActivityTab == tab.Key {
-			className += " active"
-		}
-		builder.WriteString(`<button type="button" class="` + className + `" data-activity-tab="` + tab.Key + `">` + tab.Label + `</button>`)
-	}
-	builder.WriteString(`</div>`)
-	return builder.String()
+	return ""
 }
 
 func renderWebsiteActivityPanel() string {

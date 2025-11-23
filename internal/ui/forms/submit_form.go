@@ -91,10 +91,16 @@ func RenderSubmitForm() {
 			if errors.Channel {
 				channelWrapper += " form-field-error"
 			}
-			builder.WriteString(`<div class="platform-row form-grid platform-row-grid" data-platform-row="` + row.ID + `">`)
+			builder.WriteString(`<div class="platform-row" data-platform-row="` + row.ID + `">`)
+			builder.WriteString(`<div class="platform-row-grid">`)
+			builder.WriteString(`<label class="form-field form-field-inline"><span>Platform name</span>`)
+			builder.WriteString(`<input type="text" value="` + html.EscapeString(row.Name) + `" data-platform-name data-row="` + row.ID + `" placeholder="YouTube" required />`)
+			builder.WriteString(`</label>`)
 			builder.WriteString(`<label class="` + channelWrapper + `" id="platform-url-field-` + row.ID + `"><span>Channel URL</span>`)
 			builder.WriteString(`<input type="url" class="channel-url-input" placeholder="https://example.com/live or @handle" value="` + html.EscapeString(row.ChannelURL) + `" data-platform-channel data-row="` + row.ID + `" required />`)
 			builder.WriteString(`</label>`)
+			builder.WriteString(`<button type="button" class="remove-platform-button platform-remove-inline" data-remove-platform="` + row.ID + `">Remove</button>`)
+			builder.WriteString(`</div>`)
 
 			handleValue := strings.TrimSpace(row.Handle)
 			if handleValue == "" {
@@ -114,7 +120,6 @@ func RenderSubmitForm() {
 				builder.WriteString(`</select></label>`)
 			}
 
-			builder.WriteString(`<button type="button" class="remove-platform-button platform-remove-inline" data-remove-platform="` + row.ID + `">Remove</button>`)
 			if errors.Channel {
 				builder.WriteString(`<p class="field-error-text">Provide a valid channel URL.</p>`)
 			}

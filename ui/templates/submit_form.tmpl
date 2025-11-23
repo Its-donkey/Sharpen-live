@@ -19,16 +19,6 @@
                 <input type="hidden" name="platform_id" value="{{$row.ID}}">
                 <input type="url" class="channel-url-input" name="platform_url" placeholder="https://example.com/live or @handle" value="{{$row.ChannelURL}}" required>
               </label>
-              <label class="form-field form-field-inline platform-select-wrapper">
-                <span>Platform</span>
-                <select name="platform_name" class="platform-select">
-                  <option value="" {{if eq $row.Name ""}}selected{{end}}>Select a platform…</option>
-                  <option value="YouTube" {{if eq $row.Name "YouTube"}}selected{{end}}>YouTube</option>
-                  <option value="Twitch" {{if eq $row.Name "Twitch"}}selected{{end}}>Twitch</option>
-                  <option value="Facebook" {{if eq $row.Name "Facebook"}}selected{{end}}>Facebook</option>
-                  <option value="Other" {{if eq $row.Name "Other"}}selected{{end}}>Other</option>
-                </select>
-              </label>
               {{if gt (len $.State.Platforms) 1}}
                 <button type="submit" class="remove-platform-button" name="remove_platform" value="{{$row.ID}}">Remove</button>
               {{end}}

@@ -74,17 +74,25 @@ func RenderAdminConsole() {
 	bindAdminEvents()
 }
 
+//----------------------------------------------------------------------------------
+// The following lines need to be put back in below prior to going to production:
+//
+// <input type="password" id="admin-password" value="` + html.EscapeString(state.AdminConsole.LoginPassword) + `" placeholder="Enter your password" autocomplete="current-password" required />
+// <input type="email" id="admin-email" value="` + html.EscapeString(state.AdminConsole.LoginEmail) + `" placeholder="you@example.com" autocomplete="username" required />
+//
+//----------------------------------------------------------------------------------
+
 func renderAdminLoginForm() string {
 	var builder strings.Builder
 	builder.WriteString(`
 <form id="admin-login-form" class="admin-auth">
   <label class="form-field form-field-wide">
     <span>Email</span>
-    <input type="email" id="admin-email" value="` + html.EscapeString(state.AdminConsole.LoginEmail) + `" placeholder="you@example.com" autocomplete="username" required />
+    <input type="email" id="admin-email" value="admin@sharpen.live" autocomplete="username" required />
   </label>
   <label class="form-field form-field-wide">
     <span>Password</span>
-    <input type="password" id="admin-password" value="` + html.EscapeString(state.AdminConsole.LoginPassword) + `" placeholder="Enter your password" autocomplete="current-password" required />
+    <input type="password" id="admin-password" value="change-me" autocomplete="current-password" required />
   </label>
   <div class="submit-streamer-actions">
     <button type="submit" class="submit-streamer-submit">Log in</button>

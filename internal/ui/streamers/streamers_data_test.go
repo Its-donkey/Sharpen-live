@@ -52,6 +52,23 @@ func TestMapServerStreamersOrdersOnlineFirst(t *testing.T) {
 	}
 }
 
+func TestCollectPlatformsIncludesYouTubeChannelWhenOffline(t *testing.T) {
+	t.Parallel()
+
+	platforms := collectPlatforms(model.ServerPlatformDetails{
+		YouTube: &model.ServerYouTubePlatform{
+			ChannelID: "UC123",
+		},
+	}, model.ServerStatus{})
+
+	if len(platforms) != 1 {
+		t.Fatalf("expected 1 platform got %d", len(platforms))
+	}
+	if got := platforms[0]; got.ChannelURL != "https://www.youtube.com/channel/UC123" || got.Name != "YouTube" {
+		t.Fatalf("unexpected platform %+v", got)
+	}
+}
+
 func TestFetchStreamersFromUsesBase(t *testing.T) {
 	t.Parallel()
 

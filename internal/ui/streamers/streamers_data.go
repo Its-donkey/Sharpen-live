@@ -139,8 +139,18 @@ func deriveStatus(status model.ServerStatus) (string, string) {
 func collectPlatforms(details model.ServerPlatformDetails, status model.ServerStatus) []model.Platform {
 	var platforms []model.Platform
 	if yt := details.YouTube; yt != nil {
-		if url := youtubeLiveURL(yt, status.YouTube); url != "" {
+		id := strings.TrimSpace(yt.ChannelID)
+		handle := strings.TrimPrefix(strings.TrimSpace(yt.Handle), "@")
+		if id == "" {
+			id = handle
+		}
+		url := youtubeLiveURL(yt, status.YouTube)
+		if url == "" {
+			url = youtubeChannelURL(yt)
+		}
+		if url != "" {
 			platforms = append(platforms, model.Platform{
+				ID:         id,
 				Name:       "YouTube",
 				ChannelURL: url,
 			})

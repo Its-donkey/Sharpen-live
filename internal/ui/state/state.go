@@ -12,5 +12,6 @@ var (
 	AdminConsole = model.AdminViewState{
 		ActiveTab:     "streamers",
 		StreamerForms: make(map[string]*model.AdminStreamerForm),
+		YouTubeLeases: make(map[string]model.YouTubeLeaseStatus),
 	}
 )

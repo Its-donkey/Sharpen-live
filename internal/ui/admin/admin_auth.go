@@ -114,12 +114,13 @@ func refreshAdminData() {
 		}
 		adminState.SettingsLoading = false
 
-		monitor, err := adminFetchMonitor(ctx)
+		monitor, leases, err := adminFetchMonitor(ctx)
 		if err != nil {
 			statusTone = escalateAdminStatusTone(statusTone, "warning")
 			statusMessages = append(statusMessages, "Monitor events unavailable: "+err.Error())
 		} else {
 			adminState.MonitorEvents = monitor
+			adminState.YouTubeLeases = leases
 		}
 		adminState.MonitorLoading = false
 
@@ -166,6 +167,7 @@ func performAdminLogout(status model.AdminStatus, transient bool) {
 	adminState.SettingsSaving = false
 	adminState.MonitorEvents = nil
 	adminState.MonitorLoading = false
+	adminState.YouTubeLeases = make(map[string]model.YouTubeLeaseStatus)
 	adminState.ActivityLogs = nil
 	adminState.ActivityLogsError = ""
 	closeWebsiteLogStream()

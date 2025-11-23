@@ -20,13 +20,14 @@ func handleMonitorRefresh() {
 	go func() {
 		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 		defer cancel()
-		events, err := adminFetchMonitor(ctx)
+		events, leases, err := adminFetchMonitor(ctx)
 		adminState.MonitorLoading = false
 		if err != nil {
 			setAdminStatus(model.AdminStatus{Tone: "error", Message: err.Error()})
 			return
 		}
 		adminState.MonitorEvents = events
+		adminState.YouTubeLeases = leases
 		setTransientStatus(model.AdminStatus{Tone: "success", Message: "Monitor updated."})
 	}()
 }

@@ -267,6 +267,53 @@ tbody tr:hover {
   font-size: 0.92rem;
 }
 
+.yt-lease-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.25rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  border: 1px solid transparent;
+}
+
+.yt-lease-dot {
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 50%;
+  background: currentColor;
+  box-shadow: 0 0 0 4px color-mix(in srgb, currentColor 18%, transparent);
+}
+
+.yt-lease-text {
+  text-transform: uppercase;
+}
+
+.yt-lease-date {
+  font-weight: 600;
+  color: var(--fg-muted);
+}
+
+.yt-lease-badge.valid {
+  color: var(--online);
+  background: rgba(34, 197, 94, 0.12);
+  border-color: rgba(34, 197, 94, 0.25);
+}
+
+.yt-lease-badge.expiring {
+  color: #f59e0b;
+  background: rgba(245, 158, 11, 0.14);
+  border-color: rgba(245, 158, 11, 0.28);
+}
+
+.yt-lease-badge.expired {
+  color: #ef4444;
+  background: rgba(239, 68, 68, 0.12);
+  border-color: rgba(239, 68, 68, 0.3);
+}
+
 .platform-link {
   display: inline-flex;
   align-items: center;

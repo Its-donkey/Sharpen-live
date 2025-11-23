@@ -205,6 +205,19 @@ type AdminMonitorEvent struct {
 	Message   string `json:"message"`
 }
 
+// YouTubeLeaseStatus describes the subscription lease health for a YouTube channel.
+type YouTubeLeaseStatus struct {
+	Alias        string `json:"alias"`
+	Handle       string `json:"handle"`
+	ChannelID    string `json:"channelId"`
+	LeaseStart   string `json:"leaseStart"`
+	LeaseExpires string `json:"leaseExpires"`
+	Status       string `json:"status"`
+	Expired      bool   `json:"expired"`
+	ExpiringSoon bool   `json:"expiringSoon"`
+	StartDate    string `json:"startDate,omitempty"`
+}
+
 // AdminActivityLog stores the display text for stdout/stderr entries shown in the console.
 type AdminActivityLog struct {
 	Time    string `json:"time"`
@@ -268,6 +281,7 @@ type AdminViewState struct {
 	ActivityLogsShouldScroll bool
 	Submissions              []AdminSubmission
 	Streamers                []Streamer
+	YouTubeLeases            map[string]YouTubeLeaseStatus
 	StreamerForms            map[string]*AdminStreamerForm
 	Settings                 *AdminSettings
 	SettingsDraft            *AdminSettings

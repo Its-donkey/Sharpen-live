@@ -6,6 +6,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"html"
+	"net/url"
 	"strings"
 
 	"github.com/Its-donkey/Sharpen-live/internal/ui/model"
@@ -323,7 +324,15 @@ func renderStreamerCard(s model.Streamer, form *model.AdminStreamerForm) string 
 		if len(s.Platforms) > 0 {
 			builder.WriteString(`<div class="admin-card-meta"><strong>Platforms</strong><ul class="platform-list">`)
 			for _, p := range s.Platforms {
-				builder.WriteString(`<li>` + html.EscapeString(p.Name) + ` · ` + html.EscapeString(p.ChannelURL) + `</li>`)
+				badge := ""
+				if strings.EqualFold(p.Name, "youtube") {
+					badge = renderYouTubeLeaseBadge(s, p)
+				}
+				builder.WriteString(`<li>` + html.EscapeString(p.Name) + ` · ` + html.EscapeString(p.ChannelURL))
+				if badge != "" {
+					builder.WriteString(` ` + badge)
+				}
+				builder.WriteString(`</li>`)
 			}
 			builder.WriteString(`</ul></div>`)
 		}
@@ -398,6 +407,83 @@ func renderStreamerForm(form *model.AdminStreamerForm, key, heading, submitLabel
 	builder.WriteString(`</div>`)
 	builder.WriteString(`</form>`)
 	return builder.String()
+}
+
+func renderYouTubeLeaseBadge(streamer model.Streamer, platform model.Platform) string {
+	lease := lookupLeaseStatus(streamer, platform)
+	if lease == nil {
+		return ""
+	}
+	class, label := leaseBadgePresentation(*lease)
+	var builder strings.Builder
+	builder.WriteString(`<span class="yt-lease-badge ` + class + `">`)
+	builder.WriteString(`<span class="yt-lease-dot"></span>`)
+	builder.WriteString(`<span class="yt-lease-text">` + html.EscapeString(label) + `</span>`)
+	if lease.Expired && lease.StartDate != "" {
+		builder.WriteString(`<span class="yt-lease-date">Leased ` + html.EscapeString(lease.StartDate) + `</span>`)
+	}
+	builder.WriteString(`</span>`)
+	return builder.String()
+}
+
+func lookupLeaseStatus(streamer model.Streamer, platform model.Platform) *model.YouTubeLeaseStatus {
+	leases := state.AdminConsole.YouTubeLeases
+	if len(leases) == 0 {
+		return nil
+	}
+	keys := []string{
+		normalizeLeaseLookupKey(streamer.Name),
+		normalizeLeaseLookupKey(streamer.ID),
+		normalizeLeaseLookupKey(platform.ID),
+		normalizeLeaseLookupKey(extractYouTubeHandle(platform.ChannelURL)),
+	}
+	for _, key := range keys {
+		if key == "" {
+			continue
+		}
+		if lease, ok := leases[key]; ok {
+			return &lease
+		}
+	}
+	return nil
+}
+
+func leaseBadgePresentation(status model.YouTubeLeaseStatus) (class string, label string) {
+	switch {
+	case status.Expired:
+		return "expired", "Expired"
+	case status.ExpiringSoon || strings.EqualFold(status.Status, "expiring"):
+		return "expiring", "Expiring soon"
+	default:
+		return "valid", "Valid"
+	}
+}
+
+func extractYouTubeHandle(raw string) string {
+	raw = strings.TrimSpace(raw)
+	if raw == "" {
+		return ""
+	}
+	if strings.HasPrefix(raw, "@") {
+		return raw
+	}
+	parsed, err := url.Parse(raw)
+	if err != nil {
+		return ""
+	}
+	segments := strings.Split(strings.Trim(parsed.Path, "/"), "/")
+	for _, part := range segments {
+		if strings.HasPrefix(part, "@") {
+			return part
+		}
+	}
+	return ""
+}
+
+func normalizeLeaseLookupKey(raw string) string {
+	raw = strings.ToLower(strings.TrimSpace(raw))
+	raw = strings.TrimPrefix(raw, "@")
+	return raw
 }
 
 func selectedAttr(ok bool) string {

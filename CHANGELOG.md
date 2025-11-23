@@ -5,6 +5,7 @@
 ### Added
 - Admin: add roster “Check online status” action and API to refresh channel state on demand.
 - Submit form: show the platform picker only when an @handle is entered and auto-expand handles into platform URLs after selection.
+- Admin: show YouTube lease badges inline with roster platforms, including expiring/expired indicators.
 
 ### Fixed
 - Submit form: align channel URL fields to the same grid sizing as other inputs.

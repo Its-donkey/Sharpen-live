@@ -97,21 +97,23 @@ func RenderSubmitForm() {
 			}
 			builder.WriteString(`<div class="platform-row form-grid platform-row-grid" data-platform-row="` + row.ID + `">`)
 			showPlatformName := strings.HasPrefix(strings.TrimSpace(row.ChannelURL), "@") || strings.HasPrefix(strings.TrimSpace(row.Handle), "@")
+			channelGroupClass := "platform-channel-group"
+			selectClass := "form-field form-field-inline platform-select-wrapper"
 			if showPlatformName {
 				builder.WriteString(`<label class="form-field form-field-inline platform-name"><span>Platform name</span>`)
 				builder.WriteString(`<input type="text" value="` + html.EscapeString(row.Name) + `" data-platform-name data-row="` + row.ID + `" placeholder="YouTube" required />`)
 				builder.WriteString(`</label>`)
+				selectClass += " is-visible"
+			} else {
+				channelGroupClass += " span-two"
+				selectClass += " shift-left"
 			}
-			builder.WriteString(`<div class="platform-channel-group">`)
+			builder.WriteString(`<div class="` + channelGroupClass + `">`)
 			builder.WriteString(`<label class="` + channelWrapper + `" id="platform-url-field-` + row.ID + `"><span>Channel URL</span>`)
 			builder.WriteString(`<input type="url" class="channel-url-input" placeholder="https://example.com/live or @handle" value="` + html.EscapeString(row.ChannelURL) + `" data-platform-channel data-row="` + row.ID + `" required />`)
 			builder.WriteString(`</label>`)
 			builder.WriteString(`</div>`)
-			wrapperClass := "form-field form-field-inline platform-select-wrapper"
-			if showPlatformName {
-				wrapperClass += " is-visible"
-			}
-			builder.WriteString(`<label class="` + wrapperClass + `"><span>Handle platform</span>`)
+			builder.WriteString(`<label class="` + selectClass + `"><span>Handle platform</span>`)
 			builder.WriteString(`<select class="platform-select" data-platform-choice data-row="` + row.ID + `">`)
 			builder.WriteString(`<option value="">Select a platform…</option>`)
 			selected := resolvePlatformPreset(row.Preset)

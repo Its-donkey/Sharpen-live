@@ -21,14 +21,14 @@
                     <input type="text" data-platform-name value="{{$row.Name}}" required>
                   </label>
                 {{end}}
-                <div class="platform-channel-group">
+                <div class="platform-channel-group {{if not $row.Handle}}span-two{{end}}">
                   <label class="form-field form-field-inline highlight-change {{if $rowErr.Channel}}form-field-error{{end}}" id="platform-url-field-{{$row.ID}}">
                     <span>Channel URL</span>
                     <input type="hidden" name="platform_id" value="{{$row.ID}}">
                     <input type="url" class="channel-url-input" name="platform_url" placeholder="https://example.com/live or @handle" value="{{$row.ChannelURL}}" required>
                   </label>
                 </div>
-                <label class="form-field form-field-inline platform-select-wrapper {{if $row.Handle}}is-visible{{end}}">
+                <label class="form-field form-field-inline platform-select-wrapper {{if $row.Handle}}is-visible{{else}}shift-left{{end}}">
                   <span>Handle platform</span>
                   <select class="platform-select" data-platform-choice data-row="{{$row.ID}}">
                     <option value="" {{if eq (lower $row.Preset) ""}}selected{{end}}>Select a platform…</option>

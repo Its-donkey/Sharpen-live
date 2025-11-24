@@ -15,10 +15,12 @@
             {{$rowErr := index $.State.Errors.Platforms $row.ID}}
             <div class="platform-row" data-platform-row="{{$row.ID}}">
               <div class="platform-row-grid">
-                <label class="form-field form-field-inline platform-name">
-                  <span>Platform name</span>
-                  <input type="text" data-platform-name value="{{$row.Name}}" required>
-                </label>
+                {{if hasPrefix $row.ChannelURL "@"}}
+                  <label class="form-field form-field-inline platform-name">
+                    <span>Platform name</span>
+                    <input type="text" data-platform-name value="{{$row.Name}}" required>
+                  </label>
+                {{end}}
                 <div class="platform-channel-group">
                   <label class="form-field form-field-inline highlight-change {{if $rowErr.Channel}}form-field-error{{end}}" id="platform-url-field-{{$row.ID}}">
                     <span>Channel URL</span>

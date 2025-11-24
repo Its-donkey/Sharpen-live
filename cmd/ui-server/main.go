@@ -134,6 +134,7 @@ func loadTemplates(dir string) (map[string]*template.Template, error) {
 		"displayLanguage": forms.DisplayLanguage,
 		"statusClass":     statusClass,
 		"statusLabel":     statusLabel,
+		"lower":           strings.ToLower,
 	}
 	base := filepath.Join(dir, "base.tmpl")
 	home := filepath.Join(dir, "home.tmpl")

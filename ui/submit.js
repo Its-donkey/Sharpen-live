@@ -91,7 +91,7 @@
     if (!selectWrapper) return;
     const value = (input && input.value ? input.value : '').trim();
     const show = value.startsWith('@');
-    selectWrapper.classList.toggle('is-visible', show);
+    selectWrapper.classList.toggle('platform-select-hidden', !show);
   }
 
   function bindPlatformInputs() {
@@ -101,8 +101,8 @@
     log('binding metadata handlers to', inputs.length, 'platform input(s)');
     inputs.forEach((input) => {
       const row = input.closest('.platform-row');
-      const select = row ? row.querySelector('.platform-select') : null;
-      const selectWrapper = row ? row.querySelector('.platform-select-wrapper') : null;
+      const select = row ? row.querySelector('.platform-select select, .platform-select-input') : null;
+      const selectWrapper = row ? row.querySelector('.platform-select') : null;
       const metadataHandler = (e) => queueMetadataFetch(e.target.value || '');
       const visibilityHandler = () => updatePlatformVisibility(input, selectWrapper);
 

@@ -519,6 +519,16 @@ tbody tr:hover {
   position: relative;
 }
 
+.language-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.language-controls .language-select {
+  flex: 1;
+}
+
 .language-select,
 .platform-select,
 .channel-url-input {
@@ -1032,7 +1042,7 @@ tbody tr:hover {
 }
 
 .add-language-button {
-  margin-top: 0.35rem;
+  margin: 0;
 }
 
 .submit-streamer-actions {

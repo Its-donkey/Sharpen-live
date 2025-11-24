@@ -12,6 +12,7 @@
 - Submit form: align channel URL rows to the grid and constrain inputs to half-width for consistent layout.
 - Submit form: always show handle platform picker when an @handle is entered, even before metadata loads.
 - Submit form: keep the handle dropdown markup consistent between SSR and WASM to avoid duplicate platform rows.
+- Submit form: place the add-language button before the dropdown for clearer horizontal controls.
 - Guard WebSub hub.challenge and reject malformed values to avoid reflected content.
 - Harden YouTube WebSub requests by validating hub, topic, and callback URLs.
 - Admin: validate admin tokens for settings/log streams instead of accepting any non-empty value.

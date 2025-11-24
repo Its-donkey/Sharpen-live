@@ -161,6 +161,12 @@ func RenderSubmitForm() {
 		builder.WriteString(`<label class="` + langClass + `" id="field-languages"><span>Languages *</span><p class="submit-streamer-help">Select every language the streamer uses on their channel.</p>`)
 		selectDisabled := len(state.Submit.Languages) >= model.MaxLanguages
 		builder.WriteString(`<div class="language-picker">`)
+		builder.WriteString(`<div class="language-controls">`)
+		builder.WriteString(`<button type="button" class="add-platform-button add-language-button" id="add-language"`)
+		if selectDisabled {
+			builder.WriteString(` disabled`)
+		}
+		builder.WriteString(`>+ Add another language</button>`)
 		builder.WriteString(`<select class="language-select" id="language-select"`)
 		if selectDisabled {
 			builder.WriteString(` disabled`)
@@ -171,6 +177,7 @@ func RenderSubmitForm() {
 			builder.WriteString(`<option value="` + html.EscapeString(option.Value) + `">` + html.EscapeString(option.Label) + `</option>`)
 		}
 		builder.WriteString(`</select>`)
+		builder.WriteString(`</div>`)
 		builder.WriteString(`<div class="language-tags">`)
 		if len(state.Submit.Languages) == 0 {
 			builder.WriteString(`<span class="language-empty">No languages selected yet.</span>`)
@@ -182,11 +189,6 @@ func RenderSubmitForm() {
 		}
 		builder.WriteString(`</div>`)
 		builder.WriteString(`</div>`)
-		builder.WriteString(`<button type="button" class="add-platform-button add-language-button" id="add-language"`)
-		if selectDisabled {
-			builder.WriteString(` disabled`)
-		}
-		builder.WriteString(`>+ Add another language</button>`)
 		if state.Submit.Errors.Languages {
 			builder.WriteString(`<p class="field-error-text">Select at least one language.</p>`)
 		}

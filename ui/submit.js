@@ -185,7 +185,9 @@
         btn.setAttribute('aria-label', 'Remove ' + label);
         btn.dataset.removeLanguage = value;
         btn.textContent = '×';
-        btn.addEventListener('click', () => {
+        btn.addEventListener('click', (e) => {
+          e.preventDefault();
+          e.stopPropagation();
           const remaining = Array.from(selected.entries()).filter(([key]) => key !== value);
           selected.clear();
           remaining.forEach(([key, val]) => selected.set(key, val));

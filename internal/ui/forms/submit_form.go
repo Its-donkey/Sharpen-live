@@ -114,6 +114,8 @@ func RenderSubmitForm() {
 					builder.WriteString(`>` + option.Label + `</option>`)
 				}
 				builder.WriteString(`</select></label>`)
+			} else {
+				builder.WriteString(`<label class="form-field form-field-inline platform-select platform-select-hidden"></label>`)
 			}
 			builder.WriteString(`</div>`)
 			builder.WriteString(`<button type="button" class="remove-platform-button" data-remove-platform="` + row.ID + `">Remove</button>`)

@@ -445,6 +445,10 @@ tbody tr:hover {
   flex: 1.2;
 }
 
+.platform-select-hidden {
+  display: none;
+}
+
 .form-field {
   display: flex;
   flex-direction: column;

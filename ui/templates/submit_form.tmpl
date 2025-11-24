@@ -20,6 +20,14 @@
                     <span>Platform name</span>
                     <input type="text" data-platform-name value="{{$row.Name}}" required>
                   </label>
+                  <label class="form-field form-field-inline platform-select">
+                    <span>Handle platform</span>
+                    <select data-platform-choice data-row="{{$row.ID}}">
+                      <option value="youtube" {{if eq (lower $row.Preset) "youtube"}}selected{{end}}>YouTube</option>
+                      <option value="twitch" {{if eq (lower $row.Preset) "twitch"}}selected{{end}}>Twitch</option>
+                      <option value="facebook" {{if eq (lower $row.Preset) "facebook"}}selected{{end}}>Facebook</option>
+                    </select>
+                  </label>
                 {{end}}
                 <div class="platform-channel-group">
                   <label class="form-field form-field-inline highlight-change {{if $rowErr.Channel}}form-field-error{{end}}" id="platform-url-field-{{$row.ID}}">

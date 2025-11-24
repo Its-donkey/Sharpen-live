@@ -101,6 +101,17 @@ func RenderSubmitForm() {
 				builder.WriteString(`<label class="form-field form-field-inline platform-name"><span>Platform name</span>`)
 				builder.WriteString(`<input type="text" value="` + html.EscapeString(row.Name) + `" data-platform-name data-row="` + row.ID + `" placeholder="YouTube" required />`)
 				builder.WriteString(`</label>`)
+				builder.WriteString(`<label class="form-field form-field-inline platform-select"><span>Handle platform</span>`)
+				builder.WriteString(`<select data-platform-choice data-row="` + row.ID + `">`)
+				selected := resolvePlatformPreset(row.Preset)
+				for _, option := range platformHandleOptions {
+					builder.WriteString(`<option value="` + option.Value + `"`)
+					if selected == option.Value {
+						builder.WriteString(` selected`)
+					}
+					builder.WriteString(`>` + option.Label + `</option>`)
+				}
+				builder.WriteString(`</select></label>`)
 			}
 			builder.WriteString(`<div class="platform-channel-group">`)
 			builder.WriteString(`<label class="` + channelWrapper + `" id="platform-url-field-` + row.ID + `"><span>Channel URL</span>`)

@@ -222,11 +222,6 @@
       langSelect.selectedIndex = 0;
     }
 
-    langTags.addEventListener('click', (e) => {
-      // prevent clicks in the language field from triggering unrelated handlers
-      e.stopPropagation();
-    });
-
     // Seed selected from initial state
     allOptions.forEach((opt) => {
       if (opt.selected) {

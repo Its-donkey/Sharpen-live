@@ -384,17 +384,6 @@ func bindSubmitFormEvents() {
 		})
 	})
 
-	// Prevent clicks inside the language tag region from bubbling and clearing selections.
-	langTags := formDocument().Call("querySelector", ".language-tags")
-	addFormHandler(langTags, "click", func(_ js.Value, args []js.Value) any {
-		if len(args) > 0 {
-			if ev := args[0]; ev.Truthy() {
-				ev.Call("stopPropagation")
-			}
-		}
-		return nil
-	})
-
 	platformInputs := formDocument().Call("querySelectorAll", "[data-platform-channel]")
 	forEachNode(platformInputs, func(node js.Value) {
 		addFormHandler(node, "input", func(this js.Value, _ []js.Value) any {

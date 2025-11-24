@@ -68,7 +68,7 @@
           </div>
           <div class="language-controls">
             <button type="button" class="add-platform-button add-language-button" id="add-language">+ Add another language</button>
-            <select class="language-select" id="language-select" name="language-picker">
+            <select class="language-select is-hidden" id="language-select" name="language-picker">
               <option value="">Select a language…</option>
               {{range .LanguageOptions}}
                 <option value="{{.Value}}" {{if contains $.State.Languages .Value}}data-selected="true"{{end}}>{{.Label}}</option>

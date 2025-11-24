@@ -177,7 +177,7 @@ func RenderSubmitForm() {
 			builder.WriteString(` disabled`)
 		}
 		builder.WriteString(`>+ Add another language</button>`)
-		builder.WriteString(`<select class="language-select" id="language-select"`)
+		builder.WriteString(`<select class="language-select is-hidden" id="language-select"`)
 		if selectDisabled {
 			builder.WriteString(` disabled`)
 		}
@@ -311,6 +311,7 @@ func bindSubmitFormEvents() {
 	})
 
 	langSelect := formDocument().Call("getElementById", "language-select")
+	langPicker := formDocument().Call("querySelector", ".language-picker")
 	addLanguage := func(raw string) {
 		value := strings.TrimSpace(raw)
 		if value == "" || len(state.Submit.Languages) >= model.MaxLanguages {
@@ -323,6 +324,15 @@ func bindSubmitFormEvents() {
 	}
 	addFormHandler(langSelect, "change", func(this js.Value, _ []js.Value) any {
 		addLanguage(this.Get("value").String())
+		this.Set("value", "")
+		this.Get("classList").Call("add", "is-hidden")
+		if langPicker.Truthy() {
+			langPicker.Get("classList").Call("remove", "is-select-visible")
+		}
+		addLangButton := formDocument().Call("getElementById", "add-language")
+		if addLangButton.Truthy() {
+			addLangButton.Get("classList").Call("remove", "is-hidden")
+		}
 		RenderSubmitForm()
 		return nil
 	})
@@ -330,9 +340,16 @@ func bindSubmitFormEvents() {
 	addLangButton := formDocument().Call("getElementById", "add-language")
 	addFormHandler(addLangButton, "click", func(js.Value, []js.Value) any {
 		if langSelect.Truthy() {
-			addLanguage(langSelect.Get("value").String())
+			if langSelect.Get("disabled").Bool() {
+				return nil
+			}
+			langSelect.Get("classList").Call("remove", "is-hidden")
+			if langPicker.Truthy() {
+				langPicker.Get("classList").Call("add", "is-select-visible")
+			}
+			addLangButton.Get("classList").Call("add", "is-hidden")
+			langSelect.Call("focus")
 		}
-		RenderSubmitForm()
 		return nil
 	})
 

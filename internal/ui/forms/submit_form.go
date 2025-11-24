@@ -724,7 +724,7 @@ func requestChannelDescription(ctx context.Context, target string) (string, stri
 	}
 
 	if resp.StatusCode < 200 || resp.StatusCode >= 300 {
-		return "", "", "", "", fmt.Errorf(strings.TrimSpace(string(body)))
+		return "", "", "", "", errors.New(strings.TrimSpace(string(body)))
 	}
 
 	var meta model.MetadataResponse

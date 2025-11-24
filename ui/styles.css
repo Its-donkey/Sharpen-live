@@ -470,6 +470,9 @@ tbody tr:hover {
 .form-field select,
 .form-field textarea {
   width: 100%;
+  padding: 0.75rem 0.9rem;
+  border-radius: 12px;
+  border: 1px solid rgba(148, 163, 184, 0.28);
   background: rgba(15, 23, 42, 0.65);
   color: var(--fg-primary);
   font: inherit;

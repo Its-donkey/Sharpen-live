@@ -430,25 +430,23 @@ tbody tr:hover {
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
 }
 
-.platform-row-grid {
-  grid-template-columns: 1fr auto;
-  align-items: end;
-  gap: 0.75rem;
+.platform-row-inner {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-end;
   width: 100%;
 }
 
-.platform-name {
-  grid-column: 1 / -1;
+.platform-row-inner .platform-url {
+  flex: 3;
 }
 
-.platform-channel-group {
-  grid-column: 1 / 2;
+.platform-row-inner .platform-select {
+  flex: 1.2;
 }
 
-.platform-remove-inline {
-  justify-self: start;
-  align-self: end;
-  margin-left: auto;
+.platform-select-hidden {
+  display: none;
 }
 
 .form-field {

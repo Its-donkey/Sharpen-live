@@ -101,23 +101,27 @@ func RenderSubmitForm() {
 				builder.WriteString(`<label class="form-field form-field-inline platform-name"><span>Platform name</span>`)
 				builder.WriteString(`<input type="text" value="` + html.EscapeString(row.Name) + `" data-platform-name data-row="` + row.ID + `" placeholder="YouTube" required />`)
 				builder.WriteString(`</label>`)
-				builder.WriteString(`<label class="form-field form-field-inline platform-select"><span>Handle platform</span>`)
-				builder.WriteString(`<select data-platform-choice data-row="` + row.ID + `">`)
-				selected := resolvePlatformPreset(row.Preset)
-				for _, option := range platformHandleOptions {
-					builder.WriteString(`<option value="` + option.Value + `"`)
-					if selected == option.Value {
-						builder.WriteString(` selected`)
-					}
-					builder.WriteString(`>` + option.Label + `</option>`)
-				}
-				builder.WriteString(`</select></label>`)
 			}
 			builder.WriteString(`<div class="platform-channel-group">`)
 			builder.WriteString(`<label class="` + channelWrapper + `" id="platform-url-field-` + row.ID + `"><span>Channel URL</span>`)
 			builder.WriteString(`<input type="url" class="channel-url-input" placeholder="https://example.com/live or @handle" value="` + html.EscapeString(row.ChannelURL) + `" data-platform-channel data-row="` + row.ID + `" required />`)
 			builder.WriteString(`</label>`)
 			builder.WriteString(`</div>`)
+			wrapperClass := "form-field form-field-inline platform-select-wrapper"
+			if showPlatformName {
+				wrapperClass += " is-visible"
+			}
+			builder.WriteString(`<label class="` + wrapperClass + `"><span>Handle platform</span>`)
+			builder.WriteString(`<select class="platform-select" data-platform-choice data-row="` + row.ID + `">`)
+			selected := resolvePlatformPreset(row.Preset)
+			for _, option := range platformHandleOptions {
+				builder.WriteString(`<option value="` + option.Value + `"`)
+				if selected == option.Value {
+					builder.WriteString(` selected`)
+				}
+				builder.WriteString(`>` + option.Label + `</option>`)
+			}
+			builder.WriteString(`</select></label>`)
 			builder.WriteString(`<button type="button" class="remove-platform-button platform-remove-inline" data-remove-platform="` + row.ID + `">Remove</button>`)
 			builder.WriteString(`</div>`)
 

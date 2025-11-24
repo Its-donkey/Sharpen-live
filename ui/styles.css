@@ -479,6 +479,13 @@ tbody tr:hover {
   transition: border 0.2s ease, box-shadow 0.2s ease;
 }
 
+.platform-select {
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+}
+
 .form-field-error input,
 .form-field-error select,
 .form-field-error textarea {

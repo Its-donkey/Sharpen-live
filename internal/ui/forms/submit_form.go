@@ -318,7 +318,8 @@ func bindSubmitFormEvents() {
 			return
 		}
 		if !ContainsString(state.Submit.Languages, value) {
-			state.Submit.Languages = append(state.Submit.Languages, value)
+			next := append([]string(nil), state.Submit.Languages...)
+			state.Submit.Languages = append(next, value)
 			state.Submit.Errors.Languages = false
 		}
 	}
@@ -366,7 +367,9 @@ func bindSubmitFormEvents() {
 					filtered = append(filtered, entry)
 				}
 			}
-			state.Submit.Languages = filtered
+			filteredCopy := make([]string, len(filtered))
+			copy(filteredCopy, filtered)
+			state.Submit.Languages = filteredCopy
 			if len(filtered) > 0 {
 				state.Submit.Errors.Languages = false
 			}

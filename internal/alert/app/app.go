@@ -41,17 +41,18 @@ func Run(ctx context.Context, opts Options) error {
 	opts = opts.withDefaults()
 
 	logFilePath := filepath.Join(opts.LogDir, opts.LogFile)
-	logFile, err := configureLogging(logFilePath)
+	logHolder, err := configureLogging(logFilePath)
 	if err != nil {
 		return fmt.Errorf("configure logging: %w", err)
 	}
-	defer logFile.Close()
+	defer logHolder.Close()
+	logger := logging.New()
+	startLogRotation(ctx, logFilePath, logHolder, 24*time.Hour, logger)
 
 	appCfg, err := config.Load(opts.ConfigPath)
 	if err != nil {
 		return err
 	}
-	logger := logging.New()
 
 	streamerStore := streamers.NewStore(streamers.DefaultFilePath)
 

@@ -131,6 +131,7 @@ func refreshAdminData() {
 			setAdminStatus(model.AdminStatus{Tone: statusTone, Message: strings.Join(statusMessages, " ")})
 		}
 		scheduleAdminRender()
+		go handleRosterStatusCheck()
 	}()
 }
 
@@ -192,9 +193,6 @@ func handleAdminTabChange(tab string) {
 	scheduleAdminRender()
 	if tab == "activity" && adminState.ActivityTab == "website" {
 		ensureWebsiteLogStream()
-	}
-	if tab == "monitor" && len(adminState.MonitorEvents) == 0 {
-		handleMonitorRefresh()
 	}
 }
 

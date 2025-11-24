@@ -179,12 +179,6 @@ func bindAdminEvents() {
 		})
 	})
 
-	monitorRefresh := getDocument().Call("getElementById", "admin-monitor-refresh")
-	addAdminHandler(monitorRefresh, "click", func(js.Value, []js.Value) any {
-		handleMonitorRefresh()
-		return nil
-	})
-
 	logReconnect := getDocument().Call("getElementById", "admin-logs-reconnect")
 	addAdminHandler(logReconnect, "click", func(js.Value, []js.Value) any {
 		handleAdminLogsReconnect()

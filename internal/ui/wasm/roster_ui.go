@@ -24,11 +24,11 @@ func TryStreamersWatch(ctor js.Value, paths []string) {
 	streamersWatchSource = source
 	connected := false
 
-	changeHandler := js.FuncOf(func(this js.Value, args []js.Value) any {
+	messageHandler := js.FuncOf(func(this js.Value, args []js.Value) any {
 		go refreshRoster()
 		return nil
 	})
-	readyHandler := js.FuncOf(func(this js.Value, args []js.Value) any {
+	openHandler := js.FuncOf(func(this js.Value, args []js.Value) any {
 		connected = true
 		console := window.Get("console")
 		if console.Truthy() {
@@ -52,9 +52,9 @@ func TryStreamersWatch(ctor js.Value, paths []string) {
 		return nil
 	})
 
-	streamersWatchFuncs = append(streamersWatchFuncs, changeHandler, readyHandler, errorHandler)
-	source.Call("addEventListener", "change", changeHandler)
-	source.Call("addEventListener", "ready", readyHandler)
+	streamersWatchFuncs = append(streamersWatchFuncs, messageHandler, openHandler, errorHandler)
+	source.Call("addEventListener", "message", messageHandler)
+	source.Call("addEventListener", "open", openHandler)
 	source.Call("addEventListener", "error", errorHandler)
 }
 

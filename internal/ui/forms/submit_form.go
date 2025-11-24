@@ -96,12 +96,14 @@ func RenderSubmitForm() {
 				channelWrapper += " form-field-error"
 			}
 			builder.WriteString(`<div class="platform-row form-grid platform-row-grid" data-platform-row="` + row.ID + `">`)
-			builder.WriteString(`<label class="form-field form-field-inline"><span>Platform name</span>`)
+			builder.WriteString(`<label class="form-field form-field-inline platform-name"><span>Platform name</span>`)
 			builder.WriteString(`<input type="text" value="` + html.EscapeString(row.Name) + `" data-platform-name data-row="` + row.ID + `" placeholder="YouTube" required />`)
 			builder.WriteString(`</label>`)
+			builder.WriteString(`<div class="platform-channel-group">`)
 			builder.WriteString(`<label class="` + channelWrapper + `" id="platform-url-field-` + row.ID + `"><span>Channel URL</span>`)
 			builder.WriteString(`<input type="url" class="channel-url-input" placeholder="https://example.com/live or @handle" value="` + html.EscapeString(row.ChannelURL) + `" data-platform-channel data-row="` + row.ID + `" required />`)
 			builder.WriteString(`</label>`)
+			builder.WriteString(`</div>`)
 			builder.WriteString(`<button type="button" class="remove-platform-button platform-remove-inline" data-remove-platform="` + row.ID + `">Remove</button>`)
 			builder.WriteString(`</div>`)
 

@@ -331,6 +331,7 @@ func (s *server) fetchRoster(ctx context.Context) ([]model.Streamer, string) {
 
 func defaultSubmitState() model.SubmitFormState {
 	return model.SubmitFormState{
+		Languages: []string{"English"},
 		Platforms: []model.PlatformFormRow{forms.NewPlatformRow()},
 		Errors: model.SubmitFormErrors{
 			Platforms: make(map[string]model.PlatformFieldError),

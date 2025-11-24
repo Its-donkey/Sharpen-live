@@ -136,7 +136,7 @@ func GenerateHubSecret() string {
 func ClearFormFields() {
 	state.Submit.Name = ""
 	state.Submit.Description = ""
-	state.Submit.Languages = nil
+	state.Submit.Languages = []string{"English"}
 	state.Submit.Platforms = []model.PlatformFormRow{NewPlatformRow()}
 	state.Submit.Errors = model.SubmitFormErrors{
 		Platforms: make(map[string]model.PlatformFieldError),

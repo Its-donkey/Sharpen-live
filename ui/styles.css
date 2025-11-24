@@ -441,12 +441,17 @@ tbody tr:hover {
   flex: 3;
 }
 
-.platform-row-inner .platform-select {
+.platform-row-inner .platform-select-wrapper {
   flex: 1.2;
+  display: none;
 }
 
-.platform-select-hidden {
-  display: none;
+.platform-select-wrapper.is-visible {
+  display: flex;
+}
+
+.platform-select-wrapper .platform-select {
+  width: 100%;
 }
 
 .form-field {
@@ -507,19 +512,26 @@ tbody tr:hover {
   color: var(--fg-primary);
 }
 
-.platform-select-wrapper {
-  display: none;
-}
-
-.platform-select-wrapper.is-visible {
-  display: block;
-}
-
 .language-picker,
 .platform-picker {
   display: grid;
   gap: 0.75rem;
   position: relative;
+}
+
+.language-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.language-controls .add-language-button.is-hidden,
+.language-controls .language-select.is-hidden {
+  display: none;
+}
+
+.language-controls .language-select {
+  flex: 1;
 }
 
 .language-select,
@@ -554,6 +566,7 @@ tbody tr:hover {
 
 .language-picker::after,
 .platform-picker::after {
+  display: none;
   content: "";
   position: absolute;
   top: 18px;
@@ -563,6 +576,10 @@ tbody tr:hover {
   pointer-events: none;
   background: linear-gradient(135deg, rgba(148, 163, 184, 0.65), rgba(71, 85, 105, 0.35));
   clip-path: polygon(50% 70%, 0 20%, 100% 20%);
+}
+
+.language-picker.is-select-visible::after {
+  display: block;
 }
 
 .language-tags {
@@ -1032,6 +1049,10 @@ tbody tr:hover {
 .add-platform-button:focus-visible:not(:disabled) {
   background: rgba(56, 189, 248, 0.15);
   border-style: solid;
+}
+
+.add-language-button {
+  margin: 0;
 }
 
 .submit-streamer-actions {

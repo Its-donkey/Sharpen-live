@@ -56,6 +56,9 @@ func RenderSubmitForm() {
 	if state.Submit.Errors.Platforms == nil {
 		state.Submit.Errors.Platforms = make(map[string]model.PlatformFieldError)
 	}
+	if state.Submit.Languages == nil {
+		state.Submit.Languages = []string{"English"}
+	}
 
 	var builder strings.Builder
 	sectionClass := "submit-streamer"
@@ -96,31 +99,29 @@ func RenderSubmitForm() {
 				channelWrapper += " form-field-error"
 			}
 			builder.WriteString(`<div class="platform-row" data-platform-row="` + row.ID + `">`)
-			handleInput := strings.HasPrefix(strings.TrimSpace(row.ChannelURL), "@")
+			handleInput := row.Handle != "" || strings.HasPrefix(strings.TrimSpace(row.ChannelURL), "@")
 			builder.WriteString(`<div class="platform-row-inner">`)
 			builder.WriteString(`<label class="` + channelWrapper + ` platform-url" id="platform-url-field-` + row.ID + `"><span>Channel URL</span>`)
 			builder.WriteString(`<input type="url" class="channel-url-input" placeholder="https://example.com/live or @handle" value="` + html.EscapeString(row.ChannelURL) + `" data-platform-channel data-row="` + row.ID + `" required />`)
 			builder.WriteString(`</label>`)
+			builder.WriteString(`<label class="form-field form-field-inline platform-select-wrapper`)
 			if handleInput {
-				builder.WriteString(`<label class="form-field form-field-inline platform-select is-visible"><span>Handle platform</span>`)
-				builder.WriteString(`<select class="platform-select-input" data-platform-choice data-row="` + row.ID + `">`)
-				builder.WriteString(`<option value="">Select a platform…</option>`)
-				selected := resolvePlatformPreset(row.Preset)
-				for _, option := range platformHandleOptions {
-					builder.WriteString(`<option value="` + option.Value + `"`)
-					if selected == option.Value {
-						builder.WriteString(` selected`)
-					}
-					builder.WriteString(`>` + option.Label + `</option>`)
-				}
-				builder.WriteString(`</select></label>`)
-			} else {
-				builder.WriteString(`<label class="form-field form-field-inline platform-select platform-select-hidden"></label>`)
+				builder.WriteString(` is-visible`)
 			}
+			builder.WriteString(`"><span>Handle platform</span>`)
+			builder.WriteString(`<select class="platform-select" data-platform-choice data-row="` + row.ID + `">`)
+			builder.WriteString(`<option value="">Select a platform…</option>`)
+			selected := resolvePlatformPreset(row.Preset)
+			for _, option := range platformHandleOptions {
+				builder.WriteString(`<option value="` + option.Value + `"`)
+				if selected == option.Value {
+					builder.WriteString(` selected`)
+				}
+				builder.WriteString(`>` + option.Label + `</option>`)
+			}
+			builder.WriteString(`</select></label>`)
 			builder.WriteString(`</div>`)
 			builder.WriteString(`<button type="button" class="remove-platform-button" data-remove-platform="` + row.ID + `">Remove</button>`)
-			builder.WriteString(`</div>`)
-
 			if errors.Channel {
 				builder.WriteString(`<p class="field-error-text">Provide a valid channel URL.</p>`)
 			}
@@ -160,16 +161,6 @@ func RenderSubmitForm() {
 		builder.WriteString(`<label class="` + langClass + `" id="field-languages"><span>Languages *</span><p class="submit-streamer-help">Select every language the streamer uses on their channel.</p>`)
 		selectDisabled := len(state.Submit.Languages) >= model.MaxLanguages
 		builder.WriteString(`<div class="language-picker">`)
-		builder.WriteString(`<select class="language-select" id="language-select"`)
-		if selectDisabled {
-			builder.WriteString(` disabled`)
-		}
-		builder.WriteString(`>`)
-		builder.WriteString(`<option value="">Languages</option>`)
-		for _, option := range AvailableLanguageOptions(state.Submit.Languages) {
-			builder.WriteString(`<option value="` + html.EscapeString(option.Value) + `">` + html.EscapeString(option.Label) + `</option>`)
-		}
-		builder.WriteString(`</select>`)
 		builder.WriteString(`<div class="language-tags">`)
 		if len(state.Submit.Languages) == 0 {
 			builder.WriteString(`<span class="language-empty">No languages selected yet.</span>`)
@@ -179,6 +170,23 @@ func RenderSubmitForm() {
 				builder.WriteString(`<span class="language-pill">` + html.EscapeString(label) + `<button type="button" data-remove-language="` + html.EscapeString(value) + `" aria-label="Remove ` + html.EscapeString(label) + `">×</button></span>`)
 			}
 		}
+		builder.WriteString(`</div>`)
+		builder.WriteString(`<div class="language-controls">`)
+		builder.WriteString(`<button type="button" class="add-platform-button add-language-button" id="add-language"`)
+		if selectDisabled {
+			builder.WriteString(` disabled`)
+		}
+		builder.WriteString(`>+ Add another language</button>`)
+		builder.WriteString(`<select class="language-select is-hidden" id="language-select"`)
+		if selectDisabled {
+			builder.WriteString(` disabled`)
+		}
+		builder.WriteString(`>`)
+		builder.WriteString(`<option value="">Languages</option>`)
+		for _, option := range AvailableLanguageOptions(state.Submit.Languages) {
+			builder.WriteString(`<option value="` + html.EscapeString(option.Value) + `">` + html.EscapeString(option.Label) + `</option>`)
+		}
+		builder.WriteString(`</select>`)
 		builder.WriteString(`</div>`)
 		builder.WriteString(`</div>`)
 		if state.Submit.Errors.Languages {
@@ -303,19 +311,45 @@ func bindSubmitFormEvents() {
 	})
 
 	langSelect := formDocument().Call("getElementById", "language-select")
-	addFormHandler(langSelect, "change", func(this js.Value, _ []js.Value) any {
-		value := strings.TrimSpace(this.Get("value").String())
-		if value == "" {
-			return nil
-		}
-		if len(state.Submit.Languages) >= model.MaxLanguages {
-			return nil
+	langPicker := formDocument().Call("querySelector", ".language-picker")
+	addLanguage := func(raw string) {
+		value := strings.TrimSpace(raw)
+		if value == "" || len(state.Submit.Languages) >= model.MaxLanguages {
+			return
 		}
 		if !ContainsString(state.Submit.Languages, value) {
 			state.Submit.Languages = append(state.Submit.Languages, value)
 			state.Submit.Errors.Languages = false
 		}
+	}
+	addFormHandler(langSelect, "change", func(this js.Value, _ []js.Value) any {
+		addLanguage(this.Get("value").String())
+		this.Set("value", "")
+		this.Get("classList").Call("add", "is-hidden")
+		if langPicker.Truthy() {
+			langPicker.Get("classList").Call("remove", "is-select-visible")
+		}
+		addLangButton := formDocument().Call("getElementById", "add-language")
+		if addLangButton.Truthy() {
+			addLangButton.Get("classList").Call("remove", "is-hidden")
+		}
 		RenderSubmitForm()
+		return nil
+	})
+
+	addLangButton := formDocument().Call("getElementById", "add-language")
+	addFormHandler(addLangButton, "click", func(js.Value, []js.Value) any {
+		if langSelect.Truthy() {
+			if langSelect.Get("disabled").Bool() {
+				return nil
+			}
+			langSelect.Get("classList").Call("remove", "is-hidden")
+			if langPicker.Truthy() {
+				langPicker.Get("classList").Call("add", "is-select-visible")
+			}
+			addLangButton.Get("classList").Call("add", "is-hidden")
+			langSelect.Call("focus")
+		}
 		return nil
 	})
 

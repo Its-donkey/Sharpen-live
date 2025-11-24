@@ -434,6 +434,7 @@ tbody tr:hover {
   grid-template-columns: 1fr auto;
   align-items: end;
   gap: 0.75rem;
+  width: 100%;
 }
 
 .platform-name {

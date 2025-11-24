@@ -389,6 +389,18 @@ func bindSubmitFormEvents() {
 	addFormHandler(langTags, "click", func(_ js.Value, args []js.Value) any {
 		if len(args) > 0 {
 			if ev := args[0]; ev.Truthy() {
+				ev.Call("preventDefault")
+				ev.Call("stopPropagation")
+			}
+		}
+		return nil
+	})
+
+	langField := formDocument().Call("getElementById", "field-languages")
+	addFormHandler(langField, "click", func(_ js.Value, args []js.Value) any {
+		if len(args) > 0 {
+			if ev := args[0]; ev.Truthy() {
+				ev.Call("preventDefault")
 				ev.Call("stopPropagation")
 			}
 		}

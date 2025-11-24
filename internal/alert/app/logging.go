@@ -51,7 +51,7 @@ func configureLogging(logPath string) (*logWriterHolder, error) {
 	return &logWriterHolder{writer: logWriter}, nil
 }
 
-func startLogRotation(ctx context.Context, logPath string, holder *logWriterHolder, interval time.Duration) {
+func startLogRotation(ctx context.Context, logPath string, holder *logWriterHolder, interval time.Duration, logger logging.Logger) {
 	if holder == nil {
 		return
 	}
@@ -68,13 +68,15 @@ func startLogRotation(ctx context.Context, logPath string, holder *logWriterHold
 			fmt.Fprintf(os.Stderr, "rotate log file: %v\n", err)
 			return
 		}
-		file, err := os.OpenFile(logPath, os.O_CREATE|os.O_WRONLY|os.O_TRUNC, 0o644)
+		file, err := os.OpenFile(logPath, os.O_CREATE|os.O_RDWR|os.O_TRUNC, 0o644)
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "open rotated log file: %v\n", err)
 			return
 		}
 		next := logging.NewLogFileWriter(file)
-		logging.SetDefaultWriter(io.MultiWriter(os.Stdout, next))
+		multi := io.MultiWriter(os.Stdout, next)
+		logging.SetDefaultWriter(multi)
+		logging.ReplaceLoggerWriter(logger, multi)
 		holder.Replace(next)
 	}()
 }

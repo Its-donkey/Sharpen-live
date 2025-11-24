@@ -71,6 +71,24 @@ func SetDefaultWriter(w io.Writer) {
 	defaultWriter = w
 }
 
+// ReplaceLoggerWriter swaps the output of an existing logger to the provided writer.
+func ReplaceLoggerWriter(logger Logger, w io.Writer) {
+	if logger == nil || w == nil {
+		return
+	}
+	adapter := &newlineWriter{w: w}
+	switch l := logger.(type) {
+	case *stdLogger:
+		if l.base != nil {
+			l.base.SetOutput(adapter)
+		}
+	case stdLoggerProvider:
+		if base := l.StdLogger(); base != nil {
+			base.SetOutput(adapter)
+		}
+	}
+}
+
 func getDefaultWriter() io.Writer {
 	defaultWriterMu.RLock()
 	defer defaultWriterMu.RUnlock()

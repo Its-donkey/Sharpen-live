@@ -224,7 +224,6 @@
 
     langTags.addEventListener('click', (e) => {
       // prevent clicks in the language field from triggering unrelated handlers
-      e.preventDefault();
       e.stopPropagation();
     });
 

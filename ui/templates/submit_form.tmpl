@@ -15,7 +15,7 @@
             {{$rowErr := index $.State.Errors.Platforms $row.ID}}
             <div class="platform-row" data-platform-row="{{$row.ID}}">
               <div class="platform-row-grid">
-                {{if hasPrefix $row.ChannelURL "@"}}
+                {{if $row.Handle}}
                   <label class="form-field form-field-inline platform-name">
                     <span>Platform name</span>
                     <input type="text" data-platform-name value="{{$row.Name}}" required>

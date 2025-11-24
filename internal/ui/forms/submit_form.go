@@ -353,6 +353,10 @@ func bindSubmitFormEvents() {
 		addFormHandler(node, "input", func(this js.Value, _ []js.Value) any {
 			rowID := this.Get("dataset").Get("row").String()
 			rawValue := strings.TrimSpace(this.Get("value").String())
+			normalized := CanonicalizeChannelInput(rawValue)
+			if normalized != rawValue {
+				this.Set("value", normalized)
+			}
 			for index := range state.Submit.Platforms {
 				row := &state.Submit.Platforms[index]
 				if row.ID == rowID {
@@ -384,21 +388,20 @@ func bindSubmitFormEvents() {
 						return nil
 					}
 
-					normalized := CanonicalizeChannelInput(rawValue)
-					if normalized != rawValue {
-						this.Set("value", normalized)
-					}
+					handleChanged := false
 					if row.Handle == "" {
 						if inferred := inferHandleFromURL(normalized); inferred != "" {
 							row.Handle = inferred
 							if row.Preset == "" {
 								row.Preset = "youtube"
 							}
+							handleChanged = true
 						}
 					}
 					if row.Handle != "" && normalized != buildURLFromHandle(row.Handle, row.Preset) {
 						row.Handle = ""
 						row.Preset = ""
+						handleChanged = true
 					}
 					row.ChannelURL = normalized
 					row.Name = DerivePlatformLabel(normalized)
@@ -408,6 +411,9 @@ func bindSubmitFormEvents() {
 					currentValue := normalized
 					rowIndex := index
 					fetchChannelMetadataAsync(rowIndex, currentValue)
+					if handleChanged {
+						RenderSubmitForm()
+					}
 					break
 				}
 			}

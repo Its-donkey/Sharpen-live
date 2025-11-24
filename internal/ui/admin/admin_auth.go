@@ -131,7 +131,6 @@ func refreshAdminData() {
 			setAdminStatus(model.AdminStatus{Tone: statusTone, Message: strings.Join(statusMessages, " ")})
 		}
 		scheduleAdminRender()
-		go handleRosterStatusCheck()
 	}()
 }
 

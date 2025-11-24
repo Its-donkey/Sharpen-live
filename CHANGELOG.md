@@ -19,6 +19,7 @@
 - Submit form: prevent clicks in the language field from clearing all selections unless the remove button is used.
 - Submit form: stop click bubbling in the language tag area so incidental clicks no longer wipe selections.
 - Submit form: guard field-level clicks from resetting languages in both JS and WASM interactions.
+- Submit form: initialize the language picker once and rehydrate selections from hidden inputs to survive DOM rebuilds.
 - Guard WebSub hub.challenge and reject malformed values to avoid reflected content.
 - Harden YouTube WebSub requests by validating hub, topic, and callback URLs.
 - Admin: validate admin tokens for settings/log streams instead of accepting any non-empty value.

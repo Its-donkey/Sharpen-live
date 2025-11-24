@@ -3,6 +3,8 @@
   const form = document.getElementById('submit-streamer-form');
   const toggle = document.getElementById('submit-toggle');
   if (!form) return;
+  if (window.__submitFormInitDone) return;
+  window.__submitFormInitDone = true;
 
   if (toggle && section) {
     toggle.addEventListener('click', () => {
@@ -135,8 +137,12 @@
   }
 
   // ------- Language picker helpers -------
+  let languagePickerBound = false;
+
   function initLanguagePicker() {
     if (!langSelect || !langTags) return;
+    if (languagePickerBound) return;
+    languagePickerBound = true;
     const addLangBtn = form.querySelector('.add-language-button');
     const picker = form.querySelector('.language-picker');
     const allOptions = Array.from(langSelect.options)
@@ -222,16 +228,12 @@
       langSelect.selectedIndex = 0;
     }
 
-    langTags.addEventListener('click', (e) => {
-      // prevent clicks in the language field from triggering unrelated handlers
-      e.preventDefault();
-      e.stopPropagation();
-    });
-
-    // Seed selected from initial state
-    allOptions.forEach((opt) => {
-      if (opt.selected) {
-        selected.set(opt.value, opt.label);
+    // Seed selected from hidden inputs (authoritative)
+    const hiddenValues = Array.from(document.querySelectorAll('input[name=\"languages[]\"]')).map((el) => el.value);
+    hiddenValues.forEach((value) => {
+      const match = allOptions.find((o) => o.value === value);
+      if (match) {
+        selected.set(match.value, match.label);
       }
     });
 

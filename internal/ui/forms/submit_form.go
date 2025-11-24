@@ -56,6 +56,9 @@ func RenderSubmitForm() {
 	if state.Submit.Errors.Platforms == nil {
 		state.Submit.Errors.Platforms = make(map[string]model.PlatformFieldError)
 	}
+	if state.Submit.Languages == nil {
+		state.Submit.Languages = []string{"English"}
+	}
 
 	var builder strings.Builder
 	sectionClass := "submit-streamer"
@@ -179,6 +182,11 @@ func RenderSubmitForm() {
 		}
 		builder.WriteString(`</div>`)
 		builder.WriteString(`</div>`)
+		builder.WriteString(`<button type="button" class="add-platform-button add-language-button" id="add-language"`)
+		if selectDisabled {
+			builder.WriteString(` disabled`)
+		}
+		builder.WriteString(`>+ Add another language</button>`)
 		if state.Submit.Errors.Languages {
 			builder.WriteString(`<p class="field-error-text">Select at least one language.</p>`)
 		}
@@ -301,17 +309,26 @@ func bindSubmitFormEvents() {
 	})
 
 	langSelect := formDocument().Call("getElementById", "language-select")
-	addFormHandler(langSelect, "change", func(this js.Value, _ []js.Value) any {
-		value := strings.TrimSpace(this.Get("value").String())
-		if value == "" {
-			return nil
-		}
-		if len(state.Submit.Languages) >= model.MaxLanguages {
-			return nil
+	addLanguage := func(raw string) {
+		value := strings.TrimSpace(raw)
+		if value == "" || len(state.Submit.Languages) >= model.MaxLanguages {
+			return
 		}
 		if !ContainsString(state.Submit.Languages, value) {
 			state.Submit.Languages = append(state.Submit.Languages, value)
 			state.Submit.Errors.Languages = false
+		}
+	}
+	addFormHandler(langSelect, "change", func(this js.Value, _ []js.Value) any {
+		addLanguage(this.Get("value").String())
+		RenderSubmitForm()
+		return nil
+	})
+
+	addLangButton := formDocument().Call("getElementById", "add-language")
+	addFormHandler(addLangButton, "click", func(js.Value, []js.Value) any {
+		if langSelect.Truthy() {
+			addLanguage(langSelect.Get("value").String())
 		}
 		RenderSubmitForm()
 		return nil

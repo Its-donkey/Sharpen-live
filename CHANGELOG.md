@@ -5,6 +5,7 @@
 ### Added
 - Admin: add roster “Check online status” action and API to refresh channel state on demand.
 - Submit form: detect @handles, prompt for platform, and expand to full channel URLs.
+- Submit form: preselect English and add an “Add another language” button consistent with platform controls.
 
 ### Fixed
 - Alert server: rotate the log file after 24 hours of uptime, matching the restart rotation behavior.

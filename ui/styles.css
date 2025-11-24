@@ -1031,6 +1031,10 @@ tbody tr:hover {
   border-style: solid;
 }
 
+.add-language-button {
+  margin-top: 0.35rem;
+}
+
 .submit-streamer-actions {
   display: flex;
   flex-wrap: wrap;

@@ -137,10 +137,19 @@
   // ------- Language picker helpers -------
   function initLanguagePicker() {
     if (!langSelect || !langTags) return;
+    const addLangBtn = form.querySelector('.add-language-button');
     const allOptions = Array.from(langSelect.options)
       .filter((opt) => opt.value && opt.value.trim() !== '')
       .map((opt) => ({ value: opt.value, label: opt.textContent.trim(), selected: opt.dataset.selected === 'true' }));
     const selected = new Map(); // value -> label
+
+    function addLanguage(value, label) {
+      const trimmed = (value || '').trim();
+      if (!trimmed || selected.has(trimmed)) return;
+      selected.set(trimmed, label || trimmed);
+      renderTags();
+      renderOptions();
+    }
 
     function renderTags() {
       langTags.innerHTML = '';
@@ -210,12 +219,16 @@
       const value = option.value.trim();
       if (!value) return;
       const label = option.textContent.trim() || value;
-      if (!selected.has(value)) {
-        selected.set(value, label);
-        renderTags();
-        renderOptions();
-      }
+      addLanguage(value, label);
     });
+
+    if (addLangBtn) {
+      addLangBtn.addEventListener('click', () => {
+        const option = langSelect.selectedOptions && langSelect.selectedOptions[0];
+        if (!option) return;
+        addLanguage(option.value, option.textContent);
+      });
+    }
   }
 
   function init() {

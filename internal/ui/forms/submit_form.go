@@ -356,13 +356,7 @@ func bindSubmitFormEvents() {
 
 	langButtons := formDocument().Call("querySelectorAll", "[data-remove-language]")
 	forEachNode(langButtons, func(node js.Value) {
-		addFormHandler(node, "click", func(this js.Value, args []js.Value) any {
-			if len(args) > 0 {
-				if ev := args[0]; ev.Truthy() {
-					ev.Call("preventDefault")
-					ev.Call("stopPropagation")
-				}
-			}
+		addFormHandler(node, "click", func(this js.Value, _ []js.Value) any {
 			value := this.Get("dataset").Get("removeLanguage").String()
 			if value == "" {
 				return nil

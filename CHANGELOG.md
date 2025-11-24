@@ -16,7 +16,6 @@
 - Submit form: show selected language tags above the controls for better visibility.
 - Submit form: hide the language dropdown until “Add another language” is clicked, then swap back once a choice is made.
 - Submit form: ensure removing one language only removes that entry in both JS and WASM flows.
-- Submit form: prevent clicks in the language field from clearing all selections unless the remove button is used.
 - Guard WebSub hub.challenge and reject malformed values to avoid reflected content.
 - Harden YouTube WebSub requests by validating hub, topic, and callback URLs.
 - Admin: validate admin tokens for settings/log streams instead of accepting any non-empty value.

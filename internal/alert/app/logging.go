@@ -39,12 +39,8 @@ func (h *logWriterHolder) Replace(next io.WriteCloser) {
 }
 
 func configureLogging(logPath string) (*logWriterHolder, error) {
-	started := time.Now().UTC()
 	if err := os.MkdirAll(filepath.Dir(logPath), 0o755); err != nil {
 		return nil, fmt.Errorf("create log directory: %w", err)
-	}
-	if err := rotateExistingLog(logPath, started); err != nil {
-		return nil, err
 	}
 	file, err := os.OpenFile(logPath, os.O_CREATE|os.O_WRONLY|os.O_TRUNC, 0o644)
 	if err != nil {

@@ -16,3 +16,4 @@
 - Admin: ensure `/admin/logs` streams valid server-sent events so the Activity tab shows live logs again.
 - Admin: populate platform fields when editing streamers so YouTube channels appear even when offline.
 - Admin: automatically run the roster “Check online status” action on admin load.
+- Alert server: skip rotating log files on restart.

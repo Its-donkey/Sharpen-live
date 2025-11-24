@@ -367,6 +367,10 @@ tbody tr:hover {
   gap: 1.5rem;
 }
 
+.submit-streamer.is-collapsed .submit-streamer-form {
+  display: none;
+}
+
 .submit-streamer-header {
   display: flex;
   flex-direction: column;
@@ -426,10 +430,23 @@ tbody tr:hover {
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
 }
 
-.platform-row-grid {
-  grid-template-columns: minmax(260px, 1fr) minmax(180px, 220px);
+.platform-row-inner {
+  display: flex;
+  gap: 1rem;
   align-items: flex-end;
-  gap: 0.75rem;
+  width: 100%;
+}
+
+.platform-row-inner .platform-url {
+  flex: 3;
+}
+
+.platform-row-inner .platform-select {
+  flex: 1.2;
+}
+
+.platform-select-hidden {
+  display: none;
 }
 
 .form-field {

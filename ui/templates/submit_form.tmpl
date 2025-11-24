@@ -13,12 +13,27 @@
         <div class="platform-rows">
           {{range $idx, $row := .State.Platforms}}
             {{$rowErr := index $.State.Errors.Platforms $row.ID}}
-            <div class="platform-row form-grid platform-row-grid" data-platform-row="{{$row.ID}}">
-              <label class="form-field form-field-inline highlight-change {{if $rowErr.Channel}}form-field-error{{end}}" id="platform-url-field-{{$row.ID}}">
-                <span>Channel URL</span>
-                <input type="hidden" name="platform_id" value="{{$row.ID}}">
-                <input type="url" class="channel-url-input" name="platform_url" placeholder="https://example.com/live or @handle" value="{{$row.ChannelURL}}" required>
-              </label>
+            <div class="platform-row" data-platform-row="{{$row.ID}}">
+              <div class="platform-row-inner">
+                <label class="form-field form-field-inline platform-url highlight-change {{if $rowErr.Channel}}form-field-error{{end}}" id="platform-url-field-{{$row.ID}}">
+                  <span>Channel URL</span>
+                  <input type="hidden" name="platform_id" value="{{$row.ID}}">
+                  <input type="url" class="channel-url-input" name="platform_url" placeholder="https://example.com/live or @handle" value="{{$row.ChannelURL}}" required>
+                </label>
+                {{if $row.Handle}}
+                  <label class="form-field form-field-inline platform-select is-visible">
+                    <span>Handle platform</span>
+                    <select class="platform-select" data-platform-choice data-row="{{$row.ID}}">
+                      <option value="" {{if eq (lower $row.Preset) ""}}selected{{end}}>Select a platform…</option>
+                      <option value="youtube" {{if eq (lower $row.Preset) "youtube"}}selected{{end}}>YouTube</option>
+                      <option value="twitch" {{if eq (lower $row.Preset) "twitch"}}selected{{end}}>Twitch</option>
+                      <option value="facebook" {{if eq (lower $row.Preset) "facebook"}}selected{{end}}>Facebook</option>
+                    </select>
+                  </label>
+                {{else}}
+                  <label class="form-field form-field-inline platform-select platform-select-hidden"></label>
+                {{end}}
+              </div>
               {{if gt (len $.State.Platforms) 1}}
                 <button type="submit" class="remove-platform-button" name="remove_platform" value="{{$row.ID}}">Remove</button>
               {{end}}

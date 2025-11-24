@@ -71,6 +71,24 @@ func SetDefaultWriter(w io.Writer) {
 	defaultWriter = w
 }
 
+// ReplaceLoggerWriter swaps the output of an existing logger to the provided writer.
+func ReplaceLoggerWriter(logger Logger, w io.Writer) {
+	if logger == nil || w == nil {
+		return
+	}
+	adapter := &newlineWriter{w: w}
+	switch l := logger.(type) {
+	case *stdLogger:
+		if l.base != nil {
+			l.base.SetOutput(adapter)
+		}
+	case stdLoggerProvider:
+		if base := l.StdLogger(); base != nil {
+			base.SetOutput(adapter)
+		}
+	}
+}
+
 func getDefaultWriter() io.Writer {
 	defaultWriterMu.RLock()
 	defer defaultWriterMu.RUnlock()
@@ -234,7 +252,17 @@ func emitLogEvents(logger Logger, entries ...logEvent) {
 // NewLogFileWriter wraps the provided file so all log events stay inside one
 // {"logevents":[...]} envelope and the file remains valid JSON while the server runs.
 func NewLogFileWriter(file *os.File) io.WriteCloser {
-	return &logFileWriter{file: file}
+	writer := &logFileWriter{file: file}
+	if file != nil {
+		if info, err := file.Stat(); err == nil && info.Size() > 0 {
+			writer.started = true
+			emptyEnvelopeSize := int64(len(`{"logevents":[]}`) + 1) // include trailing newline
+			if info.Size() > emptyEnvelopeSize {
+				writer.wroteEntry = true
+			}
+		}
+	}
+	return writer
 }
 
 const (

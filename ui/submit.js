@@ -3,8 +3,8 @@
   const form = document.getElementById('submit-streamer-form');
   const toggle = document.getElementById('submit-toggle');
   if (!form) return;
-  if (form.dataset.submitInit === 'true') return;
-  form.dataset.submitInit = 'true';
+  if (window.__submitFormInitDone) return;
+  window.__submitFormInitDone = true;
 
   if (toggle && section) {
     toggle.addEventListener('click', () => {
@@ -147,7 +147,7 @@
     const picker = form.querySelector('.language-picker');
     const allOptions = Array.from(langSelect.options)
       .filter((opt) => opt.value && opt.value.trim() !== '')
-      .map((opt) => ({ value: opt.value, label: opt.textContent.trim() }));
+      .map((opt) => ({ value: opt.value, label: opt.textContent.trim(), selected: opt.dataset.selected === 'true' }));
     const selected = new Map(); // value -> label
 
     function showSelect() {

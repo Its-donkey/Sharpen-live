@@ -113,6 +113,7 @@ func RenderSubmitForm() {
 			}
 			builder.WriteString(`<label class="` + wrapperClass + `"><span>Handle platform</span>`)
 			builder.WriteString(`<select class="platform-select" data-platform-choice data-row="` + row.ID + `">`)
+			builder.WriteString(`<option value="">Select a platform…</option>`)
 			selected := resolvePlatformPreset(row.Preset)
 			for _, option := range platformHandleOptions {
 				builder.WriteString(`<option value="` + option.Value + `"`)

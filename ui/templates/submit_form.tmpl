@@ -31,6 +31,7 @@
                 <label class="form-field form-field-inline platform-select-wrapper {{if $row.Handle}}is-visible{{end}}">
                   <span>Handle platform</span>
                   <select class="platform-select" data-platform-choice data-row="{{$row.ID}}">
+                    <option value="" {{if eq (lower $row.Preset) ""}}selected{{end}}>Select a platform…</option>
                     <option value="youtube" {{if eq (lower $row.Preset) "youtube"}}selected{{end}}>YouTube</option>
                     <option value="twitch" {{if eq (lower $row.Preset) "twitch"}}selected{{end}}>Twitch</option>
                     <option value="facebook" {{if eq (lower $row.Preset) "facebook"}}selected{{end}}>Facebook</option>

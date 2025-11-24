@@ -234,7 +234,17 @@ func emitLogEvents(logger Logger, entries ...logEvent) {
 // NewLogFileWriter wraps the provided file so all log events stay inside one
 // {"logevents":[...]} envelope and the file remains valid JSON while the server runs.
 func NewLogFileWriter(file *os.File) io.WriteCloser {
-	return &logFileWriter{file: file}
+	writer := &logFileWriter{file: file}
+	if file != nil {
+		if info, err := file.Stat(); err == nil && info.Size() > 0 {
+			writer.started = true
+			emptyEnvelopeSize := int64(len(`{"logevents":[]}`) + 1) // include trailing newline
+			if info.Size() > emptyEnvelopeSize {
+				writer.wroteEntry = true
+			}
+		}
+	}
+	return writer
 }
 
 const (

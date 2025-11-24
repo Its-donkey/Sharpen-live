@@ -42,7 +42,7 @@ func configureLogging(logPath string) (*logWriterHolder, error) {
 	if err := os.MkdirAll(filepath.Dir(logPath), 0o755); err != nil {
 		return nil, fmt.Errorf("create log directory: %w", err)
 	}
-	file, err := os.OpenFile(logPath, os.O_CREATE|os.O_WRONLY|os.O_TRUNC, 0o644)
+	file, err := os.OpenFile(logPath, os.O_CREATE|os.O_RDWR, 0o644)
 	if err != nil {
 		return nil, fmt.Errorf("open log file: %w", err)
 	}

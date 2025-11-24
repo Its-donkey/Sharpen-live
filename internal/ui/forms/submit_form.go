@@ -161,6 +161,16 @@ func RenderSubmitForm() {
 		builder.WriteString(`<label class="` + langClass + `" id="field-languages"><span>Languages *</span><p class="submit-streamer-help">Select every language the streamer uses on their channel.</p>`)
 		selectDisabled := len(state.Submit.Languages) >= model.MaxLanguages
 		builder.WriteString(`<div class="language-picker">`)
+		builder.WriteString(`<div class="language-tags">`)
+		if len(state.Submit.Languages) == 0 {
+			builder.WriteString(`<span class="language-empty">No languages selected yet.</span>`)
+		} else {
+			for _, value := range state.Submit.Languages {
+				label := DisplayLanguage(value)
+				builder.WriteString(`<span class="language-pill">` + html.EscapeString(label) + `<button type="button" data-remove-language="` + html.EscapeString(value) + `" aria-label="Remove ` + html.EscapeString(label) + `">×</button></span>`)
+			}
+		}
+		builder.WriteString(`</div>`)
 		builder.WriteString(`<div class="language-controls">`)
 		builder.WriteString(`<button type="button" class="add-platform-button add-language-button" id="add-language"`)
 		if selectDisabled {
@@ -177,16 +187,6 @@ func RenderSubmitForm() {
 			builder.WriteString(`<option value="` + html.EscapeString(option.Value) + `">` + html.EscapeString(option.Label) + `</option>`)
 		}
 		builder.WriteString(`</select>`)
-		builder.WriteString(`</div>`)
-		builder.WriteString(`<div class="language-tags">`)
-		if len(state.Submit.Languages) == 0 {
-			builder.WriteString(`<span class="language-empty">No languages selected yet.</span>`)
-		} else {
-			for _, value := range state.Submit.Languages {
-				label := DisplayLanguage(value)
-				builder.WriteString(`<span class="language-pill">` + html.EscapeString(label) + `<button type="button" data-remove-language="` + html.EscapeString(value) + `" aria-label="Remove ` + html.EscapeString(label) + `">×</button></span>`)
-			}
-		}
 		builder.WriteString(`</div>`)
 		builder.WriteString(`</div>`)
 		if state.Submit.Errors.Languages {

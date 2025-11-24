@@ -186,9 +186,7 @@
         btn.dataset.removeLanguage = value;
         btn.textContent = '×';
         btn.addEventListener('click', () => {
-          const remaining = Array.from(selected.entries()).filter(([key]) => key !== value);
-          selected.clear();
-          remaining.forEach(([key, val]) => selected.set(key, val));
+          selected.delete(value);
           renderTags();
           renderOptions();
         });

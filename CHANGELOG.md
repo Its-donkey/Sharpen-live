@@ -22,6 +22,7 @@
 - Submit form: fix the “Add a Streamer” toggle so it opens the hidden form as intended.
 - Submit form: stretch the lead help text across the full form grid for consistent alignment.
 - Submit form: hide the language dropdown until “Add another language” is clicked, then swap back once a choice is made.
+- UI: expand the home intro copy and span it across the full width to spotlight live sharpening streams.
 - Guard WebSub hub.challenge and reject malformed values to avoid reflected content.
 - Harden YouTube WebSub requests by validating hub, topic, and callback URLs.
 - Admin: validate admin tokens for settings/log streams instead of accepting any non-empty value.

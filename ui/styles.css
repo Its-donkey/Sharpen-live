@@ -160,8 +160,12 @@ body {
 .intro p {
   margin: 0;
   color: var(--fg-muted);
-  max-width: 720px;
   line-height: 1.7;
+}
+
+.intro .intro-lede {
+  width: 100%;
+  max-width: none;
 }
 
 .streamer-table {
@@ -392,21 +396,22 @@ tbody tr:hover {
 }
 
 .submit-streamer-toggle {
-  align-self: flex-start;
-  padding: 0.75rem 1.5rem;
+  padding: 1rem 1.75rem;
   border-radius: 999px;
-  border: none;
-  cursor: pointer;
+  background: linear-gradient(120deg, var(--accent), var(--accent-strong));
+  color: #0f172a;
   font-weight: 600;
-  background: rgba(56, 189, 248, 0.16);
-  color: var(--fg-primary);
-  transition: transform 0.25s ease, background 0.25s ease;
+  font-size: 16px !important;
+  text-decoration: none;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  box-shadow: 0 18px 30px -12px rgba(56, 189, 248, 0.55);
+
 }
 
 .submit-streamer-toggle:hover,
 .submit-streamer-toggle:focus-visible {
-  background: rgba(56, 189, 248, 0.25);
-  transform: translateY(-1px);
+  transform: translateY(-2px);
+  box-shadow: 0 20px 35px -15px rgba(56, 189, 248, 0.75);
 }
 
 .submit-streamer-form {

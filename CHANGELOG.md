@@ -21,6 +21,7 @@
 - Logging: include the caller location on general log entries for easier traceability.
 - Logging: propagate HTTP request IDs into general request logs so correlated entries share the same `id`.
 - Metadata: restrict metadata fetches to an allowlist of hosts and normalise URLs before issuing upstream requests to avoid uncontrolled destinations.
+- Admin: Refresh Status now falls back to live YouTube watch-page metadata so live streams get written to `data/streamers.json` even when the player API doesn’t flag them.
 - Roster: serve the SSE watch feed at `/api/streamers/watch` as an alias for legacy clients hitting the old API path.
 - Submit form: align channel URL rows to the grid and constrain inputs to half-width for consistent layout.
 - Submit form: remove padding/border radius from channel URL inputs so they sit flush in the grid.

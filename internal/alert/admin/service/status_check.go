@@ -12,6 +12,7 @@ import (
 	"time"
 
 	youtubeapi "github.com/Its-donkey/Sharpen-live/internal/alert/platforms/youtube/api"
+	"github.com/Its-donkey/Sharpen-live/internal/alert/platforms/youtube/liveinfo"
 	"github.com/Its-donkey/Sharpen-live/internal/alert/streamers"
 )
 
@@ -29,10 +30,15 @@ type StatusChecker struct {
 	Streamers  *streamers.Store
 	Player     youtubePlayer
 	FeedClient *http.Client
+	LiveInfo   liveInfoFetcher
 }
 
 type youtubePlayer interface {
 	LiveStatus(ctx context.Context, videoID string) (youtubeapi.LiveStatus, error)
+}
+
+type liveInfoFetcher interface {
+	Fetch(ctx context.Context, videoIDs []string) (map[string]liveinfo.VideoInfo, error)
 }
 
 const (
@@ -59,6 +65,7 @@ func (c StatusChecker) CheckAll(ctx context.Context) (StatusCheckResult, error) 
 
 	player := c.player()
 	client := c.httpClient()
+	liveInfo := c.liveInfo()
 
 	for _, record := range records {
 		yt := record.Platforms.YouTube
@@ -66,7 +73,7 @@ func (c StatusChecker) CheckAll(ctx context.Context) (StatusCheckResult, error) 
 			continue
 		}
 		result.Checked++
-		outcome, err := c.checkYouTube(ctx, record, *yt, player, client)
+		outcome, err := c.checkYouTube(ctx, record, *yt, player, liveInfo, client)
 		if err != nil {
 			result.Failed++
 			continue
@@ -89,7 +96,7 @@ type checkOutcome struct {
 	updated bool
 }
 
-func (c StatusChecker) checkYouTube(ctx context.Context, record streamers.Record, yt streamers.YouTubePlatform, player youtubePlayer, client *http.Client) (checkOutcome, error) {
+func (c StatusChecker) checkYouTube(ctx context.Context, record streamers.Record, yt streamers.YouTubePlatform, player youtubePlayer, liveInfo liveInfoFetcher, client *http.Client) (checkOutcome, error) {
 	channelID := strings.TrimSpace(yt.ChannelID)
 	if channelID == "" {
 		channelID = extractChannelID(yt.Topic)
@@ -141,6 +148,31 @@ func (c StatusChecker) checkYouTube(ctx context.Context, record streamers.Record
 				return checkOutcome{}, err
 			}
 			return checkOutcome{live: true, updated: true}, nil
+		}
+	}
+
+	if liveInfo != nil {
+		infoCtx, cancel := withTimeout(ctx, defaultStatusCheckTimeout)
+		info, err := liveInfo.Fetch(infoCtx, candidates)
+		cancel()
+		if err == nil {
+			for _, candidate := range candidates {
+				meta, ok := info[candidate]
+				if !ok {
+					continue
+				}
+				if !meta.IsLive() || !strings.EqualFold(meta.ChannelID, channelID) {
+					continue
+				}
+				if _, err := c.Streamers.UpdateYouTubeLiveStatus(channelID, streamers.YouTubeLiveStatus{
+					Live:      true,
+					VideoID:   candidate,
+					StartedAt: meta.ActualStartTime,
+				}); err != nil {
+					return checkOutcome{}, err
+				}
+				return checkOutcome{live: true, updated: true}, nil
+			}
 		}
 	}
 
@@ -215,6 +247,13 @@ func (c StatusChecker) httpClient() *http.Client {
 		return c.FeedClient
 	}
 	return &http.Client{Timeout: defaultStatusCheckTimeout}
+}
+
+func (c StatusChecker) liveInfo() liveInfoFetcher {
+	if c.LiveInfo != nil {
+		return c.LiveInfo
+	}
+	return &liveinfo.Client{HTTPClient: &http.Client{Timeout: defaultStatusCheckTimeout}}
 }
 
 func statusVideoIDs(record streamers.Record) []string {

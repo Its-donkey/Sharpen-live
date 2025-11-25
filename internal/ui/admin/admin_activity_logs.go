@@ -196,10 +196,6 @@ func buildAdminLogEntry(parsed map[string]any, raw string) model.AdminActivityLo
 		}
 		if msg, ok := parsed["message"].(string); ok && msg != "" {
 			entry.Message = msg
-		} else if rawMessage, ok := parsed["raw"].(map[string]any); ok {
-			if pretty, err := json.MarshalIndent(rawMessage, "", "  "); err == nil {
-				entry.Message = string(pretty)
-			}
 		}
 	}
 	if entry.Message == "" {

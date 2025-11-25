@@ -20,6 +20,7 @@
 - UI: remove the redundant “Roster” header button from the home view.
 - Submit form: hide the form behind an “Add a Streamer” button and reveal it on demand.
 - Submit form: fix the “Add a Streamer” toggle so it opens the hidden form as intended.
+- Submit form: stretch the lead help text across the full form grid for consistent alignment.
 - Submit form: hide the language dropdown until “Add another language” is clicked, then swap back once a choice is made.
 - Guard WebSub hub.challenge and reject malformed values to avoid reflected content.
 - Harden YouTube WebSub requests by validating hub, topic, and callback URLs.

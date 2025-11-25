@@ -9,6 +9,7 @@ import (
 	"os"
 	"path/filepath"
 	"runtime"
+	"strings"
 	"sync"
 	"time"
 )
@@ -188,6 +189,19 @@ func emitLogEvents(logger Logger, entries ...logEvent) {
 	logStream.Broadcast(data)
 
 	writeCategoryEntries(entries, data)
+}
+
+// LogWithID emits a single log entry with the provided category and ID.
+// Useful when a caller already has a correlation ID (for example, from HTTP logging).
+func LogWithID(logger Logger, category, id, message string) {
+	if logger == nil || strings.TrimSpace(message) == "" {
+		return
+	}
+	emitLogEvents(logger, logEvent{
+		Category: category,
+		ID:       strings.TrimSpace(id),
+		Message:  message,
+	})
 }
 
 func writeCategoryEntries(entries []logEvent, payload []byte) {

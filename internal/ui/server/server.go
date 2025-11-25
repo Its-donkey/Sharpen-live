@@ -1056,11 +1056,17 @@ func logRequests(logger logging.Logger, next http.Handler) http.Handler {
 		start := time.Now()
 		next.ServeHTTP(w, r)
 		duration := time.Since(start).Truncate(time.Millisecond)
-		if logger != nil {
-			logger.Printf("[http-request] %s %s host=%s duration=%s ua=%q", r.Method, r.URL.Path, r.Host, duration, r.UserAgent())
-		} else {
-			log.Printf("%s %s (%s)", r.Method, r.URL.Path, duration)
+		msg := fmt.Sprintf("[http-request] %s %s host=%s duration=%s ua=%q", r.Method, r.URL.Path, r.Host, duration, r.UserAgent())
+		if logger == nil {
+			log.Print(msg)
+			return
 		}
+		requestID := logging.RequestIDFromContext(r.Context())
+		if strings.TrimSpace(requestID) != "" {
+			logging.LogWithID(logger, "general", requestID, msg)
+			return
+		}
+		logger.Printf("%s", msg)
 	})
 }
 

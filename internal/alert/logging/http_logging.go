@@ -2,6 +2,7 @@ package logging
 
 import (
 	"bytes"
+	"context"
 	"fmt"
 	"net/http"
 	"net/http/httputil"
@@ -12,6 +13,10 @@ import (
 )
 
 const maxLoggedResponseBody = 4096
+
+type requestIDKey struct{}
+
+var contextRequestIDKey requestIDKey
 
 // WithHTTPLogging wraps the provided handler so every request/response pair is logged.
 func WithHTTPLogging(next http.Handler, logger Logger) http.Handler {
@@ -43,6 +48,10 @@ func WithHTTPLogging(next http.Handler, logger Logger) http.Handler {
 		} else {
 			logger.Printf("failed to dump request from %s: %v", r.RemoteAddr, err)
 		}
+
+		// Share the request ID with downstream handlers via context so general logs can correlate.
+		ctxWithID := context.WithValue(r.Context(), contextRequestIDKey, requestID)
+		r = r.WithContext(ctxWithID)
 
 		lrw := newLoggingResponseWriter(w)
 		start := time.Now()
@@ -135,4 +144,16 @@ func (lrw *loggingResponseWriter) Flush() {
 
 func (lrw *loggingResponseWriter) BytesWritten() int64 {
 	return lrw.bytesWritten
+}
+
+// RequestIDFromContext extracts the request ID stored by WithHTTPLogging so
+// other logs can correlate with HTTP logs.
+func RequestIDFromContext(ctx context.Context) string {
+	if ctx == nil {
+		return ""
+	}
+	if v, ok := ctx.Value(contextRequestIDKey).(string); ok {
+		return strings.TrimSpace(v)
+	}
+	return ""
 }

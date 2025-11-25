@@ -1,0 +1,147 @@
+{
+  "info": {
+    "_postman_id": "f1c6149b-4ad3-4259-b3fd-38265f7effb1",
+    "name": "Sharpen.Live server",
+    "description": "SSR server endpoints for roster/watch, metadata enrichment, and YouTube WebSub callbacks.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Roster Watch",
+      "item": [
+        {
+          "name": "GET /streamers/watch",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "text/event-stream"
+              }
+            ],
+            "url": {
+              "raw": "{{serverBase}}/streamers/watch",
+              "host": [
+                "{{serverBase}}"
+              ],
+              "path": [
+                "streamers",
+                "watch"
+              ]
+            },
+            "description": "Server-Sent Events endpoint that emits a timestamp whenever data/streamers.json is modified. Use this to trigger UI reloads when streamer records are updated."
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "YouTube",
+      "item": [
+        {
+          "name": "GET /alerts (Hub verification)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{serverBase}}/alerts?hub.mode=subscribe&hub.topic=https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCexample&hub.challenge=demo-challenge&hub.verify_token=demo-token&hub.lease_seconds=864000",
+              "host": [
+                "{{serverBase}}"
+              ],
+              "path": [
+                "alerts"
+              ],
+              "query": [
+                {
+                  "key": "hub.mode",
+                  "value": "subscribe"
+                },
+                {
+                  "key": "hub.topic",
+                  "value": "https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCexample"
+                },
+                {
+                  "key": "hub.challenge",
+                  "value": "demo-challenge"
+                },
+                {
+                  "key": "hub.verify_token",
+                  "value": "demo-token"
+                },
+                {
+                  "key": "hub.lease_seconds",
+                  "value": "864000"
+                }
+              ]
+            },
+            "description": "Simulates the GET callback that YouTube's hub issues to verify subscriptions. The server must echo the provided `hub.challenge`."
+          },
+          "response": []
+        },
+        {
+          "name": "POST /alerts (notification)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/atom+xml"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<feed xmlns:yt=\"http://www.youtube.com/xml/schemas/2015\" xmlns=\"http://www.w3.org/2005/Atom\">\n  <link rel=\"hub\" href=\"https://pubsubhubbub.appspot.com\"/>\n  <title>YouTube video feed</title>\n  <updated>2023-01-01T00:00:00+00:00</updated>\n  <entry>\n    <yt:channelId>UCexample</yt:channelId>\n    <yt:videoId>dQw4w9WgXcQ</yt:videoId>\n    <title>Sample video</title>\n    <link rel=\"alternate\" href=\"http://www.youtube.com/watch?v=dQw4w9WgXcQ\"/>\n    <published>2023-01-01T00:00:00+00:00</published>\n    <updated>2023-01-01T00:00:00+00:00</updated>\n  </entry>\n</feed>"
+            },
+            "url": {
+              "raw": "{{serverBase}}/alerts",
+              "host": [
+                "{{serverBase}}"
+              ],
+              "path": [
+                "alerts"
+              ]
+            },
+            "description": "Simulates a YouTube WebSub notification payload."
+          },
+          "response": []
+        },
+        {
+          "name": "POST /api/youtube/metadata",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"url\": \"https://www.youtube.com/@SharpenDev\"\n}"
+            },
+            "url": {
+              "raw": "{{serverBase}}/api/youtube/metadata",
+              "host": [
+                "{{serverBase}}"
+              ],
+              "path": [
+                "api",
+                "youtube",
+                "metadata"
+              ]
+            },
+            "description": "Scrapes description/title/handle/channelId metadata from the provided URL."
+          },
+          "response": []
+        }
+      ],
+      "description": "YouTube WebSub callbacks and metadata enrichment."
+    }
+  ],
+  "variable": [
+    {
+      "key": "serverBase",
+      "value": "http://127.0.0.1:4173"
+    }
+  ]
+}

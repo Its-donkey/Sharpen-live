@@ -10,6 +10,7 @@ import (
 const (
 	defaultAddr = "127.0.0.1"
 	defaultPort = ":8880"
+	defaultLogs = "data/logs"
 )
 
 // YouTubeConfig captures the WebSub-specific defaults persisted in config files.
@@ -27,6 +28,13 @@ type ServerConfig struct {
 	Port string `json:"port"`
 }
 
+// UIConfig configures server-rendered UI assets/templates and log locations.
+type UIConfig struct {
+	Templates string `json:"templates"`
+	Assets    string `json:"assets"`
+	Logs      string `json:"logs"`
+}
+
 // AdminConfig stores credentials for admin-authenticated APIs.
 type AdminConfig struct {
 	Email           string `json:"email"`
@@ -37,6 +45,7 @@ type AdminConfig struct {
 // Config represents the combined runtime settings parsed from config.json.
 type Config struct {
 	Server  ServerConfig
+	UI      UIConfig
 	YouTube YouTubeConfig
 	Admin   AdminConfig
 }
@@ -45,6 +54,7 @@ type fileConfig struct {
 	ServerBlock  *ServerConfig  `json:"server"`
 	Addr         string         `json:"addr"`
 	Port         string         `json:"port"`
+	UIBlock      *UIConfig      `json:"ui"`
 	YouTubeBlock *YouTubeConfig `json:"youtube"`
 	YouTubeConfig
 	AdminBlock *AdminConfig `json:"admin"`
@@ -95,8 +105,23 @@ func Load(path string) (Config, error) {
 		admin.TokenTTLSeconds = 86400
 	}
 
+	ui := UIConfig{}
+	if raw.UIBlock != nil {
+		ui = *raw.UIBlock
+	}
+	if ui.Templates == "" {
+		ui.Templates = "ui/templates"
+	}
+	if ui.Assets == "" {
+		ui.Assets = "ui"
+	}
+	if ui.Logs == "" {
+		ui.Logs = defaultLogs
+	}
+
 	cfg := Config{
 		Server:  server,
+		UI:      ui,
 		YouTube: yt,
 		Admin:   admin,
 	}

@@ -33,7 +33,7 @@ go test ./...
 
 ## Server
 - **Run**: `go run ./cmd/alertserver -config config.json`
-- **Config**: `config.json` supports `admin`, `server`, and `youtube` blocks (hub URL, callback, leaseSeconds, verify mode). Flags/env vars override file values.
+- **Config**: `config.json` supports `admin`, `server`, `ui`, and `youtube` blocks (hub URL, callback, leaseSeconds, verify mode). Flags/env vars override file values. The `ui` block configures templates/assets/log paths.
 - **Data**: Streamers stored in `data/streamers.json` by default. Submissions in `data/submissions.json`.
 - **YouTube leases**: Background monitor renews WebSub leases when ~5% of the window remains; `/alerts` handles WebSub callbacks.
 - **Admin auth**: server-rendered `/admin` login uses credentials under `admin` in `config.json`.

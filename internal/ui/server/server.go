@@ -35,6 +35,7 @@ type Options struct {
 	Listen       string
 	TemplatesDir string
 	AssetsDir    string
+	LogDir       string
 	ConfigPath   string
 	Logger       logging.Logger
 	Templates    map[string]*template.Template
@@ -139,7 +140,15 @@ type streamerPageData struct {
 
 // Run starts the UI HTTP server using the provided context and options.
 func Run(ctx context.Context, opts Options) error {
-	opts = applyDefaults(opts)
+	if opts.ConfigPath == "" {
+		opts.ConfigPath = "config.json"
+	}
+
+	appConfig, err := config.Load(opts.ConfigPath)
+	if err != nil {
+		return fmt.Errorf("load config: %w", err)
+	}
+	opts = applyDefaults(opts, appConfig)
 
 	templateRoot, err := filepath.Abs(opts.TemplatesDir)
 	if err != nil {
@@ -160,9 +169,9 @@ func Run(ctx context.Context, opts Options) error {
 		return fmt.Errorf("resolve assets dir: %w", err)
 	}
 
-	appConfig, err := config.Load(opts.ConfigPath)
+	logDir, err := filepath.Abs(opts.LogDir)
 	if err != nil {
-		return fmt.Errorf("load config: %w", err)
+		return fmt.Errorf("resolve log dir: %w", err)
 	}
 
 	logger := opts.Logger
@@ -171,26 +180,17 @@ func Run(ctx context.Context, opts Options) error {
 	}
 
 	// --- HTTP category log: single-envelope JSON, one file per run ---
-	httpLogPath := filepath.Join("data", "logs", "http.json")
-	if err := os.MkdirAll(filepath.Dir(httpLogPath), 0o755); err != nil {
-		return fmt.Errorf("create http log dir: %w", err)
-	}
-	// Start fresh each run so we always have one valid JSON object.
-	httpLogFile, err := os.OpenFile(httpLogPath, os.O_CREATE|os.O_WRONLY|os.O_TRUNC, 0o644)
+	httpLogFile, err := prepareLogFile(logDir, "http.json")
 	if err != nil {
-		return fmt.Errorf("open http log file: %w", err)
+		return fmt.Errorf("prepare http log file: %w", err)
 	}
 	httpLogWriter := logging.NewCategoryLogFileWriter(httpLogFile)
 	logging.SetCategoryWriter("http", httpLogWriter)
 	defer httpLogWriter.Close()
 
-	generalLogPath := filepath.Join("data", "logs", "general.json")
-	if err := os.MkdirAll(filepath.Dir(generalLogPath), 0o755); err != nil {
-		return fmt.Errorf("create general log dir: %w", err)
-	}
-	generalLogFile, err := os.OpenFile(generalLogPath, os.O_CREATE|os.O_WRONLY|os.O_TRUNC, 0o644)
+	generalLogFile, err := prepareLogFile(logDir, "general.json")
 	if err != nil {
-		return fmt.Errorf("open general log file: %w", err)
+		return fmt.Errorf("prepare general log file: %w", err)
 	}
 	generalLogWriter := logging.NewCategoryLogFileWriter(generalLogFile)
 	logging.SetCategoryWriter("general", generalLogWriter)
@@ -302,6 +302,8 @@ func Run(ctx context.Context, opts Options) error {
 		defer monitor.Stop()
 	}
 
+	alertPaths := alertCallbackPaths(appConfig.YouTube.CallbackURL)
+
 	mux := http.NewServeMux()
 	mux.HandleFunc("/", srv.handleHome)
 	mux.HandleFunc("/streamers/", srv.handleStreamer)
@@ -325,8 +327,9 @@ func Run(ctx context.Context, opts Options) error {
 	mux.HandleFunc("/api/youtube/metadata", srv.handleMetadata)
 	if baseStore, ok := streamersStore.(*streamers.Store); ok {
 		alertsHandler := buildAlertsHandler(logger, baseStore)
-		mux.Handle("/alerts", alertsHandler)
-		mux.Handle("/alert", alertsHandler)
+		for _, path := range alertPaths {
+			mux.Handle(path, alertsHandler)
+		}
 	}
 	mux.HandleFunc("/streamers.json", srv.serveStreamersJSON)
 	mux.HandleFunc("/favicon.ico", func(w http.ResponseWriter, r *http.Request) {
@@ -365,20 +368,76 @@ func Run(ctx context.Context, opts Options) error {
 	}
 }
 
-func applyDefaults(opts Options) Options {
+func applyDefaults(opts Options, cfg config.Config) Options {
 	if opts.Listen == "" {
-		opts.Listen = "127.0.0.1:4173"
+		addr := strings.TrimSpace(cfg.Server.Addr)
+		port := strings.TrimSpace(cfg.Server.Port)
+		if addr != "" || port != "" {
+			if port != "" && !strings.HasPrefix(port, ":") {
+				opts.Listen = addr + ":" + port
+			} else {
+				opts.Listen = addr + port
+			}
+		}
+		if opts.Listen == "" {
+			opts.Listen = "127.0.0.1:4173"
+		}
 	}
 	if opts.TemplatesDir == "" {
-		opts.TemplatesDir = "ui/templates"
+		if cfg.UI.Templates != "" {
+			opts.TemplatesDir = cfg.UI.Templates
+		} else {
+			opts.TemplatesDir = "ui/templates"
+		}
 	}
 	if opts.AssetsDir == "" {
-		opts.AssetsDir = "ui"
+		if cfg.UI.Assets != "" {
+			opts.AssetsDir = cfg.UI.Assets
+		} else {
+			opts.AssetsDir = "ui"
+		}
+	}
+	if opts.LogDir == "" {
+		if cfg.UI.Logs != "" {
+			opts.LogDir = cfg.UI.Logs
+		} else {
+			opts.LogDir = "data/logs"
+		}
 	}
 	if opts.ConfigPath == "" {
 		opts.ConfigPath = "config.json"
 	}
 	return opts
+}
+
+func prepareLogFile(dir, name string) (*os.File, error) {
+	if dir == "" {
+		dir = "data/logs"
+	}
+	if err := os.MkdirAll(dir, 0o755); err != nil {
+		return nil, fmt.Errorf("create log dir: %w", err)
+	}
+	target := filepath.Join(dir, name)
+
+	if _, err := os.Stat(target); err == nil {
+		archiveDir := filepath.Join(dir, "archive")
+		if err := os.MkdirAll(archiveDir, 0o755); err != nil {
+			return nil, fmt.Errorf("create log archive dir: %w", err)
+		}
+		ext := filepath.Ext(name)
+		base := strings.TrimSuffix(name, ext)
+		timestamp := time.Now().UTC().Format("20060102-150405")
+		archived := filepath.Join(archiveDir, fmt.Sprintf("%s-%s%s", base, timestamp, ext))
+		if err := os.Rename(target, archived); err != nil && !errors.Is(err, os.ErrNotExist) {
+			return nil, fmt.Errorf("archive log file: %w", err)
+		}
+	}
+
+	file, err := os.OpenFile(target, os.O_CREATE|os.O_WRONLY|os.O_TRUNC, 0o644)
+	if err != nil {
+		return nil, fmt.Errorf("open log file: %w", err)
+	}
+	return file, nil
 }
 
 func loadTemplates(dir string) (map[string]*template.Template, error) {
@@ -1084,7 +1143,7 @@ func handleAlerts(notificationOpts youtubehandlers.AlertNotificationOptions) htt
 	allowedMethods := strings.Join([]string{http.MethodGet, http.MethodPost}, ", ")
 	logger := notificationOpts.Logger
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if r.URL.Path != "/alerts" && r.URL.Path != "/alert" {
+		if !youtubehandlers.IsAlertPath(r.URL.Path) {
 			http.NotFound(w, r)
 			return
 		}
@@ -1146,4 +1205,50 @@ func alertPlatform(userAgent, from string) string {
 	default:
 		return ""
 	}
+}
+
+func alertCallbackPaths(callbackURL string) []string {
+	paths := []string{"/alerts", "/alert"}
+	path := resolveCallbackPath(callbackURL)
+	if path != "" {
+		paths = append(paths, path)
+		switch {
+		case strings.HasSuffix(path, "/alerts"):
+			paths = append(paths, strings.TrimSuffix(path, "s"))
+		case strings.HasSuffix(path, "/alert"):
+			paths = append(paths, path+"s")
+		}
+	}
+	return dedupePaths(paths)
+}
+
+func resolveCallbackPath(callbackURL string) string {
+	u, err := url.Parse(strings.TrimSpace(callbackURL))
+	if err != nil {
+		return ""
+	}
+	path := strings.TrimRight(u.Path, "/")
+	if path == "" {
+		return ""
+	}
+	if !strings.HasPrefix(path, "/") {
+		path = "/" + path
+	}
+	return path
+}
+
+func dedupePaths(paths []string) []string {
+	seen := make(map[string]struct{}, len(paths))
+	result := make([]string, 0, len(paths))
+	for _, p := range paths {
+		if p == "" {
+			continue
+		}
+		if _, ok := seen[p]; ok {
+			continue
+		}
+		seen[p] = struct{}{}
+		result = append(result, p)
+	}
+	return result
 }

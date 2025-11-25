@@ -59,13 +59,13 @@
         <input type="text" id="streamer-name" name="name" value="{{.State.Name}}" required>
       </label>
 
-      <label class="form-field form-field-wide {{if .State.Errors.Description}}form-field-error{{end}}" id="field-description">
+      <div class="form-field form-field-wide {{if .State.Errors.Description}}form-field-error{{end}}" id="field-description">
         <span>Description *</span>
         <p class="submit-streamer-help">What does the streamer do and what makes their streams unique?</p>
         <textarea id="streamer-description" name="description" rows="3" required>{{.State.Description}}</textarea>
-      </label>
+      </div>
 
-      <label class="form-field form-field-wide {{if .State.Errors.Languages}}form-field-error{{end}}" id="field-languages">
+      <div class="form-field form-field-wide {{if .State.Errors.Languages}}form-field-error{{end}}" id="field-languages">
         <span>Languages *</span>
         <p class="submit-streamer-help">Select every language the streamer uses on their channel.</p>
         <div class="language-picker">
@@ -91,7 +91,7 @@
         {{if .State.Errors.Languages}}
           <p class="field-error-text">Select at least one language.</p>
         {{end}}
-      </label>
+      </div>
     </div>
 
     <div class="submit-streamer-actions">

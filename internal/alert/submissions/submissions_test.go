@@ -116,3 +116,29 @@ func TestStoreUsesInjectedIDGenerator(t *testing.T) {
 		t.Fatalf("expected injected ID generator to run, got %s", saved.ID)
 	}
 }
+
+func TestSharedStoreHelpersInitialiseDefaults(t *testing.T) {
+	dir := t.TempDir()
+	path := filepath.Join(dir, "subs.json")
+
+	first, err := submissions.Append(path, submissions.Submission{Alias: "One"})
+	if err != nil {
+		t.Fatalf("append via helper: %v", err)
+	}
+
+	list, err := submissions.List(path)
+	if err != nil {
+		t.Fatalf("list via helper: %v", err)
+	}
+	if len(list) != 1 || list[0].ID != first.ID {
+		t.Fatalf("unexpected list result: %+v", list)
+	}
+
+	removed, err := submissions.Remove(path, first.ID)
+	if err != nil {
+		t.Fatalf("remove via helper: %v", err)
+	}
+	if removed.ID != first.ID {
+		t.Fatalf("expected removed ID %s, got %s", first.ID, removed.ID)
+	}
+}

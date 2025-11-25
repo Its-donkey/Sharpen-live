@@ -4,6 +4,7 @@ import (
 	"context"
 	"net/http"
 	"net/http/httptest"
+	"net/url"
 	"testing"
 )
 
@@ -14,7 +15,11 @@ func TestMetadataServiceFetch(t *testing.T) {
 	}))
 	t.Cleanup(server.Close)
 
-	svc := MetadataService{Client: server.Client()}
+	host := mustParseHost(t, server.URL)
+	svc := MetadataService{
+		Client:       server.Client(),
+		AllowedHosts: []string{host},
+	}
 	data, err := svc.Fetch(context.Background(), server.URL)
 	if err != nil {
 		t.Fatalf("fetch: %v", err)
@@ -29,6 +34,9 @@ func TestMetadataServiceValidation(t *testing.T) {
 	if _, err := svc.Fetch(context.Background(), "ftp://example"); err == nil {
 		t.Fatalf("expected validation error")
 	}
+	if _, err := svc.Fetch(context.Background(), "https://example.com/x"); err == nil {
+		t.Fatalf("expected host validation error")
+	}
 }
 
 func TestFetchMetadataParsesContent(t *testing.T) {
@@ -38,7 +46,11 @@ func TestFetchMetadataParsesContent(t *testing.T) {
 	}))
 	defer server.Close()
 
-	svc := MetadataService{Client: server.Client()}
+	host := mustParseHost(t, server.URL)
+	svc := MetadataService{
+		Client:       server.Client(),
+		AllowedHosts: []string{host},
+	}
 	desc, title, handle, channelID, err := svc.fetchMetadata(context.Background(), server.URL)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
@@ -82,4 +94,13 @@ func TestParseChannelID(t *testing.T) {
 	if parseChannelID("https://youtube.com/user/test") != "" {
 		t.Fatalf("expected empty when pattern missing")
 	}
+}
+
+func mustParseHost(t *testing.T, raw string) string {
+	t.Helper()
+	u, err := url.Parse(raw)
+	if err != nil {
+		t.Fatalf("parse url: %v", err)
+	}
+	return u.Host
 }

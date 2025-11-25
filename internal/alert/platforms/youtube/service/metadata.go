@@ -25,13 +25,14 @@ type Metadata struct {
 
 // MetadataService fetches metadata for user-supplied URLs.
 type MetadataService struct {
-	Client  *http.Client
-	Timeout time.Duration
+	Client       *http.Client
+	Timeout      time.Duration
+	AllowedHosts []string
 }
 
 // Fetch returns the metadata extracted from the provided URL.
 func (s MetadataService) Fetch(ctx context.Context, rawURL string) (Metadata, error) {
-	target, err := normaliseMetadataURL(rawURL)
+	target, err := normaliseMetadataURL(rawURL, s.allowedHosts())
 	if err != nil {
 		return Metadata{}, err
 	}
@@ -55,6 +56,18 @@ func (s MetadataService) requestTimeout() time.Duration {
 		return s.Timeout
 	}
 	return defaultMetadataTimeout
+}
+
+func (s MetadataService) allowedHosts() []string {
+	if len(s.AllowedHosts) > 0 {
+		return s.AllowedHosts
+	}
+	return []string{
+		"youtube.com",
+		"www.youtube.com",
+		"m.youtube.com",
+		"youtu.be",
+	}
 }
 
 func (s MetadataService) httpClient() *http.Client {
@@ -117,7 +130,7 @@ func (s MetadataService) fetchMetadata(ctx context.Context, target string) (stri
 	return desc, title, handle, channelID, nil
 }
 
-func normaliseMetadataURL(raw string) (string, error) {
+func normaliseMetadataURL(raw string, allowedHosts []string) (string, error) {
 	target := strings.TrimSpace(raw)
 	if target == "" {
 		return "", fmt.Errorf("%w: url is required", ErrValidation)
@@ -128,7 +141,18 @@ func normaliseMetadataURL(raw string) (string, error) {
 		return "", fmt.Errorf("%w: url must be http or https", ErrValidation)
 	}
 
-	return parsed.String(), nil
+	host := strings.ToLower(parsed.Host)
+	if !isAllowedHost(host, allowedHosts) {
+		return "", fmt.Errorf("%w: host not allowed", ErrValidation)
+	}
+
+	sanitized := url.URL{
+		Scheme:   parsed.Scheme,
+		Host:     host,
+		Path:     parsed.EscapedPath(),
+		RawQuery: parsed.RawQuery,
+	}
+	return sanitized.String(), nil
 }
 
 // EncodeMetadataResponse is used by tests to mimic handler JSON responses.
@@ -170,4 +194,27 @@ func parseChannelID(raw string) string {
 		return parts[1]
 	}
 	return ""
+}
+
+func isAllowedHost(host string, allowed []string) bool {
+	if host == "" {
+		return false
+	}
+	host = strings.ToLower(host)
+	for _, allowedHost := range allowed {
+		allowedHost = strings.ToLower(strings.TrimSpace(allowedHost))
+		if allowedHost == "" {
+			continue
+		}
+		if host == allowedHost {
+			return true
+		}
+		if strings.HasPrefix(host, allowedHost+":") {
+			return true
+		}
+		if strings.HasPrefix(allowedHost, host+":") {
+			return true
+		}
+	}
+	return false
 }

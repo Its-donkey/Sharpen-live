@@ -100,7 +100,11 @@ func storeForPath(path string) *Store {
 	if existing, ok := storeCache.Load(cleaned); ok {
 		return existing.(*Store)
 	}
-	store := &Store{path: cleaned}
+	store := &Store{
+		path:        cleaned,
+		now:         time.Now,
+		idGenerator: defaultSubmissionID,
+	}
 	actual, _ := storeCache.LoadOrStore(cleaned, store)
 	return actual.(*Store)
 }

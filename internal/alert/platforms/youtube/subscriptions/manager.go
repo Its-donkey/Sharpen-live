@@ -24,10 +24,7 @@ type Options struct {
 
 // getLogger returns an appropriate logger, defaulting when none is provided.
 func (o Options) getLogger() logging.Logger {
-	if o.Logger != nil {
-		return o.Logger
-	}
-	return logging.New()
+	return o.Logger
 }
 
 // buildYouTubeSubscriptionData centralises the shared logic for:

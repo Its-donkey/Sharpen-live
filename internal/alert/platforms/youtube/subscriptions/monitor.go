@@ -2,6 +2,7 @@ package subscriptions
 
 import (
 	"context"
+	"fmt"
 	"strings"
 	"sync"
 	"time"
@@ -18,6 +19,7 @@ type LeaseMonitorConfig struct {
 	Options       Options
 	Now           func() time.Time
 	Renew         func(context.Context, streamers.Record, Options) error
+	OnError       func(error)
 }
 
 const defaultRenewWindow = 0.05
@@ -33,6 +35,7 @@ type LeaseMonitor struct {
 	cancel       context.CancelFunc
 	runWg        sync.WaitGroup
 	renewWg      sync.WaitGroup
+	onError      func(error)
 }
 
 // StartLeaseMonitor launches the lease monitor using the provided context.
@@ -70,15 +73,13 @@ func newLeaseMonitor(cfg LeaseMonitorConfig) *LeaseMonitor {
 		opts.Mode = "subscribe"
 	}
 	logger := opts.getLogger()
-	if logger == nil {
-		logger = logging.New()
-	}
 
 	return &LeaseMonitor{
 		cfg:          cfg,
 		options:      opts,
 		logger:       logger,
 		lastAttempts: make(map[string]time.Time),
+		onError:      cfg.OnError,
 	}
 }
 
@@ -100,9 +101,7 @@ func (m *LeaseMonitor) run(ctx context.Context) {
 func (m *LeaseMonitor) evaluate(ctx context.Context) {
 	records, err := streamers.List(m.cfg.StreamersPath)
 	if err != nil {
-		if m.logger != nil {
-			m.logger.Printf("lease monitor: failed to read streamers file: %v", err)
-		}
+		m.reportError(fmt.Errorf("lease monitor: failed to read streamers file: %w", err))
 		return
 	}
 
@@ -132,9 +131,7 @@ func (m *LeaseMonitor) inspectRecord(ctx context.Context, record streamers.Recor
 	}
 	startTime, err := time.Parse(time.RFC3339, leaseStart)
 	if err != nil {
-		if m.logger != nil {
-			m.logger.Printf("lease monitor: invalid hubLeaseDate for %s: %v", channelID, err)
-		}
+		m.reportError(fmt.Errorf("lease monitor: invalid hubLeaseDate for %s: %w", channelID, err))
 		return
 	}
 
@@ -203,14 +200,11 @@ func (m *LeaseMonitor) launchRenewal(ctx context.Context, record streamers.Recor
 }
 
 func (m *LeaseMonitor) triggerRenewal(ctx context.Context, record streamers.Record) {
-	if m.logger != nil {
-		m.logger.Printf("lease monitor: renewing subscription for %s (channel=%s)", record.Streamer.Alias, record.Platforms.YouTube.ChannelID)
-	}
 	renewCtx, cancel := context.WithTimeout(ctx, 15*time.Second)
 	defer cancel()
 
-	if err := m.cfg.Renew(renewCtx, record, m.options); err != nil && m.logger != nil {
-		m.logger.Printf("lease monitor: renewal failed for %s: %v", record.Streamer.Alias, err)
+	if err := m.cfg.Renew(renewCtx, record, m.options); err != nil {
+		m.reportError(fmt.Errorf("lease monitor: renewal failed for %s: %w", record.Streamer.Alias, err))
 	}
 }
 
@@ -224,4 +218,17 @@ func (m *LeaseMonitor) Stop() {
 	}
 	m.runWg.Wait()
 	m.renewWg.Wait()
+}
+
+func (m *LeaseMonitor) reportError(err error) {
+	if err == nil {
+		return
+	}
+	if m.onError != nil {
+		m.onError(err)
+		return
+	}
+	if m.logger != nil {
+		m.logger.Printf("%v", err)
+	}
 }

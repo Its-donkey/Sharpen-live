@@ -168,7 +168,7 @@ func WithHTTPLogging(next http.Handler, logger Logger) http.Handler {
 				ID:        requestID,
 				Direction: "request",
 				Message:   fmt.Sprintf("Incoming request from %s", r.RemoteAddr),
-				Raw:       string(dump),
+				Raw:       encodeLogRaw(string(dump)),
 				Method:    r.Method,
 				Path:      r.URL.Path,
 				Remote:    r.RemoteAddr,
@@ -185,7 +185,7 @@ func WithHTTPLogging(next http.Handler, logger Logger) http.Handler {
 				ID:        requestID,
 				Direction: "response",
 				Message:   fmt.Sprintf("Response for %s %s (%d %s)", r.Method, r.URL.Path, status, http.StatusText(status)),
-				Raw:       lrw.LoggedBody(),
+				Raw:       encodeLogRaw(lrw.LoggedBody()),
 				Method:    r.Method,
 				Path:      r.URL.Path,
 				Status:    status,
@@ -200,19 +200,34 @@ func WithHTTPLogging(next http.Handler, logger Logger) http.Handler {
 }
 
 type logEvent struct {
-	Time      string `json:"time"`
-	ID        string `json:"id,omitempty"`
-	Direction string `json:"direction,omitempty"`
-	Message   string `json:"message"`
-	Raw       string `json:"raw,omitempty"`
-	Method    string `json:"method,omitempty"`
-	Path      string `json:"path,omitempty"`
-	Status    int    `json:"status,omitempty"`
-	Remote    string `json:"remote,omitempty"`
+	Time      string          `json:"time"`
+	ID        string          `json:"id,omitempty"`
+	Direction string          `json:"direction,omitempty"`
+	Message   string          `json:"message"`
+	Raw       json.RawMessage `json:"raw,omitempty"`
+	Method    string          `json:"method,omitempty"`
+	Path      string          `json:"path,omitempty"`
+	Status    int             `json:"status,omitempty"`
+	Remote    string          `json:"remote,omitempty"`
 }
 
 type logPayload struct {
 	LogEvents []logEvent `json:"logevents"`
+}
+
+func encodeLogRaw(raw string) json.RawMessage {
+	if strings.TrimSpace(raw) == "" {
+		return nil
+	}
+	data := []byte(raw)
+	if json.Valid(data) {
+		return json.RawMessage(data)
+	}
+	encoded, err := json.Marshal(raw)
+	if err != nil {
+		return nil
+	}
+	return encoded
 }
 
 func logJSON(logger Logger, entries ...logEvent) { emitLogEvents(logger, entries...) }

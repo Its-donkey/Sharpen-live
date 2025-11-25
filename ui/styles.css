@@ -446,7 +446,7 @@ tbody tr:hover {
 }
 
 .platform-select-hidden {
-  display: none;
+  display: none !important;
 }
 
 .form-field {
@@ -589,7 +589,7 @@ select.platform-select {
   clip-path: polygon(50% 70%, 0 20%, 100% 20%);
 }
 
-.language-picker.is-select-visible::after {
+.language-picker.is-select-visible {
   display: block;
 }
 
@@ -694,6 +694,7 @@ select.platform-select {
 
 .admin-logout-button {
   margin-top: 0;
+  margin-right: 0.6rem;
 }
 
 .admin-help {
@@ -713,6 +714,7 @@ select.platform-select {
   display: flex;
   flex-wrap: wrap;
   gap: 0.6rem;
+  margin: 0.6rem;
 }
 
 .admin-tabs--sub {

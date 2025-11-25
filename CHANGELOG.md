@@ -17,6 +17,7 @@
 - Submit form: keep the handle dropdown markup consistent between SSR and WASM to avoid duplicate platform rows.
 - Submit form: place the add-language button before the dropdown for clearer horizontal controls.
 - Submit form: show selected language tags above the controls for better visibility.
+- UI: remove the redundant “Roster” header button from the home view.
 - Submit form: hide the language dropdown until “Add another language” is clicked, then swap back once a choice is made.
 - Guard WebSub hub.challenge and reject malformed values to avoid reflected content.
 - Harden YouTube WebSub requests by validating hub, topic, and callback URLs.

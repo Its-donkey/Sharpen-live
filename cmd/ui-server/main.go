@@ -293,7 +293,7 @@ func (s *server) renderHome(w http.ResponseWriter, formState model.SubmitFormSta
 			PageTitle:       "Sharpen.Live",
 			StylesheetPath:  s.stylesPath,
 			SubmitLink:      "/#submit",
-			SecondaryAction: &navAction{Label: "Roster", Href: "/"},
+			SecondaryAction: nil,
 			CurrentYear:     s.currentYear,
 		},
 		Streamers:   roster,

@@ -83,14 +83,14 @@ func renderAdminLoginForm() string {
 	var builder strings.Builder
 	builder.WriteString(`
 <form id="admin-login-form" class="admin-auth">
-  <label class="form-field form-field-wide">
+  <div class="form-field form-field-wide">
     <span>Email</span>
     <input type="email" id="admin-email" value="admin@sharpen.live" autocomplete="username" required />
-  </label>
-  <label class="form-field form-field-wide">
+  </div>
+  <div class="form-field form-field-wide">
     <span>Password</span>
     <input type="password" id="admin-password" value="change-me" autocomplete="current-password" required />
-  </label>
+  </div>
   <div class="submit-streamer-actions">
     <button type="submit" class="submit-streamer-submit">Log in</button>
   </div>
@@ -348,14 +348,14 @@ func renderStreamerForm(form *model.AdminStreamerForm, key, heading, submitLabel
       <span>Status label</span>
       <input type="text" data-streamer-field="statusLabel" data-streamer-id="` + html.EscapeString(formID) + `" value="` + html.EscapeString(form.StatusLabel) + `" />
     </label>
-    <label class="form-field form-field-wide">
+    <div class="form-field form-field-wide">
       <span>Description</span>
       <textarea rows="3" data-streamer-field="description" data-streamer-id="` + html.EscapeString(formID) + `">` + html.EscapeString(form.Description) + `</textarea>
-    </label>
-    <label class="form-field form-field-wide">
+    </div>
+    <div class="form-field form-field-wide">
       <span>Languages</span>
       <input type="text" placeholder="English, Japanese" data-streamer-field="languages" data-streamer-id="` + html.EscapeString(formID) + `" value="` + html.EscapeString(form.LanguagesInput) + `" />
-    </label>
+    </div>
   </div>`)
 	builder.WriteString(`<fieldset class="platform-fieldset">
     <legend>Platforms</legend>

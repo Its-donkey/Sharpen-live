@@ -7,6 +7,8 @@ import (
 	"io"
 	"log"
 	"os"
+	"path/filepath"
+	"runtime"
 	"sync"
 	"time"
 )
@@ -157,6 +159,11 @@ func emitLogEvents(logger Logger, entries ...logEvent) {
 		if entries[i].Category == "" {
 			entries[i].Category = "general"
 		}
+		if entries[i].Category == "general" && entries[i].Source == "" {
+			if caller := callerLocation(3); caller != "" {
+				entries[i].Source = caller
+			}
+		}
 	}
 	payload := logPayload{LogEvents: entries}
 	data, err := json.Marshal(payload)
@@ -213,4 +220,16 @@ func writeCategoryEntries(entries []logEvent, payload []byte) {
 	}
 
 	_, _ = writer.Write(payload)
+}
+
+func callerLocation(skip int) string {
+	// skip is passed in from emitLogEvents to land on the caller that invoked
+	// the logger (logger.Printf -> emitLogEvents -> runtime.Caller).
+	if skip < 0 {
+		skip = 0
+	}
+	if _, file, line, ok := runtime.Caller(skip); ok {
+		return fmt.Sprintf("%s:%d", filepath.Base(file), line)
+	}
+	return ""
 }

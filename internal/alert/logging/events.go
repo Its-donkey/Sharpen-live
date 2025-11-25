@@ -19,6 +19,7 @@ type logEvent struct {
 	Proto     string          `json:"proto,omitempty"`
 	UserAgent string          `json:"userAgent,omitempty"`
 	Referer   string          `json:"referer,omitempty"`
+	Source    string          `json:"source,omitempty"`
 	Status    int             `json:"status,omitempty"`
 	Remote    string          `json:"remote,omitempty"`
 	Response  int64           `json:"responseBytes,omitempty"`

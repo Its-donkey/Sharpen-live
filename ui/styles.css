@@ -365,8 +365,8 @@ tbody tr:hover {
 
 .platform-link.platform-youtube {
   padding: 0;
-  width: 94px;
-  height: 32px;
+  width: 48px;
+  height: 28px;
   background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 84'%3E%3Crect x='0' y='0' width='120' height='84' rx='14' fill='%23ff0033'/%3E%3Cpolygon points='50,24 50,60 86,42' fill='white'/%3E%3C/svg%3E") center center / contain no-repeat;
   color: transparent;
 }

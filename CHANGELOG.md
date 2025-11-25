@@ -26,6 +26,7 @@
 - Roster: swap YouTube text labels for the YouTube logo on platform links.
 - UI: remove the home page “Live Knife Sharpening Studio” heading to keep the intro concise.
 - Roster: auto-reload browsers when `streamers.json` changes via the watch endpoint.
+- Roster: size the YouTube logo pill to match the text-height badges.
 - Guard WebSub hub.challenge and reject malformed values to avoid reflected content.
 - Harden YouTube WebSub requests by validating hub, topic, and callback URLs.
 - Admin: validate admin tokens for settings/log streams instead of accepting any non-empty value.

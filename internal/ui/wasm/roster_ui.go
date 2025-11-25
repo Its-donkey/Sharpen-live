@@ -122,7 +122,7 @@ func renderStreamers(streamers []model.Streamer) {
 					builder.WriteString(`<span class="` + linkClass + `" aria-disabled="true">`)
 				}
 				if isYouTube {
-					builder.WriteString(`<span class="sr-only">YouTube</span>`)
+					builder.WriteString(`<span class="platform-icon platform-icon-youtube" aria-hidden="true"></span><span class="platform-label">YouTube</span>`)
 				} else {
 					builder.WriteString(name)
 				}

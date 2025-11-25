@@ -43,11 +43,17 @@
                     <li>
                       {{if .ChannelURL}}
                         <a class="platform-link {{if $isYouTube}}platform-youtube{{end}}" href="{{.ChannelURL}}" target="_blank" rel="noopener noreferrer">
-                          {{if $isYouTube}}<span class="sr-only">YouTube</span>{{else}}{{.Name}}{{end}}
+                          {{if $isYouTube}}
+                            <span class="platform-icon platform-icon-youtube" aria-hidden="true"></span>
+                            <span class="platform-label">YouTube</span>
+                          {{else}}{{.Name}}{{end}}
                         </a>
                       {{else}}
                         <span class="platform-link {{if $isYouTube}}platform-youtube{{end}}" aria-disabled="true">
-                          {{if $isYouTube}}<span class="sr-only">YouTube</span>{{else}}{{.Name}}{{end}}
+                          {{if $isYouTube}}
+                            <span class="platform-icon platform-icon-youtube" aria-hidden="true"></span>
+                            <span class="platform-label">YouTube</span>
+                          {{else}}{{.Name}}{{end}}
                         </span>
                       {{end}}
                     </li>

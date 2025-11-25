@@ -377,6 +377,13 @@ tbody tr:hover {
   gap: 1rem;
 }
 
+.submit-title-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
 .submit-streamer-header h2 {
   margin: 0;
   font-size: clamp(1.5rem, 2vw + 0.75rem, 2rem);

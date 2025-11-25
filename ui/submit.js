@@ -1,13 +1,18 @@
 (function () {
-  const section = document.getElementById('submit-streamer-section');
+  const section = document.getElementById('submit') || document.getElementById('submit-streamer-section');
   const form = document.getElementById('submit-streamer-form');
   const toggle = document.getElementById('submit-toggle');
   if (!form) return;
 
   if (toggle && section) {
-    toggle.addEventListener('click', () => {
-      section.classList.toggle('is-collapsed');
-    });
+    const showForm = () => {
+      section.classList.remove('is-collapsed');
+      toggle.setAttribute('hidden', 'true');
+    };
+    if (!section.classList.contains('is-collapsed')) {
+      toggle.setAttribute('hidden', 'true');
+    }
+    toggle.addEventListener('click', showForm);
   }
 
   const nameInput = document.getElementById('streamer-name');

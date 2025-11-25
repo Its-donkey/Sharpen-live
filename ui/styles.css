@@ -441,17 +441,12 @@ tbody tr:hover {
   flex: 3;
 }
 
-.platform-row-inner .platform-select-wrapper {
+.platform-row-inner .platform-select {
   flex: 1.2;
+}
+
+.platform-select-hidden {
   display: none;
-}
-
-.platform-select-wrapper.is-visible {
-  display: flex;
-}
-
-.platform-select-wrapper .platform-select {
-  width: 100%;
 }
 
 .form-field {
@@ -482,6 +477,18 @@ tbody tr:hover {
   color: var(--fg-primary);
   font: inherit;
   transition: border 0.2s ease, box-shadow 0.2s ease;
+}
+
+.platform-select {
+  padding: 0;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  padding-right: 0;
+}
+
+select.platform-select {
+  width: 100%;
 }
 
 .form-field-error input,
@@ -539,9 +546,6 @@ tbody tr:hover {
 .channel-url-input {
   width: 100%;
   min-width: 220px;
-  padding: 0.75rem 0.9rem;
-  border-radius: 12px;
-  border: 1px solid rgba(148, 163, 184, 0.28);
   background: rgba(15, 23, 42, 0.65);
   color: var(--fg-primary);
   font: inherit;
@@ -550,6 +554,13 @@ tbody tr:hover {
   -webkit-appearance: none;
   -moz-appearance: none;
   padding-right: 2.5rem;
+}
+
+.channel-url-input {
+  padding: 0;
+  padding-right: 0;
+  border: none;
+  border-radius: 0;
 }
 
 .language-select:disabled {

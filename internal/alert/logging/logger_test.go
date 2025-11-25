@@ -116,6 +116,45 @@ func TestWithHTTPLoggingWrapsHandler(t *testing.T) {
 	}
 }
 
+func TestWithHTTPLoggingUnwrapsJSONRawPayloads(t *testing.T) {
+	logger := &captureLogger{}
+	base := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "application/json")
+		_, _ = w.Write([]byte(`{"ok":true,"message":"hi"}`))
+	})
+	handler := WithHTTPLogging(base, logger)
+
+	req := httptest.NewRequest(http.MethodGet, "/json", nil)
+	rr := httptest.NewRecorder()
+
+	handler.ServeHTTP(rr, req)
+
+	if rr.Code != http.StatusOK {
+		t.Fatalf("expected 200, got %d", rr.Code)
+	}
+	if len(logger.entries) != 1 {
+		t.Fatalf("expected single log payload, got %d", len(logger.entries))
+	}
+	var payload logPayload
+	if err := json.Unmarshal([]byte(logger.entries[0]), &payload); err != nil {
+		t.Fatalf("unmarshal log payload: %v", err)
+	}
+	if len(payload.LogEvents) != 2 {
+		t.Fatalf("expected request and response entries, got %d", len(payload.LogEvents))
+	}
+	response := payload.LogEvents[1]
+	if !json.Valid(response.Raw) {
+		t.Fatalf("expected raw JSON to be valid, got %q", string(response.Raw))
+	}
+	var decoded map[string]any
+	if err := json.Unmarshal(response.Raw, &decoded); err != nil {
+		t.Fatalf("expected raw JSON to decode, got error: %v (data: %q)", err, string(response.Raw))
+	}
+	if decoded["ok"] != true || decoded["message"] != "hi" {
+		t.Fatalf("unexpected decoded raw payload: %+v", decoded)
+	}
+}
+
 func TestWithHTTPLoggingNilLoggerReturnsOriginal(t *testing.T) {
 	base := http.HandlerFunc(func(http.ResponseWriter, *http.Request) {})
 	if got := WithHTTPLogging(base, nil); fmt.Sprintf("%p", got) != fmt.Sprintf("%p", base) {

@@ -104,11 +104,11 @@ func RenderSubmitForm() {
 			builder.WriteString(`<label class="` + channelWrapper + ` platform-url" id="platform-url-field-` + row.ID + `"><span>Channel URL</span>`)
 			builder.WriteString(`<input type="url" class="channel-url-input" placeholder="https://example.com/live or @handle" value="` + html.EscapeString(row.ChannelURL) + `" data-platform-channel data-row="` + row.ID + `" required />`)
 			builder.WriteString(`</label>`)
-			builder.WriteString(`<label class="form-field form-field-inline platform-select-wrapper`)
-			if handleInput {
-				builder.WriteString(` is-visible`)
+			labelClass := "form-field form-field-inline platform-select"
+			if !handleInput {
+				labelClass += " platform-select-hidden"
 			}
-			builder.WriteString(`"><span>Handle platform</span>`)
+			builder.WriteString(`<label class="` + labelClass + `"><span>Handle platform</span>`)
 			builder.WriteString(`<select class="platform-select" data-platform-choice data-row="` + row.ID + `">`)
 			builder.WriteString(`<option value="">Select a platform…</option>`)
 			selected := resolvePlatformPreset(row.Preset)
@@ -122,6 +122,8 @@ func RenderSubmitForm() {
 			builder.WriteString(`</select></label>`)
 			builder.WriteString(`</div>`)
 			builder.WriteString(`<button type="button" class="remove-platform-button" data-remove-platform="` + row.ID + `">Remove</button>`)
+			builder.WriteString(`</div>`)
+
 			if errors.Channel {
 				builder.WriteString(`<p class="field-error-text">Provide a valid channel URL.</p>`)
 			}
@@ -182,7 +184,7 @@ func RenderSubmitForm() {
 			builder.WriteString(` disabled`)
 		}
 		builder.WriteString(`>`)
-		builder.WriteString(`<option value="">Languages</option>`)
+		builder.WriteString(`<option value="">Select a language…</option>`)
 		for _, option := range AvailableLanguageOptions(state.Submit.Languages) {
 			builder.WriteString(`<option value="` + html.EscapeString(option.Value) + `">` + html.EscapeString(option.Label) + `</option>`)
 		}

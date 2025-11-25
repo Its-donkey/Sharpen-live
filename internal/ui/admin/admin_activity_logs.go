@@ -201,6 +201,12 @@ func buildAdminLogEntry(parsed map[string]any, raw string) model.AdminActivityLo
 	if entry.Message == "" {
 		entry.Message = raw
 	}
+	if formatted := formatLogRawJSON(entry.Raw); formatted != "" {
+		entry.Raw = formatted
+		if entry.Message == raw || entry.Message == entry.Raw {
+			entry.Message = formatted
+		}
+	}
 	if entry.Time == "" {
 		entry.Time = parseTimestampFromLog(raw)
 	}
@@ -208,4 +214,19 @@ func buildAdminLogEntry(parsed map[string]any, raw string) model.AdminActivityLo
 		entry.Time = time.Now().UTC().Format(time.RFC3339Nano)
 	}
 	return entry
+}
+
+func formatLogRawJSON(raw string) string {
+	if strings.TrimSpace(raw) == "" {
+		return ""
+	}
+	var payload any
+	if err := json.Unmarshal([]byte(raw), &payload); err != nil {
+		return ""
+	}
+	pretty, err := json.MarshalIndent(payload, "", "  ")
+	if err != nil {
+		return ""
+	}
+	return string(pretty)
 }

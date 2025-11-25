@@ -25,6 +25,11 @@ func streamersWatchHandler(opts streamersWatchOptions) http.Handler {
 	}
 
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		writeMessage := func(ts time.Time, flusher http.Flusher) {
+			fmt.Fprintf(w, "data: %d\n\n", ts.UnixMilli())
+			flusher.Flush()
+		}
+
 		if r.Method != http.MethodGet {
 			w.Header().Set("Allow", http.MethodGet)
 			http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
@@ -47,8 +52,7 @@ func streamersWatchHandler(opts streamersWatchOptions) http.Handler {
 		w.WriteHeader(http.StatusOK)
 
 		lastMod, _ := fileModTime(opts.FilePath)
-		fmt.Fprintf(w, "event: ready\ndata: %d\n\n", lastMod.UnixMilli())
-		flusher.Flush()
+		writeMessage(lastMod, flusher)
 
 		ticker := time.NewTicker(interval)
 		defer ticker.Stop()
@@ -67,8 +71,7 @@ func streamersWatchHandler(opts streamersWatchOptions) http.Handler {
 				}
 				if mod.After(lastMod) {
 					lastMod = mod
-					fmt.Fprintf(w, "event: change\ndata: %d\n\n", mod.UnixMilli())
-					flusher.Flush()
+					writeMessage(mod, flusher)
 				}
 			}
 		}

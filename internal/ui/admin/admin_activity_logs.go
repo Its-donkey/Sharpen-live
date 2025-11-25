@@ -199,15 +199,6 @@ func buildAdminLogEntry(parsed map[string]any, raw string) model.AdminActivityLo
 		} else if rawMessage, ok := parsed["raw"].(map[string]any); ok {
 			if pretty, err := json.MarshalIndent(rawMessage, "", "  "); err == nil {
 				entry.Message = string(pretty)
-				entry.Raw = entry.Message
-			}
-		} else if rawString, ok := parsed["raw"].(string); ok && rawString != "" {
-			var rawPayload any
-			if err := json.Unmarshal([]byte(rawString), &rawPayload); err == nil {
-				if pretty, err := json.MarshalIndent(rawPayload, "", "  "); err == nil {
-					entry.Message = string(pretty)
-					entry.Raw = entry.Message
-				}
 			}
 		}
 	}

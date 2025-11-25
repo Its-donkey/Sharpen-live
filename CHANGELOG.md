@@ -16,6 +16,7 @@
 - Harden YouTube WebSub requests by validating hub, topic, and callback URLs.
 - Admin: validate admin tokens for settings/log streams instead of accepting any non-empty value.
 - Admin: ensure `/admin/logs` streams valid server-sent events so the Activity tab shows live logs again.
+- Alert server: emit default SSE message events on `/api/streamers/watch` so EventSource listeners receive updates.
 - Admin: populate platform fields when editing streamers so YouTube channels appear even when offline.
 - Admin: automatically run the roster “Check online status” action on admin load.
 - Alert server: skip rotating log files on restart.

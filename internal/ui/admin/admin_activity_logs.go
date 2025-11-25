@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"net/url"
 	"regexp"
+	"strconv"
 	"strings"
 	"syscall/js"
 	"time"
@@ -235,7 +236,19 @@ func formatLogRawJSON(raw string) string {
 	}
 	var payload any
 	if err := json.Unmarshal([]byte(raw), &payload); err != nil {
-		return ""
+		// Handle escaped JSON like {\"summary\":...}
+		trimmed := strings.TrimSpace(raw)
+		if strings.HasPrefix(trimmed, `{\"`) {
+			if unquoted, err2 := strconv.Unquote(`"` + strings.ReplaceAll(trimmed, `"`, `\"`) + `"`); err2 == nil {
+				if err3 := json.Unmarshal([]byte(unquoted), &payload); err3 != nil {
+					return ""
+				}
+			} else {
+				return ""
+			}
+		} else {
+			return ""
+		}
 	}
 	pretty, err := json.MarshalIndent(payload, "", "  ")
 	if err != nil {

@@ -17,6 +17,7 @@
 ### Fixed
 - Alert server: rotate the log file after 24 hours of uptime, matching the restart rotation behavior.
 - Logging: write category log files as flat `logevents` arrays (no nested envelopes) so http/general logs stay valid JSON.
+- Logging: reopen and rewrite category log files on each write to avoid holding open handles and keep envelopes valid for downstream readers.
 - Roster: serve the SSE watch feed at `/api/streamers/watch` as an alias for legacy clients hitting the old API path.
 - Submit form: align channel URL rows to the grid and constrain inputs to half-width for consistent layout.
 - Submit form: remove padding/border radius from channel URL inputs so they sit flush in the grid.

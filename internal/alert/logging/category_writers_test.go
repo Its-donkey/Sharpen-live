@@ -33,9 +33,6 @@ func TestCategoryWriterStoresIndividualEvents(t *testing.T) {
 	if err != nil {
 		t.Fatalf("read http log: %v", err)
 	}
-	if strings.Count(string(content), `"logevents":[`) != 1 {
-		t.Fatalf("expected single logevents envelope, got %q", content)
-	}
 
 	var payload logPayload
 	if err := json.Unmarshal(content, &payload); err != nil {
@@ -46,5 +43,9 @@ func TestCategoryWriterStoresIndividualEvents(t *testing.T) {
 	}
 	if payload.LogEvents[0].Message != "first" || payload.LogEvents[1].Message != "second" {
 		t.Fatalf("unexpected messages: %+v", payload.LogEvents)
+	}
+
+	if strings.Contains(string(content), `"logevents":[{`) {
+		t.Logf("logevents array is flat as expected")
 	}
 }

@@ -4,6 +4,7 @@ package logging
 import (
 	"bufio"
 	"encoding/json"
+	"io"
 	"os"
 	"sync"
 )
@@ -27,30 +28,16 @@ func SetCategoryWriter(category string, w WriteCloser) {
 	categoryWriters.Store(category, w)
 }
 
-// NewNDJSONWriter wraps the file so each payload is written as a single line of JSON.
-func NewNDJSONWriter(file *os.File) WriteCloser {
-	return &ndjsonWriter{w: bufio.NewWriter(file)}
-}
-
-// NewCategoryLogFileWriter returns a writer that aggregates *all* logevents
-// into a single JSON envelope:
-//
-//   {"logevents":[
-//     {...},
-//     {...},
-//     ...
-//   ]}
-func NewCategoryLogFileWriter(file *os.File) WriteCloser {
-	return &envelopeWriter{
-		w:     bufio.NewWriter(file),
-		first: true,
-	}
-}
-
-// WriteCloser mirrors io.WriteCloser locally to avoid importing the entire interface hierarchy here.
+// WriteCloser mirrors io.WriteCloser locally.
 type WriteCloser interface {
 	Write([]byte) (int, error)
 	Close() error
+}
+
+// -------- NDJSON writer (unchanged) --------
+
+func NewNDJSONWriter(file *os.File) WriteCloser {
+	return &ndjsonWriter{w: bufio.NewWriter(file)}
 }
 
 type ndjsonWriter struct {
@@ -64,6 +51,7 @@ func (n *ndjsonWriter) Write(p []byte) (int, error) {
 	}
 	n.mu.Lock()
 	defer n.mu.Unlock()
+
 	if len(p) > 0 && p[len(p)-1] != '\n' {
 		if _, err := n.w.Write(append(p, '\n')); err != nil {
 			return 0, err
@@ -88,94 +76,112 @@ func (n *ndjsonWriter) Close() error {
 	return n.w.Flush()
 }
 
-// ---- Single-envelope category writer ----
+// -------- Single-envelope JSON file writer (opens/closes every Write) --------
 
-// logBatch matches the shape that WithHTTPLogging is writing:
+// On disk:
 //
-//   {"logevents":[{...},{...}]}
+//	{"logevents":[ {...}, {...}, ... ]}
+type logFileEnvelope struct {
+	Logevents []json.RawMessage `json:"logevents"`
+}
+
+// What WithHTTPLogging is currently writing to the writer:
+//
+//	{"logevents":[ {...}, {...} ]}
 type logBatch struct {
-	Events []json.RawMessage `json:"logevents"`
+	Logevents []json.RawMessage `json:"logevents"`
 }
 
-// envelopeWriter flattens each incoming {"logevents":[...]} batch
-// into a single outer {"logevents":[ ... ]} in the file.
+// fileEnvelopeWriter stores just the path; it opens/closes the file for every Write.
 type envelopeWriter struct {
-	mu     sync.Mutex
-	w      *bufio.Writer
-	opened bool // header written
-	first  bool // true until first event is written
+	mu   sync.Mutex
+	path string
 }
 
-func (e *envelopeWriter) Write(p []byte) (int, error) {
-	if e == nil || e.w == nil {
+// NewCategoryLogFileWriter aggregates *all* logevents into a single JSON envelope
+// in the file at file.Name(). The underlying *os.File is closed immediately;
+// each Write re-opens, updates, and closes the file so external processors always
+// see complete JSON and the file handle is not held open.
+func NewCategoryLogFileWriter(file *os.File) WriteCloser {
+	if file == nil {
+		return nopWriteCloser{}
+	}
+	path := file.Name()
+	_ = file.Close()
+
+	return &envelopeWriter{
+		path: path,
+	}
+}
+
+func (w *envelopeWriter) Write(p []byte) (int, error) {
+	if w == nil || w.path == "" {
 		return len(p), nil
 	}
 
-	e.mu.Lock()
-	defer e.mu.Unlock()
+	w.mu.Lock()
+	defer w.mu.Unlock()
 
-	// Write the outer envelope header once.
-	if !e.opened {
-		if _, err := e.w.WriteString(`{"logevents":[` + "\n"); err != nil {
-			return 0, err
-		}
-		e.opened = true
-	}
-
-	// Try to parse the payload as {"logevents":[...]}.
+	// Determine the new events to append.
 	var batch logBatch
-	if err := json.Unmarshal(p, &batch); err != nil || len(batch.Events) == 0 {
-		// Fallback: treat the payload itself as a single event object.
-		if !e.first {
-			if _, err := e.w.WriteString(",\n"); err != nil {
-				return 0, err
-			}
-		}
-		if _, err := e.w.Write(p); err != nil {
-			return 0, err
-		}
-		e.first = false
-		return len(p), e.w.Flush()
+	var newEvents []json.RawMessage
+
+	if err := json.Unmarshal(p, &batch); err == nil && len(batch.Logevents) > 0 {
+		// Normal case: incoming payload is {"logevents":[...]}.
+		newEvents = batch.Logevents
+	} else {
+		// Fallback: treat the entire payload as a single event object.
+		newEvents = []json.RawMessage{json.RawMessage(append([]byte(nil), p...))}
 	}
 
-	// Normal case: flatten each event in the batch.Events slice.
-	for _, ev := range batch.Events {
-		if !e.first {
-			if _, err := e.w.WriteString(",\n"); err != nil {
-				return 0, err
-			}
-		}
-		if _, err := e.w.Write(ev); err != nil {
-			return 0, err
-		}
-		e.first = false
+	// Open (or create) the file for read/write.
+	f, err := os.OpenFile(w.path, os.O_CREATE|os.O_RDWR, 0o644)
+	if err != nil {
+		return 0, err
+	}
+	defer f.Close()
+
+	// Read existing envelope, if any.
+	var env logFileEnvelope
+	data, err := io.ReadAll(f)
+	if err != nil {
+		return 0, err
+	}
+	if len(data) > 0 {
+		// If this fails, we just start from an empty envelope.
+		_ = json.Unmarshal(data, &env)
 	}
 
-	if err := e.w.Flush(); err != nil {
+	// Append new events.
+	env.Logevents = append(env.Logevents, newEvents...)
+
+	// Rewrite the file from scratch with the updated envelope.
+	if _, err := f.Seek(0, 0); err != nil {
+		return 0, err
+	}
+	if err := f.Truncate(0); err != nil {
 		return 0, err
 	}
 
+	encoded, err := json.MarshalIndent(env, "", "  ")
+	if err != nil {
+		return 0, err
+	}
+	if _, err := f.Write(encoded); err != nil {
+		return 0, err
+	}
+
+	// At this point the file contains complete JSON and is closed
+	// by the deferred f.Close() when Write returns.
 	return len(p), nil
 }
 
-func (e *envelopeWriter) Close() error {
-	if e == nil || e.w == nil {
-		return nil
-	}
-
-	e.mu.Lock()
-	defer e.mu.Unlock()
-
-	// No writes at all? Still emit a valid empty array.
-	if !e.opened {
-		if _, err := e.w.WriteString(`{"logevents":[]}` + "\n"); err != nil {
-			return err
-		}
-		return e.w.Flush()
-	}
-
-	if _, err := e.w.WriteString("\n]}\n"); err != nil {
-		return err
-	}
-	return e.w.Flush()
+func (w *envelopeWriter) Close() error {
+	// Nothing to do here: files are opened/closed per Write.
+	return nil
 }
+
+type nopWriteCloser struct{}
+
+func (nopWriteCloser) Write(p []byte) (int, error) { return len(p), nil }
+func (nopWriteCloser) Close() error                { return nil }

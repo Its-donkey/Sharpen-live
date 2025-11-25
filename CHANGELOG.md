@@ -9,6 +9,7 @@
 ### Fixed
 - Alert server: rotate the log file after 24 hours of uptime, matching the restart rotation behavior.
 - Submit form: align channel URL rows to the grid and constrain inputs to half-width for consistent layout.
+- Submit form: remove padding/border radius from channel URL inputs so they sit flush in the grid.
 - Submit form: always show handle platform picker when an @handle is entered, even before metadata loads.
 - Submit form: render handle platform picker markup even before a handle is typed so it can be toggled on.
 - Submit form: remove padding/border radius on handle platform selects so they render flush.

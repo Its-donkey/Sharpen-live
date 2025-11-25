@@ -29,6 +29,39 @@
     }
   }
 
+  function initStreamersWatch() {
+    const paths = ['/api/streamers/watch', '/streamers/watch'];
+    if (typeof EventSource === 'undefined') {
+      return;
+    }
+    let lastTimestamp = null;
+    let source = null;
+
+    const connect = (idx) => {
+      if (idx >= paths.length) return;
+      source = new EventSource(paths[idx]);
+      source.addEventListener('message', (evt) => {
+        const ts = parseInt((evt && evt.data) || '', 10);
+        if (Number.isNaN(ts)) return;
+        if (lastTimestamp === null) {
+          lastTimestamp = ts;
+          return;
+        }
+        if (ts > lastTimestamp) {
+          window.location.reload();
+        }
+      });
+      source.addEventListener('error', () => {
+        try {
+          source && source.close();
+        } catch (_) {}
+        connect(idx + 1);
+      });
+    };
+
+    connect(0);
+  }
+
   // ------- Metadata helpers -------
   function shouldSkipMetadata() {
     return !form || !nameInput || !descInput;
@@ -257,6 +290,7 @@
   function init() {
     bindPlatformInputs();
     initLanguagePicker();
+    initStreamersWatch();
   }
 
   if (document.readyState === 'loading') {

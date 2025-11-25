@@ -84,11 +84,10 @@ func RenderSubmitForm() {
 			formClass += " is-submitting"
 		}
 		builder.WriteString(`<form id="submit-streamer-form" class="` + formClass + `" aria-live="polite">`)
-		builder.WriteString(`<p class="submit-streamer-help">Share the details below and our team will review the submission before adding the streamer to the roster. No additional access is required.</p>`)
 
 		// Form grid
 		builder.WriteString(`<div class="form-grid">`)
-
+		builder.WriteString(`<p class="submit-streamer-help full-span">Share the details below and our team will review the submission before adding the streamer to the roster. No additional access is required.</p>`)
 		// Platform fieldset
 		builder.WriteString(`<fieldset class="platform-fieldset form-field-wide"><legend>Streaming platforms *</legend><p class="submit-streamer-help">Add each platform’s name and channel URL. If they’re the same stream link, repeat the URL.</p>`)
 		builder.WriteString(`<div class="platform-rows">`)
@@ -160,7 +159,7 @@ func RenderSubmitForm() {
 		if state.Submit.Errors.Languages {
 			langClass += " form-field-error"
 		}
-		builder.WriteString(`<label class="` + langClass + `" id="field-languages"><span>Languages *</span><p class="submit-streamer-help">Select every language the streamer uses on their channel.</p>`)
+		builder.WriteString(`<label class="` + langClass + `" id="field-languages"><span>Languages</span><p class="submit-streamer-help">Select every language the streamer uses on their channel.</p>`)
 		selectDisabled := len(state.Submit.Languages) >= model.MaxLanguages
 		builder.WriteString(`<div class="language-picker">`)
 		builder.WriteString(`<div class="language-tags">`)

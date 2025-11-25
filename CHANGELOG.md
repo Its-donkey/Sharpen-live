@@ -20,7 +20,14 @@
 - UI: remove the redundant “Roster” header button from the home view.
 - Submit form: hide the form behind an “Add a Streamer” button and reveal it on demand.
 - Submit form: fix the “Add a Streamer” toggle so it opens the hidden form as intended.
+- Submit form: stretch the lead help text across the full form grid for consistent alignment.
 - Submit form: hide the language dropdown until “Add another language” is clicked, then swap back once a choice is made.
+- UI: expand the home intro copy and span it across the full width to spotlight live sharpening streams.
+- Roster: swap YouTube text labels for the YouTube logo on platform links.
+- UI: remove the home page “Live Knife Sharpening Studio” heading to keep the intro concise.
+- Roster: auto-reload browsers when `streamers.json` changes via the watch endpoint.
+- Roster: size the YouTube logo pill to match the text-height badges.
+- Roster: show platform links only when a streamer is online and disable profile links for now.
 - Guard WebSub hub.challenge and reject malformed values to avoid reflected content.
 - Harden YouTube WebSub requests by validating hub, topic, and callback URLs.
 - Admin: validate admin tokens for settings/log streams instead of accepting any non-empty value.

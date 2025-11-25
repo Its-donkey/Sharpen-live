@@ -5,10 +5,11 @@
 {{define "content"}}
 <main class="surface" id="home-view" aria-labelledby="streamers-title">
   <section class="intro">
-    <h2 id="streamers-title">Live Knife Sharpening Studio</h2>
-    <p>
-      Discover bladesmiths and sharpening artists streaming in real time. Status indicators show who is live, who is prepping off camera, and who is offline.
-      Premium partners share their booking links so you can send in your knives for a professional edge.
+    <p class="intro-lede">
+      Sharpen.Live is an online hub for knife sharpeners and bladesmiths, showcasing real-time stream status of sharpeners and knife makers around the world. Explore expert craftsmanship, discover a wide range of makers, and access a growing library of sharpening tutorials, tools, guides, and industry resources.
+	</p>
+	<p class="intro-lede">
+	  Designed for enthusiasts, collectors, and professional makers alike, Sharpen.Live helps users find new talent, learn advanced knife-sharpening techniques, and stay connected with the global bladesmithing community.
     </p>
     {{if .RosterError}}
       <div class="submit-streamer-result" data-state="error">{{.RosterError}}</div>
@@ -32,20 +33,31 @@
               <span class="status {{statusClass .Status}}">{{statusLabel .Status .StatusLabel}}</span>
             </td>
             <td data-label="Name">
-              <strong><a class="platform-link" href="/streamers/{{.ID}}">{{.Name}}</a></strong>
+              <strong><span class="platform-link" aria-disabled="true">{{.Name}}</span></strong>
               {{if .Description}}
                 <div class="streamer-description">{{.Description}}</div>
               {{end}}
             </td>
             <td data-label="Streaming Platforms">
-              {{if .Platforms}}
+              {{if and .Platforms (eq (statusClass .Status) "online")}}
                 <ul class="platform-list">
                   {{range .Platforms}}
+                    {{$isYouTube := eq (lower .Name) "youtube"}}
                     <li>
                       {{if .ChannelURL}}
-                        <a class="platform-link" href="{{.ChannelURL}}" target="_blank" rel="noopener noreferrer">{{.Name}}</a>
+                        <a class="platform-link {{if $isYouTube}}platform-youtube{{end}}" href="{{.ChannelURL}}" target="_blank" rel="noopener noreferrer">
+                          {{if $isYouTube}}
+                            <span class="sr-only">YouTube</span>
+                            <span class="platform-icon platform-icon-youtube" aria-hidden="true"></span>
+                          {{else}}{{.Name}}{{end}}
+                        </a>
                       {{else}}
-                        <span class="platform-link" aria-disabled="true">{{.Name}}</span>
+                        <span class="platform-link {{if $isYouTube}}platform-youtube{{end}}" aria-disabled="true">
+                          {{if $isYouTube}}
+                            <span class="sr-only">YouTube</span>
+                            <span class="platform-icon platform-icon-youtube" aria-hidden="true"></span>
+                          {{else}}{{.Name}}{{end}}
+                        </span>
                       {{end}}
                     </li>
                   {{end}}

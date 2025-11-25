@@ -102,7 +102,7 @@ func renderStreamers(streamers []model.Streamer) {
 		builder.WriteString("</td>")
 
 		builder.WriteString(`<td data-label="Streaming Platforms">`)
-		if len(s.Platforms) == 0 {
+		if status != "online" || len(s.Platforms) == 0 {
 			builder.WriteString("—")
 		} else {
 			builder.WriteString(`<ul class="platform-list">`)

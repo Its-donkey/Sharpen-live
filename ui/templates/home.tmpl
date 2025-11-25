@@ -33,13 +33,13 @@
               <span class="status {{statusClass .Status}}">{{statusLabel .Status .StatusLabel}}</span>
             </td>
             <td data-label="Name">
-              <strong><a class="platform-link" href="/streamers/{{.ID}}">{{.Name}}</a></strong>
+              <strong><span class="platform-link" aria-disabled="true">{{.Name}}</span></strong>
               {{if .Description}}
                 <div class="streamer-description">{{.Description}}</div>
               {{end}}
             </td>
             <td data-label="Streaming Platforms">
-              {{if .Platforms}}
+              {{if and .Platforms (eq (statusClass .Status) "online")}}
                 <ul class="platform-list">
                   {{range .Platforms}}
                     {{$isYouTube := eq (lower .Name) "youtube"}}

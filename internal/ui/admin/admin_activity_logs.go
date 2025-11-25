@@ -187,7 +187,9 @@ func extractLogEvents(parsed map[string]any, fallbackRaw string) []model.AdminAc
 }
 
 func buildAdminLogEntry(parsed map[string]any, raw string) model.AdminActivityLog {
-	entry := model.AdminActivityLog{Raw: raw}
+	normalizedRaw := strings.ReplaceAll(raw, "\r\n", "\n")
+	normalizedRaw = strings.ReplaceAll(normalizedRaw, "\r", "\n")
+	entry := model.AdminActivityLog{Raw: normalizedRaw}
 	if parsed != nil {
 		if ts, ok := parsed["time"].(string); ok && ts != "" {
 			entry.Time = ts
@@ -195,14 +197,15 @@ func buildAdminLogEntry(parsed map[string]any, raw string) model.AdminActivityLo
 			entry.Time = ts
 		}
 		if msg, ok := parsed["message"].(string); ok && msg != "" {
-			entry.Message = msg
+			entry.Message = strings.ReplaceAll(msg, "\r\n", "\n")
+			entry.Message = strings.ReplaceAll(entry.Message, "\r", "\n")
 		}
 	}
 	if entry.Message == "" {
-		entry.Message = raw
+		entry.Message = normalizedRaw
 	}
 	if entry.Time == "" {
-		entry.Time = parseTimestampFromLog(raw)
+		entry.Time = parseTimestampFromLog(normalizedRaw)
 	}
 	if entry.Time == "" {
 		entry.Time = time.Now().UTC().Format(time.RFC3339Nano)

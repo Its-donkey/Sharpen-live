@@ -1,5 +1,5 @@
 (function () {
-  const section = document.getElementById('submit-streamer-section');
+  const section = document.getElementById('submit') || document.getElementById('submit-streamer-section');
   const form = document.getElementById('submit-streamer-form');
   const toggle = document.getElementById('submit-toggle');
   if (!form) return;

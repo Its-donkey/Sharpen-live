@@ -6,7 +6,10 @@
 <main class="surface" id="home-view" aria-labelledby="streamers-title">
   <section class="intro">
     <p class="intro-lede">
-      Sharpen.Live is an online hub for knife sharpeners and bladesmiths, showcasing real-time stream status of sharpeners and knife makers around the world. Explore expert craftsmanship, discover a wide range of makers, and access a growing library of sharpening tutorials, tools, guides, and industry resources. Designed for enthusiasts, collectors, and professional makers alike, Sharpen.Live helps users find new talent, learn advanced knife-sharpening techniques, and stay connected with the global bladesmithing community.
+      Sharpen.Live is an online hub for knife sharpeners and bladesmiths, showcasing real-time stream status of sharpeners and knife makers around the world. Explore expert craftsmanship, discover a wide range of makers, and access a growing library of sharpening tutorials, tools, guides, and industry resources.
+	</p>
+	<p class="intro-lede">
+	  Designed for enthusiasts, collectors, and professional makers alike, Sharpen.Live helps users find new talent, learn advanced knife-sharpening techniques, and stay connected with the global bladesmithing community.
     </p>
     {{if .RosterError}}
       <div class="submit-streamer-result" data-state="error">{{.RosterError}}</div>
@@ -44,15 +47,15 @@
                       {{if .ChannelURL}}
                         <a class="platform-link {{if $isYouTube}}platform-youtube{{end}}" href="{{.ChannelURL}}" target="_blank" rel="noopener noreferrer">
                           {{if $isYouTube}}
+                            <span class="sr-only">YouTube</span>
                             <span class="platform-icon platform-icon-youtube" aria-hidden="true"></span>
-                            <span class="platform-label">YouTube</span>
                           {{else}}{{.Name}}{{end}}
                         </a>
                       {{else}}
                         <span class="platform-link {{if $isYouTube}}platform-youtube{{end}}" aria-disabled="true">
                           {{if $isYouTube}}
+                            <span class="sr-only">YouTube</span>
                             <span class="platform-icon platform-icon-youtube" aria-hidden="true"></span>
-                            <span class="platform-label">YouTube</span>
                           {{else}}{{.Name}}{{end}}
                         </span>
                       {{end}}

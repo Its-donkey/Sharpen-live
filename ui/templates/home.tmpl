@@ -40,11 +40,16 @@
               {{if .Platforms}}
                 <ul class="platform-list">
                   {{range .Platforms}}
+                    {{$isYouTube := eq (lower .Name) "youtube"}}
                     <li>
                       {{if .ChannelURL}}
-                        <a class="platform-link" href="{{.ChannelURL}}" target="_blank" rel="noopener noreferrer">{{.Name}}</a>
+                        <a class="platform-link {{if $isYouTube}}platform-youtube{{end}}" href="{{.ChannelURL}}" target="_blank" rel="noopener noreferrer">
+                          {{if $isYouTube}}<span class="sr-only">YouTube</span>{{else}}{{.Name}}{{end}}
+                        </a>
                       {{else}}
-                        <span class="platform-link" aria-disabled="true">{{.Name}}</span>
+                        <span class="platform-link {{if $isYouTube}}platform-youtube{{end}}" aria-disabled="true">
+                          {{if $isYouTube}}<span class="sr-only">YouTube</span>{{else}}{{.Name}}{{end}}
+                        </span>
                       {{end}}
                     </li>
                   {{end}}

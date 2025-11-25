@@ -146,6 +146,18 @@ body {
   transform: translateY(-1px);
 }
 
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 .intro {
   display: flex;
   flex-direction: column;
@@ -346,6 +358,26 @@ tbody tr:hover {
 }
 
 .platform-link[aria-disabled="true"] {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.platform-link.platform-youtube {
+  padding: 0;
+  width: 94px;
+  height: 32px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 84'%3E%3Crect x='0' y='0' width='120' height='84' rx='14' fill='%23ff0033'/%3E%3Cpolygon points='50,24 50,60 86,42' fill='white'/%3E%3C/svg%3E") center center / contain no-repeat;
+  color: transparent;
+}
+
+.platform-link.platform-youtube:hover,
+.platform-link.platform-youtube:focus-visible {
+  background-color: transparent;
+  transform: translateY(-1px);
+}
+
+.platform-link.platform-youtube[aria-disabled="true"] {
   opacity: 0.5;
   cursor: not-allowed;
   pointer-events: none;

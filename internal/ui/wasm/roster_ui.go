@@ -109,11 +109,27 @@ func renderStreamers(streamers []model.Streamer) {
 			for _, p := range s.Platforms {
 				name := html.EscapeString(p.Name)
 				url := strings.TrimSpace(p.ChannelURL)
+				lowerName := strings.ToLower(strings.TrimSpace(p.Name))
+				isYouTube := lowerName == "youtube"
+				linkClass := "platform-link"
+				if isYouTube {
+					linkClass += " platform-youtube"
+				}
 				builder.WriteString("<li>")
 				if url != "" {
-					builder.WriteString(`<a class="platform-link" href="` + html.EscapeString(url) + `" target="_blank" rel="noopener noreferrer">` + name + `</a>`)
+					builder.WriteString(`<a class="` + linkClass + `" href="` + html.EscapeString(url) + `" target="_blank" rel="noopener noreferrer">`)
 				} else {
-					builder.WriteString(`<span class="platform-link" aria-disabled="true">` + name + `</span>`)
+					builder.WriteString(`<span class="` + linkClass + `" aria-disabled="true">`)
+				}
+				if isYouTube {
+					builder.WriteString(`<span class="sr-only">YouTube</span>`)
+				} else {
+					builder.WriteString(name)
+				}
+				if url != "" {
+					builder.WriteString(`</a>`)
+				} else {
+					builder.WriteString(`</span>`)
 				}
 				builder.WriteString("</li>")
 			}

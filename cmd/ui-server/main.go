@@ -243,6 +243,7 @@ func (s *server) handleSubmit(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	formState := parseSubmitForm(r)
+	formState.Open = true
 	removeID := strings.TrimSpace(r.FormValue("remove_platform"))
 	action := strings.TrimSpace(r.FormValue("action"))
 
@@ -250,6 +251,7 @@ func (s *server) handleSubmit(w http.ResponseWriter, r *http.Request) {
 	case removeID != "":
 		formState.Platforms = removePlatformRow(formState.Platforms, removeID)
 		formState.Errors.Platforms = make(map[string]model.PlatformFieldError)
+		formState.Open = true
 		s.renderHomeWithRoster(w, r, formState, http.StatusOK)
 		return
 	case action == "add-platform":
@@ -257,6 +259,7 @@ func (s *server) handleSubmit(w http.ResponseWriter, r *http.Request) {
 			formState.Platforms = append(formState.Platforms, forms.NewPlatformRow())
 		}
 		formState.Errors.Platforms = make(map[string]model.PlatformFieldError)
+		formState.Open = true
 		s.renderHomeWithRoster(w, r, formState, http.StatusOK)
 		return
 	}
@@ -287,6 +290,9 @@ func (s *server) handleSubmit(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *server) renderHome(w http.ResponseWriter, formState model.SubmitFormState, roster []model.Streamer, rosterErr string, status int) {
+	if !formState.Open && (formState.ResultState != "" || formState.ResultMessage != "" || hasSubmitErrors(formState.Errors)) {
+		formState.Open = true
+	}
 	ensureSubmitDefaults(&formState)
 	data := homePageData{
 		basePageData: basePageData{
@@ -349,6 +355,18 @@ func ensureSubmitDefaults(state *model.SubmitFormState) {
 	if state.Errors.Platforms == nil {
 		state.Errors.Platforms = make(map[string]model.PlatformFieldError)
 	}
+}
+
+func hasSubmitErrors(errs model.SubmitFormErrors) bool {
+	if errs.Name || errs.Description || errs.Languages {
+		return true
+	}
+	for _, p := range errs.Platforms {
+		if p.Channel {
+			return true
+		}
+	}
+	return false
 }
 
 func parseSubmitForm(r *http.Request) model.SubmitFormState {

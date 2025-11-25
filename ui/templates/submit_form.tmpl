@@ -1,7 +1,10 @@
 {{define "submit_form"}}
-<section class="submit-streamer" id="submit" aria-labelledby="submit-streamer-title">
+<section class="submit-streamer {{if not .State.Open}}is-collapsed{{end}}" id="submit" aria-labelledby="submit-streamer-title">
   <div class="submit-streamer-header">
-    <h2 id="submit-streamer-title">Know a streamer we should feature?</h2>
+    <div class="submit-title-row">
+      <h2 id="submit-streamer-title">Know a streamer we should feature?</h2>
+      <button type="button" class="submit-streamer-toggle" id="submit-toggle">Add a Streamer</button>
+    </div>
     <p class="submit-streamer-help">Share the details below and our team will review the submission before adding the streamer to the roster. No additional access is required.</p>
   </div>
 

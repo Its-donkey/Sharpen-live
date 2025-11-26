@@ -50,20 +50,18 @@ func (s *server) handleAdmin(w http.ResponseWriter, r *http.Request) {
 	msg := strings.TrimSpace(r.URL.Query().Get("msg"))
 	errMsg := strings.TrimSpace(r.URL.Query().Get("err"))
 
+	base := s.buildBasePageData(r, fmt.Sprintf("Admin · %s", s.siteName), "Sharpen.Live admin dashboard for roster moderation and submissions.", "/admin")
+	base.SecondaryAction = &navAction{
+		Label: "Back to site",
+		Href:  "/",
+	}
+	base.Robots = "noindex, nofollow"
+
 	data := adminPageData{
-		basePageData: basePageData{
-			PageTitle:      "Admin · Sharpen.Live",
-			StylesheetPath: s.stylesPath,
-			SubmitLink:     "/#submit",
-			SecondaryAction: &navAction{
-				Label: "Back to site",
-				Href:  "/",
-			},
-			CurrentYear: s.currentYear,
-		},
-		Flash:      msg,
-		Error:      errMsg,
-		AdminEmail: s.adminEmail,
+		basePageData: base,
+		Flash:        msg,
+		Error:        errMsg,
+		AdminEmail:   s.adminEmail,
 	}
 
 	token := s.adminTokenFromRequest(r)

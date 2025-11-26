@@ -266,6 +266,60 @@ func TestHandleMetadataMethodNotAllowed(t *testing.T) {
 	}
 }
 
+func TestHandleSitemap(t *testing.T) {
+	srv := newTestServer()
+	srv.streamersStore = &stubStreamersStore{
+		records: []streamers.Record{
+			{
+				Streamer:  streamers.Streamer{ID: "alpha"},
+				UpdatedAt: time.Date(2024, time.March, 1, 12, 30, 0, 0, time.UTC),
+			},
+		},
+	}
+
+	req := httptest.NewRequest(http.MethodGet, "/sitemap.xml", nil)
+	req.Host = "sharpen.live"
+	req.Header.Set("X-Forwarded-Proto", "https")
+	rr := httptest.NewRecorder()
+
+	srv.handleSitemap(rr, req)
+
+	if rr.Code != http.StatusOK {
+		t.Fatalf("expected 200, got %d", rr.Code)
+	}
+	body := rr.Body.String()
+	if !strings.Contains(body, "<loc>https://sharpen.live/</loc>") {
+		t.Fatalf("expected home loc, got %q", body)
+	}
+	if !strings.Contains(body, "<loc>https://sharpen.live/streamers/alpha</loc>") {
+		t.Fatalf("expected streamer loc, got %q", body)
+	}
+	if !strings.Contains(body, "2024-03-01") {
+		t.Fatalf("expected lastmod timestamp, got %q", body)
+	}
+}
+
+func TestHandleRobots(t *testing.T) {
+	srv := newTestServer()
+	req := httptest.NewRequest(http.MethodGet, "/robots.txt", nil)
+	req.Host = "sharpen.live"
+	req.Header.Set("X-Forwarded-Proto", "https")
+	rr := httptest.NewRecorder()
+
+	srv.handleRobots(rr, req)
+
+	if rr.Code != http.StatusOK {
+		t.Fatalf("expected 200, got %d", rr.Code)
+	}
+	body := rr.Body.String()
+	if !strings.Contains(body, "Sitemap: https://sharpen.live/sitemap.xml") {
+		t.Fatalf("expected sitemap link, got %q", body)
+	}
+	if !strings.Contains(body, "Allow: /") {
+		t.Fatalf("expected allow all agents, got %q", body)
+	}
+}
+
 func TestStreamersWatchAlias(t *testing.T) {
 	path := filepath.Join(t.TempDir(), "streamers.json")
 	handler := streamersWatchHandler(streamersWatchOptions{
@@ -314,6 +368,9 @@ func newTestServer() *server {
 		logger:           nil,
 		adminEmail:       "admin@example.com",
 		metadataFetcher:  stubMetadataFetcher{},
+		socialImagePath:  "/og-image.png",
+		siteName:         "Sharpen.Live",
+		primaryHost:      "example.com",
 	}
 }
 

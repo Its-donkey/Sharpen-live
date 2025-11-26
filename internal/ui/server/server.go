@@ -3,6 +3,7 @@ package server
 import (
 	"context"
 	"encoding/json"
+	"encoding/xml"
 	"errors"
 	"fmt"
 	"html/template"
@@ -93,6 +94,7 @@ type LeaseMonitorFactory func(context.Context, subscriptions.LeaseMonitorConfig)
 type server struct {
 	assetsDir        string
 	stylesPath       string
+	socialImagePath  string
 	templates        map[string]*template.Template
 	currentYear      int
 	submitEndpoint   string
@@ -105,6 +107,8 @@ type server struct {
 	logger           logging.Logger
 	adminEmail       string
 	metadataFetcher  MetadataFetcher
+	siteName         string
+	primaryHost      string
 	youtubeConfig    config.YouTubeConfig
 }
 
@@ -119,6 +123,13 @@ type basePageData struct {
 	SubmitLink      string
 	SecondaryAction *navAction
 	CurrentYear     int
+	SiteName        string
+	MetaDescription string
+	CanonicalURL    string
+	SocialImage     string
+	OGType          string
+	Robots          string
+	StructuredData  template.JS
 }
 
 type homePageData struct {
@@ -282,9 +293,12 @@ func Run(ctx context.Context, opts Options) error {
 		}
 	}
 
+	primaryHost := canonicalHostFromURL(appConfig.YouTube.CallbackURL)
+
 	srv := &server{
 		assetsDir:        assetsPath,
 		stylesPath:       "/styles.css",
+		socialImagePath:  "/og-image.png",
 		templates:        tmpl,
 		currentYear:      time.Now().Year(),
 		submitEndpoint:   "/submit",
@@ -297,6 +311,8 @@ func Run(ctx context.Context, opts Options) error {
 		logger:           logger,
 		adminEmail:       appConfig.Admin.Email,
 		metadataFetcher:  metadataSvc,
+		siteName:         "Sharpen.Live",
+		primaryHost:      primaryHost,
 		youtubeConfig:    appConfig.YouTube,
 	}
 
@@ -334,6 +350,9 @@ func Run(ctx context.Context, opts Options) error {
 	mux.HandleFunc("/submit", srv.handleSubmit)
 	mux.Handle("/styles.css", srv.assetHandler("styles.css", "text/css"))
 	mux.Handle("/submit.js", srv.assetHandler("submit.js", "application/javascript"))
+	mux.Handle("/og-image.png", srv.assetHandler("og-image.png", "image/png"))
+	mux.HandleFunc("/robots.txt", srv.handleRobots)
+	mux.HandleFunc("/sitemap.xml", srv.handleSitemap)
 	mux.HandleFunc("/admin", srv.handleAdmin)
 	mux.HandleFunc("/admin/", srv.handleAdmin)
 	mux.HandleFunc("/admin/login", srv.handleAdminLogin)
@@ -505,6 +524,154 @@ func loadTemplates(dir string) (map[string]*template.Template, error) {
 	}, nil
 }
 
+func canonicalHostFromURL(raw string) string {
+	u, err := url.Parse(strings.TrimSpace(raw))
+	if err != nil {
+		return ""
+	}
+	return strings.TrimSpace(u.Host)
+}
+
+func (s *server) absoluteURL(r *http.Request, path string) string {
+	clean := strings.TrimSpace(path)
+	if clean == "" {
+		clean = "/"
+	}
+	if !strings.HasPrefix(clean, "/") {
+		clean = "/" + clean
+	}
+	scheme := "https"
+	if r != nil {
+		if proto := strings.ToLower(strings.TrimSpace(r.Header.Get("X-Forwarded-Proto"))); proto != "" {
+			scheme = proto
+		} else if r.TLS == nil {
+			scheme = "http"
+		}
+		if host := strings.TrimSpace(r.Host); host != "" {
+			return fmt.Sprintf("%s://%s%s", scheme, host, clean)
+		}
+	}
+	host := strings.TrimSpace(s.primaryHost)
+	if host == "" {
+		host = "localhost"
+	}
+	return fmt.Sprintf("%s://%s%s", scheme, host, clean)
+}
+
+func (s *server) socialImageURL(r *http.Request) string {
+	if strings.TrimSpace(s.socialImagePath) == "" {
+		return ""
+	}
+	return s.absoluteURL(r, s.socialImagePath)
+}
+
+func (s *server) defaultDescription() string {
+	return "Sharpen.Live tracks live knife sharpeners and bladesmith streams across YouTube, Twitch, and Facebook - find makers, tutorials, and sharpening resources."
+}
+
+func truncateWithEllipsis(value string, max int) string {
+	value = strings.TrimSpace(value)
+	if max <= 0 {
+		return value
+	}
+	runes := []rune(value)
+	if len(runes) <= max {
+		return value
+	}
+	limit := max
+	if limit > len(runes) {
+		limit = len(runes)
+	}
+	cut := limit
+	for i := limit; i >= 0 && i >= limit-20; i-- {
+		if runes[i] == ' ' {
+			cut = i
+			break
+		}
+	}
+	trimmed := strings.TrimSpace(string(runes[:cut]))
+	if trimmed == "" {
+		trimmed = strings.TrimSpace(string(runes[:limit]))
+	}
+	return trimmed + "..."
+}
+
+func (s *server) normalizeDescription(desc string) string {
+	trimmed := strings.TrimSpace(desc)
+	if trimmed == "" {
+		trimmed = s.defaultDescription()
+	}
+	return truncateWithEllipsis(trimmed, 155)
+}
+
+func (s *server) buildBasePageData(r *http.Request, title, description, canonicalPath string) basePageData {
+	if strings.TrimSpace(title) == "" {
+		title = s.siteName
+	}
+	canonical := s.absoluteURL(r, canonicalPath)
+	return basePageData{
+		PageTitle:       title,
+		StylesheetPath:  s.stylesPath,
+		SubmitLink:      "/#submit",
+		CurrentYear:     s.currentYear,
+		SiteName:        s.siteName,
+		MetaDescription: s.normalizeDescription(description),
+		CanonicalURL:    canonical,
+		SocialImage:     s.socialImageURL(r),
+		OGType:          "website",
+	}
+}
+
+func (s *server) homeStructuredData(homeURL string) template.JS {
+	if strings.TrimSpace(homeURL) == "" {
+		return ""
+	}
+	org := map[string]any{
+		"@context":    "https://schema.org",
+		"@type":       "Organization",
+		"name":        s.siteName,
+		"url":         homeURL,
+		"description": s.defaultDescription(),
+	}
+	payload, err := json.Marshal(org)
+	if err != nil {
+		return ""
+	}
+	return template.JS(payload)
+}
+
+func (s *server) streamerStructuredData(streamer model.Streamer, canonical string) template.JS {
+	if strings.TrimSpace(streamer.Name) == "" || strings.TrimSpace(canonical) == "" {
+		return ""
+	}
+	sameAs := make([]string, 0, len(streamer.Platforms))
+	for _, platform := range streamer.Platforms {
+		if url := strings.TrimSpace(platform.ChannelURL); url != "" {
+			sameAs = append(sameAs, url)
+		}
+	}
+	schema := map[string]any{
+		"@context": "https://schema.org",
+		"@type":    "Person",
+		"name":     streamer.Name,
+		"url":      canonical,
+	}
+	if desc := strings.TrimSpace(streamer.Description); desc != "" {
+		schema["description"] = desc
+	}
+	if len(streamer.Languages) > 0 {
+		schema["knowsLanguage"] = streamer.Languages
+	}
+	if len(sameAs) > 0 {
+		schema["sameAs"] = sameAs
+	}
+	payload, err := json.Marshal(schema)
+	if err != nil {
+		return ""
+	}
+	return template.JS(payload)
+}
+
 func (s *server) assetHandler(name, contentType string) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		path := filepath.Join(s.assetsDir, name)
@@ -513,6 +680,85 @@ func (s *server) assetHandler(name, contentType string) http.Handler {
 		}
 		http.ServeFile(w, r, path)
 	})
+}
+
+func (s *server) handleRobots(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		w.Header().Set("Allow", http.MethodGet)
+		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+	sitemapURL := s.absoluteURL(r, "/sitemap.xml")
+	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
+	w.Header().Set("Cache-Control", "public, max-age=3600")
+	fmt.Fprintf(w, "User-agent: *\nAllow: /\nSitemap: %s\n", sitemapURL)
+}
+
+type sitemapURL struct {
+	Loc     string `xml:"loc"`
+	LastMod string `xml:"lastmod,omitempty"`
+}
+
+type sitemapSet struct {
+	XMLName xml.Name     `xml:"urlset"`
+	XMLNS   string       `xml:"xmlns,attr"`
+	URLs    []sitemapURL `xml:"url"`
+}
+
+func (s *server) handleSitemap(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		w.Header().Set("Allow", http.MethodGet)
+		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	entries := []sitemapURL{{Loc: s.absoluteURL(r, "/")}}
+	seen := map[string]struct{}{entries[0].Loc: {}}
+
+	if s.streamersStore != nil {
+		records, err := s.streamersStore.List()
+		if err != nil && s.logger != nil {
+			s.logger.Printf("sitemap: failed to list streamers: %v", err)
+		}
+		if err == nil {
+			for _, rec := range records {
+				id := strings.TrimSpace(rec.Streamer.ID)
+				if id == "" {
+					continue
+				}
+				loc := s.absoluteURL(r, "/streamers/"+url.PathEscape(id))
+				if _, exists := seen[loc]; exists {
+					continue
+				}
+				lastMod := rec.UpdatedAt
+				if lastMod.IsZero() {
+					lastMod = rec.CreatedAt
+				}
+				entry := sitemapURL{Loc: loc}
+				if !lastMod.IsZero() {
+					entry.LastMod = lastMod.UTC().Format(time.RFC3339)
+				}
+				entries = append(entries, entry)
+				seen[loc] = struct{}{}
+			}
+		}
+	}
+
+	payload := sitemapSet{
+		XMLNS: "http://www.sitemaps.org/schemas/sitemap/0.9",
+		URLs:  entries,
+	}
+
+	w.Header().Set("Content-Type", "application/xml; charset=utf-8")
+	w.Header().Set("Cache-Control", "public, max-age=3600")
+	w.WriteHeader(http.StatusOK)
+	_, _ = w.Write([]byte(xml.Header))
+
+	encoder := xml.NewEncoder(w)
+	encoder.Indent("", "  ")
+	if err := encoder.Encode(payload); err != nil {
+		log.Printf("render sitemap: %v", err)
+	}
 }
 
 func (s *server) handleHome(w http.ResponseWriter, r *http.Request) {
@@ -532,7 +778,7 @@ func (s *server) handleHome(w http.ResponseWriter, r *http.Request) {
 		formState.ResultMessage = message
 	}
 
-	s.renderHome(w, formState, streamersList, rosterErr, http.StatusOK)
+	s.renderHome(w, r, formState, streamersList, rosterErr, http.StatusOK)
 }
 
 func (s *server) handleStreamer(w http.ResponseWriter, r *http.Request) {
@@ -567,16 +813,16 @@ func (s *server) handleStreamer(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	data := streamerPageData{
-		basePageData: basePageData{
-			PageTitle:       fmt.Sprintf("%s · Sharpen.Live", match.Name),
-			StylesheetPath:  s.stylesPath,
-			SubmitLink:      "/#submit",
-			SecondaryAction: &navAction{Label: "Back to roster", Href: "/"},
-			CurrentYear:     s.currentYear,
-		},
-		Streamer: *match,
-	}
+	data := streamerPageData{Streamer: *match}
+	title := fmt.Sprintf("%s · %s", match.Name, s.siteName)
+	description := truncateWithEllipsis(strings.TrimSpace(match.Description), 155)
+	escapedID := url.PathEscape(match.ID)
+	base := s.buildBasePageData(r, title, description, "/streamers/"+escapedID)
+	base.OGType = "profile"
+	base.SecondaryAction = &navAction{Label: "Back to roster", Href: "/"}
+	base.StructuredData = s.streamerStructuredData(*match, base.CanonicalURL)
+	data.basePageData = base
+
 	if err := s.templates["streamer"].ExecuteTemplate(w, "streamer", data); err != nil {
 		log.Printf("render streamer detail: %v", err)
 		http.Error(w, "template error", http.StatusInternalServerError)
@@ -673,21 +919,18 @@ func (s *server) handleMetadata(w http.ResponseWriter, r *http.Request) {
 	_ = json.NewEncoder(w).Encode(resp)
 }
 
-func (s *server) renderHome(w http.ResponseWriter, formState model.SubmitFormState, roster []model.Streamer, rosterErr string, status int) {
+func (s *server) renderHome(w http.ResponseWriter, r *http.Request, formState model.SubmitFormState, roster []model.Streamer, rosterErr string, status int) {
 	if !formState.Open && (formState.ResultState != "" || formState.ResultMessage != "" || hasSubmitErrors(formState.Errors)) {
 		formState.Open = true
 	}
 	ensureSubmitDefaults(&formState)
+	homeTitle := fmt.Sprintf("%s · Live knife sharpeners & bladesmith streams", s.siteName)
+	base := s.buildBasePageData(r, homeTitle, s.defaultDescription(), "/")
+	base.StructuredData = s.homeStructuredData(base.CanonicalURL)
 	data := homePageData{
-		basePageData: basePageData{
-			PageTitle:       "Sharpen.Live",
-			StylesheetPath:  s.stylesPath,
-			SubmitLink:      "/#submit",
-			SecondaryAction: nil,
-			CurrentYear:     s.currentYear,
-		},
-		Streamers:   roster,
-		RosterError: rosterErr,
+		basePageData: base,
+		Streamers:    roster,
+		RosterError:  rosterErr,
 		Submit: submitFormView{
 			State:           formState,
 			LanguageOptions: model.LanguageOptions,
@@ -706,7 +949,7 @@ func (s *server) renderHome(w http.ResponseWriter, formState model.SubmitFormSta
 
 func (s *server) renderHomeWithRoster(w http.ResponseWriter, r *http.Request, formState model.SubmitFormState, status int) {
 	streamersList, rosterErr := s.fetchRoster(r.Context())
-	s.renderHome(w, formState, streamersList, rosterErr, status)
+	s.renderHome(w, r, formState, streamersList, rosterErr, status)
 }
 
 func (s *server) fetchRoster(ctx context.Context) ([]model.Streamer, string) {

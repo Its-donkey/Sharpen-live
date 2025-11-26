@@ -81,7 +81,7 @@ func HandleSubscriptionConfirmation(w http.ResponseWriter, r *http.Request, opts
 }
 
 func isAlertsVerificationRequest(r *http.Request) bool {
-	return r.Method == http.MethodGet && r.URL.Path == "/alerts"
+	return r.Method == http.MethodGet && IsAlertPath(r.URL.Path)
 }
 
 func parseHubRequest(query url.Values) (hubRequest, ValidationResult) {

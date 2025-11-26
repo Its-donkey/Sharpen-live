@@ -18,6 +18,7 @@ import (
 	adminservice "github.com/Its-donkey/Sharpen-live/internal/alert/admin/service"
 	"github.com/Its-donkey/Sharpen-live/internal/alert/config"
 	"github.com/Its-donkey/Sharpen-live/internal/alert/logging"
+	youtubeapi "github.com/Its-donkey/Sharpen-live/internal/alert/platforms/youtube/api"
 	youtubehandlers "github.com/Its-donkey/Sharpen-live/internal/alert/platforms/youtube/handlers"
 	liveinfo "github.com/Its-donkey/Sharpen-live/internal/alert/platforms/youtube/liveinfo"
 	youtubeservice "github.com/Its-donkey/Sharpen-live/internal/alert/platforms/youtube/service"
@@ -273,6 +274,11 @@ func Run(ctx context.Context, opts Options) error {
 		}
 		statusChecker = adminservice.StatusChecker{
 			Streamers: baseStore,
+			Logger:    logger,
+			Search: youtubeapi.SearchClient{
+				APIKey:     strings.TrimSpace(appConfig.YouTube.APIKey),
+				HTTPClient: &http.Client{Timeout: 5 * time.Second},
+			},
 		}
 	}
 

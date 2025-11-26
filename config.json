@@ -19,6 +19,7 @@
 		"hub_url": "https://pubsubhubbub.appspot.com/subscribe",
 		"callback_url": "https://sharpen.live/dev/alerts",
 		"lease_seconds": 864000,
-		"verify": "async"
+		"verify": "async",
+		"api_key": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 	}
 }

@@ -30,8 +30,9 @@ func main() {
 
 	listen := flag.String("listen", "", "address to serve the Sharpen.Live UI (defaults to config.json server.addr+port)")
 	templatesDir := flag.String("templates", "", "path to the html/template files (defaults to config.json ui.templates)")
-	assetsDir := flag.String("assets", "", "path where styles.css is located (defaults to config.json ui.assets)")
-	logDir := flag.String("logs", "", "directory for category logs (defaults to config.json ui.logs)")
+	assetsDir := flag.String("assets", "", "path where styles.css is located (defaults to config.json app.assets)")
+	logDir := flag.String("logs", "", "directory for category logs (defaults to config.json app.logs)")
+	dataDir := flag.String("data", "", "directory for data files (streamers/submissions); defaults to config.json app.data")
 	configPath := flag.String("config", "config.json", "path to server configuration")
 	flag.Parse()
 
@@ -40,6 +41,7 @@ func main() {
 		TemplatesDir: *templatesDir,
 		AssetsDir:    *assetsDir,
 		LogDir:       *logDir,
+		DataDir:      *dataDir,
 		ConfigPath:   *configPath,
 	}
 

@@ -9,10 +9,11 @@
 		"addr": "127.0.0.1",
 		"port": ":8880"
 	},
-	"ui": {
+	"app": {
 		"templates": "ui/templates",
 		"assets": "ui",
-		"logs": "data/logs"
+		"logs": "data/logs",
+		"data": "data"
 	},
 	"youtube": {
 		"hub_url": "https://pubsubhubbub.appspot.com/subscribe",

@@ -21,6 +21,7 @@ type YouTubeConfig struct {
 	LeaseSeconds int    `json:"lease_seconds"`
 	Mode         string `json:"mode"`
 	Verify       string `json:"verify"`
+	APIKey       string `json:"api_key"`
 }
 
 // ServerConfig configures the HTTP listener used by alert-server.

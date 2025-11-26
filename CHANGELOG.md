@@ -13,6 +13,7 @@
 - API surface: drop public streamers CRUD/config/admin APIs; only SSE watch, metadata, and `/alerts` remain exposed.
 - Tooling: replace Postman collection with current endpoints and update one-command runner to start only the consolidated server.
 - Config: default server listen/templates/assets/log directories now come from `config.json` (see `ui` block) so running without flags picks up file settings.
+ - Config: renamed `ui` block to `app` and added `data` so streamers/submissions/logs/templates/assets paths are all configurable from config.json.
 - Docs: update layout/run commands to reflect the consolidated server entrypoint.
 
 ### Fixed

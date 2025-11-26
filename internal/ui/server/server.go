@@ -36,6 +36,7 @@ type Options struct {
 	TemplatesDir string
 	AssetsDir    string
 	LogDir       string
+	DataDir      string
 	ConfigPath   string
 	Logger       logging.Logger
 	Templates    map[string]*template.Template
@@ -174,6 +175,15 @@ func Run(ctx context.Context, opts Options) error {
 		return fmt.Errorf("resolve log dir: %w", err)
 	}
 
+	dataDir := opts.DataDir
+	if dataDir == "" {
+		dataDir = "data"
+	}
+	dataDir, err = filepath.Abs(dataDir)
+	if err != nil {
+		return fmt.Errorf("resolve data dir: %w", err)
+	}
+
 	logger := opts.Logger
 	if logger == nil {
 		logger = logging.New()
@@ -198,11 +208,11 @@ func Run(ctx context.Context, opts Options) error {
 
 	streamersStore := opts.StreamersStore
 	if streamersStore == nil {
-		streamersStore = streamers.NewStore(streamers.DefaultFilePath)
+		streamersStore = streamers.NewStore(filepath.Join(dataDir, "streamers.json"))
 	}
 	submissionsStore := opts.SubmissionsStore
 	if submissionsStore == nil {
-		submissionsStore = submissions.NewStore(submissions.DefaultFilePath)
+		submissionsStore = submissions.NewStore(filepath.Join(dataDir, "submissions.json"))
 	}
 	streamerSvc := opts.StreamerService
 	if streamerSvc == nil {
@@ -384,24 +394,31 @@ func applyDefaults(opts Options, cfg config.Config) Options {
 		}
 	}
 	if opts.TemplatesDir == "" {
-		if cfg.UI.Templates != "" {
-			opts.TemplatesDir = cfg.UI.Templates
+		if cfg.App.Templates != "" {
+			opts.TemplatesDir = cfg.App.Templates
 		} else {
 			opts.TemplatesDir = "ui/templates"
 		}
 	}
 	if opts.AssetsDir == "" {
-		if cfg.UI.Assets != "" {
-			opts.AssetsDir = cfg.UI.Assets
+		if cfg.App.Assets != "" {
+			opts.AssetsDir = cfg.App.Assets
 		} else {
 			opts.AssetsDir = "ui"
 		}
 	}
 	if opts.LogDir == "" {
-		if cfg.UI.Logs != "" {
-			opts.LogDir = cfg.UI.Logs
+		if cfg.App.Logs != "" {
+			opts.LogDir = cfg.App.Logs
 		} else {
 			opts.LogDir = "data/logs"
+		}
+	}
+	if opts.DataDir == "" {
+		if cfg.App.Data != "" {
+			opts.DataDir = cfg.App.Data
+		} else {
+			opts.DataDir = "data"
 		}
 	}
 	if opts.ConfigPath == "" {

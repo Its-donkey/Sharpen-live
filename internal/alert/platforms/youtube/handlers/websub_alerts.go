@@ -2,6 +2,7 @@
 package handlers
 
 import (
+	"context"
 	"io"
 	"net/http"
 	"net/http/httputil"
@@ -135,11 +136,7 @@ func validateAgainstExpectation(req hubRequest, exp websub.Expectation) Validati
 }
 
 func logHubRequest(logger logging.Logger, r *http.Request, query url.Values, req hubRequest) {
-	if logger == nil {
-		return
-	}
-
-	logger.Printf(
+	logWebsub(r.Context(), logger,
 		"Responding to hub challenge: mode=%s topic=%s lease=%s token=%s body=%q",
 		req.Mode,
 		query.Get("hub.topic"),
@@ -148,9 +145,9 @@ func logHubRequest(logger logging.Logger, r *http.Request, query url.Values, req
 		req.Challenge,
 	)
 	if dump, err := httputil.DumpRequest(r, true); err == nil {
-		logger.Printf("Raw verification request:\n%s", dump)
+		logWebsub(r.Context(), logger, "Raw verification request:\n%s", dump)
 	} else {
-		logger.Printf("Failed to dump verification request: %v", err)
+		logWebsub(r.Context(), logger, "Failed to dump verification request: %v", err)
 	}
 }
 
@@ -160,10 +157,6 @@ func prepareHubResponse(w http.ResponseWriter, challenge string) {
 }
 
 func logPlannedResponse(logger logging.Logger, w http.ResponseWriter, challenge string) {
-	if logger == nil {
-		return
-	}
-
 	var responseDump strings.Builder
 	responseDump.WriteString("HTTP/1.1 200 OK\r\n")
 	for name, values := range w.Header() {
@@ -176,7 +169,7 @@ func logPlannedResponse(logger logging.Logger, w http.ResponseWriter, challenge 
 	}
 	responseDump.WriteString("\r\n")
 	responseDump.WriteString(challenge)
-	logger.Printf("Planned hub response:\n%s", responseDump.String())
+	logWebsub(context.Background(), logger, "Planned hub response:\n%s", responseDump.String())
 }
 
 func updateLeaseIfNeeded(req hubRequest, exp websub.Expectation, store *streamers.Store, verifiedAt time.Time, logger logging.Logger) string {
@@ -187,7 +180,7 @@ func updateLeaseIfNeeded(req hubRequest, exp websub.Expectation, store *streamer
 
 	if channelID != "" && !req.IsUnsubscribe() && req.LeaseProvided {
 		if err := youtubesub.RecordLease(store, channelID, verifiedAt); err != nil && logger != nil {
-			logger.Printf("failed to record hub lease for %s: %v", channelID, err)
+			logWebsub(context.Background(), logger, "failed to record hub lease for %s: %v", channelID, err)
 		}
 	}
 
@@ -208,12 +201,8 @@ func writeChallengeResponse(w http.ResponseWriter, challenge string) {
 }
 
 func logSubscriptionResult(logger logging.Logger, finalExp, originalExp websub.Expectation, channelID, topic string, isUnsubscribe bool) {
-	if logger == nil {
-		return
-	}
-
 	if finalExp.HubStatus != "" {
-		logger.Printf("YouTube hub response status: %s, body: %s", finalExp.HubStatus, finalExp.HubBody)
+		logWebsub(context.Background(), logger, "YouTube hub response status: %s, body: %s", finalExp.HubStatus, finalExp.HubBody)
 	}
 	alias := strings.TrimSpace(finalExp.Alias)
 	if alias == "" {
@@ -235,9 +224,9 @@ func logSubscriptionResult(logger logging.Logger, finalExp, originalExp websub.E
 	}
 
 	if isUnsubscribe {
-		logger.Printf("YouTube alerts unsubscribed for %s (%s)", alias, displayTopic)
+		logWebsub(context.Background(), logger, "YouTube alerts unsubscribed for %s (%s)", alias, displayTopic)
 	} else {
-		logger.Printf("YouTube alerts subscribed for %s (%s)", alias, displayTopic)
+		logWebsub(context.Background(), logger, "YouTube alerts subscribed for %s (%s)", alias, displayTopic)
 	}
 }
 

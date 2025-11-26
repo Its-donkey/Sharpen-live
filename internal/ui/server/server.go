@@ -206,6 +206,14 @@ func Run(ctx context.Context, opts Options) error {
 	logging.SetCategoryWriter("general", generalLogWriter)
 	defer generalLogWriter.Close()
 
+	websubLogFile, err := prepareLogFile(logDir, "websub.json")
+	if err != nil {
+		return fmt.Errorf("prepare websub log file: %w", err)
+	}
+	websubLogWriter := logging.NewCategoryLogFileWriter(websubLogFile)
+	logging.SetCategoryWriter("websub", websubLogWriter)
+	defer websubLogWriter.Close()
+
 	streamersStore := opts.StreamersStore
 	if streamersStore == nil {
 		streamersStore = streamers.NewStore(filepath.Join(dataDir, "streamers.json"))

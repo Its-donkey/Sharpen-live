@@ -9,6 +9,11 @@
 		"addr": "127.0.0.1",
 		"port": ":8880"
 	},
+	"ui": {
+		"templates": "ui/templates",
+		"assets": "ui",
+		"logs": "data/logs"
+	},
 	"youtube": {
 		"hub_url": "https://pubsubhubbub.appspot.com/subscribe",
 		"callback_url": "https://sharpen.live/dev/alerts",

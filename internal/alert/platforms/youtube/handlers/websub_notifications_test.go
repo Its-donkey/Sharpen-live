@@ -45,6 +45,23 @@ func TestHandleAlertNotificationDelegatesToProcessor(t *testing.T) {
 	}
 }
 
+func TestHandleAlertNotificationAcceptsPrefixedPath(t *testing.T) {
+	stub := &stubAlertProcessor{}
+	opts := AlertNotificationOptions{Processor: stub}
+	req := httptest.NewRequest(http.MethodPost, "/dev/alerts", bytes.NewBufferString("<feed/>"))
+	rr := httptest.NewRecorder()
+
+	if !HandleAlertNotification(rr, req, opts) {
+		t.Fatalf("expected handler to process request")
+	}
+	if rr.Code != http.StatusNoContent {
+		t.Fatalf("expected 204, got %d", rr.Code)
+	}
+	if stub.calls != 1 {
+		t.Fatalf("expected processor to be called once, got %d", stub.calls)
+	}
+}
+
 func TestHandleAlertNotificationHandlesInvalidFeedError(t *testing.T) {
 	stub := &stubAlertProcessor{err: youtubeservice.ErrInvalidFeed}
 	opts := AlertNotificationOptions{Processor: stub}

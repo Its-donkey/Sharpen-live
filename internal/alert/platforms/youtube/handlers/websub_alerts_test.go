@@ -78,6 +78,34 @@ func TestHandleSubscriptionConfirmationSuccess(t *testing.T) {
 	}
 }
 
+func TestHandleSubscriptionConfirmationSupportsPrefixedPath(t *testing.T) {
+	token := "prefixed-token"
+	challenge := "challenge"
+	topic := "https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCprefixed"
+	websub.RegisterExpectation(websub.Expectation{VerifyToken: token, Topic: topic, Mode: "subscribe"})
+	t.Cleanup(func() { websub.CancelExpectation(token) })
+
+	values := url.Values{}
+	values.Set("hub.challenge", challenge)
+	values.Set("hub.verify_token", token)
+	values.Set("hub.topic", topic)
+	values.Set("hub.mode", "subscribe")
+
+	req := httptest.NewRequest(http.MethodGet, "/dev/alerts?"+values.Encode(), nil)
+	rr := httptest.NewRecorder()
+
+	handled := HandleSubscriptionConfirmation(rr, req, SubscriptionConfirmationOptions{})
+	if !handled {
+		t.Fatalf("expected request to be handled")
+	}
+	if rr.Code != http.StatusOK {
+		t.Fatalf("expected 200, got %d", rr.Code)
+	}
+	if rr.Body.String() != challenge {
+		t.Fatalf("expected challenge echoed")
+	}
+}
+
 func TestHandleSubscriptionConfirmationSkipsLeaseForUnsubscribe(t *testing.T) {
 	dir := t.TempDir()
 	path := filepath.Join(dir, "streamers.json")

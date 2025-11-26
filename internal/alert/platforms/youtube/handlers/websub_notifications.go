@@ -30,9 +30,7 @@ func HandleAlertNotification(w http.ResponseWriter, r *http.Request, opts AlertN
 	if r.Method != http.MethodPost {
 		return false
 	}
-	switch r.URL.Path {
-	case "/alert", "/alerts":
-	default:
+	if !IsAlertPath(r.URL.Path) {
 		return false
 	}
 

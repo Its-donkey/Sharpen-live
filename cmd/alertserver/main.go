@@ -28,9 +28,10 @@ func main() {
 		cancel()
 	}()
 
-	listen := flag.String("listen", "127.0.0.1:4173", "address to serve the Sharpen.Live UI")
-	templatesDir := flag.String("templates", "ui/templates", "path to the html/template files")
-	assetsDir := flag.String("assets", "ui", "path where styles.css is located")
+	listen := flag.String("listen", "", "address to serve the Sharpen.Live UI (defaults to config.json server.addr+port)")
+	templatesDir := flag.String("templates", "", "path to the html/template files (defaults to config.json ui.templates)")
+	assetsDir := flag.String("assets", "", "path where styles.css is located (defaults to config.json ui.assets)")
+	logDir := flag.String("logs", "", "directory for category logs (defaults to config.json ui.logs)")
 	configPath := flag.String("config", "config.json", "path to server configuration")
 	flag.Parse()
 
@@ -38,6 +39,7 @@ func main() {
 		Listen:       *listen,
 		TemplatesDir: *templatesDir,
 		AssetsDir:    *assetsDir,
+		LogDir:       *logDir,
 		ConfigPath:   *configPath,
 	}
 

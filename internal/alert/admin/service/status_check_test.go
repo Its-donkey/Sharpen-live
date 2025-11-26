@@ -10,6 +10,7 @@ import (
 	"time"
 
 	youtubeapi "github.com/Its-donkey/Sharpen-live/internal/alert/platforms/youtube/api"
+	"github.com/Its-donkey/Sharpen-live/internal/alert/platforms/youtube/liveinfo"
 	"github.com/Its-donkey/Sharpen-live/internal/alert/streamers"
 )
 
@@ -116,6 +117,66 @@ func TestStatusCheckerClearsOfflineState(t *testing.T) {
 	}
 }
 
+func TestStatusCheckerFallsBackToLiveInfo(t *testing.T) {
+	store := streamers.NewStore(t.TempDir() + "/streamers.json")
+	_, err := store.Append(streamers.Record{
+		Streamer: streamers.Streamer{ID: "demo", Alias: "Demo"},
+		Platforms: streamers.Platforms{
+			YouTube: &streamers.YouTubePlatform{
+				ChannelID: "UCdemo",
+				Topic:     "https://www.youtube.com/xml/feeds/videos.xml?channel_id=UCdemo",
+			},
+		},
+	})
+	if err != nil {
+		t.Fatalf("append streamer: %v", err)
+	}
+
+	feedBody := `<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns:yt="http://www.youtube.com/xml/schemas/2015" xmlns="http://www.w3.org/2005/Atom">
+ <entry><yt:videoId>live456</yt:videoId></entry>
+</feed>`
+
+	checker := StatusChecker{
+		Streamers:  store,
+		Player:     stubPlayer{responses: map[string]youtubeapi.LiveStatus{"live456": {VideoID: "live456", ChannelID: "UCdemo"}}},
+		FeedClient: &http.Client{Transport: staticResponder{status: http.StatusOK, body: feedBody}},
+		LiveInfo: stubLiveInfo{
+			data: map[string]youtubeapi.LiveStatus{
+				"live456": {
+					VideoID:           "live456",
+					ChannelID:         "UCdemo",
+					IsLive:            true,
+					IsLiveNow:         true,
+					PlayabilityStatus: "OK",
+					StartedAt:         time.Date(2024, 2, 2, 15, 0, 0, 0, time.UTC),
+				},
+			},
+		},
+	}
+
+	result, err := checker.CheckAll(context.Background())
+	if err != nil {
+		t.Fatalf("check all: %v", err)
+	}
+	if result.Online != 1 || result.Updated != 1 || result.Failed != 0 {
+		t.Fatalf("unexpected result: %+v", result)
+	}
+	records, err := store.List()
+	if err != nil {
+		t.Fatalf("list streamers: %v", err)
+	}
+	if records[0].Status == nil || records[0].Status.YouTube == nil || !records[0].Status.YouTube.Live {
+		t.Fatalf("expected live status: %+v", records[0].Status)
+	}
+	if records[0].Status.YouTube.VideoID != "live456" {
+		t.Fatalf("expected video id live456, got %q", records[0].Status.YouTube.VideoID)
+	}
+	if records[0].Status.YouTube.StartedAt.IsZero() {
+		t.Fatalf("expected startedAt to be set")
+	}
+}
+
 type stubPlayer struct {
 	responses map[string]youtubeapi.LiveStatus
 	err       error
@@ -147,4 +208,28 @@ func (s staticResponder) RoundTrip(_ *http.Request) (*http.Response, error) {
 		Header:     make(http.Header),
 		Body:       io.NopCloser(strings.NewReader(s.body)),
 	}, nil
+}
+
+type stubLiveInfo struct {
+	data map[string]youtubeapi.LiveStatus
+	err  error
+}
+
+func (s stubLiveInfo) Fetch(ctx context.Context, videoIDs []string) (map[string]liveinfo.VideoInfo, error) {
+	if s.err != nil {
+		return nil, s.err
+	}
+	result := make(map[string]liveinfo.VideoInfo)
+	for _, id := range videoIDs {
+		if resp, ok := s.data[id]; ok {
+			result[id] = liveinfo.VideoInfo{
+				ID:                   resp.VideoID,
+				ChannelID:            resp.ChannelID,
+				Title:                resp.Title,
+				LiveBroadcastContent: "live",
+				ActualStartTime:      resp.StartedAt,
+			}
+		}
+	}
+	return result, nil
 }

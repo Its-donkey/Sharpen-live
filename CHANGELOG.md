@@ -12,6 +12,7 @@
 - UI: remove WASM bundle/static entrypoints; everything is server-rendered.
 - API surface: drop public streamers CRUD/config/admin APIs; only SSE watch, metadata, and `/alerts` remain exposed.
 - Tooling: replace Postman collection with current endpoints and update one-command runner to start only the consolidated server.
+- Config: default server listen/templates/assets/log directories now come from `config.json` (see `ui` block) so running without flags picks up file settings.
 - Docs: update layout/run commands to reflect the consolidated server entrypoint.
 
 ### Fixed
@@ -20,7 +21,9 @@
 - Logging: reopen and rewrite category log files on each write to avoid holding open handles and keep envelopes valid for downstream readers.
 - Logging: include the caller location on general log entries for easier traceability.
 - Logging: propagate HTTP request IDs into general request logs so correlated entries share the same `id`.
+- Logging: rotate existing log files into `ui.logs/archive` with timestamps on startup, using the configured log directory from `config.json`.
 - Metadata: restrict metadata fetches to an allowlist of hosts and normalise URLs before issuing upstream requests to avoid uncontrolled destinations.
+- Admin: Refresh Status now falls back to live YouTube watch-page metadata so live streams get written to `data/streamers.json` even when the player API doesn’t flag them.
 - Roster: serve the SSE watch feed at `/api/streamers/watch` as an alias for legacy clients hitting the old API path.
 - Submit form: align channel URL rows to the grid and constrain inputs to half-width for consistent layout.
 - Submit form: remove padding/border radius from channel URL inputs so they sit flush in the grid.

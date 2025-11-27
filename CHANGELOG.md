@@ -23,6 +23,7 @@
 - Docs: update layout/run commands to reflect the consolidated server entrypoint.
 - Config/Docs: capture per-site `app.name` plus site-specific server/assets/log/data roots in config.json and README so multi-site deployments stay isolated.
 - UI: drop legacy root templates/assets in favour of per-site (Sharpen.Live, synth.wave) and catch-all directories.
+- YouTube API: prefer `YOUTUBE_API_KEY`/`YT_API_KEY` environment values for both config loading and the player client default key instead of the baked-in sample key.
 
 ### Fixed
 - Alert server: rotate the log file after 24 hours of uptime, matching the restart rotation behavior.

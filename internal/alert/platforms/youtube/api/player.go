@@ -8,6 +8,7 @@ import (
 	"io"
 	"net/http"
 	"net/url"
+	"os"
 	"strings"
 	"time"
 
@@ -44,6 +45,9 @@ type PlayerClient struct {
 func NewPlayerClient(opts PlayerClientOptions) *PlayerClient {
 	apiKey := opts.APIKey
 	if apiKey == "" {
+		apiKey = youtubeAPIKeyFromEnv()
+	}
+	if apiKey == "" {
 		apiKey = defaultPlayerAPIKey
 	}
 	clientName := opts.ClientName
@@ -65,12 +69,25 @@ func NewPlayerClient(opts PlayerClientOptions) *PlayerClient {
 	httpClient = ratelimit.Client(httpClient)
 
 	return &PlayerClient{
-		apiKey:        apiKey,
+		apiKey:        strings.TrimSpace(apiKey),
 		clientName:    clientName,
 		clientVersion: clientVersion,
 		baseURL:       baseURL,
 		httpClient:    httpClient,
 	}
+}
+
+func youtubeAPIKeyFromEnv() string {
+	keys := []string{
+		strings.TrimSpace(os.Getenv("YOUTUBE_API_KEY")),
+		strings.TrimSpace(os.Getenv("YT_API_KEY")),
+	}
+	for _, key := range keys {
+		if key != "" {
+			return key
+		}
+	}
+	return ""
 }
 
 // LiveStatus describes whether a video is a livestream and if it's online.

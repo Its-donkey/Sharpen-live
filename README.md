@@ -35,7 +35,7 @@ go test ./...
 
 ## Server
 - **Run**: `go run ./cmd/alertserver -config config.json`
-- **Config**: `config.json` supports `admin`, `server`, `app`, `sites`, and `youtube` blocks (hub URL, callback, leaseSeconds, verify mode, `api_key`). The `server`/`app` blocks define the base site (Sharpen.Live); additional entries under `sites` override those values for alternate sites like `synth-wave`. Keep `youtube.api_key` in env/secret overrides; the sample uses a placeholder.
+- **Config**: `config.json` supports `admin`, `server`, `app`, `sites`, and `youtube` blocks (hub URL, callback, leaseSeconds, verify mode, `api_key`). The `server`/`app` blocks define the base site (Sharpen.Live); additional entries under `sites` override those values for alternate sites like `synth-wave`. Set `YOUTUBE_API_KEY` (or `YT_API_KEY`) in the environment to override `youtube.api_key`; the sample uses a placeholder.
 - **Data**: Each site writes to its own data root (e.g., Sharpen.Live -> `data/sharpen-live/streamers.json`, synth.wave -> `data/synth-wave/streamers.json`). Submissions live alongside streamers in each site's `submissions.json`.
 - **YouTube leases**: Background monitor renews WebSub leases when ~5% of the window remains; `/alerts` handles WebSub callbacks.
 - **Admin auth**: server-rendered `/admin` login uses credentials under `admin` in `config.json`.

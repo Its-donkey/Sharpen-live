@@ -55,6 +55,28 @@ func TestLoadHonoursOverrides(t *testing.T) {
 	}
 }
 
+func TestLoadPrefersEnvAPIKey(t *testing.T) {
+	dir := t.TempDir()
+	path := filepath.Join(dir, "config.json")
+	data := `{
+		"server": {"addr":"0.0.0.0","port":":9999"},
+		"youtube": {"api_key":"from-config"},
+		"admin": {"email":"admin@example.com","password":"secret","token_ttl_seconds":10}
+	}`
+	if err := os.WriteFile(path, []byte(data), 0o644); err != nil {
+		t.Fatalf("write config: %v", err)
+	}
+	t.Setenv("YOUTUBE_API_KEY", "from-env")
+
+	cfg, err := Load(path)
+	if err != nil {
+		t.Fatalf("load: %v", err)
+	}
+	if cfg.YouTube.APIKey != "from-env" {
+		t.Fatalf("expected env api key, got %q", cfg.YouTube.APIKey)
+	}
+}
+
 func TestLoadErrorsForMissingFile(t *testing.T) {
 	if _, err := Load("missing.json"); err == nil {
 		t.Fatalf("expected error for missing file")

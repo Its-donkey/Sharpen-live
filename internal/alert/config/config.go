@@ -101,6 +101,9 @@ func Load(path string) (Config, error) {
 	if raw.YouTubeBlock != nil {
 		yt = *raw.YouTubeBlock
 	}
+	if envAPIKey := youtubeAPIKeyFromEnv(); envAPIKey != "" {
+		yt.APIKey = envAPIKey
+	}
 
 	server := ServerConfig{
 		Addr: raw.Addr,
@@ -310,4 +313,17 @@ func CatchAllSite(cfg Config) SiteConfig {
 		Server: server,
 		App:    CatchAllAppConfig(),
 	}
+}
+
+func youtubeAPIKeyFromEnv() string {
+	keys := []string{
+		strings.TrimSpace(os.Getenv("YOUTUBE_API_KEY")),
+		strings.TrimSpace(os.Getenv("YT_API_KEY")),
+	}
+	for _, key := range keys {
+		if key != "" {
+			return key
+		}
+	}
+	return ""
 }

@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"net/url"
+	"os"
 	"path/filepath"
 	"strings"
 	"testing"
@@ -317,6 +318,38 @@ func TestHandleRobots(t *testing.T) {
 	}
 	if !strings.Contains(body, "Allow: /") {
 		t.Fatalf("expected allow all agents, got %q", body)
+	}
+}
+
+func TestLoadAdminLogs(t *testing.T) {
+	dir := t.TempDir()
+	write := func(name, content string) {
+		if err := os.WriteFile(filepath.Join(dir, name), []byte(content), 0o644); err != nil {
+			t.Fatalf("write %s: %v", name, err)
+		}
+	}
+	write("general.json", `{"logevents":[{"time":"2024-01-02T15:04:05Z","category":"general","message":"hello","id":"abc"}]}`)
+	write("http.json", `{"logevents":[{"time":"2024-01-03T10:00:00Z","method":"GET","path":"/","status":200,"remote":"1.2.3.4"}]}`)
+	write("websub.json", `{"logevents":[]}`)
+
+	srv := newTestServer()
+	srv.logDir = dir
+
+	logs, err := srv.loadAdminLogs(10)
+	if err != nil {
+		t.Fatalf("loadAdminLogs returned error: %v", err)
+	}
+	if len(logs) != 3 {
+		t.Fatalf("expected 3 categories, got %d", len(logs))
+	}
+	if logs[0].Title != "General" || len(logs[0].Entries) != 1 || logs[0].Entries[0].Message != "hello" {
+		t.Fatalf("unexpected general logs: %+v", logs[0])
+	}
+	if logs[1].Title != "HTTP" || len(logs[1].Entries) != 1 || !strings.Contains(logs[1].Entries[0].Message, "GET /") {
+		t.Fatalf("unexpected http logs: %+v", logs[1])
+	}
+	if logs[2].Title != "WebSub" || len(logs[2].Entries) != 0 {
+		t.Fatalf("expected empty websub logs, got %+v", logs[2])
 	}
 }
 

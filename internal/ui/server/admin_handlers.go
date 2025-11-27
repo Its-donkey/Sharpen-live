@@ -2,10 +2,13 @@ package server
 
 import (
 	"context"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"net/http"
 	"net/url"
+	"os"
+	"path/filepath"
 	"strings"
 	"time"
 
@@ -19,6 +22,7 @@ import (
 )
 
 const adminCookieName = "sharpen_admin_token"
+const adminLogLimit = 120
 
 type adminPageData struct {
 	basePageData
@@ -30,6 +34,9 @@ type adminPageData struct {
 	Streamers        []model.Streamer
 	RosterError      string
 	AdminEmail       string
+	Logs             []logCategoryView
+	LogLimit         int
+	LogsError        string
 }
 
 type adminSubmission struct {
@@ -39,6 +46,20 @@ type adminSubmission struct {
 	Languages   []string
 	PlatformURL string
 	SubmittedAt string
+}
+
+type logCategoryView struct {
+	Title   string
+	Entries []logEntryView
+	Error   string
+}
+
+type logEntryView struct {
+	Timestamp string
+	Message   string
+	Meta      string
+	Category  string
+	RequestID string
 }
 
 func (s *server) handleAdmin(w http.ResponseWriter, r *http.Request) {
@@ -91,6 +112,13 @@ func (s *server) handleAdmin(w http.ResponseWriter, r *http.Request) {
 			data.Streamers = mapStreamerRecords(records)
 		}
 	}
+
+	logs, logErr := s.loadAdminLogs(adminLogLimit)
+	if logErr != nil {
+		data.LogsError = logErr.Error()
+	}
+	data.Logs = logs
+	data.LogLimit = adminLogLimit
 
 	s.renderAdminPage(w, data)
 }
@@ -473,4 +501,168 @@ func pastTense(action string) string {
 	default:
 		return action + "ed"
 	}
+}
+
+func (s *server) loadAdminLogs(limit int) ([]logCategoryView, error) {
+	if limit <= 0 {
+		limit = adminLogLimit
+	}
+	if strings.TrimSpace(s.logDir) == "" {
+		return nil, errors.New("log directory not configured")
+	}
+	categories := []struct {
+		File  string
+		Title string
+	}{
+		{File: "general.json", Title: "General"},
+		{File: "http.json", Title: "HTTP"},
+		{File: "websub.json", Title: "WebSub"},
+	}
+
+	views := make([]logCategoryView, 0, len(categories))
+	for _, cat := range categories {
+		view := logCategoryView{Title: cat.Title}
+		entries, err := s.readLogFile(filepath.Join(s.logDir, cat.File), limit)
+		if err != nil {
+			view.Error = err.Error()
+		} else {
+			view.Entries = entries
+		}
+		views = append(views, view)
+	}
+	return views, nil
+}
+
+func (s *server) readLogFile(path string, limit int) ([]logEntryView, error) {
+	data, err := os.ReadFile(path)
+	if err != nil {
+		return nil, fmt.Errorf("read %s: %w", filepath.Base(path), err)
+	}
+	var payload struct {
+		LogEvents []json.RawMessage `json:"logevents"`
+	}
+	if err := json.Unmarshal(data, &payload); err != nil {
+		return nil, fmt.Errorf("parse %s: %w", filepath.Base(path), err)
+	}
+	if len(payload.LogEvents) == 0 {
+		return nil, nil
+	}
+	if limit <= 0 {
+		limit = adminLogLimit
+	}
+	entries := make([]logEntryView, 0, min(limit, len(payload.LogEvents)))
+	for i := len(payload.LogEvents) - 1; i >= 0 && len(entries) < limit; i-- {
+		entries = append(entries, mapLogEntry(payload.LogEvents[i]))
+	}
+	return entries, nil
+}
+
+func mapLogEntry(raw json.RawMessage) logEntryView {
+	var payload map[string]any
+	if err := json.Unmarshal(raw, &payload); err != nil {
+		return logEntryView{
+			Timestamp: "(unknown time)",
+			Message:   "Unparseable log entry",
+			Meta:      err.Error(),
+		}
+	}
+	entry := logEntryView{
+		Category:  stringVal(payload, "category"),
+		RequestID: stringVal(payload, "id"),
+		Message:   stringVal(payload, "message"),
+		Timestamp: formatLogTime(stringVal(payload, "time")),
+	}
+	method := stringVal(payload, "method")
+	path := stringVal(payload, "path")
+	direction := stringVal(payload, "direction")
+	status := intVal(payload, "status")
+	remote := stringVal(payload, "remote")
+	duration := intVal(payload, "durationMs")
+
+	if method != "" || path != "" {
+		var parts []string
+		if direction != "" {
+			parts = append(parts, titleCase(direction))
+		}
+		methodPath := strings.TrimSpace(strings.TrimSpace(method + " " + path))
+		if methodPath != "" {
+			parts = append(parts, methodPath)
+		}
+		if status > 0 {
+			parts = append(parts, fmt.Sprintf("(%d)", status))
+		}
+		if len(parts) > 0 {
+			entry.Message = strings.Join(parts, " ")
+		}
+	}
+
+	var meta []string
+	if duration > 0 {
+		meta = append(meta, fmt.Sprintf("%dms", duration))
+	}
+	if remote != "" {
+		meta = append(meta, "from "+remote)
+	}
+	if entry.RequestID != "" {
+		meta = append(meta, "id "+entry.RequestID)
+	}
+	entry.Meta = strings.Join(meta, " • ")
+
+	if entry.Message == "" {
+		entry.Message = "(no message)"
+	}
+	if entry.Timestamp == "" {
+		entry.Timestamp = "(unknown time)"
+	}
+	return entry
+}
+
+func stringVal(values map[string]any, key string) string {
+	if raw, ok := values[key]; ok {
+		switch v := raw.(type) {
+		case string:
+			return strings.TrimSpace(v)
+		}
+	}
+	return ""
+}
+
+func intVal(values map[string]any, key string) int {
+	if raw, ok := values[key]; ok {
+		switch v := raw.(type) {
+		case float64:
+			return int(v)
+		case int64:
+			return int(v)
+		case int:
+			return v
+		}
+	}
+	return 0
+}
+
+func formatLogTime(raw string) string {
+	if raw == "" {
+		return ""
+	}
+	if ts, err := time.Parse(time.RFC3339, raw); err == nil {
+		return ts.Local().Format("2006-01-02 15:04:05")
+	}
+	return strings.TrimSpace(raw)
+}
+
+func min(a, b int) int {
+	if a < b {
+		return a
+	}
+	return b
+}
+
+func titleCase(value string) string {
+	trimmed := strings.TrimSpace(value)
+	if trimmed == "" {
+		return ""
+	}
+	lower := strings.ToLower(trimmed)
+	return strings.ToUpper(lower[:1]) + lower[1:]
 }

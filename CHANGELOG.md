@@ -57,6 +57,7 @@
 - Admin: populate platform fields when editing streamers so YouTube channels appear even when offline.
 - Admin: automatically run the roster “Check online status” action on admin load.
 - Alert server: skip rotating log files on restart.
+- UI: restore top-aligned layout by removing full-page centering so the header/footer sit in the right place.
 
 ## Legacy alertserver entries (merged)
 

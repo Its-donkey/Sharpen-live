@@ -26,20 +26,16 @@ body {
   background: radial-gradient(120% 120% at 0% 0%, #172554 0%, #0f172a 45%, #020617 100%);
   font-family: var(--font-body);
   color: var(--fg-primary);
-  display: flex;
-  justify-content: center;
-  align-items: center;
   padding: clamp(1.5rem, 2vw + 1rem, 4rem);
 }
 
 #app-root {
   width: 100%;
-  display: flex;
-  justify-content: center;
 }
 
 .app-shell {
   width: min(1200px, 100%);
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
   gap: 3rem;

@@ -57,13 +57,14 @@ func WithHTTPLogging(next http.Handler, logger Logger) http.Handler {
 		start := time.Now()
 		defer func() {
 			status := lrw.StatusCode()
+			body := lrw.LoggedBody()
 			responseEvent := logEvent{
 				Time:      time.Now().UTC().Format(time.RFC3339Nano),
 				ID:        requestID,
 				Category:  "http",
 				Direction: "response",
 				Message:   fmt.Sprintf("Response for %s %s (%d %s)", r.Method, r.URL.Path, status, http.StatusText(status)),
-				Raw:       encodeLogRaw(lrw.LoggedBody()),
+				Raw:       encodeLogRaw(summarizeRawBody(body, r)),
 				Method:    r.Method,
 				Path:      r.URL.Path,
 				Query:     r.URL.RawQuery,
@@ -144,6 +145,33 @@ func (lrw *loggingResponseWriter) Flush() {
 
 func (lrw *loggingResponseWriter) BytesWritten() int64 {
 	return lrw.bytesWritten
+}
+
+func summarizeRawBody(body string, r *http.Request) string {
+	trimmed := strings.TrimSpace(body)
+	if trimmed == "" {
+		return body
+	}
+	lower := strings.ToLower(trimmed)
+	if strings.HasPrefix(lower, "<!doctype html") || strings.HasPrefix(lower, "<html") || strings.Contains(lower, "<html") {
+		return fmt.Sprintf("HTML response omitted. Fetch %s to reproduce.", responseURL(r))
+	}
+	return body
+}
+
+func responseURL(r *http.Request) string {
+	if r == nil || r.URL == nil {
+		return ""
+	}
+	scheme := "http"
+	if r.TLS != nil || strings.EqualFold(r.Header.Get("X-Forwarded-Proto"), "https") {
+		scheme = "https"
+	}
+	host := strings.TrimSpace(r.Host)
+	if host == "" {
+		host = "localhost"
+	}
+	return fmt.Sprintf("%s://%s%s", scheme, host, r.URL.RequestURI())
 }
 
 // RequestIDFromContext extracts the request ID stored by WithHTTPLogging so

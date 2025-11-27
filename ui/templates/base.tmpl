@@ -5,6 +5,20 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{{if .PageTitle}}{{.PageTitle}}{{else}}Sharpen.Live{{end}}</title>
+  <meta name="description" content="{{if .MetaDescription}}{{.MetaDescription}}{{else}}Sharpen.Live tracks live knife sharpeners and bladesmith streams across YouTube, Twitch, and Facebook - find makers, tutorials, and sharpening resources.{{end}}">
+  {{if .CanonicalURL}}<link rel="canonical" href="{{.CanonicalURL}}">{{end}}
+  <meta property="og:site_name" content="{{if .SiteName}}{{.SiteName}}{{else}}Sharpen.Live{{end}}">
+  <meta property="og:title" content="{{if .PageTitle}}{{.PageTitle}}{{else}}Sharpen.Live{{end}}">
+  <meta property="og:description" content="{{if .MetaDescription}}{{.MetaDescription}}{{else}}Sharpen.Live tracks live knife sharpeners and bladesmith streams across YouTube, Twitch, and Facebook - find makers, tutorials, and sharpening resources.{{end}}">
+  <meta property="og:type" content="{{if .OGType}}{{.OGType}}{{else}}website{{end}}">
+  {{if .CanonicalURL}}<meta property="og:url" content="{{.CanonicalURL}}">{{end}}
+  {{if .SocialImage}}<meta property="og:image" content="{{.SocialImage}}">{{end}}
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{{if .PageTitle}}{{.PageTitle}}{{else}}Sharpen.Live{{end}}">
+  <meta name="twitter:description" content="{{if .MetaDescription}}{{.MetaDescription}}{{else}}Sharpen.Live tracks live knife sharpeners and bladesmith streams across YouTube, Twitch, and Facebook - find makers, tutorials, and sharpening resources.{{end}}">
+  {{if .SocialImage}}<meta name="twitter:image" content="{{.SocialImage}}">{{end}}
+  {{if .Robots}}<meta name="robots" content="{{.Robots}}">{{end}}
+  {{if .StructuredData}}<script type="application/ld+json">{{.StructuredData}}</script>{{end}}
   <link rel="stylesheet" href="{{if .StylesheetPath}}{{.StylesheetPath}}{{else}}/styles.css{{end}}">
   <script src="/submit.js" defer></script>
 </head>

@@ -28,6 +28,7 @@ type SearchClient struct {
 	APIKey     string
 	HTTPClient *http.Client
 	Logger     logging.Logger
+	BaseURL    string
 }
 
 // LiveNow returns the current live video (if any) for the channel.
@@ -49,7 +50,7 @@ func (c SearchClient) LiveNow(ctx context.Context, channelID string) (SearchLive
 	}
 	client = ratelimit.Client(client)
 
-	endpoint, _ := url.Parse("https://www.googleapis.com/youtube/v3/search/")
+	endpoint, _ := url.Parse(c.baseURL())
 	q := endpoint.Query()
 	q.Set("part", "snippet")
 	q.Set("channelId", ch)
@@ -108,6 +109,13 @@ func (c SearchClient) LiveNow(ctx context.Context, channelID string) (SearchLive
 	}
 
 	return SearchLiveResult{}, nil
+}
+
+func (c SearchClient) baseURL() string {
+	if trimmed := strings.TrimSpace(c.BaseURL); trimmed != "" {
+		return trimmed
+	}
+	return "https://www.googleapis.com/youtube/v3/search"
 }
 
 type searchResponse struct {

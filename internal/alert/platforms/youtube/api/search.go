@@ -9,6 +9,8 @@ import (
 	"net/url"
 	"strings"
 	"time"
+
+	"github.com/Its-donkey/Sharpen-live/internal/alert/platforms/youtube/ratelimit"
 )
 
 // SearchLiveResult represents the live search result for a channel.
@@ -36,6 +38,7 @@ func (c SearchClient) LiveNow(ctx context.Context, channelID string) (SearchLive
 	if client == nil {
 		client = &http.Client{Timeout: 5 * time.Second}
 	}
+	client = ratelimit.Client(client)
 
 	endpoint, _ := url.Parse("https://www.googleapis.com/youtube/v3/search/")
 	q := endpoint.Query()

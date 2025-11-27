@@ -10,6 +10,8 @@ import (
 	"net/url"
 	"strings"
 	"time"
+
+	"github.com/Its-donkey/Sharpen-live/internal/alert/platforms/youtube/ratelimit"
 )
 
 const (
@@ -60,6 +62,7 @@ func NewPlayerClient(opts PlayerClientOptions) *PlayerClient {
 	if httpClient == nil {
 		httpClient = &http.Client{Timeout: 5 * time.Second}
 	}
+	httpClient = ratelimit.Client(httpClient)
 
 	return &PlayerClient{
 		apiKey:        apiKey,

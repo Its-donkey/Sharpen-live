@@ -14,6 +14,7 @@ import (
 	"time"
 
 	"github.com/Its-donkey/Sharpen-live/internal/alert/logging"
+	"github.com/Its-donkey/Sharpen-live/internal/alert/platforms/youtube/ratelimit"
 	"github.com/Its-donkey/Sharpen-live/internal/alert/platforms/youtube/websub"
 )
 
@@ -51,6 +52,7 @@ func SubscribeYouTube(
 	if hc == nil {
 		hc = &http.Client{Timeout: 10 * time.Second}
 	}
+	hc = ratelimit.Client(hc)
 
 	// Resolve hub URL.
 	hubURL := strings.TrimSpace(req.HubURL)

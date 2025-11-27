@@ -10,6 +10,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/Its-donkey/Sharpen-live/internal/alert/platforms/youtube/ratelimit"
 	"github.com/PuerkitoBio/goquery"
 )
 
@@ -71,10 +72,11 @@ func (s MetadataService) allowedHosts() []string {
 }
 
 func (s MetadataService) httpClient() *http.Client {
-	if s.Client != nil {
-		return s.Client
+	client := s.Client
+	if client == nil {
+		client = &http.Client{Timeout: s.requestTimeout()}
 	}
-	return &http.Client{Timeout: s.requestTimeout()}
+	return ratelimit.Client(client)
 }
 
 func (s MetadataService) fetchMetadata(ctx context.Context, target string) (string, string, string, string, error) {

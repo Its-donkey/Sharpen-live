@@ -13,6 +13,7 @@ import (
 	"time"
 
 	"github.com/Its-donkey/Sharpen-live/internal/alert/logging"
+	"github.com/Its-donkey/Sharpen-live/internal/alert/platforms/youtube/ratelimit"
 )
 
 // Client fetches live metadata by scraping YouTube watch pages (no API key required).
@@ -51,6 +52,7 @@ func (c *Client) Fetch(ctx context.Context, videoIDs []string) (map[string]Video
 	if httpClient == nil {
 		httpClient = &http.Client{Timeout: 5 * time.Second}
 	}
+	httpClient = ratelimit.Client(httpClient)
 	baseURL := c.BaseURL
 	if baseURL == "" {
 		baseURL = "https://www.youtube.com/watch"

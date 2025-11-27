@@ -8,14 +8,18 @@ Single Go server for Sharpen.Live (alerts, roster, submissions, and server-rende
 - `ui/`: static assets (`styles.css`, templates, JS helpers).
 
 ## Quick start (dev)
-Run the UI + alerts server:
+Run the UI + alerts server (all configured sites start when no `-site` is provided):
 ```bash
 go run ./cmd/alertserver \
-  -templates ui/templates \
-  -assets ui \
-  -listen 127.0.0.1:4173 \
   -config config.json
 ```
+
+### Multi-site layout
+- The base site uses the `server` and `app` blocks in `config.json` (Sharpen.Live by default).
+- Additional sites live under `config.sites` with their own `server` + `app` overrides (e.g., `synth-wave`).
+- When started without `-site`, alertserver launches all defined sites concurrently using their configured listen addresses, templates, assets, log, and data roots.
+- Pass `-site <key>` to launch only one site (use `-site sharpen-live`/`-site base` to target the default Sharpen.Live config); path/listen overrides (`-templates`, `-assets`, `-listen`, `-logs`, `-data`) are only permitted when targeting a single site.
+- Each site keeps its own `streamers.json` and `submissions.json` under the configured `app.data` directory to maintain separate rosters.
 
 ## Requirements
 - Go 1.21+
@@ -31,8 +35,8 @@ go test ./...
 
 ## Server
 - **Run**: `go run ./cmd/alertserver -config config.json`
-- **Config**: `config.json` supports `admin`, `server`, `app`, and `youtube` blocks (hub URL, callback, leaseSeconds, verify mode, `api_key`). Listen/templates/assets/log/data paths default from the `app` block unless overridden by flags. Keep `youtube.api_key` in env/secret overrides; the sample uses a placeholder.
-- **Data**: Streamers stored in `data/streamers.json` by default (configurable via `app.data`). Submissions in `data/submissions.json`.
+- **Config**: `config.json` supports `admin`, `server`, `app`, `sites`, and `youtube` blocks (hub URL, callback, leaseSeconds, verify mode, `api_key`). The `server`/`app` blocks define the base site (Sharpen.Live); additional entries under `sites` override those values for alternate sites like `synth-wave`. Keep `youtube.api_key` in env/secret overrides; the sample uses a placeholder.
+- **Data**: Each site writes to its own data root (e.g., Sharpen.Live -> `data/sharpen-live/streamers.json`, synth.wave -> `data/synth-wave/streamers.json`). Submissions live alongside streamers in each site's `submissions.json`.
 - **YouTube leases**: Background monitor renews WebSub leases when ~5% of the window remains; `/alerts` handles WebSub callbacks.
 - **Admin auth**: server-rendered `/admin` login uses credentials under `admin` in `config.json`.
 

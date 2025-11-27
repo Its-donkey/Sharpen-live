@@ -1,25 +1,41 @@
 
 {
-	"admin": {
-		"email": "admin@sharpen.live",
-		"password": "change-me",
-		"token_ttl_seconds": 86400
-	},
-	"server": {
-		"addr": "127.0.0.1",
-		"port": ":8880"
-	},
-	"app": {
-		"templates": "ui/templates",
-		"assets": "ui",
-		"logs": "data/logs",
-		"data": "data"
-	},
-	"youtube": {
-		"hub_url": "https://pubsubhubbub.appspot.com/subscribe",
-		"callback_url": "https://sharpen.live/dev/alerts",
-		"lease_seconds": 864000,
-		"verify": "async",
-		"api_key": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-	}
+        "admin": {
+                "email": "admin@sharpen.live",
+                "password": "change-me",
+                "token_ttl_seconds": 86400
+        },
+        "server": {
+                "addr": "127.0.0.1",
+                "port": ":8880"
+        },
+        "app": {
+                "name": "Sharpen.Live",
+                "templates": "ui/sites/sharpen-live/templates",
+                "assets": "ui/sites/sharpen-live",
+                "logs": "data/logs/sharpen-live",
+                "data": "data/sharpen-live"
+        },
+        "sites": {
+                "synth-wave": {
+                        "name": "synth.wave",
+                        "server": {
+                                "addr": "127.0.0.1",
+                                "port": ":8881"
+                        },
+                        "app": {
+                                "templates": "ui/sites/synth-wave/templates",
+                                "assets": "ui/sites/synth-wave",
+                                "logs": "data/logs/synth-wave",
+                                "data": "data/synth-wave"
+                        }
+                }
+        },
+        "youtube": {
+                "hub_url": "https://pubsubhubbub.appspot.com/subscribe",
+                "callback_url": "https://sharpen.live/dev/alerts",
+                "lease_seconds": 864000,
+                "verify": "async",
+                "api_key": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+        }
 }

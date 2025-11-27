@@ -40,6 +40,7 @@ type Options struct {
 	LogDir       string
 	DataDir      string
 	ConfigPath   string
+	Site         string
 	Logger       logging.Logger
 	Templates    map[string]*template.Template
 
@@ -109,6 +110,7 @@ type server struct {
 	adminEmail       string
 	metadataFetcher  MetadataFetcher
 	siteName         string
+	siteDescription  string
 	primaryHost      string
 	youtubeConfig    config.YouTubeConfig
 }
@@ -162,7 +164,11 @@ func Run(ctx context.Context, opts Options) error {
 	if err != nil {
 		return fmt.Errorf("load config: %w", err)
 	}
-	opts = applyDefaults(opts, appConfig)
+	siteConfig, err := config.ResolveSite(opts.Site, appConfig)
+	if err != nil {
+		return fmt.Errorf("resolve site config: %w", err)
+	}
+	opts = applyDefaults(opts, siteConfig)
 
 	templateRoot, err := filepath.Abs(opts.TemplatesDir)
 	if err != nil {
@@ -296,6 +302,11 @@ func Run(ctx context.Context, opts Options) error {
 
 	primaryHost := canonicalHostFromURL(appConfig.YouTube.CallbackURL)
 
+	siteDescription := "Sharpen.Live tracks live knife sharpeners and bladesmith streams across YouTube, Twitch, and Facebook - find makers, tutorials, and sharpening resources."
+	if strings.EqualFold(siteConfig.Key, "synth-wave") || strings.EqualFold(siteConfig.Name, "synth.wave") {
+		siteDescription = "synth.wave tracks live synthwave, chillwave, and electronic music streams so you can ride the neon frequencies in real time."
+	}
+
 	srv := &server{
 		assetsDir:        assetsPath,
 		stylesPath:       "/styles.css",
@@ -313,7 +324,8 @@ func Run(ctx context.Context, opts Options) error {
 		logger:           logger,
 		adminEmail:       appConfig.Admin.Email,
 		metadataFetcher:  metadataSvc,
-		siteName:         "Sharpen.Live",
+		siteName:         siteConfig.Name,
+		siteDescription:  siteDescription,
 		primaryHost:      primaryHost,
 		youtubeConfig:    appConfig.YouTube,
 	}
@@ -394,7 +406,12 @@ func Run(ctx context.Context, opts Options) error {
 		errCh <- server.ListenAndServe()
 	}()
 
-	log.Printf("Serving Sharpen.Live UI on http://%s", opts.Listen)
+	siteLabel := siteConfig.Name
+	if siteConfig.Key != "" {
+		siteLabel = fmt.Sprintf("%s (%s)", siteConfig.Name, siteConfig.Key)
+	}
+
+	log.Printf("Serving %s UI on http://%s", siteLabel, opts.Listen)
 
 	select {
 	case <-ctx.Done():
@@ -413,10 +430,10 @@ func Run(ctx context.Context, opts Options) error {
 	}
 }
 
-func applyDefaults(opts Options, cfg config.Config) Options {
+func applyDefaults(opts Options, site config.SiteConfig) Options {
 	if opts.Listen == "" {
-		addr := strings.TrimSpace(cfg.Server.Addr)
-		port := strings.TrimSpace(cfg.Server.Port)
+		addr := strings.TrimSpace(site.Server.Addr)
+		port := strings.TrimSpace(site.Server.Port)
 		if addr != "" || port != "" {
 			if port != "" && !strings.HasPrefix(port, ":") {
 				opts.Listen = addr + ":" + port
@@ -429,29 +446,29 @@ func applyDefaults(opts Options, cfg config.Config) Options {
 		}
 	}
 	if opts.TemplatesDir == "" {
-		if cfg.App.Templates != "" {
-			opts.TemplatesDir = cfg.App.Templates
+		if site.App.Templates != "" {
+			opts.TemplatesDir = site.App.Templates
 		} else {
 			opts.TemplatesDir = "ui/templates"
 		}
 	}
 	if opts.AssetsDir == "" {
-		if cfg.App.Assets != "" {
-			opts.AssetsDir = cfg.App.Assets
+		if site.App.Assets != "" {
+			opts.AssetsDir = site.App.Assets
 		} else {
 			opts.AssetsDir = "ui"
 		}
 	}
 	if opts.LogDir == "" {
-		if cfg.App.Logs != "" {
-			opts.LogDir = cfg.App.Logs
+		if site.App.Logs != "" {
+			opts.LogDir = site.App.Logs
 		} else {
 			opts.LogDir = "data/logs"
 		}
 	}
 	if opts.DataDir == "" {
-		if cfg.App.Data != "" {
-			opts.DataDir = cfg.App.Data
+		if site.App.Data != "" {
+			opts.DataDir = site.App.Data
 		} else {
 			opts.DataDir = "data"
 		}
@@ -568,7 +585,7 @@ func (s *server) socialImageURL(r *http.Request) string {
 }
 
 func (s *server) defaultDescription() string {
-	return "Sharpen.Live tracks live knife sharpeners and bladesmith streams across YouTube, Twitch, and Facebook - find makers, tutorials, and sharpening resources."
+	return s.siteDescription
 }
 
 func truncateWithEllipsis(value string, max int) string {

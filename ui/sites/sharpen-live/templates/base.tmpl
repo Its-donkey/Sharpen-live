@@ -1,0 +1,69 @@
+{{define "base"}}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{if .PageTitle}}{{.PageTitle}}{{else}}Sharpen.Live{{end}}</title>
+  <meta name="description" content="{{if .MetaDescription}}{{.MetaDescription}}{{else}}Sharpen.Live tracks live knife sharpeners and bladesmith streams across YouTube, Twitch, and Facebook - find makers, tutorials, and sharpening resources.{{end}}">
+  {{if .CanonicalURL}}<link rel="canonical" href="{{.CanonicalURL}}">{{end}}
+  <meta property="og:site_name" content="{{if .SiteName}}{{.SiteName}}{{else}}Sharpen.Live{{end}}">
+  <meta property="og:title" content="{{if .PageTitle}}{{.PageTitle}}{{else}}Sharpen.Live{{end}}">
+  <meta property="og:description" content="{{if .MetaDescription}}{{.MetaDescription}}{{else}}Sharpen.Live tracks live knife sharpeners and bladesmith streams across YouTube, Twitch, and Facebook - find makers, tutorials, and sharpening resources.{{end}}">
+  <meta property="og:type" content="{{if .OGType}}{{.OGType}}{{else}}website{{end}}">
+  {{if .CanonicalURL}}<meta property="og:url" content="{{.CanonicalURL}}">{{end}}
+  {{if .SocialImage}}<meta property="og:image" content="{{.SocialImage}}">{{end}}
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{{if .PageTitle}}{{.PageTitle}}{{else}}Sharpen.Live{{end}}">
+  <meta name="twitter:description" content="{{if .MetaDescription}}{{.MetaDescription}}{{else}}Sharpen.Live tracks live knife sharpeners and bladesmith streams across YouTube, Twitch, and Facebook - find makers, tutorials, and sharpening resources.{{end}}">
+  {{if .SocialImage}}<meta name="twitter:image" content="{{.SocialImage}}">{{end}}
+  {{if .Robots}}<meta name="robots" content="{{.Robots}}">{{end}}
+  {{if .StructuredData}}<script type="application/ld+json">{{.StructuredData}}</script>{{end}}
+  <link rel="stylesheet" href="{{if .StylesheetPath}}{{.StylesheetPath}}{{else}}/styles.css{{end}}">
+  <script src="/submit.js" defer></script>
+</head>
+<body>
+  <div id="app-root">
+    <div class="app-shell">
+      <header class="surface site-header">
+        <div class="logo-lockup">
+          <div class="logo-icon" aria-hidden="true">
+            <svg viewBox="0 0 120 120" role="img" aria-labelledby="sharpen-logo-title">
+              <title id="sharpen-logo-title">Sharpen Live logo</title>
+              <defs>
+                <linearGradient id="bladeGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#f8fafc" stop-opacity="0.95" />
+                  <stop offset="55%" stop-color="#cbd5f5" stop-opacity="0.85" />
+                  <stop offset="100%" stop-color="#7dd3fc" stop-opacity="0.95" />
+                </linearGradient>
+              </defs>
+              <path d="M14 68c12-20 38-54 80-58l6 36c-12 6-26 14-41 26l-45-4z" fill="url(#bladeGradient)" stroke="#0f172a" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></path>
+              <path d="M19 76l35 4c-5 5-10 11-15 18l-26-8 6-14z" fill="rgba(15, 23, 42, 0.45)" stroke="#0f172a" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"></path>
+              <circle cx="32" cy="92" r="6" fill="#38bdf8"></circle>
+              <circle cx="88" cy="36" r="6" fill="#38bdf8"></circle>
+            </svg>
+          </div>
+          <div class="logo-text">
+            <h1>Sharpen.Live</h1>
+            <p>Streaming Knife Craftsmen</p>
+          </div>
+        </div>
+        <div class="header-actions">
+          <a class="cta" href="{{if .SubmitLink}}{{.SubmitLink}}{{else}}#submit{{end}}">Become a Partner</a>
+          {{if .SecondaryAction}}
+            <a class="admin-button" href="{{.SecondaryAction.Href}}">{{.SecondaryAction.Label}}</a>
+          {{end}}
+        </div>
+      </header>
+
+      {{block "content" .}}{{end}}
+
+      <footer>
+        <span>&copy; {{.CurrentYear}} Sharpen Live. All rights reserved.</span>
+        <span>Need assistance? <a href="mailto:hello@sharpen.live">hello@sharpen.live</a></span>
+      </footer>
+    </div>
+  </div>
+</body>
+</html>
+{{end}}

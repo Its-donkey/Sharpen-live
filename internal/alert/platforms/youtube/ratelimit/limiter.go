@@ -11,6 +11,7 @@ var (
 	mu       sync.Mutex
 	gate     chan time.Time
 	ticker   *time.Ticker
+	stop     chan struct{}
 	interval = 5 * time.Second
 )
 
@@ -45,11 +46,15 @@ func Client(base *http.Client) *http.Client {
 func SetIntervalForTesting(d time.Duration) {
 	mu.Lock()
 	defer mu.Unlock()
+	if stop != nil {
+		close(stop)
+	}
 	if ticker != nil {
 		ticker.Stop()
 	}
 	gate = nil
 	ticker = nil
+	stop = nil
 	if d > 0 {
 		interval = d
 	}
@@ -75,9 +80,19 @@ func ensureStarted() {
 	gate = make(chan time.Time, 1)
 	gate <- time.Now()
 	ticker = time.NewTicker(interval)
+	stop = make(chan struct{})
+	t := ticker
+	g := gate
+	s := stop
 	go func() {
-		for t := range ticker.C {
-			gate <- t
+		for {
+			select {
+			case tick := <-t.C:
+				g <- tick
+			case <-s:
+				t.Stop()
+				return
+			}
 		}
 	}()
 }

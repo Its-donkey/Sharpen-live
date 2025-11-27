@@ -3,6 +3,8 @@
 ## Unreleased
 
 ### Added
+- Server/UI: run multiple branded sites from a single config (`-site` targets one; default boot spins up every entry) so Sharpen.Live and synth.wave can host their own templates/assets/log/data roots concurrently.
+- UI: add site-specific templates, OG images, neon synthwave styling, and SVG brand assets plus a synth.wave brand guide for design handoff.
 - Admin: add roster “Check online status” action and API to refresh channel state on demand.
 - Submit form: detect @handles, prompt for platform, and expand to full channel URLs.
 - Submit form: preselect English and add an “Add another language” button consistent with platform controls.
@@ -18,6 +20,7 @@
 - Config: default server listen/templates/assets/log directories now come from `config.json` (see `ui` block) so running without flags picks up file settings.
  - Config: renamed `ui` block to `app` and added `data` so streamers/submissions/logs/templates/assets paths are all configurable from config.json.
 - Docs: update layout/run commands to reflect the consolidated server entrypoint.
+- Config/Docs: capture per-site `app.name` plus site-specific server/assets/log/data roots in config.json and README so multi-site deployments stay isolated.
 
 ### Fixed
 - Alert server: rotate the log file after 24 hours of uptime, matching the restart rotation behavior.
@@ -60,6 +63,7 @@
 - Admin: automatically run the roster “Check online status” action on admin load.
 - Alert server: skip rotating log files on restart.
 - UI: restore top-aligned layout by removing full-page centering so the header/footer sit in the right place.
+- YouTube rate limiter: stop the ticker when adjusting test intervals to avoid leaking goroutines between runs.
 
 ## Legacy alertserver entries (merged)
 

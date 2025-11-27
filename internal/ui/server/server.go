@@ -344,6 +344,7 @@ func Run(ctx context.Context, opts Options) error {
 			Search: youtubeapi.SearchClient{
 				APIKey:     strings.TrimSpace(appConfig.YouTube.APIKey),
 				HTTPClient: &http.Client{Timeout: 5 * time.Second},
+				Logger:     logger,
 			},
 		}
 	}

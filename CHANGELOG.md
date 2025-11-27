@@ -25,6 +25,7 @@
 - UI: drop legacy root templates/assets in favour of per-site (Sharpen.Live, synth.wave) and catch-all directories.
 - YouTube API: prefer `YOUTUBE_API_KEY`/`YT_API_KEY` environment values for both config loading and the player client default key instead of the baked-in sample key.
 - Logging: write every site’s HTTP/general/WebSub logs to the base `app.logs` directory instead of separate per-site log folders.
+- Logging: emit full HTTP request/response dumps (with correlation IDs) for YouTube status checks so timeouts and upstream failures can be debugged.
 
 ### Fixed
 - Alert server: rotate the log file after 24 hours of uptime, matching the restart rotation behavior.

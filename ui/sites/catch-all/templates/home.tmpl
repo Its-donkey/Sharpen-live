@@ -1,0 +1,25 @@
+{{define "home"}}
+{{template "base" .}}
+{{end}}
+
+{{define "content"}}
+<main class="surface">
+  <h2>Catch-all site active</h2>
+  <p>We could not load the requested site, so a generic view is being served instead.</p>
+  {{if .FallbackErrors}}
+    <p>Please review the issues below and update the configuration to restore the intended site.</p>
+  {{else}}
+    <p>No specific errors were captured, but the site configuration was missing.</p>
+  {{end}}
+  <div class="status-block">
+    <h3>Errors</h3>
+    {{if .FallbackErrors}}
+      <ul>
+        {{range .FallbackErrors}}<li>{{.}}</li>{{end}}
+      </ul>
+    {{else}}
+      <p>No errors available.</p>
+    {{end}}
+  </div>
+</main>
+{{end}}

@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"flag"
+	"fmt"
 	"log"
 	"os"
 	"os/signal"
@@ -40,28 +41,54 @@ func main() {
 	site := flag.String("site", "", "site key to serve (defaults to all configured sites when empty)")
 	flag.Parse()
 
-	loadedConfig, err := config.Load(*configPath)
-	if err != nil {
-		log.Fatalf("failed to load config: %v", err)
+	loadedConfig, configErr := config.Load(*configPath)
+	fallbackErrors := []string{}
+	if configErr != nil {
+		fallbackErrors = append(fallbackErrors, fmt.Sprintf("failed to load config: %v", configErr))
+		loadedConfig = config.DefaultConfig()
 	}
 
 	rawSite := strings.TrimSpace(*site)
 	siteRequested := rawSite != ""
-	normalizedSite := normalizeSiteKey(rawSite, loadedConfig.App.Name)
+	normalizedSite := normalizeSiteKey(rawSite)
 
-	siteKeys := []string{}
-	if siteRequested {
-		if _, err := config.ResolveSite(normalizedSite, loadedConfig); err != nil {
-			log.Fatalf("invalid site %q: %v", *site, err)
+	type siteTarget struct {
+		cfg    config.SiteConfig
+		errors []string
+	}
+
+	siteTargets := []siteTarget{}
+	switch {
+	case configErr != nil && !siteRequested:
+		siteTargets = append(siteTargets, siteTarget{
+			cfg:    config.CatchAllSite(loadedConfig),
+			errors: fallbackErrors,
+		})
+	case siteRequested:
+		siteCfg, err := config.ResolveSite(normalizedSite, loadedConfig)
+		errors := append([]string{}, fallbackErrors...)
+		if err != nil {
+			errors = append(errors, fmt.Sprintf("site %q not found; serving %s", rawSite, config.CatchAllSiteKey))
+			siteCfg = config.CatchAllSite(loadedConfig)
 		}
-		siteKeys = append(siteKeys, normalizedSite)
-	} else {
+		siteTargets = append(siteTargets, siteTarget{
+			cfg:    siteCfg,
+			errors: errors,
+		})
+	default:
 		for _, resolved := range config.AllSites(loadedConfig) {
-			siteKeys = append(siteKeys, resolved.Key)
+			siteTargets = append(siteTargets, siteTarget{
+				cfg:    resolved,
+				errors: append([]string{}, fallbackErrors...),
+			})
 		}
 	}
 
-	if len(siteKeys) > 1 {
+	if len(siteTargets) == 0 {
+		log.Fatal("no site configurations found")
+	}
+
+	if len(siteTargets) > 1 {
 		if *listen != "" || *templatesDir != "" || *assetsDir != "" || *logDir != "" || *dataDir != "" {
 			log.Fatal("path/listen overrides require -site to target a single site")
 		}
@@ -72,25 +99,26 @@ func main() {
 		err  error
 	}
 
-	results := make(chan runResult, len(siteKeys))
-	for _, siteKey := range siteKeys {
+	results := make(chan runResult, len(siteTargets))
+	for _, target := range siteTargets {
 		cfg := uiserver.Options{
-			Listen:       *listen,
-			TemplatesDir: *templatesDir,
-			AssetsDir:    *assetsDir,
-			LogDir:       *logDir,
-			DataDir:      *dataDir,
-			ConfigPath:   *configPath,
-			Site:         siteKey,
+			Listen:         *listen,
+			TemplatesDir:   *templatesDir,
+			AssetsDir:      *assetsDir,
+			LogDir:         *logDir,
+			DataDir:        *dataDir,
+			ConfigPath:     *configPath,
+			Site:           target.cfg.Key,
+			FallbackErrors: target.errors,
 		}
 		go func(key string) {
 			results <- runResult{site: key, err: uiserver.Run(ctx, cfg)}
-		}(siteKey)
+		}(target.cfg.Key)
 	}
 
 	var firstErr error
 	var failingSite string
-	for range siteKeys {
+	for range siteTargets {
 		res := <-results
 		if res.err != nil && !errors.Is(res.err, context.Canceled) && firstErr == nil {
 			firstErr = res.err
@@ -104,22 +132,12 @@ func main() {
 	}
 }
 
-func normalizeSiteKey(siteArg, baseName string) string {
+func normalizeSiteKey(siteArg string) string {
 	key := strings.TrimSpace(siteArg)
 	if key == "" {
 		return ""
 	}
-
-	if normalizeNameKey(key) == normalizeNameKey(baseName) {
-		return ""
-	}
-
-	switch strings.ToLower(key) {
-	case "default", "base":
-		return ""
-	}
-
-	return key
+	return normalizeNameKey(key)
 }
 
 func normalizeNameKey(name string) string {

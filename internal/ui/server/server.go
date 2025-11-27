@@ -34,15 +34,16 @@ import (
 
 // Options configures the UI HTTP server.
 type Options struct {
-	Listen       string
-	TemplatesDir string
-	AssetsDir    string
-	LogDir       string
-	DataDir      string
-	ConfigPath   string
-	Site         string
-	Logger       logging.Logger
-	Templates    map[string]*template.Template
+	Listen         string
+	TemplatesDir   string
+	AssetsDir      string
+	LogDir         string
+	DataDir        string
+	ConfigPath     string
+	Site           string
+	FallbackErrors []string
+	Logger         logging.Logger
+	Templates      map[string]*template.Template
 
 	StreamersStore   StreamersStore
 	StreamerService  StreamerService
@@ -113,6 +114,7 @@ type server struct {
 	siteDescription  string
 	primaryHost      string
 	youtubeConfig    config.YouTubeConfig
+	fallbackErrors   []string
 }
 
 type navAction struct {
@@ -133,6 +135,7 @@ type basePageData struct {
 	OGType          string
 	Robots          string
 	StructuredData  template.JS
+	FallbackErrors  []string
 }
 
 type homePageData struct {
@@ -160,26 +163,71 @@ func Run(ctx context.Context, opts Options) error {
 		opts.ConfigPath = "config.json"
 	}
 
-	appConfig, err := config.Load(opts.ConfigPath)
-	if err != nil {
-		return fmt.Errorf("load config: %w", err)
+	appendFallback := func(msg string) {
+		for _, existing := range opts.FallbackErrors {
+			if existing == msg {
+				return
+			}
+		}
+		opts.FallbackErrors = append(opts.FallbackErrors, msg)
 	}
-	siteConfig, err := config.ResolveSite(opts.Site, appConfig)
+
+	appConfig, err := config.Load(opts.ConfigPath)
+	usingCatchAll := false
 	if err != nil {
-		return fmt.Errorf("resolve site config: %w", err)
+		appendFallback(fmt.Sprintf("failed to load config: %v", err))
+		appConfig = config.DefaultConfig()
+		usingCatchAll = true
+	}
+	var siteConfig config.SiteConfig
+	if opts.Site == config.CatchAllSiteKey {
+		siteConfig = config.CatchAllSite(appConfig)
+		usingCatchAll = true
+	} else {
+		siteConfig, err = config.ResolveSite(opts.Site, appConfig)
+		if err != nil {
+			appendFallback(fmt.Sprintf("site %q not found: %v", opts.Site, err))
+			siteConfig = config.CatchAllSite(appConfig)
+			usingCatchAll = true
+		}
+	}
+	if siteConfig.Key == config.CatchAllSiteKey || strings.EqualFold(siteConfig.Name, config.CatchAllSiteKey) || strings.EqualFold(siteConfig.Name, "catch-all") {
+		usingCatchAll = true
 	}
 	opts = applyDefaults(opts, siteConfig)
 
 	templateRoot, err := filepath.Abs(opts.TemplatesDir)
 	if err != nil {
-		return fmt.Errorf("resolve templates dir: %w", err)
+		if usingCatchAll {
+			return fmt.Errorf("resolve templates dir: %w", err)
+		}
+		appendFallback(fmt.Sprintf("template path %q failed: %v", opts.TemplatesDir, err))
+		siteConfig, opts = switchToCatchAll(appConfig, opts)
+		usingCatchAll = true
+		templateRoot, err = filepath.Abs(opts.TemplatesDir)
+		if err != nil {
+			return fmt.Errorf("resolve catch-all templates dir: %w", err)
+		}
 	}
 
 	tmpl := opts.Templates
 	if tmpl == nil {
 		loaded, err := loadTemplates(templateRoot)
 		if err != nil {
-			return fmt.Errorf("load templates: %w", err)
+			if usingCatchAll {
+				return fmt.Errorf("load catch-all templates: %w", err)
+			}
+			appendFallback(fmt.Sprintf("failed to load templates from %s: %v", templateRoot, err))
+			siteConfig, opts = switchToCatchAll(appConfig, opts)
+			usingCatchAll = true
+			templateRoot, err = filepath.Abs(opts.TemplatesDir)
+			if err != nil {
+				return fmt.Errorf("resolve catch-all templates dir: %w", err)
+			}
+			loaded, err = loadTemplates(templateRoot)
+			if err != nil {
+				return fmt.Errorf("load catch-all templates: %w", err)
+			}
 		}
 		tmpl = loaded
 	}
@@ -303,7 +351,10 @@ func Run(ctx context.Context, opts Options) error {
 	primaryHost := canonicalHostFromURL(appConfig.YouTube.CallbackURL)
 
 	siteDescription := "Sharpen.Live tracks live knife sharpeners and bladesmith streams across YouTube, Twitch, and Facebook - find makers, tutorials, and sharpening resources."
-	if strings.EqualFold(siteConfig.Key, "synth-wave") || strings.EqualFold(siteConfig.Name, "synth.wave") {
+	switch {
+	case strings.EqualFold(siteConfig.Key, config.CatchAllSiteKey) || strings.EqualFold(siteConfig.Name, config.CatchAllSiteKey) || strings.EqualFold(siteConfig.Name, "catch-all"):
+		siteDescription = "This catch-all page appears when a requested site cannot be served. Review the errors below to restore the site configuration."
+	case strings.EqualFold(siteConfig.Key, "synth-wave") || strings.EqualFold(siteConfig.Name, "synth.wave"):
 		siteDescription = "synth.wave tracks live synthwave, chillwave, and electronic music streams so you can ride the neon frequencies in real time."
 	}
 
@@ -328,6 +379,7 @@ func Run(ctx context.Context, opts Options) error {
 		siteDescription:  siteDescription,
 		primaryHost:      primaryHost,
 		youtubeConfig:    appConfig.YouTube,
+		fallbackErrors:   opts.FallbackErrors,
 	}
 
 	monitorFactory := opts.NewLeaseMonitor
@@ -411,7 +463,11 @@ func Run(ctx context.Context, opts Options) error {
 		siteLabel = fmt.Sprintf("%s (%s)", siteConfig.Name, siteConfig.Key)
 	}
 
-	log.Printf("Serving %s UI on http://%s", siteLabel, opts.Listen)
+	logLine := fmt.Sprintf("Serving %s UI on http://%s", siteLabel, opts.Listen)
+	if len(opts.FallbackErrors) > 0 {
+		logLine = fmt.Sprintf("%s (fallback: %s)", logLine, strings.Join(opts.FallbackErrors, "; "))
+	}
+	log.Print(logLine)
 
 	select {
 	case <-ctx.Done():
@@ -431,6 +487,7 @@ func Run(ctx context.Context, opts Options) error {
 }
 
 func applyDefaults(opts Options, site config.SiteConfig) Options {
+	fallbackApp := config.CatchAllAppConfig()
 	if opts.Listen == "" {
 		addr := strings.TrimSpace(site.Server.Addr)
 		port := strings.TrimSpace(site.Server.Port)
@@ -449,28 +506,28 @@ func applyDefaults(opts Options, site config.SiteConfig) Options {
 		if site.App.Templates != "" {
 			opts.TemplatesDir = site.App.Templates
 		} else {
-			opts.TemplatesDir = "ui/templates"
+			opts.TemplatesDir = fallbackApp.Templates
 		}
 	}
 	if opts.AssetsDir == "" {
 		if site.App.Assets != "" {
 			opts.AssetsDir = site.App.Assets
 		} else {
-			opts.AssetsDir = "ui"
+			opts.AssetsDir = fallbackApp.Assets
 		}
 	}
 	if opts.LogDir == "" {
 		if site.App.Logs != "" {
 			opts.LogDir = site.App.Logs
 		} else {
-			opts.LogDir = "data/logs"
+			opts.LogDir = fallbackApp.Logs
 		}
 	}
 	if opts.DataDir == "" {
 		if site.App.Data != "" {
 			opts.DataDir = site.App.Data
 		} else {
-			opts.DataDir = "data"
+			opts.DataDir = fallbackApp.Data
 		}
 	}
 	if opts.ConfigPath == "" {
@@ -479,9 +536,20 @@ func applyDefaults(opts Options, site config.SiteConfig) Options {
 	return opts
 }
 
+func switchToCatchAll(cfg config.Config, opts Options) (config.SiteConfig, Options) {
+	fallback := config.CatchAllSite(cfg)
+	opts.Site = fallback.Key
+	opts.TemplatesDir = ""
+	opts.AssetsDir = ""
+	opts.LogDir = ""
+	opts.DataDir = ""
+	opts = applyDefaults(opts, fallback)
+	return fallback, opts
+}
+
 func prepareLogFile(dir, name string) (*os.File, error) {
 	if dir == "" {
-		dir = "data/logs"
+		dir = config.CatchAllAppConfig().Logs
 	}
 	if err := os.MkdirAll(dir, 0o755); err != nil {
 		return nil, fmt.Errorf("create log dir: %w", err)
@@ -638,6 +706,7 @@ func (s *server) buildBasePageData(r *http.Request, title, description, canonica
 		CanonicalURL:    canonical,
 		SocialImage:     s.socialImageURL(r),
 		OGType:          "website",
+		FallbackErrors:  s.fallbackErrors,
 	}
 }
 

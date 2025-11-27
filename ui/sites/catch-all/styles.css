@@ -1,0 +1,84 @@
+:root {
+  color-scheme: light dark;
+  --bg: #0f172a;
+  --surface: rgba(15, 23, 42, 0.85);
+  --text: #e2e8f0;
+  --muted: #94a3b8;
+  --accent: #f59e0b;
+  --radius: 14px;
+  --shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
+  --font-body: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: radial-gradient(120% 120% at 0% 0%, #111827 0%, #0f172a 45%, #020617 100%);
+  color: var(--text);
+  font-family: var(--font-body);
+  padding: clamp(1.5rem, 2vw + 1rem, 3rem);
+}
+
+.app-shell {
+  width: min(960px, 100%);
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.surface {
+  background: var(--surface);
+  border-radius: var(--radius);
+  padding: clamp(1.25rem, 2vw + 0.5rem, 1.75rem);
+  box-shadow: var(--shadow);
+  border: 1px solid rgba(148, 163, 184, 0.2);
+}
+
+.site-header h1 {
+  margin: 0 0 0.35rem;
+  font-size: clamp(1.9rem, 2vw + 1rem, 2.4rem);
+}
+
+.site-tagline,
+.site-label {
+  margin: 0;
+  color: var(--muted);
+}
+
+.fallback-banner {
+  border: 1px solid rgba(245, 158, 11, 0.5);
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.12), rgba(59, 130, 246, 0.08));
+}
+
+.fallback-banner ul,
+.status-block ul {
+  margin: 0.5rem 0 0;
+  padding-left: 1.25rem;
+  color: #fde68a;
+}
+
+.status-block {
+  margin-top: 1rem;
+  padding: 1rem;
+  border-radius: var(--radius);
+  border: 1px dashed rgba(148, 163, 184, 0.5);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.site-footer {
+  text-align: center;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.submit-streamer-result {
+  margin-top: 1rem;
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius);
+  background: rgba(59, 130, 246, 0.15);
+}

@@ -1,0 +1,22 @@
+{{define "streamer"}}
+{{template "base" .}}
+{{end}}
+
+{{define "content"}}
+<main class="surface">
+  <h2>{{if .Streamer.Name}}{{.Streamer.Name}}{{else}}Streamer{{end}}</h2>
+  {{if .FallbackErrors}}
+    <div class="status-block">
+      <h3>Fallback mode</h3>
+      <ul>
+        {{range .FallbackErrors}}<li>{{.}}</li>{{end}}
+      </ul>
+    </div>
+  {{end}}
+  {{if .Streamer.Description}}
+    <p>{{.Streamer.Description}}</p>
+  {{else}}
+    <p>Streamer details are unavailable while the catch-all site is active.</p>
+  {{end}}
+</main>
+{{end}}

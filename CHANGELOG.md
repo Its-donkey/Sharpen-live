@@ -5,6 +5,7 @@
 ### Added
 - Server/UI: run multiple branded sites from a single config (`-site` targets one; default boot spins up every entry) so Sharpen.Live and synth.wave can host their own templates/assets/log/data roots concurrently.
 - UI: add site-specific templates, OG images, neon synthwave styling, and SVG brand assets plus a synth.wave brand guide for design handoff.
+- UI: add a catch-all fallback site that surfaces the errors causing a fallback instead of silently rendering Sharpen.Live defaults.
 - Admin: add roster “Check online status” action and API to refresh channel state on demand.
 - Submit form: detect @handles, prompt for platform, and expand to full channel URLs.
 - Submit form: preselect English and add an “Add another language” button consistent with platform controls.
@@ -21,6 +22,7 @@
  - Config: renamed `ui` block to `app` and added `data` so streamers/submissions/logs/templates/assets paths are all configurable from config.json.
 - Docs: update layout/run commands to reflect the consolidated server entrypoint.
 - Config/Docs: capture per-site `app.name` plus site-specific server/assets/log/data roots in config.json and README so multi-site deployments stay isolated.
+- UI: drop legacy root templates/assets in favour of per-site (Sharpen.Live, synth.wave) and catch-all directories.
 
 ### Fixed
 - Alert server: rotate the log file after 24 hours of uptime, matching the restart rotation behavior.

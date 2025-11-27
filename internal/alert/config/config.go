@@ -173,9 +173,6 @@ func Load(path string) (Config, error) {
 			if site.App.Assets != "" {
 				siteApp.Assets = site.App.Assets
 			}
-			if site.App.Logs != "" {
-				siteApp.Logs = site.App.Logs
-			}
 			if site.App.Data != "" {
 				siteApp.Data = site.App.Data
 			}
@@ -183,6 +180,8 @@ func Load(path string) (Config, error) {
 				siteApp.Name = site.App.Name
 			}
 		}
+		// Logs always use the base app logs path so every site writes to one location.
+		siteApp.Logs = app.Logs
 
 		siteName := site.Name
 		if siteName == "" {

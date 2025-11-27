@@ -95,6 +95,7 @@ type server struct {
 	assetsDir        string
 	stylesPath       string
 	socialImagePath  string
+	logDir           string
 	templates        map[string]*template.Template
 	currentYear      int
 	submitEndpoint   string
@@ -299,6 +300,7 @@ func Run(ctx context.Context, opts Options) error {
 		assetsDir:        assetsPath,
 		stylesPath:       "/styles.css",
 		socialImagePath:  "/og-image.png",
+		logDir:           logDir,
 		templates:        tmpl,
 		currentYear:      time.Now().Year(),
 		submitEndpoint:   "/submit",

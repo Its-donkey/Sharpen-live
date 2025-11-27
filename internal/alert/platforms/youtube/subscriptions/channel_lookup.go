@@ -9,6 +9,8 @@ import (
 	"regexp"
 	"strings"
 	"time"
+
+	"github.com/Its-donkey/Sharpen-live/internal/alert/platforms/youtube/ratelimit"
 )
 
 var (
@@ -30,6 +32,7 @@ func ResolveChannelID(ctx context.Context, handle string, client *http.Client) (
 	if client == nil {
 		client = &http.Client{Timeout: 10 * time.Second}
 	}
+	client = ratelimit.Client(client)
 
 	url := fmt.Sprintf("https://www.youtube.com/%s/about", handle)
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)

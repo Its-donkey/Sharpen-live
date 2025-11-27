@@ -7,6 +7,8 @@
 - Submit form: detect @handles, prompt for platform, and expand to full channel URLs.
 - Submit form: preselect English and add an “Add another language” button consistent with platform controls.
 - UI: add SEO-focused canonical/meta tags, JSON-LD, sitemap/robots.txt endpoints, and an Open Graph preview image so pages are fully server-rendered for search and social.
+- Admin: add a human-readable log viewer for general/HTTP/WebSub logs within the dashboard.
+- Logging: skip embedding full HTML responses in `raw` fields; store a reproducible URL instead.
 
 ### Changed
 - Server: consolidate alerts, roster, submissions, and admin into a single `cmd/alertserver` binary (no separate proxy) and host YouTube WebSub callbacks + lease monitor in-process.

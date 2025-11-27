@@ -155,6 +155,40 @@ func TestWithHTTPLoggingUnwrapsJSONRawPayloads(t *testing.T) {
 	}
 }
 
+func TestWithHTTPLoggingOmitHTMLRawBodies(t *testing.T) {
+	logger := &captureLogger{}
+	base := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.WriteHeader(http.StatusOK)
+		_, _ = w.Write([]byte("<!DOCTYPE html><html><body>hi</body></html>"))
+	})
+	handler := WithHTTPLogging(base, logger)
+
+	req := httptest.NewRequest(http.MethodGet, "/admin", nil)
+	req.Host = "example.com"
+	rr := httptest.NewRecorder()
+
+	handler.ServeHTTP(rr, req)
+
+	if len(logger.entries) != 1 {
+		t.Fatalf("expected single log payload, got %d", len(logger.entries))
+	}
+	var payload logPayload
+	if err := json.Unmarshal([]byte(logger.entries[0]), &payload); err != nil {
+		t.Fatalf("unmarshal log payload: %v", err)
+	}
+	response := payload.LogEvents[len(payload.LogEvents)-1]
+	var raw string
+	if err := json.Unmarshal(response.Raw, &raw); err != nil {
+		t.Fatalf("expected string raw, got %v", err)
+	}
+	if strings.Contains(raw, "<html") {
+		t.Fatalf("expected HTML body to be omitted, got %q", raw)
+	}
+	if !strings.Contains(raw, "http://example.com/admin") {
+		t.Fatalf("expected URL reference in raw, got %q", raw)
+	}
+}
+
 func TestWithHTTPLoggingNilLoggerReturnsOriginal(t *testing.T) {
 	base := http.HandlerFunc(func(http.ResponseWriter, *http.Request) {})
 	if got := WithHTTPLogging(base, nil); fmt.Sprintf("%p", got) != fmt.Sprintf("%p", base) {

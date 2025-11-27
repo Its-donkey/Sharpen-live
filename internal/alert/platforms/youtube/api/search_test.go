@@ -47,7 +47,8 @@ func TestLiveNowBuildsExpectedRequest(t *testing.T) {
 	if got := q.Get("part"); got != "snippet" {
 		t.Fatalf("part = %q, want snippet", got)
 	}
-	if got := q.Get("channelId"); got != "UCFSlI8Y3Zdoq5buNW_40AAA" {
+	channelID := "UCFSlI8Y3Zdoq5buNW_40AAA"
+	if got := q.Get("channelId"); got != channelID {
 		t.Fatalf("channelId = %q, want channel id", got)
 	}
 	if got := q.Get("eventType"); got != "live" {
@@ -58,5 +59,10 @@ func TestLiveNowBuildsExpectedRequest(t *testing.T) {
 	}
 	if got := q.Get("key"); got != "test-key" {
 		t.Fatalf("key = %q, want test-key", got)
+	}
+
+	expectedRaw := "part=snippet&channelId=" + url.QueryEscape(channelID) + "&eventType=live&type=video&key=test-key"
+	if captured.URL.RawQuery != expectedRaw {
+		t.Fatalf("raw query = %q, want %q", captured.URL.RawQuery, expectedRaw)
 	}
 }

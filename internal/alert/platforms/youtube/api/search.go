@@ -51,15 +51,16 @@ func (c SearchClient) LiveNow(ctx context.Context, channelID string) (SearchLive
 	client = ratelimit.Client(client)
 
 	endpoint, _ := url.Parse(c.baseURL())
-	q := endpoint.Query()
-	q.Set("part", "snippet")
-	q.Set("channelId", ch)
-	q.Set("eventType", "live")
-	q.Set("type", "video")
-	if apiKey != "" {
-		q.Set("key", apiKey)
+	params := []string{
+		"part=" + url.QueryEscape("snippet"),
+		"channelId=" + url.QueryEscape(ch),
+		"eventType=" + url.QueryEscape("live"),
+		"type=" + url.QueryEscape("video"),
 	}
-	endpoint.RawQuery = q.Encode()
+	if apiKey != "" {
+		params = append(params, "key="+url.QueryEscape(apiKey))
+	}
+	endpoint.RawQuery = strings.Join(params, "&")
 
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, endpoint.String(), nil)
 	if err != nil {

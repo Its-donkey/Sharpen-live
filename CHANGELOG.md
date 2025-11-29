@@ -37,6 +37,7 @@
 - Logging: propagate HTTP request IDs into general request logs so correlated entries share the same `id`.
 - Logging: rotate existing log files into `ui.logs/archive` with timestamps on startup, using the configured log directory from `config.json`.
 - Logging: add a dedicated `websub.json` category log capturing WebSub subscription and notification events.
+- Multi-site boot: create per-site HTTP/general/WebSub log writers so concurrent servers no longer clobber or close each other’s files when -site is omitted.
 - Metadata: restrict metadata fetches to an allowlist of hosts and normalise URLs before issuing upstream requests to avoid uncontrolled destinations.
 - Admin: Refresh Status now falls back to live YouTube watch-page metadata so live streams get written to `data/streamers.json` even when the player API doesn’t flag them.
 - Admin: Status checks query the YouTube search API (`eventType=live`) using the configured API key, clearing status when no live items are returned.

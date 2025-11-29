@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"errors"
 	"html/template"
-	"log"
 	"net/http"
 	"net/url"
 	"path/filepath"
@@ -53,7 +52,7 @@ func (s *server) handleHome(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	state, err := s.fetchRoster(ctx)
 	if err != nil {
-		log.Printf("render home: %v", err)
+		s.logf("render home: %v", err)
 		http.Error(w, "failed to load roster", http.StatusInternalServerError)
 		return
 	}
@@ -73,7 +72,7 @@ func (s *server) handleSubmit(w http.ResponseWriter, r *http.Request) {
 	case http.MethodPost:
 		state, removedRows, err := parseSubmitForm(r)
 		if err != nil {
-			log.Printf("parse submit form: %v", err)
+			s.logf("parse submit form: %v", err)
 			http.Error(w, "invalid request", http.StatusBadRequest)
 			return
 		}
@@ -93,7 +92,7 @@ func (s *server) handleSubmit(w http.ResponseWriter, r *http.Request) {
 
 		maybeEnrichMetadata(ctx, &state, http.DefaultClient)
 		if _, err := submitStreamer(ctx, s.streamerService, state); err != nil {
-			log.Printf("submit streamer: %v", err)
+			s.logf("submit streamer: %v", err)
 			state.Errors.General = append(state.Errors.General, "failed to submit streamer, please try again")
 			ensureSubmitDefaults(&state)
 			page := s.buildBasePageData(r, "Sharpen.Live – Submit a Streamer", s.siteDescription, "/submit")
@@ -138,7 +137,7 @@ func (s *server) handleMetadata(w http.ResponseWriter, r *http.Request) {
 
 	meta, err := s.metadataFetcher.Fetch(ctx, u.String())
 	if err != nil {
-		log.Printf("fetch metadata: %v", err)
+		s.logf("fetch metadata: %v", err)
 		http.Error(w, "failed to fetch metadata", http.StatusInternalServerError)
 		return
 	}
@@ -151,14 +150,14 @@ func (s *server) handleMetadata(w http.ResponseWriter, r *http.Request) {
 		"channelId":   meta.ChannelID,
 	}
 	if err := json.NewEncoder(w).Encode(resp); err != nil {
-		log.Printf("encode metadata: %v", err)
+		s.logf("encode metadata: %v", err)
 	}
 }
 
 func (s *server) renderHome(w http.ResponseWriter, r *http.Request, page basePageData, submit model.SubmitFormState) {
 	state, err := s.fetchRoster(r.Context())
 	if err != nil {
-		log.Printf("render home: %v", err)
+		s.logf("render home: %v", err)
 		http.Error(w, "failed to load roster", http.StatusInternalServerError)
 		return
 	}
@@ -185,7 +184,7 @@ func (s *server) renderHomeWithRoster(w http.ResponseWriter, r *http.Request, pa
 		return
 	}
 	if err := tmpl.ExecuteTemplate(w, "home", data); err != nil {
-		log.Printf("execute home template: %v", err)
+		s.logf("execute home template: %v", err)
 		http.Error(w, "failed to render page", http.StatusInternalServerError)
 	}
 }

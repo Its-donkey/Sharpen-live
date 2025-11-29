@@ -3,7 +3,6 @@ package server
 import (
 	"encoding/xml"
 	"fmt"
-	"log"
 	"net/http"
 	"strings"
 
@@ -56,7 +55,7 @@ func (s *server) handleSitemap(w http.ResponseWriter, r *http.Request) {
 		var err error
 		records, err = s.streamersStore.List()
 		if err != nil {
-			log.Printf("render sitemap: %v", err)
+			s.logf("render sitemap: %v", err)
 		}
 	}
 
@@ -85,6 +84,6 @@ func (s *server) handleSitemap(w http.ResponseWriter, r *http.Request) {
 	enc := xml.NewEncoder(w)
 	enc.Indent("", "  ")
 	if err := enc.Encode(smap); err != nil {
-		log.Printf("encode sitemap: %v", err)
+		s.logf("encode sitemap: %v", err)
 	}
 }

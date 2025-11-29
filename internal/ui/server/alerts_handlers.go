@@ -9,14 +9,14 @@ import (
 	"github.com/Its-donkey/Sharpen-live/internal/alert/streamers"
 )
 
-func buildAlertsHandler(streamersStore *streamers.Store) http.Handler {
+func (s *server) buildAlertsHandler(streamersStore *streamers.Store) http.Handler {
 	opts := youtubehandlers.AlertNotificationOptions{
 		StreamersStore: streamersStore,
 	}
-	return handleAlerts(opts)
+	return s.handleAlerts(opts)
 }
 
-func handleAlerts(notificationOpts youtubehandlers.AlertNotificationOptions) http.Handler {
+func (s *server) handleAlerts(notificationOpts youtubehandlers.AlertNotificationOptions) http.Handler {
 	allowedMethods := strings.Join([]string{http.MethodGet, http.MethodPost}, ", ")
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if !youtubehandlers.IsAlertPath(r.URL.Path) {
@@ -32,6 +32,9 @@ func handleAlerts(notificationOpts youtubehandlers.AlertNotificationOptions) htt
 				if youtubehandlers.HandleSubscriptionConfirmation(w, r, youtubehandlers.SubscriptionConfirmationOptions{
 					StreamersStore: notificationOpts.StreamersStore,
 				}) {
+					if s != nil && s.logger != nil {
+						s.logger.RecordWebSub(r, "verification")
+					}
 					return
 				}
 				http.Error(w, "invalid subscription confirmation", http.StatusBadRequest)
@@ -46,6 +49,9 @@ func handleAlerts(notificationOpts youtubehandlers.AlertNotificationOptions) htt
 				return
 			}
 			if youtubehandlers.HandleAlertNotification(w, r, notificationOpts) {
+				if s != nil && s.logger != nil {
+					s.logger.RecordWebSub(r, "notification")
+				}
 				return
 			}
 			http.Error(w, "failed to process notification", http.StatusInternalServerError)

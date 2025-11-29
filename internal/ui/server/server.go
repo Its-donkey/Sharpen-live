@@ -16,7 +16,6 @@ import (
 	"github.com/Its-donkey/Sharpen-live/internal/alert/submissions"
 	"github.com/Its-donkey/Sharpen-live/internal/ui/model"
 	"html/template"
-	"log"
 	"net/http"
 	"path/filepath"
 	"strings"
@@ -94,6 +93,7 @@ type server struct {
 	streamersStore   StreamersStore
 	streamerService  StreamerService
 	submissionsStore *submissions.Store
+	logger           *siteLogger
 	adminSubmissions AdminSubmissions
 	statusChecker    StatusChecker
 	adminManager     AdminManager
@@ -231,6 +231,10 @@ func Run(ctx context.Context, opts Options) error {
 	if err != nil {
 		return fmt.Errorf("resolve log dir: %w", err)
 	}
+	logger, err := newSiteLogger(logDir, siteConfig.Key)
+	if err != nil {
+		return fmt.Errorf("configure logger: %w", err)
+	}
 
 	dataDir := opts.DataDir
 	if dataDir == "" {
@@ -327,6 +331,7 @@ func Run(ctx context.Context, opts Options) error {
 		streamersStore:   streamersStore,
 		streamerService:  streamerSvc,
 		submissionsStore: submissionsStore,
+		logger:           logger,
 		adminSubmissions: adminSubSvc,
 		statusChecker:    statusChecker,
 		adminManager:     adminMgr,
@@ -389,7 +394,7 @@ func Run(ctx context.Context, opts Options) error {
 	mux.Handle("/api/streamers/watch", streamersWatch)
 	mux.HandleFunc("/api/youtube/metadata", srv.handleMetadata)
 	if baseStore, ok := streamersStore.(*streamers.Store); ok {
-		alertsHandler := buildAlertsHandler(baseStore)
+		alertsHandler := srv.buildAlertsHandler(baseStore)
 		for _, path := range alertPaths {
 			mux.Handle(path, alertsHandler)
 		}
@@ -404,7 +409,7 @@ func Run(ctx context.Context, opts Options) error {
 
 	server := &http.Server{
 		Addr:    opts.Listen,
-		Handler: mux,
+		Handler: srv.withHTTPLogging(mux),
 	}
 
 	errCh := make(chan error, 1)
@@ -421,7 +426,7 @@ func Run(ctx context.Context, opts Options) error {
 	if len(opts.FallbackErrors) > 0 {
 		logLine = fmt.Sprintf("%s (fallback: %s)", logLine, strings.Join(opts.FallbackErrors, "; "))
 	}
-	log.Print(logLine)
+	srv.logf("%s", logLine)
 
 	select {
 	case <-ctx.Done():

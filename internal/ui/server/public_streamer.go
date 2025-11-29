@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"html/template"
-	"log"
 	"net/http"
 	"strings"
 
@@ -66,7 +65,7 @@ func (s *server) handleStreamer(w http.ResponseWriter, r *http.Request) {
 	if s.streamersStore != nil {
 		records, err := s.streamersStore.List()
 		if err != nil {
-			log.Printf("render streamer detail: %v", err)
+			s.logf("render streamer detail: %v", err)
 			http.Error(w, "failed to load streamer", http.StatusInternalServerError)
 			return
 		}
@@ -98,7 +97,7 @@ func (s *server) handleStreamer(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if err := tmpl.ExecuteTemplate(w, "streamer", data); err != nil {
-		log.Printf("execute streamer template: %v", err)
+		s.logf("execute streamer template: %v", err)
 		http.Error(w, "failed to render page", http.StatusInternalServerError)
 	}
 }

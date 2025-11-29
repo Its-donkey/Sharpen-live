@@ -4,27 +4,19 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"net/http"
-	"strings"
-
-	"github.com/Its-donkey/Sharpen-live/internal/alert/logging"
 	"github.com/Its-donkey/Sharpen-live/internal/alert/platforms/youtube/websub"
 	"github.com/Its-donkey/Sharpen-live/internal/alert/streamers"
+	"net/http"
+	"strings"
+	// Options configures how subscriptions are issued.
 )
 
-// Options configures how subscriptions are issued.
 type Options struct {
 	Client       *http.Client
 	HubURL       string
-	Logger       logging.Logger
 	Mode         string // subscribe or unsubscribe; must be provided
 	Verify       string
 	LeaseSeconds int
-}
-
-// getLogger returns an appropriate logger, defaulting when none is provided.
-func (o Options) getLogger() logging.Logger {
-	return o.Logger
 }
 
 // buildYouTubeSubscriptionData centralises the shared logic for:
@@ -85,7 +77,6 @@ func ManageSubscription(ctx context.Context, record streamers.Record, opts Optio
 	}
 
 	client := opts.Client // defaulting is handled in SubscribeYouTube
-	logger := opts.getLogger()
 
 	channelID, topic, secret, err := buildYouTubeSubscriptionData(ctx, record, client, mode)
 	if err != nil {
@@ -117,25 +108,9 @@ func ManageSubscription(ctx context.Context, record streamers.Record, opts Optio
 		LeaseSeconds: leaseSeconds,
 	}
 
-	resp, body, finalReq, err := SubscribeYouTube(ctx, client, logger, subscribeReq)
+	resp, body, finalReq, err := SubscribeYouTube(ctx, client, subscribeReq)
 	if err != nil {
 		return fmt.Errorf("subscribe youtube alerts: %w", err)
-	}
-
-	if logger != nil && resp != nil {
-		alias := strings.TrimSpace(record.Streamer.Alias)
-		if alias == "" {
-			alias = record.Streamer.ID
-		}
-		logger.Printf(
-			"YouTube hub accepted %s for %s (topic=%s, callback=%s, status=%s). Awaiting hub challenge with token %s.",
-			mode,
-			alias,
-			finalReq.Topic,
-			finalReq.Callback,
-			resp.Status,
-			finalReq.VerifyToken,
-		)
 	}
 
 	websub.RecordSubscriptionResult(

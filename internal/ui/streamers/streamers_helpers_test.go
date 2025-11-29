@@ -1,9 +1,8 @@
 package streamers
 
 import (
-	"testing"
-
 	"github.com/Its-donkey/Sharpen-live/internal/ui/model"
+	"testing"
 )
 
 func TestDeriveStatus(t *testing.T) {

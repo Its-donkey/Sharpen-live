@@ -1,12 +1,11 @@
 package submissions_test
 
 import (
+	"github.com/Its-donkey/Sharpen-live/internal/alert/submissions"
 	"os"
 	"path/filepath"
 	"testing"
 	"time"
-
-	"github.com/Its-donkey/Sharpen-live/internal/alert/submissions"
 )
 
 func TestStoreAppendPopulatesDefaults(t *testing.T) {

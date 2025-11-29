@@ -1,11 +1,10 @@
 package subscriptions
 
 import (
+	"github.com/Its-donkey/Sharpen-live/internal/alert/streamers"
 	"path/filepath"
 	"testing"
 	"time"
-
-	"github.com/Its-donkey/Sharpen-live/internal/alert/streamers"
 )
 
 func TestRecordLeaseUpdatesFile(t *testing.T) {

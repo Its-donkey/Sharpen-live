@@ -1,0 +1,197 @@
+{{define "admin"}}
+{{template "base" .}}
+{{end}}
+
+{{define "content"}}
+<section class="surface admin-panel" aria-live="polite">
+  <div class="admin-header">
+    <div>
+      <h2 id="admin-console-title">Admin Dashboard</h2>
+      <p class="admin-help">Review pending submissions, manage the roster, and refresh channel status.</p>
+    </div>
+    {{if .LoggedIn}}
+    <div class="admin-header-actions">
+      <form method="post" action="/admin/status-check" class="admin-actions">
+        <button type="submit" class="admin-tab">Refresh status</button>
+      </form>
+      <form method="post" action="/admin/logout">
+        <button type="submit" class="admin-logout-button">Log out</button>
+      </form>
+    </div>
+    {{end}}
+  </div>
+
+  {{if .Flash}}
+    <div class="admin-status" data-state="success">{{.Flash}}</div>
+  {{end}}
+  {{if .Error}}
+    <div class="admin-status" data-state="error">{{.Error}}</div>
+  {{end}}
+
+  {{if not .LoggedIn}}
+    <form method="post" action="/admin/login" class="admin-auth">
+      <div class="form-field form-field-wide">
+        <span>Email</span>
+        <input type="email" name="email" value="{{.AdminEmail}}" autocomplete="username" required />
+      </div>
+      <div class="form-field form-field-wide">
+        <span>Password</span>
+        <input type="password" name="password" value="" autocomplete="current-password" required />
+      </div>
+      <div class="submit-streamer-actions">
+        <button type="submit" class="submit-streamer-submit">Log in</button>
+      </div>
+    </form>
+    <p class="admin-help">Use the admin credentials configured on the alert server.</p>
+  {{else}}
+    <div class="admin-grid">
+      <section aria-labelledby="admin-submissions-title">
+        <div class="admin-streamers-header">
+          <h3 id="admin-submissions-title">Pending submissions</h3>
+        </div>
+        {{if .SubmissionsError}}
+          <div class="admin-status" data-state="error">{{.SubmissionsError}}</div>
+        {{end}}
+        {{if .Submissions}}
+          <div class="admin-submissions">
+            {{range .Submissions}}
+            <article class="admin-card">
+              <div class="admin-card-header">
+                <div class="admin-card-heading">
+                  <h4>{{.Alias}}</h4>
+                  <span class="admin-card-meta">{{.SubmittedAt}}</span>
+                </div>
+              </div>
+              <div class="admin-card-body">
+                {{if .Description}}<p>{{.Description}}</p>{{end}}
+                {{if .Languages}}<p class="admin-card-meta">Languages: {{join .Languages ", "}}</p>{{end}}
+                {{if .PlatformURL}}<p class="admin-card-meta">Platform: <a href="{{.PlatformURL}}" target="_blank" rel="noopener">{{.PlatformURL}}</a></p>{{end}}
+              </div>
+              <div class="admin-card-actions">
+                <form method="post" action="/admin/submissions">
+                  <input type="hidden" name="id" value="{{.ID}}">
+                  <button type="submit" name="action" value="approve">Approve</button>
+                  <button type="submit" name="action" value="reject" class="remove-platform-button">Reject</button>
+                </form>
+              </div>
+            </article>
+            {{end}}
+          </div>
+        {{else}}
+          <div class="admin-empty">No pending submissions.</div>
+        {{end}}
+      </section>
+
+      <section aria-labelledby="admin-streamers-title">
+        <div class="admin-streamers-header">
+          <h3 id="admin-streamers-title">Current roster</h3>
+        </div>
+        {{if .RosterError}}
+          <div class="admin-status" data-state="error">{{.RosterError}}</div>
+        {{end}}
+        {{if .Streamers}}
+          <div class="admin-streamers">
+            {{range .Streamers}}
+            <article class="admin-card">
+              <div class="admin-card-header">
+                <div class="admin-card-heading">
+                  <h4>{{.Name}}</h4>
+                  <span class="admin-card-meta">Status: {{statusLabel .Status .StatusLabel}}</span>
+                </div>
+                <form method="post" action="/admin/streamers/delete" class="admin-card-actions admin-card-actions--streamer">
+                  <input type="hidden" name="id" value="{{.ID}}">
+                  <button type="submit" class="remove-platform-button">Delete</button>
+                </form>
+              </div>
+              <form class="admin-streamer-form" method="post" action="/admin/streamers/update">
+                <input type="hidden" name="id" value="{{.ID}}">
+                <div class="form-grid">
+                  <label class="form-field">
+                    <span>Name</span>
+                    <input type="text" name="alias" value="{{.Name}}" required />
+                  </label>
+                  <div class="form-field form-field-wide">
+                    <span>Description</span>
+                    <textarea name="description" rows="3" required>{{.Description}}</textarea>
+                  </div>
+                  <label class="form-field form-field-wide">
+                    <span>Languages</span>
+                    <input type="text" name="languages" placeholder="English, Japanese" value="{{join .Languages ", "}}" />
+                  </label>
+                  <label class="form-field form-field-wide">
+                    <span>Platform URL</span>
+                    <input type="url" name="platform_url" placeholder="https://www.youtube.com/@handle" value="{{if .Platforms}}{{(index .Platforms 0).ChannelURL}}{{end}}" />
+                  </label>
+                </div>
+                {{if .Platforms}}
+                <div class="admin-card-body">
+                  <strong>Platforms</strong>
+                  <ul class="platform-list">
+                    {{range .Platforms}}
+                    <li>{{.Name}} &middot; <a href="{{.ChannelURL}}" target="_blank" rel="noopener">{{.ChannelURL}}</a></li>
+                    {{end}}
+                  </ul>
+                </div>
+                {{end}}
+                <div class="submit-streamer-actions">
+                  <button type="submit" class="submit-streamer-submit">Save changes</button>
+                </div>
+              </form>
+            </article>
+            {{end}}
+          </div>
+        {{else}}
+          <div class="admin-empty">No streamers found yet.</div>
+        {{end}}
+      </section>
+
+      <section aria-labelledby="admin-logs-title">
+        <div class="admin-streamers-header">
+          <div>
+            <h3 id="admin-logs-title">Latest logs</h3>
+            <p class="admin-help">Recent entries from server logs (general, HTTP, WebSub). Showing up to {{if .LogLimit}}{{.LogLimit}}{{else}}120{{end}} per file.</p>
+          </div>
+        </div>
+        {{if .LogsError}}
+          <div class="admin-status" data-state="error">{{.LogsError}}</div>
+        {{end}}
+        {{if .Logs}}
+          <div class="admin-logs">
+            {{range .Logs}}
+            <article class="admin-card admin-log-card">
+              <div class="admin-card-header">
+                <div class="admin-card-heading">
+                  <h4>{{.Title}}</h4>
+                </div>
+              </div>
+              {{if .Error}}
+                <div class="admin-status" data-state="error">{{.Error}}</div>
+              {{else if .Entries}}
+                <div class="admin-log-feed">
+                  {{range .Entries}}
+                    <div class="admin-log-entry">
+                      <div class="admin-log-entry__meta">
+                        <span class="admin-log-time">{{.Timestamp}}</span>
+                        {{if .Meta}}<span class="admin-log-meta">{{.Meta}}</span>{{end}}
+                      </div>
+                      <div class="admin-log-message">{{.Message}}</div>
+                      {{if .Details}}
+                        <pre class="admin-log-details">{{.Details}}</pre>
+                      {{end}}
+                    </div>
+                  {{end}}
+                </div>
+              {{else}}
+                <div class="admin-empty">No log entries found.</div>
+              {{end}}
+            </article>
+            {{end}}
+          </div>
+        {{else}}
+          <div class="admin-empty">Logs are unavailable.</div>
+        {{end}}
+      </section>
+    </div>
+  {{end}}
+</section>
+{{end}}

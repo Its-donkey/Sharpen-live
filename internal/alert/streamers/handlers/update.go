@@ -2,10 +2,9 @@ package handlers
 
 import (
 	"encoding/json"
+	streamersvc "github.com/Its-donkey/Sharpen-live/internal/alert/streamers/service"
 	"net/http"
 	"strings"
-
-	streamersvc "github.com/Its-donkey/Sharpen-live/internal/alert/streamers/service"
 )
 
 type patchRequest struct {

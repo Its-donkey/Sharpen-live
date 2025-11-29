@@ -3,18 +3,16 @@ package service
 import (
 	"context"
 	"errors"
-	"net/http"
-	"strings"
-	"time"
-
 	"github.com/Its-donkey/Sharpen-live/internal/alert/config"
-	"github.com/Its-donkey/Sharpen-live/internal/alert/logging"
 	"github.com/Its-donkey/Sharpen-live/internal/alert/platforms/youtube/onboarding"
 	"github.com/Its-donkey/Sharpen-live/internal/alert/streamers"
 	"github.com/Its-donkey/Sharpen-live/internal/alert/submissions"
+	"net/http"
+	"strings"
+	"time"
+	// Action represents the allowed admin submission actions.
 )
 
-// Action represents the allowed admin submission actions.
 type Action string
 
 const (
@@ -58,7 +56,6 @@ type SubmissionsOptions struct {
 	StreamersStore   *streamers.Store
 	YouTubeClient    *http.Client
 	YouTube          config.YouTubeConfig
-	Logger           logging.Logger
 	Onboarder        Onboarder
 }
 
@@ -68,7 +65,6 @@ type SubmissionsService struct {
 	streamersStore   *streamers.Store
 	youtubeClient    *http.Client
 	youtube          config.YouTubeConfig
-	logger           logging.Logger
 	onboarder        Onboarder
 }
 
@@ -91,7 +87,6 @@ func NewSubmissionsService(opts SubmissionsOptions) *SubmissionsService {
 		streamersStore:   streamersStore,
 		youtubeClient:    client,
 		youtube:          opts.YouTube,
-		logger:           opts.Logger,
 		onboarder:        opts.Onboarder,
 	}
 	if svc.onboarder == nil {
@@ -102,7 +97,6 @@ func NewSubmissionsService(opts SubmissionsOptions) *SubmissionsService {
 				CallbackURL:  strings.TrimSpace(svc.youtube.CallbackURL),
 				VerifyMode:   strings.TrimSpace(svc.youtube.Verify),
 				LeaseSeconds: svc.youtube.LeaseSeconds,
-				Logger:       svc.logger,
 				Store:        svc.streamersStore,
 			}
 			return onboarding.FromURL(ctx, record, url, onboardOpts)
@@ -138,6 +132,8 @@ func (s *SubmissionsService) Process(ctx context.Context, req ActionRequest) (Ac
 	}
 	if action == ActionApprove {
 		if err := s.approve(ctx, removed); err != nil {
+			// requeue the submission when approval fails
+			_, _ = s.submissionsStore.Append(removed)
 			return ActionResult{}, err
 		}
 		return ActionResult{Status: ActionApprove, Submission: removed}, nil
@@ -161,33 +157,24 @@ func (s *SubmissionsService) ensureStores() error {
 func (s *SubmissionsService) approve(ctx context.Context, submission submissions.Submission) error {
 	record := streamers.Record{
 		Streamer: streamers.Streamer{
-			ID:          streamers.GenerateID(),
-			Alias:       submission.Alias,
-			Description: submission.Description,
-			Languages:   submission.Languages,
+			Alias:       strings.TrimSpace(submission.Alias),
+			Description: strings.TrimSpace(submission.Description),
+			Languages:   append([]string(nil), submission.Languages...),
 		},
 	}
-	persisted, err := s.streamersStore.Append(record)
+	saved, err := s.streamersStore.Append(record)
 	if err != nil {
-		s.requeue(submission)
 		return err
 	}
 	url := strings.TrimSpace(submission.PlatformURL)
-	if url == "" {
+	if url == "" || s.onboarder == nil {
 		return nil
 	}
 	ctx, cancel := context.WithTimeout(ctx, 15*time.Second)
 	defer cancel()
-	if err := s.onboarder.FromURL(ctx, persisted, url); err != nil && s.logger != nil {
-		s.logger.Printf("failed to process platform url for %s: %v", persisted.Streamer.Alias, err)
-	}
+	// Ignore onboarding errors so approvals still succeed.
+	_ = s.onboarder.FromURL(ctx, saved, url)
 	return nil
-}
-
-func (s *SubmissionsService) requeue(submission submissions.Submission) {
-	if _, err := s.submissionsStore.Append(submission); err != nil && s.logger != nil {
-		s.logger.Printf("failed to requeue submission %s: %v", submission.ID, err)
-	}
 }
 
 func normaliseAction(value Action) Action {

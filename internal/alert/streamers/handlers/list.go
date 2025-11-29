@@ -2,9 +2,8 @@ package handlers
 
 import (
 	"encoding/json"
-	"net/http"
-
 	"github.com/Its-donkey/Sharpen-live/internal/alert/streamers"
+	"net/http"
 )
 
 func (h *streamersHTTPHandler) handleList(w http.ResponseWriter, r *http.Request) {
@@ -21,8 +20,6 @@ func (h *streamersHTTPHandler) handleList(w http.ResponseWriter, r *http.Request
 		Streamers: records,
 	}
 	if err := json.NewEncoder(w).Encode(response); err != nil {
-		if h.logger != nil {
-			h.logger.Printf("failed to encode streamers response: %v", err)
-		}
+
 	}
 }

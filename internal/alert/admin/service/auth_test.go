@@ -1,10 +1,9 @@
 package service
 
 import (
+	adminauth "github.com/Its-donkey/Sharpen-live/internal/alert/admin/auth"
 	"net/http/httptest"
 	"testing"
-
-	adminauth "github.com/Its-donkey/Sharpen-live/internal/alert/admin/auth"
 )
 
 func TestAuthServiceAuthorizeRequest(t *testing.T) {

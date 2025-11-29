@@ -2,23 +2,19 @@ package adminhttp
 
 import (
 	"context"
-	"errors"
-	"net/http"
-
 	adminauth "github.com/Its-donkey/Sharpen-live/internal/alert/admin/auth"
 	adminservice "github.com/Its-donkey/Sharpen-live/internal/alert/admin/service"
 	"github.com/Its-donkey/Sharpen-live/internal/alert/config"
-	"github.com/Its-donkey/Sharpen-live/internal/alert/logging"
 	"github.com/Its-donkey/Sharpen-live/internal/alert/platforms/youtube/monitoring"
 	"github.com/Its-donkey/Sharpen-live/internal/alert/streamers"
+	"net/http"
+	// MonitorHandlerOptions configures the YouTube monitor handler.
 )
 
-// MonitorHandlerOptions configures the YouTube monitor handler.
 type MonitorHandlerOptions struct {
 	Authorizer     authorizer
 	Service        monitorService
 	Manager        *adminauth.Manager
-	Logger         logging.Logger
 	StreamersStore *streamers.Store
 	YouTube        config.YouTubeConfig
 }
@@ -30,7 +26,6 @@ type monitorService interface {
 type monitorHandler struct {
 	authorizer authorizer
 	service    monitorService
-	logger     logging.Logger
 }
 
 // NewMonitorHandler constructs the admin monitor HTTP handler.
@@ -49,7 +44,6 @@ func NewMonitorHandler(opts MonitorHandlerOptions) http.Handler {
 	return monitorHandler{
 		authorizer: auth,
 		service:    svc,
-		logger:     opts.Logger,
 	}
 }
 
@@ -69,9 +63,6 @@ func (h monitorHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 	overview, err := h.service.Overview(r.Context())
 	if err != nil {
-		if h.logger != nil && !errors.Is(err, context.Canceled) && !errors.Is(err, context.DeadlineExceeded) {
-			h.logger.Printf("monitor overview: %v", err)
-		}
 		http.Error(w, "failed to load monitor data", http.StatusInternalServerError)
 		return
 	}

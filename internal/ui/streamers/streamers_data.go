@@ -5,12 +5,11 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/Its-donkey/Sharpen-live/internal/ui/model"
 	"io"
 	"net/http"
 	"strings"
 	"time"
-
-	"github.com/Its-donkey/Sharpen-live/internal/ui/model"
 )
 
 // FetchStreamers retrieves roster data from the API, falling back to bundled JSON if needed.

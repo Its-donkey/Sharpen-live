@@ -4,11 +4,9 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	youtubeservice "github.com/Its-donkey/Sharpen-live/internal/alert/platforms/youtube/service"
 	"net/http"
 	"strings"
-
-	"github.com/Its-donkey/Sharpen-live/internal/alert/logging"
-	youtubeservice "github.com/Its-donkey/Sharpen-live/internal/alert/platforms/youtube/service"
 )
 
 type channelLookupRequest struct {
@@ -23,12 +21,10 @@ type channelResolver interface {
 type ChannelLookupHandlerOptions struct {
 	Resolver channelResolver
 	Client   *http.Client
-	Logger   logging.Logger
 }
 
 type channelLookupHandler struct {
 	resolver channelResolver
-	logger   logging.Logger
 }
 
 // NewChannelLookupHandler resolves a YouTube handle to its canonical channel ID.
@@ -37,7 +33,7 @@ func NewChannelLookupHandler(opts ChannelLookupHandlerOptions) http.Handler {
 	if resolver == nil {
 		resolver = youtubeservice.ChannelResolver{Client: opts.Client}
 	}
-	h := channelLookupHandler{resolver: resolver, logger: opts.Logger}
+	h := channelLookupHandler{resolver: resolver}
 	return http.HandlerFunc(h.ServeHTTP)
 }
 
@@ -70,9 +66,6 @@ func (h channelLookupHandler) respondError(w http.ResponseWriter, err error) {
 	case errors.Is(err, youtubeservice.ErrUpstream):
 		http.Error(w, "failed to resolve channel handle", http.StatusBadGateway)
 	default:
-		if h.logger != nil {
-			h.logger.Printf("channel lookup failed: %v", err)
-		}
 		http.Error(w, "failed to resolve channel handle", http.StatusInternalServerError)
 	}
 }

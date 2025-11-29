@@ -4,12 +4,11 @@ import (
 	"bytes"
 	"context"
 	"errors"
+	"github.com/Its-donkey/Sharpen-live/internal/alert/platforms/youtube/liveinfo"
+	"github.com/Its-donkey/Sharpen-live/internal/alert/streamers"
 	"path/filepath"
 	"testing"
 	"time"
-
-	"github.com/Its-donkey/Sharpen-live/internal/alert/platforms/youtube/liveinfo"
-	"github.com/Its-donkey/Sharpen-live/internal/alert/streamers"
 )
 
 type stubVideoLookup struct {

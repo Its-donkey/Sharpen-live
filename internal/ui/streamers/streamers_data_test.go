@@ -3,11 +3,10 @@ package streamers
 import (
 	"context"
 	"encoding/json"
+	"github.com/Its-donkey/Sharpen-live/internal/ui/model"
 	"net/http"
 	"net/http/httptest"
 	"testing"
-
-	"github.com/Its-donkey/Sharpen-live/internal/ui/model"
 )
 
 func TestMapServerStreamersOrdersOnlineFirst(t *testing.T) {

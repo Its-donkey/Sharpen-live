@@ -1,14 +1,13 @@
 package handlers
 
 import (
+	"github.com/Its-donkey/Sharpen-live/internal/alert/platforms/youtube/websub"
+	"github.com/Its-donkey/Sharpen-live/internal/alert/streamers"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
 	"path/filepath"
 	"testing"
-
-	"github.com/Its-donkey/Sharpen-live/internal/alert/platforms/youtube/websub"
-	"github.com/Its-donkey/Sharpen-live/internal/alert/streamers"
 )
 
 type memoryLogger struct {
@@ -52,7 +51,7 @@ func TestHandleSubscriptionConfirmationSuccess(t *testing.T) {
 	req := httptest.NewRequest(http.MethodGet, "/alerts?"+values.Encode(), nil)
 	rr := httptest.NewRecorder()
 
-	handled := HandleSubscriptionConfirmation(rr, req, SubscriptionConfirmationOptions{StreamersStore: store, Logger: &memoryLogger{}})
+	handled := HandleSubscriptionConfirmation(rr, req, SubscriptionConfirmationOptions{StreamersStore: store})
 	if !handled {
 		t.Fatalf("expected request to be handled")
 	}
@@ -138,7 +137,7 @@ func TestHandleSubscriptionConfirmationSkipsLeaseForUnsubscribe(t *testing.T) {
 	req := httptest.NewRequest(http.MethodGet, "/alerts?"+values.Encode(), nil)
 	rr := httptest.NewRecorder()
 
-	handled := HandleSubscriptionConfirmation(rr, req, SubscriptionConfirmationOptions{StreamersStore: store, Logger: &memoryLogger{}})
+	handled := HandleSubscriptionConfirmation(rr, req, SubscriptionConfirmationOptions{StreamersStore: store})
 	if !handled {
 		t.Fatalf("expected request to be handled")
 	}

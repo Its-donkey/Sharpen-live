@@ -1,0 +1,27 @@
+<svg width="240" height="240" viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">synth.wave logo concept</title>
+  <desc id="desc">Neon circular wave mark with magenta and cyan glow on dark background.</desc>
+  <defs>
+    <radialGradient id="bg" cx="50%" cy="50%" r="75%">
+      <stop offset="0%" stop-color="#0b1024" />
+      <stop offset="100%" stop-color="#0b1024" />
+    </radialGradient>
+    <linearGradient id="ring" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ff2fb4" />
+      <stop offset="50%" stop-color="#7d5bff" />
+      <stop offset="100%" stop-color="#28e7ff" />
+    </linearGradient>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="6" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+  </defs>
+  <rect width="240" height="240" fill="url(#bg)" />
+  <circle cx="120" cy="120" r="82" fill="none" stroke="url(#ring)" stroke-width="12" filter="url(#glow)" />
+  <path d="M40 140 C70 120 95 110 120 132 C145 154 170 150 200 132" fill="none" stroke="#28e7ff" stroke-width="10" stroke-linecap="round" filter="url(#glow)" />
+  <path d="M50 108 C78 92 102 92 120 110 C138 128 162 132 190 120" fill="none" stroke="#ff2fb4" stroke-width="6" stroke-linecap="round" filter="url(#glow)" opacity="0.9" />
+  <circle cx="120" cy="120" r="6" fill="#ffb347" />
+</svg>

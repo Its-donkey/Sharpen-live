@@ -5,20 +5,17 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"github.com/Its-donkey/Sharpen-live/internal/alert/platforms/youtube/ratelimit"
+	"github.com/Its-donkey/Sharpen-live/internal/alert/platforms/youtube/websub"
 	"io"
 	"net/http"
-	"net/http/httputil"
 	"net/url"
 	"strconv"
 	"strings"
 	"time"
-
-	"github.com/Its-donkey/Sharpen-live/internal/alert/logging"
-	"github.com/Its-donkey/Sharpen-live/internal/alert/platforms/youtube/ratelimit"
-	"github.com/Its-donkey/Sharpen-live/internal/alert/platforms/youtube/websub"
+	// ErrValidation signals that the request payload is missing required fields.
 )
 
-// ErrValidation signals that the request payload is missing required fields.
 var ErrValidation = errors.New("validation error")
 
 // YouTubeRequest models the fields required by YouTube's WebSub subscription flow.
@@ -40,13 +37,8 @@ type YouTubeRequest struct {
 func SubscribeYouTube(
 	ctx context.Context,
 	hc *http.Client,
-	logger logging.Logger,
 	req YouTubeRequest,
 ) (*http.Response, []byte, YouTubeRequest, error) {
-	// Ensure we have a logger.
-	if logger == nil {
-		logger = logging.New()
-	}
 
 	// Centralised default HTTP client.
 	if hc == nil {
@@ -149,10 +141,6 @@ func SubscribeYouTube(
 	httpReq.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 	httpReq.Header.Set("User-Agent", "sharpen-live-alerts-client/1.0")
 
-	if dump, err := httputil.DumpRequestOut(httpReq, true); err == nil {
-		logger.Printf("Outbound WebSub request:\n%s", dump)
-	}
-
 	resp, err := hc.Do(httpReq)
 	if err != nil {
 		return nil, nil, req, fmt.Errorf("post to hub: %w", err)
@@ -165,11 +153,6 @@ func SubscribeYouTube(
 	}
 	resp.Body = io.NopCloser(bytes.NewReader(body))
 
-	if dump, err := httputil.DumpResponse(resp, true); err == nil {
-		logger.Printf("Inbound WebSub response:\n%s", dump)
-	} else {
-		logger.Printf("Failed to dump WebSub response: %v", err)
-	}
 	resp.Body = io.NopCloser(bytes.NewReader(body))
 	if resp.StatusCode < 200 || resp.StatusCode >= 300 {
 		return resp, body, req, fmt.Errorf("hub returned non-2xx: %s", resp.Status)

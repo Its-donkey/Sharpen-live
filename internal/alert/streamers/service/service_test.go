@@ -2,13 +2,12 @@ package service
 
 import (
 	"errors"
+	"github.com/Its-donkey/Sharpen-live/internal/alert/streamers"
+	"github.com/Its-donkey/Sharpen-live/internal/alert/submissions"
 	"net/http"
 	"net/http/httptest"
 	"path/filepath"
 	"testing"
-
-	"github.com/Its-donkey/Sharpen-live/internal/alert/streamers"
-	"github.com/Its-donkey/Sharpen-live/internal/alert/submissions"
 )
 
 func TestServiceCreateQueuesSubmission(t *testing.T) {
@@ -47,6 +46,37 @@ func TestServiceUpdateValidatesInput(t *testing.T) {
 	if _, err := svc.Update(t.Context(), UpdateRequest{}); err == nil {
 		t.Fatalf("expected validation error")
 	}
+}
+
+func TestServiceUpdateRejectsDuplicateAlias(t *testing.T) {
+	dir := t.TempDir()
+	streamStore := streamers.NewStore(filepath.Join(dir, "streamers.json"))
+	subStore := submissions.NewStore(filepath.Join(dir, "submissions.json"))
+	if _, err := streamStore.Append(streamers.Record{Streamer: streamers.Streamer{ID: "s1", Alias: "Alpha"}}); err != nil {
+		t.Fatalf("append s1: %v", err)
+	}
+	if _, err := streamStore.Append(streamers.Record{Streamer: streamers.Streamer{ID: "s2", Alias: "Bravo"}}); err != nil {
+		t.Fatalf("append s2: %v", err)
+	}
+	svc := New(Options{Streamers: streamStore, Submissions: subStore})
+
+	t.Run("rejects duplicate alias", func(t *testing.T) {
+		alias := "Alpha"
+		if _, err := svc.Update(t.Context(), UpdateRequest{ID: "s2", Alias: &alias}); !errors.Is(err, streamers.ErrDuplicateAlias) {
+			t.Fatalf("expected duplicate alias error, got %v", err)
+		}
+	})
+
+	t.Run("allows unchanged alias", func(t *testing.T) {
+		alias := "Bravo"
+		updated, err := svc.Update(t.Context(), UpdateRequest{ID: "s2", Alias: &alias})
+		if err != nil {
+			t.Fatalf("update: %v", err)
+		}
+		if updated.Streamer.Alias != "Bravo" {
+			t.Fatalf("expected alias to remain Bravo, got %s", updated.Streamer.Alias)
+		}
+	})
 }
 
 func TestServiceDeleteUnsubscribesAndRemoves(t *testing.T) {

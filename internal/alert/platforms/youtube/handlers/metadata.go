@@ -4,14 +4,12 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	youtubeservice "github.com/Its-donkey/Sharpen-live/internal/alert/platforms/youtube/service"
 	"net/http"
 	"time"
-
-	"github.com/Its-donkey/Sharpen-live/internal/alert/logging"
-	youtubeservice "github.com/Its-donkey/Sharpen-live/internal/alert/platforms/youtube/service"
+	// MetadataRequest describes the payload for fetching metadata.
 )
 
-// MetadataRequest describes the payload for fetching metadata.
 type MetadataRequest struct {
 	URL string `json:"url"`
 }
@@ -32,12 +30,10 @@ type metadataFetcher interface {
 type MetadataHandlerOptions struct {
 	Fetcher metadataFetcher
 	Client  *http.Client
-	Logger  logging.Logger
 }
 
 type metadataHandler struct {
 	fetcher metadataFetcher
-	logger  logging.Logger
 }
 
 // NewMetadataHandler returns an http.Handler that fetches metadata for a given URL.
@@ -49,7 +45,7 @@ func NewMetadataHandler(opts MetadataHandlerOptions) http.Handler {
 			Timeout: 5 * time.Second,
 		}
 	}
-	h := metadataHandler{fetcher: fetcher, logger: opts.Logger}
+	h := metadataHandler{fetcher: fetcher}
 	return http.HandlerFunc(h.ServeHTTP)
 }
 
@@ -90,9 +86,6 @@ func (h metadataHandler) respondError(w http.ResponseWriter, err error) {
 	case errors.Is(err, youtubeservice.ErrUpstream):
 		http.Error(w, "failed to fetch metadata", http.StatusBadGateway)
 	default:
-		if h.logger != nil {
-			h.logger.Printf("metadata fetch failed: %v", err)
-		}
 		http.Error(w, "failed to fetch metadata", http.StatusInternalServerError)
 	}
 }

@@ -3,13 +3,12 @@ package service
 import (
 	"context"
 	"fmt"
+	"github.com/Its-donkey/Sharpen-live/internal/alert/platforms/youtube/subscriptions"
 	"net/http"
 	"strings"
-
-	"github.com/Its-donkey/Sharpen-live/internal/alert/platforms/youtube/subscriptions"
+	// ChannelResolver resolves YouTube @handles into channel IDs.
 )
 
-// ChannelResolver resolves YouTube @handles into channel IDs.
 type ChannelResolver struct {
 	Client *http.Client
 }

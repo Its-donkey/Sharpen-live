@@ -4,13 +4,12 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"github.com/Its-donkey/Sharpen-live/internal/alert/platforms/youtube/ratelimit"
 	"io"
 	"net/http"
 	"regexp"
 	"strings"
 	"time"
-
-	"github.com/Its-donkey/Sharpen-live/internal/alert/platforms/youtube/ratelimit"
 )
 
 var (

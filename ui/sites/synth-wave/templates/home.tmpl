@@ -1,0 +1,82 @@
+{{define "home"}}
+{{template "base" .}}
+{{end}}
+
+{{define "content"}}
+<main class="surface" id="home-view" aria-labelledby="streamers-title">
+  <section class="intro">
+    <p class="intro-lede">
+      synth.wave is a live radar for synthwave, chillwave, and electronic creators. Track DJs, producers, and livestream sets as they go on-air with neon-coded status so you never miss a drop.
+    </p>
+    <p class="intro-lede">
+      Built for fans, radio curators, and artists, synth.wave highlights underground streams, curates platform links, and keeps the vibe flowing across YouTube, Twitch, and beyond.
+    </p>
+    {{if .RosterError}}
+      <div class="submit-streamer-result" data-state="error">{{.RosterError}}</div>
+    {{end}}
+  </section>
+
+  <section class="streamer-table" aria-label="synth.wave stream roster">
+    <table>
+      <thead>
+        <tr>
+          <th scope="col">Status</th>
+          <th scope="col">Name</th>
+          <th scope="col">Streaming Platforms</th>
+          <th scope="col">Language</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{range .Streamers}}
+          <tr>
+            <td data-label="Status">
+              <span class="status {{statusClass .Status}}">{{statusLabel .Status .StatusLabel}}</span>
+            </td>
+            <td data-label="Name">
+              <strong><span class="platform-link" aria-disabled="true">{{.Name}}</span></strong>
+              {{if .Description}}
+                <div class="streamer-description">{{.Description}}</div>
+              {{end}}
+            </td>
+            <td data-label="Streaming Platforms">
+              {{if and .Platforms (eq (statusClass .Status) "online")}}
+                <ul class="platform-list">
+                  {{range .Platforms}}
+                    {{$isYouTube := eq (lower .Name) "youtube"}}
+                    <li>
+                      {{if .ChannelURL}}
+                        <a class="platform-link {{if $isYouTube}}platform-youtube{{end}}" href="{{.ChannelURL}}" target="_blank" rel="noopener noreferrer">
+                          {{if $isYouTube}}
+                            <span class="sr-only">YouTube</span>
+                            <span class="platform-icon platform-icon-youtube" aria-hidden="true"></span>
+                          {{else}}{{.Name}}{{end}}
+                        </a>
+                      {{else}}
+                        <span class="platform-link {{if $isYouTube}}platform-youtube{{end}}" aria-disabled="true">
+                          {{if $isYouTube}}
+                            <span class="sr-only">YouTube</span>
+                            <span class="platform-icon platform-icon-youtube" aria-hidden="true"></span>
+                          {{else}}{{.Name}}{{end}}
+                        </span>
+                      {{end}}
+                    </li>
+                  {{end}}
+                </ul>
+              {{else}}—{{end}}
+            </td>
+            <td data-label="Language">
+              <span class="lang">
+                {{if .Languages}}{{join .Languages " · "}}{{else}}—{{end}}
+              </span>
+            </td>
+          </tr>
+        {{else}}
+          <tr><td colspan="4" class="table-status">No streams online right now.</td></tr>
+        {{end}}
+      </tbody>
+    </table>
+  </section>
+
+  {{template "submit_form" .Submit}}
+</main>
+{{end}}

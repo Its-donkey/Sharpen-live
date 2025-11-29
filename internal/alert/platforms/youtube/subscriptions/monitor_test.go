@@ -3,13 +3,12 @@ package subscriptions
 import (
 	"context"
 	"encoding/json"
+	"github.com/Its-donkey/Sharpen-live/internal/alert/streamers"
 	"os"
 	"path/filepath"
 	"sync"
 	"testing"
 	"time"
-
-	"github.com/Its-donkey/Sharpen-live/internal/alert/streamers"
 )
 
 func TestLeaseMonitorRenewsWhenWindowReached(t *testing.T) {

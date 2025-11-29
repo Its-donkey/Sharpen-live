@@ -4,16 +4,15 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/Its-donkey/Sharpen-live/internal/alert/platforms/youtube/ratelimit"
 	"io"
 	"net/http"
 	"net/url"
 	"strings"
 	"time"
-
-	"github.com/Its-donkey/Sharpen-live/internal/alert/platforms/youtube/ratelimit"
+	// SearchLiveResult represents the live search result for a channel.
 )
 
-// SearchLiveResult represents the live search result for a channel.
 type SearchLiveResult struct {
 	VideoID   string
 	StartedAt time.Time
@@ -24,6 +23,7 @@ type SearchLiveResult struct {
 type SearchClient struct {
 	APIKey     string
 	HTTPClient *http.Client
+	BaseURL    string
 }
 
 // LiveNow returns the current live video (if any) for the channel.
@@ -36,20 +36,21 @@ func (c SearchClient) LiveNow(ctx context.Context, channelID string) (SearchLive
 	apiKey := strings.TrimSpace(c.APIKey)
 	client := c.HTTPClient
 	if client == nil {
-		client = &http.Client{Timeout: 5 * time.Second}
+		client = &http.Client{Timeout: 30 * time.Second}
 	}
 	client = ratelimit.Client(client)
 
-	endpoint, _ := url.Parse("https://www.googleapis.com/youtube/v3/search/")
-	q := endpoint.Query()
-	q.Set("part", "snippet")
-	q.Set("channelId", ch)
-	q.Set("eventType", "live")
-	q.Set("type", "video")
-	if apiKey != "" {
-		q.Set("key", apiKey)
+	endpoint, _ := url.Parse(c.baseURL())
+	params := []string{
+		"part=" + url.QueryEscape("snippet"),
+		"channelId=" + url.QueryEscape(ch),
+		"eventType=" + url.QueryEscape("live"),
+		"type=" + url.QueryEscape("video"),
 	}
-	endpoint.RawQuery = q.Encode()
+	if apiKey != "" {
+		params = append(params, "key="+url.QueryEscape(apiKey))
+	}
+	endpoint.RawQuery = strings.Join(params, "&")
 
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, endpoint.String(), nil)
 	if err != nil {
@@ -66,6 +67,7 @@ func (c SearchClient) LiveNow(ctx context.Context, channelID string) (SearchLive
 	if err != nil {
 		return SearchLiveResult{}, fmt.Errorf("read search response: %w", err)
 	}
+
 	if resp.StatusCode < http.StatusOK || resp.StatusCode >= http.StatusMultipleChoices {
 		return SearchLiveResult{}, fmt.Errorf("search API %s: %s", resp.Status, string(body))
 	}
@@ -93,6 +95,13 @@ func (c SearchClient) LiveNow(ctx context.Context, channelID string) (SearchLive
 	}
 
 	return SearchLiveResult{}, nil
+}
+
+func (c SearchClient) baseURL() string {
+	if trimmed := strings.TrimSpace(c.BaseURL); trimmed != "" {
+		return trimmed
+	}
+	return "https://www.googleapis.com/youtube/v3/search"
 }
 
 type searchResponse struct {

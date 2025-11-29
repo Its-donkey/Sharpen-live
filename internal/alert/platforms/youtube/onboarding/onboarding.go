@@ -6,14 +6,12 @@ import (
 	"encoding/base64"
 	"errors"
 	"fmt"
+	"github.com/Its-donkey/Sharpen-live/internal/alert/platforms/youtube/subscriptions"
+	"github.com/Its-donkey/Sharpen-live/internal/alert/streamers"
 	"net/http"
 	"net/url"
 	"strings"
 	"time"
-
-	"github.com/Its-donkey/Sharpen-live/internal/alert/logging"
-	"github.com/Its-donkey/Sharpen-live/internal/alert/platforms/youtube/subscriptions"
-	"github.com/Its-donkey/Sharpen-live/internal/alert/streamers"
 )
 
 // Options configures how YouTube onboarding should behave.
@@ -23,8 +21,32 @@ type Options struct {
 	CallbackURL  string
 	VerifyMode   string
 	LeaseSeconds int
-	Logger       logging.Logger
 	Store        *streamers.Store
+}
+
+// OnboardRequest captures the minimal data required to onboard a YouTube channel.
+type OnboardRequest struct {
+	ChannelID string
+	Lease     time.Duration
+}
+
+// Service provides helpers for onboarding channels.
+type Service struct{}
+
+// OnboardChannel validates an onboarding request and returns an error for invalid input.
+func (Service) OnboardChannel(ctx context.Context, req OnboardRequest) error {
+	if ctx != nil {
+		if err := ctx.Err(); err != nil {
+			return err
+		}
+	}
+	if strings.TrimSpace(req.ChannelID) == "" {
+		return errors.New("channel id is required")
+	}
+	if req.Lease <= 0 {
+		return errors.New("lease must be positive")
+	}
+	return nil
 }
 
 // FromURL parses the provided channel URL, resolves missing metadata, updates the streamer record,
@@ -97,7 +119,6 @@ func FromURL(ctx context.Context, record streamers.Record, channelURL string, op
 	subscribeOpts := subscriptions.Options{
 		Client:       client,
 		HubURL:       hubURL,
-		Logger:       opts.Logger,
 		Mode:         "subscribe",
 		LeaseSeconds: leaseSeconds,
 		Verify:       verifyMode,

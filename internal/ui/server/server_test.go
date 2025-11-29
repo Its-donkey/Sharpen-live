@@ -2,6 +2,12 @@ package server
 
 import (
 	"context"
+	adminauth "github.com/Its-donkey/Sharpen-live/internal/alert/admin/auth"
+	adminservice "github.com/Its-donkey/Sharpen-live/internal/alert/admin/service"
+	youtubeservice "github.com/Its-donkey/Sharpen-live/internal/alert/platforms/youtube/service"
+	"github.com/Its-donkey/Sharpen-live/internal/alert/streamers"
+	streamersvc "github.com/Its-donkey/Sharpen-live/internal/alert/streamers/service"
+	"github.com/Its-donkey/Sharpen-live/internal/alert/submissions"
 	"html/template"
 	"net/http"
 	"net/http/httptest"
@@ -11,13 +17,6 @@ import (
 	"strings"
 	"testing"
 	"time"
-
-	adminauth "github.com/Its-donkey/Sharpen-live/internal/alert/admin/auth"
-	adminservice "github.com/Its-donkey/Sharpen-live/internal/alert/admin/service"
-	youtubeservice "github.com/Its-donkey/Sharpen-live/internal/alert/platforms/youtube/service"
-	"github.com/Its-donkey/Sharpen-live/internal/alert/streamers"
-	streamersvc "github.com/Its-donkey/Sharpen-live/internal/alert/streamers/service"
-	"github.com/Its-donkey/Sharpen-live/internal/alert/submissions"
 )
 
 func TestHandleHomeRendersStreamers(t *testing.T) {
@@ -357,7 +356,6 @@ func TestStreamersWatchAlias(t *testing.T) {
 	path := filepath.Join(t.TempDir(), "streamers.json")
 	handler := streamersWatchHandler(streamersWatchOptions{
 		FilePath: path,
-		Logger:   nil,
 	})
 
 	ctx, cancel := context.WithCancel(context.Background())
@@ -398,7 +396,6 @@ func newTestServer() *server {
 		adminSubmissions: &stubAdminSubmissions{},
 		statusChecker:    &stubStatusChecker{},
 		adminManager:     &stubAdminManager{valid: true},
-		logger:           nil,
 		adminEmail:       "admin@example.com",
 		metadataFetcher:  stubMetadataFetcher{},
 		socialImagePath:  "/og-image.png",

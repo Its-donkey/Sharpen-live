@@ -3,18 +3,15 @@ package service
 import (
 	"context"
 	"errors"
-	"fmt"
+	youtubeapi "github.com/Its-donkey/Sharpen-live/internal/alert/platforms/youtube/api"
+	"github.com/Its-donkey/Sharpen-live/internal/alert/streamers"
 	"net/http"
 	"net/url"
 	"strings"
 	"time"
-
-	"github.com/Its-donkey/Sharpen-live/internal/alert/logging"
-	youtubeapi "github.com/Its-donkey/Sharpen-live/internal/alert/platforms/youtube/api"
-	"github.com/Its-donkey/Sharpen-live/internal/alert/streamers"
+	// StatusCheckResult summarises the outcome of a status refresh across all channels.
 )
 
-// StatusCheckResult summarises the outcome of a status refresh across all channels.
 type StatusCheckResult struct {
 	Checked int `json:"checked"`
 	Online  int `json:"online"`
@@ -27,7 +24,6 @@ type StatusCheckResult struct {
 type StatusChecker struct {
 	Streamers *streamers.Store
 	Search    liveSearcher
-	Logger    logging.Logger
 }
 
 type liveSearcher interface {
@@ -54,7 +50,6 @@ func (c StatusChecker) CheckAll(ctx context.Context) (StatusCheckResult, error) 
 	}
 
 	search := c.search()
-	logStatus(c.Logger, "Starting status refresh for %d streamers", len(records))
 
 	for _, record := range records {
 		yt := record.Platforms.YouTube
@@ -65,7 +60,6 @@ func (c StatusChecker) CheckAll(ctx context.Context) (StatusCheckResult, error) 
 		outcome, err := c.checkYouTube(ctx, record, *yt, search)
 		if err != nil {
 			result.Failed++
-			logStatus(c.Logger, "Status check failed for %s: %v", record.Streamer.Alias, err)
 			continue
 		}
 		if outcome.live {
@@ -75,11 +69,9 @@ func (c StatusChecker) CheckAll(ctx context.Context) (StatusCheckResult, error) 
 		}
 		if outcome.updated {
 			result.Updated++
-			logStatus(c.Logger, "Updated status for %s: live=%v video=%s", record.Streamer.Alias, outcome.live, outcome.videoID)
 		}
 	}
 
-	logStatus(c.Logger, "Status refresh complete: checked=%d online=%d offline=%d updated=%d failed=%d", result.Checked, result.Online, result.Offline, result.Updated, result.Failed)
 	return result, nil
 }
 
@@ -160,11 +152,4 @@ func withTimeout(parent context.Context, d time.Duration) (context.Context, cont
 		return context.WithTimeout(context.Background(), d)
 	}
 	return context.WithTimeout(parent, d)
-}
-
-func logStatus(logger logging.Logger, format string, args ...any) {
-	if logger == nil {
-		return
-	}
-	logging.LogWithID(logger, "investigative", "", fmt.Sprintf(format, args...))
 }

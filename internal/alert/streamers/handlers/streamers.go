@@ -4,14 +4,12 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"net/http"
-
-	"github.com/Its-donkey/Sharpen-live/internal/alert/logging"
 	"github.com/Its-donkey/Sharpen-live/internal/alert/streamers"
 	streamersvc "github.com/Its-donkey/Sharpen-live/internal/alert/streamers/service"
+	"net/http"
+	// StreamerService describes the dependencies required by the HTTP handlers.
 )
 
-// StreamerService describes the dependencies required by the HTTP handlers.
 type StreamerService interface {
 	List(ctx context.Context) ([]streamers.Record, error)
 	Create(ctx context.Context, req streamersvc.CreateRequest) (streamersvc.CreateResult, error)
@@ -22,12 +20,10 @@ type StreamerService interface {
 // StreamOptions configures the streamer handler.
 type StreamOptions struct {
 	Service StreamerService
-	Logger  logging.Logger
 }
 
 type streamersHTTPHandler struct {
 	service StreamerService
-	logger  logging.Logger
 }
 
 // StreamersHandler returns a handler for GET/POST /api/streamers.
@@ -37,7 +33,7 @@ func StreamersHandler(opts StreamOptions) http.Handler {
 			http.Error(w, "streamer service not configured", http.StatusInternalServerError)
 		})
 	}
-	h := &streamersHTTPHandler{service: opts.Service, logger: opts.Logger}
+	h := &streamersHTTPHandler{service: opts.Service}
 	return http.HandlerFunc(h.serveHTTP)
 }
 
@@ -68,9 +64,6 @@ func (h *streamersHTTPHandler) respondError(w http.ResponseWriter, err error, de
 	case errors.Is(err, streamersvc.ErrSubscription):
 		http.Error(w, "failed to update YouTube subscription", http.StatusBadGateway)
 	default:
-		if h.logger != nil {
-			h.logger.Printf("%s: %v", defaultMessage, err)
-		}
 		http.Error(w, defaultMessage, http.StatusInternalServerError)
 	}
 }

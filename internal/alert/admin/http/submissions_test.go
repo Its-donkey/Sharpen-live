@@ -5,15 +5,14 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	"net/http"
-	"net/http/httptest"
-	"testing"
-	"time"
-
 	adminhttp "github.com/Its-donkey/Sharpen-live/internal/alert/admin/http"
 	adminservice "github.com/Its-donkey/Sharpen-live/internal/alert/admin/service"
 	"github.com/Its-donkey/Sharpen-live/internal/alert/streamers"
 	"github.com/Its-donkey/Sharpen-live/internal/alert/submissions"
+	"net/http"
+	"net/http/httptest"
+	"testing"
+	"time"
 )
 
 func TestSubmissionsHandlerList(t *testing.T) {

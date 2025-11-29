@@ -2,11 +2,10 @@ package service
 
 import (
 	"context"
-	"testing"
-	"time"
-
 	youtubeapi "github.com/Its-donkey/Sharpen-live/internal/alert/platforms/youtube/api"
 	"github.com/Its-donkey/Sharpen-live/internal/alert/streamers"
+	"testing"
+	"time"
 )
 
 func TestStatusCheckerMarksLiveFromSearch(t *testing.T) {

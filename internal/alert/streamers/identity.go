@@ -1,10 +1,9 @@
 package streamers
 
 import (
+	"github.com/google/uuid"
 	"strings"
 	"unicode"
-
-	"github.com/google/uuid"
 )
 
 // GenerateID returns a random alphanumeric identifier for new streamer records.

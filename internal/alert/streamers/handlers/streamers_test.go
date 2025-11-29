@@ -5,12 +5,11 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"github.com/Its-donkey/Sharpen-live/internal/alert/streamers"
+	streamersvc "github.com/Its-donkey/Sharpen-live/internal/alert/streamers/service"
 	"net/http"
 	"net/http/httptest"
 	"testing"
-
-	"github.com/Its-donkey/Sharpen-live/internal/alert/streamers"
-	streamersvc "github.com/Its-donkey/Sharpen-live/internal/alert/streamers/service"
 )
 
 type fakeService struct {

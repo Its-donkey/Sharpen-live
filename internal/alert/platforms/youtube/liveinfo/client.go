@@ -5,22 +5,19 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/Its-donkey/Sharpen-live/internal/alert/platforms/youtube/ratelimit"
 	"io"
 	"net/http"
 	"net/url"
 	"regexp"
 	"strings"
 	"time"
-
-	"github.com/Its-donkey/Sharpen-live/internal/alert/logging"
-	"github.com/Its-donkey/Sharpen-live/internal/alert/platforms/youtube/ratelimit"
 )
 
 // Client fetches live metadata by scraping YouTube watch pages (no API key required).
 type Client struct {
 	HTTPClient *http.Client
 	BaseURL    string
-	Logger     logging.Logger
 }
 
 // VideoInfo represents the parsed metadata for a video.
@@ -136,10 +133,9 @@ func (c *Client) fetchSingle(ctx context.Context, client *http.Client, baseURL, 
 }
 
 func (c *Client) logf(format string, args ...any) {
-	if c == nil || c.Logger == nil {
+	if c == nil {
 		return
 	}
-	c.Logger.Printf(format, args...)
 }
 
 var playerResponsePattern = regexp.MustCompile(`(?s)ytInitialPlayerResponse\s*=\s*(\{.+?\});`)

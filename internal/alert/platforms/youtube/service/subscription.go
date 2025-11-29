@@ -4,13 +4,11 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"github.com/Its-donkey/Sharpen-live/internal/alert/platforms/youtube/subscriptions"
+	"github.com/Its-donkey/Sharpen-live/internal/alert/platforms/youtube/websub"
 	"net/http"
 	"strings"
 	"time"
-
-	"github.com/Its-donkey/Sharpen-live/internal/alert/logging"
-	"github.com/Its-donkey/Sharpen-live/internal/alert/platforms/youtube/subscriptions"
-	"github.com/Its-donkey/Sharpen-live/internal/alert/platforms/youtube/websub"
 )
 
 const defaultSubscriptionTimeout = 10 * time.Second
@@ -43,7 +41,6 @@ func (e *ProxyError) Unwrap() error {
 type SubscriptionProxy struct {
 	mode         string
 	client       *http.Client
-	logger       logging.Logger
 	hubURL       string
 	callbackURL  string
 	verifyMode   string
@@ -54,7 +51,6 @@ type SubscriptionProxy struct {
 // SubscriptionProxyOptions configures the proxy defaults.
 type SubscriptionProxyOptions struct {
 	Client       *http.Client
-	Logger       logging.Logger
 	HubURL       string
 	CallbackURL  string
 	VerifyMode   string
@@ -67,7 +63,6 @@ func NewSubscriptionProxy(mode string, opts SubscriptionProxyOptions) *Subscript
 	return &SubscriptionProxy{
 		mode:         mode,
 		client:       opts.Client,
-		logger:       opts.Logger,
 		hubURL:       strings.TrimSpace(opts.HubURL),
 		callbackURL:  strings.TrimSpace(opts.CallbackURL),
 		verifyMode:   strings.TrimSpace(opts.VerifyMode),
@@ -90,20 +85,14 @@ func (p *SubscriptionProxy) Process(ctx context.Context, req subscriptions.YouTu
 	}
 	applySubscriptionDefaults(&req, p.mode, defaults)
 
-	resp, body, finalReq, err := subscriptions.SubscribeYouTube(ctx, client, p.logger, req)
+	resp, body, finalReq, err := subscriptions.SubscribeYouTube(ctx, client, req)
 	if err != nil {
 		if resp == nil {
 			status := http.StatusBadGateway
 			if errors.Is(err, subscriptions.ErrValidation) {
 				status = http.StatusBadRequest
 			}
-			if p.logger != nil {
-				p.logger.Printf("%s hub response: %v", p.mode, err)
-			}
 			return SubscriptionResult{}, &ProxyError{Status: status, Err: err}
-		}
-		if p.logger != nil {
-			p.logger.Printf("%s hub response: %v", p.mode, err)
 		}
 	}
 	if resp == nil {

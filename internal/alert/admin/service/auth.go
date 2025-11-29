@@ -2,10 +2,9 @@ package service
 
 import (
 	"errors"
+	adminauth "github.com/Its-donkey/Sharpen-live/internal/alert/admin/auth"
 	"net/http"
 	"strings"
-
-	adminauth "github.com/Its-donkey/Sharpen-live/internal/alert/admin/auth"
 )
 
 // AuthService provides helpers for validating admin credentials and tokens.

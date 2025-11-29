@@ -28,7 +28,7 @@
 			{
 				"label": "Run Sharpen UI server",
 				"type": "shell",
-				"command": "go run ./cmd/ui-server -listen 127.0.0.1:4173 -api http://127.0.0.1:8880 -assets ui -templates ui/templates",
+				"command": "go run ./cmd/ui-server -listen 127.0.0.1:4173 -api http://127.0.0.1:8880 -assets ui/sites/sharpen-live -templates ui/sites/sharpen-live/templates",
 				"group": "build",
 				"problemMatcher": "$go",
 				"detail": "Start the server-rendered UI with API proxying to the alert server."
@@ -77,9 +77,9 @@
 					"-api",
 					"http://127.0.0.1:8880",
 					"-assets",
-					"ui",
+					"ui/sites/sharpen-live",
 					"-templates",
-					"ui/templates"
+					"ui/sites/sharpen-live/templates"
 				],
 				"cwd": "${workspaceFolder:sharpen-live}"
 			},

@@ -1,49 +1,40 @@
+// file name — /internal/ui/state/roster_cache.go
 package state
 
-import "github.com/Its-donkey/Sharpen-live/internal/ui/model"
+import (
+	"github.com/Its-donkey/Sharpen-live/internal/ui/model"
+	"sync"
+)
 
-var rosterSnapshot []model.Streamer
-
-// StoreRosterSnapshot caches the latest public roster for offline use in the WASM UI.
-func StoreRosterSnapshot(streamers []model.Streamer) {
-	if len(streamers) == 0 {
-		return
-	}
-	rosterSnapshot = cloneStreamers(streamers)
+// RosterCache maintains an in-memory snapshot of streamers.
+type RosterCache struct {
+	mu        sync.RWMutex
+	streamers []model.Streamer
 }
 
-// LoadRosterSnapshot returns a deep copy of the cached roster if it exists.
-func LoadRosterSnapshot() []model.Streamer {
-	if len(rosterSnapshot) == 0 {
-		return nil
-	}
-	return cloneStreamers(rosterSnapshot)
+// NewRosterCache constructs an empty RosterCache.
+func NewRosterCache() *RosterCache {
+	return &RosterCache{}
 }
 
-func cloneStreamers(entries []model.Streamer) []model.Streamer {
-	if len(entries) == 0 {
-		return nil
-	}
-	clones := make([]model.Streamer, len(entries))
-	for i, s := range entries {
-		clones[i] = model.Streamer{
-			ID:          s.ID,
-			Name:        s.Name,
-			Description: s.Description,
-			Status:      s.Status,
-			StatusLabel: s.StatusLabel,
-			Languages:   append([]string(nil), s.Languages...),
-			Platforms:   clonePlatforms(s.Platforms),
-		}
-	}
-	return clones
+// Snapshot returns a copy of the current snapshot.
+//
+// Callers can safely modify the returned slice without affecting the cache.
+func (c *RosterCache) Snapshot() []model.Streamer {
+	c.mu.RLock()
+	defer c.mu.RUnlock()
+
+	cp := make([]model.Streamer, len(c.streamers))
+	copy(cp, c.streamers)
+	return cp
 }
 
-func clonePlatforms(entries []model.Platform) []model.Platform {
-	if len(entries) == 0 {
-		return nil
-	}
-	clones := make([]model.Platform, len(entries))
-	copy(clones, entries)
-	return clones
+// Update replaces the current snapshot.
+func (c *RosterCache) Update(streamers []model.Streamer) {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+
+	cp := make([]model.Streamer, len(streamers))
+	copy(cp, streamers)
+	c.streamers = cp
 }

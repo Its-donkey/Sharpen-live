@@ -4,14 +4,12 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/PuerkitoBio/goquery"
 	"io"
 	"net/http"
 	"net/url"
 	"strings"
 	"time"
-
-	"github.com/Its-donkey/Sharpen-live/internal/alert/platforms/youtube/ratelimit"
-	"github.com/PuerkitoBio/goquery"
 )
 
 const defaultMetadataTimeout = 5 * time.Second
@@ -76,7 +74,7 @@ func (s MetadataService) httpClient() *http.Client {
 	if client == nil {
 		client = &http.Client{Timeout: s.requestTimeout()}
 	}
-	return ratelimit.Client(client)
+	return client
 }
 
 func (s MetadataService) fetchMetadata(ctx context.Context, target string) (string, string, string, string, error) {

@@ -1,3 +1,4 @@
+// file name — /internal/alert/platforms/youtube/ratelimit/limiter.go
 package ratelimit
 
 import (
@@ -9,25 +10,42 @@ import (
 
 var (
 	mu       sync.Mutex
-	gate     chan time.Time
-	ticker   *time.Ticker
 	interval = 5 * time.Second
 )
 
-// Wait blocks until the next YouTube request slot is available or the context is canceled.
-// The first call is allowed immediately; subsequent calls are spaced by the configured interval.
-func Wait(ctx context.Context) error {
-	ensureStarted()
-	select {
-	case <-ctx.Done():
-		return ctx.Err()
-	case <-gate:
-		return nil
-	}
+// throttledTransport wraps a base RoundTripper and enforces a minimum delay
+// between requests using the global interval.
+type throttledTransport struct {
+	base http.RoundTripper
 }
 
-// Client wraps the provided HTTP client with a transport that enforces the throttle interval.
-// If base is nil, http.DefaultClient is used.
+// RoundTrip waits for the configured interval or for the request context to
+// cancel before delegating to the underlying RoundTripper.
+func (t throttledTransport) RoundTrip(req *http.Request) (*http.Response, error) {
+	ctx := req.Context()
+
+	// Capture the current interval under lock to avoid races.
+	mu.Lock()
+	currentInterval := interval
+	mu.Unlock()
+
+	if currentInterval > 0 {
+		select {
+		case <-ctx.Done():
+			return nil, ctx.Err()
+		case <-time.After(currentInterval):
+		}
+	}
+
+	return t.base.RoundTrip(req)
+}
+
+// ensureStarted is kept for API compatibility with the original implementation.
+// The new implementation does not require background goroutines, so this is a no-op.
+func ensureStarted() {}
+
+// Client wraps the provided HTTP client with a transport that enforces a
+// throttle interval. If base is nil, http.DefaultClient is used.
 func Client(base *http.Client) *http.Client {
 	ensureStarted()
 	if base == nil {
@@ -45,39 +63,21 @@ func Client(base *http.Client) *http.Client {
 func SetIntervalForTesting(d time.Duration) {
 	mu.Lock()
 	defer mu.Unlock()
-	if ticker != nil {
-		ticker.Stop()
-	}
-	gate = nil
-	ticker = nil
-	if d > 0 {
-		interval = d
-	}
+	interval = d
 }
 
-type throttledTransport struct {
-	base http.RoundTripper
-}
-
-func (t throttledTransport) RoundTrip(req *http.Request) (*http.Response, error) {
-	if err := Wait(req.Context()); err != nil {
-		return nil, err
-	}
-	return t.base.RoundTrip(req)
-}
-
-func ensureStarted() {
+// Wait blocks for the configured interval or until the context is canceled.
+func Wait(ctx context.Context) error {
 	mu.Lock()
-	defer mu.Unlock()
-	if gate != nil {
-		return
+	delay := interval
+	mu.Unlock()
+	if delay <= 0 {
+		return ctx.Err()
 	}
-	gate = make(chan time.Time, 1)
-	gate <- time.Now()
-	ticker = time.NewTicker(interval)
-	go func() {
-		for t := range ticker.C {
-			gate <- t
-		}
-	}()
+	select {
+	case <-ctx.Done():
+		return ctx.Err()
+	case <-time.After(delay):
+		return nil
+	}
 }

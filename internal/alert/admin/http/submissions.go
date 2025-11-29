@@ -4,17 +4,15 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	"net/http"
-
 	adminauth "github.com/Its-donkey/Sharpen-live/internal/alert/admin/auth"
 	adminservice "github.com/Its-donkey/Sharpen-live/internal/alert/admin/service"
 	"github.com/Its-donkey/Sharpen-live/internal/alert/config"
-	"github.com/Its-donkey/Sharpen-live/internal/alert/logging"
 	"github.com/Its-donkey/Sharpen-live/internal/alert/streamers"
 	"github.com/Its-donkey/Sharpen-live/internal/alert/submissions"
+	"net/http"
+	// SubmissionsHandlerOptions configures the admin submissions handler.
 )
 
-// SubmissionsHandlerOptions configures the admin submissions handler.
 type SubmissionsHandlerOptions struct {
 	Authorizer       authorizer
 	Service          submissionsService
@@ -22,7 +20,6 @@ type SubmissionsHandlerOptions struct {
 	SubmissionsStore *submissions.Store
 	StreamersStore   *streamers.Store
 	YouTubeClient    *http.Client
-	Logger           logging.Logger
 	YouTube          config.YouTubeConfig
 }
 
@@ -38,7 +35,6 @@ type submissionsService interface {
 type submissionsHandler struct {
 	authorizer authorizer
 	service    submissionsService
-	logger     logging.Logger
 }
 
 // NewSubmissionsHandler constructs the admin submissions HTTP handler.
@@ -54,13 +50,11 @@ func NewSubmissionsHandler(opts SubmissionsHandlerOptions) http.Handler {
 			StreamersStore:   opts.StreamersStore,
 			YouTubeClient:    opts.YouTubeClient,
 			YouTube:          opts.YouTube,
-			Logger:           opts.Logger,
 		})
 	}
 	return submissionsHandler{
 		authorizer: auth,
 		service:    svc,
-		logger:     opts.Logger,
 	}
 }
 
@@ -87,9 +81,6 @@ func (h submissionsHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 func (h submissionsHandler) list(w http.ResponseWriter, r *http.Request) {
 	pending, err := h.service.List(r.Context())
 	if err != nil {
-		if h.logger != nil {
-			h.logger.Printf("list submissions: %v", err)
-		}
 		http.Error(w, "failed to load submissions", http.StatusInternalServerError)
 		return
 	}
@@ -125,9 +116,6 @@ func (h submissionsHandler) handleProcessError(w http.ResponseWriter, err error)
 	case errors.Is(err, streamers.ErrDuplicateAlias):
 		http.Error(w, "a streamer with that alias already exists", http.StatusConflict)
 	default:
-		if h.logger != nil {
-			h.logger.Printf("update submission: %v", err)
-		}
 		http.Error(w, "failed to update submission", http.StatusInternalServerError)
 	}
 }

@@ -2,12 +2,11 @@ package monitoring_test
 
 import (
 	"context"
+	"github.com/Its-donkey/Sharpen-live/internal/alert/platforms/youtube/monitoring"
+	"github.com/Its-donkey/Sharpen-live/internal/alert/streamers"
 	"path/filepath"
 	"testing"
 	"time"
-
-	"github.com/Its-donkey/Sharpen-live/internal/alert/platforms/youtube/monitoring"
-	"github.com/Its-donkey/Sharpen-live/internal/alert/streamers"
 )
 
 func TestServiceOverview(t *testing.T) {

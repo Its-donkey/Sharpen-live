@@ -22,4 +22,4 @@ live-stream-alerts/node_modules/
 # Local data snapshots
 data/
 scripts/
-alertserver
+/alertserver

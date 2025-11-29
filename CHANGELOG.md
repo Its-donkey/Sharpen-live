@@ -32,6 +32,7 @@
 ### Fixed
 - Home page now renders even when roster loading fails, surfacing the error inline instead of crashing the template.
 - HTTP logging wrapper no longer triggers superfluous WriteHeader warnings when handlers write headers after a body.
+- Submit form template now binds directly to the submit form state and status badges render with the correct helper signature, preventing template execution errors on the home page.
 - Alert server: rotate the log file after 24 hours of uptime, matching the restart rotation behavior.
 - Logging: write category log files as flat `logevents` arrays (no nested envelopes) so http/general logs stay valid JSON.
 - Logging: reopen and rewrite category log files on each write to avoid holding open handles and keep envelopes valid for downstream readers.

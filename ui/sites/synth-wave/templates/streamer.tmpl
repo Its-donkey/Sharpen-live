@@ -7,7 +7,7 @@
   <section class="intro">
     <h2 id="streamer-name">{{.Streamer.Name}}</h2>
     <p>
-      <span class="status {{statusClass .Streamer.Status}}">{{statusLabel .Streamer.Status .Streamer.StatusLabel}}</span>
+      <span class="status {{statusClass .Streamer.Status}}">{{statusLabel .Streamer.Status}}</span>
       {{if .Streamer.Description}}
         <span class="streamer-description">{{.Streamer.Description}}</span>
       {{end}}

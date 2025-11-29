@@ -96,7 +96,7 @@
               <div class="admin-card-header">
                 <div class="admin-card-heading">
                   <h4>{{.Name}}</h4>
-                  <span class="admin-card-meta">Status: {{statusLabel .Status .StatusLabel}}</span>
+                  <span class="admin-card-meta">Status: {{statusLabel .Status}}</span>
                 </div>
                 <form method="post" action="/admin/streamers/delete" class="admin-card-actions admin-card-actions--streamer">
                   <input type="hidden" name="id" value="{{.ID}}">

@@ -155,18 +155,24 @@ func (s *server) renderHome(w http.ResponseWriter, r *http.Request, page basePag
 
 func (s *server) renderHomeWithRoster(w http.ResponseWriter, r *http.Request, page basePageData, state []model.Streamer, rosterErr string, submit model.SubmitFormState) {
 	page.StructuredData = s.homeStructuredData(s.absoluteURL(r, "/"))
+	submitView := submitFormView{
+		State:           submit,
+		LanguageOptions: forms.AvailableLanguageOptions(submit.Languages),
+		FormAction:      "",
+		MaxPlatforms:    model.MaxPlatforms,
+	}
 	data := struct {
 		basePageData
 		Roster      []model.Streamer
 		Streamers   []model.Streamer
 		RosterError string
-		Submit      model.SubmitFormState
+		Submit      submitFormView
 	}{
 		basePageData: page,
 		Roster:       state,
 		Streamers:    state,
 		RosterError:  rosterErr,
-		Submit:       submit,
+		Submit:       submitView,
 	}
 
 	tmpl := s.templates["home"]

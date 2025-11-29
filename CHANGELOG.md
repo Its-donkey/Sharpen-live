@@ -22,6 +22,7 @@
 - Config: default server listen/templates/assets/log directories now come from `config.json` (see `ui` block) so running without flags picks up file settings.
  - Config: renamed `ui` block to `app` and added `data` so streamers/submissions/logs/templates/assets paths are all configurable from config.json.
 - Docs: update layout/run commands to reflect the consolidated server entrypoint.
+- Forms: split submit helpers into focused files (state, languages, platforms, secrets, description) to simplify maintenance.
 - Config/Docs: capture per-site `app.name` plus site-specific server/assets/log/data roots in config.json and README so multi-site deployments stay isolated.
 - UI: drop legacy root templates/assets in favour of per-site (Sharpen.Live, synth.wave) and catch-all directories.
 - YouTube API: prefer `YOUTUBE_API_KEY`/`YT_API_KEY` environment values for both config loading and the player client default key instead of the baked-in sample key.

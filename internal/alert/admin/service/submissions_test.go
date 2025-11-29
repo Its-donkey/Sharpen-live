@@ -3,14 +3,13 @@ package service
 import (
 	"context"
 	"errors"
+	"github.com/Its-donkey/Sharpen-live/internal/alert/config"
+	"github.com/Its-donkey/Sharpen-live/internal/alert/streamers"
+	"github.com/Its-donkey/Sharpen-live/internal/alert/submissions"
 	"net/http"
 	"path/filepath"
 	"testing"
 	"time"
-
-	"github.com/Its-donkey/Sharpen-live/internal/alert/config"
-	"github.com/Its-donkey/Sharpen-live/internal/alert/streamers"
-	"github.com/Its-donkey/Sharpen-live/internal/alert/submissions"
 )
 
 func TestSubmissionsServiceReject(t *testing.T) {

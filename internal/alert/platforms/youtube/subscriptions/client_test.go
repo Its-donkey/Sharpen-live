@@ -2,11 +2,10 @@ package subscriptions
 
 import (
 	"context"
+	"github.com/Its-donkey/Sharpen-live/internal/alert/platforms/youtube/websub"
 	"net/http"
 	"net/http/httptest"
 	"testing"
-
-	"github.com/Its-donkey/Sharpen-live/internal/alert/platforms/youtube/websub"
 )
 
 func TestSubscribeYouTubeSuccess(t *testing.T) {
@@ -34,7 +33,7 @@ func TestSubscribeYouTubeSuccess(t *testing.T) {
 		LeaseSeconds: 120,
 	}
 
-	resp, body, finalReq, err := SubscribeYouTube(context.Background(), hub.Client(), nil, req)
+	resp, body, finalReq, err := SubscribeYouTube(context.Background(), hub.Client(), req)
 	if err != nil {
 		t.Fatalf("unexpected error: %v", err)
 	}
@@ -51,7 +50,7 @@ func TestSubscribeYouTubeSuccess(t *testing.T) {
 }
 
 func TestSubscribeYouTubeValidatesConfig(t *testing.T) {
-	_, _, _, err := SubscribeYouTube(context.Background(), nil, nil, YouTubeRequest{
+	_, _, _, err := SubscribeYouTube(context.Background(), nil, YouTubeRequest{
 		Topic: "https://example",
 		Mode:  "subscribe",
 	})
@@ -76,7 +75,7 @@ func TestSubscribeYouTubePropagatesHubErrors(t *testing.T) {
 		LeaseSeconds: 60,
 	}
 
-	resp, body, _, err := SubscribeYouTube(context.Background(), hub.Client(), nil, req)
+	resp, body, _, err := SubscribeYouTube(context.Background(), hub.Client(), req)
 	if err == nil {
 		t.Fatalf("expected error for non-2xx response")
 	}
@@ -113,7 +112,7 @@ func TestSubscribeYouTubeRejectsUnsafeURLs(t *testing.T) {
 
 	for _, tc := range cases {
 		t.Run(tc.name, func(t *testing.T) {
-			if _, _, _, err := SubscribeYouTube(context.Background(), nil, nil, tc.req); err == nil {
+			if _, _, _, err := SubscribeYouTube(context.Background(), nil, tc.req); err == nil {
 				t.Fatalf("expected validation error")
 			}
 		})

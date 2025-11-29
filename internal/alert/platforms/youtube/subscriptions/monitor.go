@@ -3,15 +3,13 @@ package subscriptions
 import (
 	"context"
 	"fmt"
+	"github.com/Its-donkey/Sharpen-live/internal/alert/streamers"
 	"strings"
 	"sync"
 	"time"
-
-	"github.com/Its-donkey/Sharpen-live/internal/alert/logging"
-	"github.com/Its-donkey/Sharpen-live/internal/alert/streamers"
+	// LeaseMonitorConfig configures the background YouTube lease renewal watcher.
 )
 
-// LeaseMonitorConfig configures the background YouTube lease renewal watcher.
 type LeaseMonitorConfig struct {
 	StreamersPath string
 	Interval      time.Duration
@@ -29,7 +27,6 @@ const defaultRenewWindow = 0.05
 type LeaseMonitor struct {
 	cfg          LeaseMonitorConfig
 	options      Options
-	logger       logging.Logger
 	lastAttempts map[string]time.Time
 	mu           sync.Mutex
 	cancel       context.CancelFunc
@@ -72,12 +69,10 @@ func newLeaseMonitor(cfg LeaseMonitorConfig) *LeaseMonitor {
 	if !strings.EqualFold(opts.Mode, "subscribe") {
 		opts.Mode = "subscribe"
 	}
-	logger := opts.getLogger()
 
 	return &LeaseMonitor{
 		cfg:          cfg,
 		options:      opts,
-		logger:       logger,
 		lastAttempts: make(map[string]time.Time),
 		onError:      cfg.OnError,
 	}
@@ -227,8 +222,5 @@ func (m *LeaseMonitor) reportError(err error) {
 	if m.onError != nil {
 		m.onError(err)
 		return
-	}
-	if m.logger != nil {
-		m.logger.Printf("%v", err)
 	}
 }

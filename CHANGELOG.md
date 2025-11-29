@@ -12,6 +12,7 @@
 - UI: add SEO-focused canonical/meta tags, JSON-LD, sitemap/robots.txt endpoints, and an Open Graph preview image so pages are fully server-rendered for search and social.
 - Admin: add a human-readable log viewer for general/HTTP/WebSub logs within the dashboard.
 - Logging: skip embedding full HTML responses in `raw` fields; store a reproducible URL instead.
+- Docs: add Go engineering guidelines covering file responsibilities, testing, and logging practices.
 
 ### Changed
 - Server: consolidate alerts, roster, submissions, and admin into a single `cmd/alertserver` binary (no separate proxy) and host YouTube WebSub callbacks + lease monitor in-process.
@@ -155,6 +156,8 @@
 
 ### Fixed
 - Streamer service deletion tests now supply the required YouTube callback URL so subscription management validations mirror production behavior and `go test ./...` stays green.
+- Reject admin and API updates that try to reuse an existing streamer alias so roster edits cannot accidentally duplicate names.
+- Split the UI server handlers into dedicated admin/public files (login, submissions, streamers, status, home, streamer, sitemap) to reduce coupling and make future changes easier to navigate.
 - Persist `streamer.alias` when creating records and require it as the primary identifier so requests without names no longer lose the alias field.
 - Removed references to the deprecated `/api/youtube/new/subscribe` alias so the README only lists active endpoints.
 - Allow `DELETE /api/streamers/{id}` to accept RFC3339 timestamps with or without fractional seconds so clients can resend the stored `createdAt` value without losing precision.
@@ -192,6 +195,7 @@
 - Detect unauthorized responses from the admin log EventSource and log out automatically when the stream reports expired credentials.
 
 ### Removed
+- Removed the custom alert-server logging pipeline and related YouTube handler log hooks to simplify runtime dependencies.
 - Removed the manual roster refresh button from the public header; the roster already updates via live events and retry controls.
 - Dropped the in-console “Add new streamer” form—new entries now flow exclusively through the public submission form before admins approve them.
 - Deleted the legacy `frontend/` workspace so the WASM UI is now the single source of truth for Sharpens's dashboard bundle.

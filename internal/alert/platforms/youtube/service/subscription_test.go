@@ -3,12 +3,11 @@ package service
 import (
 	"bytes"
 	"errors"
+	"github.com/Its-donkey/Sharpen-live/internal/alert/platforms/youtube/subscriptions"
 	"io"
 	"net/http"
 	"net/http/httptest"
 	"testing"
-
-	"github.com/Its-donkey/Sharpen-live/internal/alert/platforms/youtube/subscriptions"
 )
 
 type stubTransport func(*http.Request) (*http.Response, error)

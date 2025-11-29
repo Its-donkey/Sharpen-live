@@ -2,15 +2,14 @@ package forms
 
 import (
 	"fmt"
-	"strings"
-
 	"github.com/Its-donkey/Sharpen-live/internal/ui/model"
 	"github.com/Its-donkey/Sharpen-live/internal/ui/state"
+	"strings"
+	// ValidateSubmitForm checks the provided form state for required fields and returns
+	// a populated error map. Callers are responsible for storing the errors on the
+	// state if needed.
 )
 
-// ValidateSubmitForm checks the provided form state for required fields and returns
-// a populated error map. Callers are responsible for storing the errors on the
-// state if needed.
 func ValidateSubmitForm(form *model.SubmitFormState) model.SubmitFormErrors {
 	errors := model.SubmitFormErrors{
 		Platforms: make(map[string]model.PlatformFieldError),

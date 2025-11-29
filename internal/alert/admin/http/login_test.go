@@ -4,14 +4,13 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
+	adminauth "github.com/Its-donkey/Sharpen-live/internal/alert/admin/auth"
+	adminhttp "github.com/Its-donkey/Sharpen-live/internal/alert/admin/http"
+	adminservice "github.com/Its-donkey/Sharpen-live/internal/alert/admin/service"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 	"time"
-
-	adminauth "github.com/Its-donkey/Sharpen-live/internal/alert/admin/auth"
-	adminhttp "github.com/Its-donkey/Sharpen-live/internal/alert/admin/http"
-	adminservice "github.com/Its-donkey/Sharpen-live/internal/alert/admin/service"
 )
 
 func TestLoginHandlerSuccess(t *testing.T) {

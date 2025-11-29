@@ -9,19 +9,25 @@
                 "addr": "127.0.0.1",
                 "port": ":8880"
         },
-        "app": {
-                "name": "Sharpen.Live",
-                "templates": "ui/sites/sharpen-live/templates",
-                "assets": "ui/sites/sharpen-live",
-                "logs": "data/logs/sharpen-live",
-                "data": "data/sharpen-live"
-        },
         "sites": {
+                "sharpen-live": {
+                        "name": "sharpen.live",
+                        "server": {
+                                "addr": "127.0.0.1",
+                                "port": ":18886"
+                        },
+                        "app": {
+                                "templates": "ui/sites/sharpen-live/templates",
+								"assets": "ui/sites/sharpen-live",
+								"logs": "data/logs/sharpen-live",
+								"data": "data/sharpen-live"
+                        }
+                },
                 "synth-wave": {
                         "name": "synth.wave",
                         "server": {
                                 "addr": "127.0.0.1",
-                                "port": ":8881"
+                                "port": ":18885"
                         },
                         "app": {
                                 "templates": "ui/sites/synth-wave/templates",

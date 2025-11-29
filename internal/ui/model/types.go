@@ -91,6 +91,10 @@ type PlatformFormRow struct {
 	HubSecret  string
 }
 
+// SubmitPlatformState preserves compatibility with older submit handler code.
+// It aliases PlatformFormRow so existing form logic remains unchanged.
+type SubmitPlatformState = PlatformFormRow
+
 // PlatformFieldError tracks platform-specific validation errors on form rows.
 type PlatformFieldError struct {
 	Channel bool
@@ -102,6 +106,7 @@ type SubmitFormErrors struct {
 	Description bool
 	Languages   bool
 	Platforms   map[string]PlatformFieldError
+	General     []string
 }
 
 // SubmitFormState represents the fully-rendered submission form state.

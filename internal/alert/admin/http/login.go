@@ -3,11 +3,10 @@ package adminhttp
 import (
 	"encoding/json"
 	"errors"
-	"net/http"
-	"time"
-
 	adminauth "github.com/Its-donkey/Sharpen-live/internal/alert/admin/auth"
 	adminservice "github.com/Its-donkey/Sharpen-live/internal/alert/admin/service"
+	"net/http"
+	"time"
 )
 
 // LoginHandlerOptions configures the admin login handler.

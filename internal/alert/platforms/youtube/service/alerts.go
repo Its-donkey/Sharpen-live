@@ -5,12 +5,11 @@ import (
 	"encoding/xml"
 	"errors"
 	"fmt"
+	"github.com/Its-donkey/Sharpen-live/internal/alert/platforms/youtube/liveinfo"
+	"github.com/Its-donkey/Sharpen-live/internal/alert/streamers"
 	"io"
 	"strings"
 	"time"
-
-	"github.com/Its-donkey/Sharpen-live/internal/alert/platforms/youtube/liveinfo"
-	"github.com/Its-donkey/Sharpen-live/internal/alert/streamers"
 )
 
 // AlertProcessor orchestrates WebSub notification handling.

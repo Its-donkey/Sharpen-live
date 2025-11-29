@@ -5,14 +5,13 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/Its-donkey/Sharpen-live/internal/alert/platforms/youtube/ratelimit"
 	"io"
 	"net/http"
 	"net/url"
 	"os"
 	"strings"
 	"time"
-
-	"github.com/Its-donkey/Sharpen-live/internal/alert/platforms/youtube/ratelimit"
 )
 
 const (
@@ -165,6 +164,15 @@ func (c *PlayerClient) LiveStatus(ctx context.Context, videoID string) (LiveStat
 	}
 
 	return status, nil
+}
+
+// ParsePlayerResponse decodes a player API response payload.
+func ParsePlayerResponse(raw string) (playerResponse, error) {
+	var resp playerResponse
+	if err := json.Unmarshal([]byte(raw), &resp); err != nil {
+		return playerResponse{}, err
+	}
+	return resp, nil
 }
 
 type playerResponse struct {

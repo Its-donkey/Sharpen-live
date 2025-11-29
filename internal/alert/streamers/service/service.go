@@ -4,13 +4,12 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"net/http"
-	"strings"
-	"time"
-
 	"github.com/Its-donkey/Sharpen-live/internal/alert/platforms/youtube/subscriptions"
 	"github.com/Its-donkey/Sharpen-live/internal/alert/streamers"
 	"github.com/Its-donkey/Sharpen-live/internal/alert/submissions"
+	"net/http"
+	"strings"
+	"time"
 )
 
 // ErrValidation indicates the request payload is invalid.
@@ -95,7 +94,7 @@ func (s *Service) Create(ctx context.Context, req CreateRequest) (CreateResult, 
 	if err != nil {
 		return CreateResult{}, fmt.Errorf("%w: %v", ErrValidation, err)
 	}
-	if err := s.ensureUniqueAlias(alias); err != nil {
+	if err := s.ensureUniqueAlias(alias, ""); err != nil {
 		return CreateResult{}, err
 	}
 	submission := submissions.Submission{
@@ -126,6 +125,9 @@ func (s *Service) Update(ctx context.Context, req UpdateRequest) (streamers.Reco
 		alias := strings.TrimSpace(*req.Alias)
 		if alias == "" {
 			return streamers.Record{}, fmt.Errorf("%w: streamer.alias cannot be blank", ErrValidation)
+		}
+		if err := s.ensureUniqueAlias(alias, id); err != nil {
+			return streamers.Record{}, err
 		}
 		update.Alias = &alias
 		hasUpdate = true
@@ -202,16 +204,20 @@ func (s *Service) ensureStores() error {
 	return nil
 }
 
-func (s *Service) ensureUniqueAlias(alias string) error {
+func (s *Service) ensureUniqueAlias(alias, skipID string) error {
 	key := streamers.NormaliseAlias(alias)
 	if key == "" {
 		return fmt.Errorf("%w: streamer.alias must contain at least one letter or digit", ErrValidation)
 	}
+	ignoreID := strings.TrimSpace(skipID)
 	records, err := s.streamers.List()
 	if err != nil {
 		return err
 	}
 	for _, rec := range records {
+		if ignoreID != "" && strings.EqualFold(strings.TrimSpace(rec.Streamer.ID), ignoreID) {
+			continue
+		}
 		if key == streamers.NormaliseAlias(rec.Streamer.Alias) {
 			return streamers.ErrDuplicateAlias
 		}

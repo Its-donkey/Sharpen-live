@@ -175,6 +175,9 @@
                         {{if .Meta}}<span class="admin-log-meta">{{.Meta}}</span>{{end}}
                       </div>
                       <div class="admin-log-message">{{.Message}}</div>
+                      {{if .Details}}
+                        <pre class="admin-log-details">{{.Details}}</pre>
+                      {{end}}
                     </div>
                   {{end}}
                 </div>

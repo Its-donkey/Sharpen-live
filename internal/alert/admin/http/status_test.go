@@ -4,11 +4,10 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	adminservice "github.com/Its-donkey/Sharpen-live/internal/alert/admin/service"
 	"net/http"
 	"net/http/httptest"
 	"testing"
-
-	adminservice "github.com/Its-donkey/Sharpen-live/internal/alert/admin/service"
 )
 
 func TestStatusHandlerAuthorizesRequests(t *testing.T) {

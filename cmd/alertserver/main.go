@@ -5,14 +5,13 @@ import (
 	"errors"
 	"flag"
 	"fmt"
+	"github.com/Its-donkey/Sharpen-live/internal/alert/config"
+	uiserver "github.com/Its-donkey/Sharpen-live/internal/ui/server"
 	"log"
 	"os"
 	"os/signal"
 	"strings"
 	"syscall"
-
-	"github.com/Its-donkey/Sharpen-live/internal/alert/config"
-	uiserver "github.com/Its-donkey/Sharpen-live/internal/ui/server"
 )
 
 func main() {
@@ -50,7 +49,7 @@ func main() {
 
 	rawSite := strings.TrimSpace(*site)
 	siteRequested := rawSite != ""
-	normalizedSite := normalizeSiteKey(rawSite)
+	normalizedSite := config.NormaliseSiteKey(rawSite)
 
 	type siteTarget struct {
 		cfg    config.SiteConfig
@@ -133,14 +132,5 @@ func main() {
 }
 
 func normalizeSiteKey(siteArg string) string {
-	key := strings.TrimSpace(siteArg)
-	if key == "" {
-		return ""
-	}
-	return normalizeNameKey(key)
-}
-
-func normalizeNameKey(name string) string {
-	replacer := strings.NewReplacer(".", "-", "_", "-", " ", "-")
-	return replacer.Replace(strings.ToLower(strings.TrimSpace(name)))
+	return config.NormaliseSiteKey(siteArg)
 }

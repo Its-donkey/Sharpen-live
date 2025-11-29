@@ -2,25 +2,20 @@
 package handlers
 
 import (
-	"context"
+	youtubesub "github.com/Its-donkey/Sharpen-live/internal/alert/platforms/youtube/subscriptions"
+	"github.com/Its-donkey/Sharpen-live/internal/alert/platforms/youtube/websub"
+	"github.com/Its-donkey/Sharpen-live/internal/alert/streamers"
 	"io"
 	"net/http"
-	"net/http/httputil"
 	"net/url"
 	"regexp"
 	"strconv"
 	"strings"
 	"time"
-
-	"github.com/Its-donkey/Sharpen-live/internal/alert/logging"
-	youtubesub "github.com/Its-donkey/Sharpen-live/internal/alert/platforms/youtube/subscriptions"
-	"github.com/Its-donkey/Sharpen-live/internal/alert/platforms/youtube/websub"
-	"github.com/Its-donkey/Sharpen-live/internal/alert/streamers"
+	// SubscriptionConfirmationOptions configures how hub verification requests are handled.
 )
 
-// SubscriptionConfirmationOptions configures how hub verification requests are handled.
 type SubscriptionConfirmationOptions struct {
-	Logger         logging.Logger
 	StreamersStore *streamers.Store
 }
 
@@ -40,7 +35,6 @@ func (req hubRequest) IsUnsubscribe() bool {
 // HandleSubscriptionConfirmation processes YouTube PubSubHubbub GET verification requests.
 // It returns true when the request has been handled (regardless of success).
 func HandleSubscriptionConfirmation(w http.ResponseWriter, r *http.Request, opts SubscriptionConfirmationOptions) bool {
-	logger := opts.Logger
 	if !isAlertsVerificationRequest(r) {
 		return false
 	}
@@ -64,19 +58,14 @@ func HandleSubscriptionConfirmation(w http.ResponseWriter, r *http.Request, opts
 		return true
 	}
 
-	logHubRequest(logger, r, query, req)
+	finalExp := finalizeExpectation(req.VerifyToken, exp)
+	if opts.StreamersStore != nil {
+		updateLeaseIfNeeded(req, finalExp, opts.StreamersStore, time.Now().UTC())
+	}
 
 	prepareHubResponse(w, req.Challenge)
-	logPlannedResponse(logger, w, req.Challenge)
-
-	verifiedAt := time.Now().UTC()
-	channelID := updateLeaseIfNeeded(req, exp, opts.StreamersStore, verifiedAt, logger)
-
-	finalExp := finalizeExpectation(req.VerifyToken, exp)
 
 	writeChallengeResponse(w, req.Challenge)
-
-	logSubscriptionResult(logger, finalExp, exp, channelID, req.Topic, req.IsUnsubscribe())
 
 	return true
 }
@@ -135,52 +124,19 @@ func validateAgainstExpectation(req hubRequest, exp websub.Expectation) Validati
 	return ValidationResult{IsValid: true}
 }
 
-func logHubRequest(logger logging.Logger, r *http.Request, query url.Values, req hubRequest) {
-	logWebsub(r.Context(), logger,
-		"Responding to hub challenge: mode=%s topic=%s lease=%s token=%s body=%q",
-		req.Mode,
-		query.Get("hub.topic"),
-		query.Get("hub.lease_seconds"),
-		query.Get("hub.verify_token"),
-		req.Challenge,
-	)
-	if dump, err := httputil.DumpRequest(r, true); err == nil {
-		logWebsub(r.Context(), logger, "Raw verification request:\n%s", dump)
-	} else {
-		logWebsub(r.Context(), logger, "Failed to dump verification request: %v", err)
-	}
-}
-
 func prepareHubResponse(w http.ResponseWriter, challenge string) {
 	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
 	w.Header().Set("Content-Length", strconv.Itoa(len(challenge)))
 }
 
-func logPlannedResponse(logger logging.Logger, w http.ResponseWriter, challenge string) {
-	var responseDump strings.Builder
-	responseDump.WriteString("HTTP/1.1 200 OK\r\n")
-	for name, values := range w.Header() {
-		for _, value := range values {
-			responseDump.WriteString(name)
-			responseDump.WriteString(": ")
-			responseDump.WriteString(value)
-			responseDump.WriteString("\r\n")
-		}
-	}
-	responseDump.WriteString("\r\n")
-	responseDump.WriteString(challenge)
-	logWebsub(context.Background(), logger, "Planned hub response:\n%s", responseDump.String())
-}
-
-func updateLeaseIfNeeded(req hubRequest, exp websub.Expectation, store *streamers.Store, verifiedAt time.Time, logger logging.Logger) string {
+func updateLeaseIfNeeded(req hubRequest, exp websub.Expectation, store *streamers.Store, verifiedAt time.Time) string {
 	channelID := exp.ChannelID
 	if channelID == "" {
 		channelID = websub.ExtractChannelID(req.Topic)
 	}
 
 	if channelID != "" && !req.IsUnsubscribe() && req.LeaseProvided {
-		if err := youtubesub.RecordLease(store, channelID, verifiedAt); err != nil && logger != nil {
-			logWebsub(context.Background(), logger, "failed to record hub lease for %s: %v", channelID, err)
+		if err := youtubesub.RecordLease(store, channelID, verifiedAt); err != nil {
 		}
 	}
 
@@ -198,36 +154,6 @@ func finalizeExpectation(verifyToken string, exp websub.Expectation) websub.Expe
 func writeChallengeResponse(w http.ResponseWriter, challenge string) {
 	w.WriteHeader(http.StatusOK)
 	_, _ = io.WriteString(w, challenge)
-}
-
-func logSubscriptionResult(logger logging.Logger, finalExp, originalExp websub.Expectation, channelID, topic string, isUnsubscribe bool) {
-	if finalExp.HubStatus != "" {
-		logWebsub(context.Background(), logger, "YouTube hub response status: %s, body: %s", finalExp.HubStatus, finalExp.HubBody)
-	}
-	alias := strings.TrimSpace(finalExp.Alias)
-	if alias == "" {
-		alias = strings.TrimSpace(originalExp.Alias)
-	}
-	if alias == "" {
-		alias = channelID
-	}
-	if alias == "" {
-		alias = "channel"
-	}
-
-	displayTopic := topic
-	if displayTopic == "" {
-		displayTopic = finalExp.Topic
-	}
-	if displayTopic == "" {
-		displayTopic = originalExp.Topic
-	}
-
-	if isUnsubscribe {
-		logWebsub(context.Background(), logger, "YouTube alerts unsubscribed for %s (%s)", alias, displayTopic)
-	} else {
-		logWebsub(context.Background(), logger, "YouTube alerts subscribed for %s (%s)", alias, displayTopic)
-	}
 }
 
 var challengePattern = regexp.MustCompile(`^[A-Za-z0-9._~-]{1,200}$`)

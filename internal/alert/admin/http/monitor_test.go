@@ -4,12 +4,11 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	adminhttp "github.com/Its-donkey/Sharpen-live/internal/alert/admin/http"
+	"github.com/Its-donkey/Sharpen-live/internal/alert/platforms/youtube/monitoring"
 	"net/http"
 	"net/http/httptest"
 	"testing"
-
-	adminhttp "github.com/Its-donkey/Sharpen-live/internal/alert/admin/http"
-	"github.com/Its-donkey/Sharpen-live/internal/alert/platforms/youtube/monitoring"
 )
 
 func TestMonitorHandlerSuccess(t *testing.T) {

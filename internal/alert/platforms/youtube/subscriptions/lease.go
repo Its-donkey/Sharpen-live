@@ -3,13 +3,12 @@ package subscriptions
 import (
 	"errors"
 	"fmt"
+	"github.com/Its-donkey/Sharpen-live/internal/alert/streamers"
 	"strings"
 	"time"
-
-	"github.com/Its-donkey/Sharpen-live/internal/alert/streamers"
+	// RecordLease stores the verification timestamp for the supplied channel ID.
 )
 
-// RecordLease stores the verification timestamp for the supplied channel ID.
 func RecordLease(store *streamers.Store, channelID string, verifiedAt time.Time) error {
 	channelID = strings.TrimSpace(channelID)
 	if channelID == "" {

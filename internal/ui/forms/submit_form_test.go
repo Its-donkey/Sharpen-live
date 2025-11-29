@@ -1,10 +1,9 @@
 package forms
 
 import (
-	"testing"
-
 	"github.com/Its-donkey/Sharpen-live/internal/ui/model"
 	"github.com/Its-donkey/Sharpen-live/internal/ui/state"
+	"testing"
 )
 
 func resetSubmitState() {

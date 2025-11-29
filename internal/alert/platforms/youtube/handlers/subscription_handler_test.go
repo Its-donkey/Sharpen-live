@@ -5,12 +5,11 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	youtubeservice "github.com/Its-donkey/Sharpen-live/internal/alert/platforms/youtube/service"
+	"github.com/Its-donkey/Sharpen-live/internal/alert/platforms/youtube/subscriptions"
 	"net/http"
 	"net/http/httptest"
 	"testing"
-
-	youtubeservice "github.com/Its-donkey/Sharpen-live/internal/alert/platforms/youtube/service"
-	"github.com/Its-donkey/Sharpen-live/internal/alert/platforms/youtube/subscriptions"
 )
 
 type stubSubscriptionProxy struct {

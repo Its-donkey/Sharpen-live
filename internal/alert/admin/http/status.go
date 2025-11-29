@@ -2,22 +2,18 @@ package adminhttp
 
 import (
 	"context"
-	"errors"
-	"net/http"
-	"time"
-
 	adminauth "github.com/Its-donkey/Sharpen-live/internal/alert/admin/auth"
 	adminservice "github.com/Its-donkey/Sharpen-live/internal/alert/admin/service"
-	"github.com/Its-donkey/Sharpen-live/internal/alert/logging"
 	"github.com/Its-donkey/Sharpen-live/internal/alert/streamers"
+	"net/http"
+	"time"
+	// StatusHandlerOptions configures the roster status refresh handler.
 )
 
-// StatusHandlerOptions configures the roster status refresh handler.
 type StatusHandlerOptions struct {
 	Authorizer     authorizer
 	Service        statusService
 	Manager        *adminauth.Manager
-	Logger         logging.Logger
 	StreamersStore *streamers.Store
 }
 
@@ -28,7 +24,6 @@ type statusService interface {
 type statusHandler struct {
 	authorizer authorizer
 	service    statusService
-	logger     logging.Logger
 }
 
 // NewStatusHandler constructs the admin roster status handler.
@@ -46,7 +41,6 @@ func NewStatusHandler(opts StatusHandlerOptions) http.Handler {
 	return statusHandler{
 		authorizer: auth,
 		service:    svc,
-		logger:     opts.Logger,
 	}
 }
 
@@ -69,9 +63,6 @@ func (h statusHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	defer cancel()
 	result, err := h.service.CheckAll(ctx)
 	if err != nil {
-		if h.logger != nil && !errors.Is(err, context.Canceled) && !errors.Is(err, context.DeadlineExceeded) {
-			h.logger.Printf("admin status check failed: %v", err)
-		}
 		http.Error(w, "failed to refresh channel status", http.StatusInternalServerError)
 		return
 	}

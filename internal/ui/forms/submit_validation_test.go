@@ -1,9 +1,8 @@
 package forms
 
 import (
-	"testing"
-
 	"github.com/Its-donkey/Sharpen-live/internal/ui/model"
+	"testing"
 )
 
 func TestValidateSubmitFormNil(t *testing.T) {

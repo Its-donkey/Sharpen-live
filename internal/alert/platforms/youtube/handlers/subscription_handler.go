@@ -4,19 +4,16 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	youtubeservice "github.com/Its-donkey/Sharpen-live/internal/alert/platforms/youtube/service"
+	"github.com/Its-donkey/Sharpen-live/internal/alert/platforms/youtube/subscriptions"
 	"io"
 	"net/http"
 	"strings"
-
-	"github.com/Its-donkey/Sharpen-live/internal/alert/logging"
-	youtubeservice "github.com/Its-donkey/Sharpen-live/internal/alert/platforms/youtube/service"
-	"github.com/Its-donkey/Sharpen-live/internal/alert/platforms/youtube/subscriptions"
+	// SubscriptionHandlerOptions configures handlers that talk to the YouTube hub.
 )
 
-// SubscriptionHandlerOptions configures handlers that talk to the YouTube hub.
 type SubscriptionHandlerOptions struct {
 	Client       *http.Client
-	Logger       logging.Logger
 	HubURL       string
 	CallbackURL  string
 	VerifyMode   string
@@ -35,8 +32,7 @@ type subscriptionProxy interface {
 }
 
 type subscriptionHandler struct {
-	proxy  subscriptionProxy
-	logger logging.Logger
+	proxy subscriptionProxy
 }
 
 // NewSubscribeHandler returns an http.Handler that accepts POST requests and forwards them to YouTube's hub.
@@ -54,14 +50,13 @@ func newSubscriptionHandler(mode string, opts SubscriptionHandlerOptions) http.H
 	if proxy == nil {
 		proxy = youtubeservice.NewSubscriptionProxy(mode, youtubeservice.SubscriptionProxyOptions{
 			Client:       opts.Client,
-			Logger:       opts.Logger,
 			HubURL:       strings.TrimSpace(opts.HubURL),
 			CallbackURL:  strings.TrimSpace(opts.CallbackURL),
 			VerifyMode:   strings.TrimSpace(opts.VerifyMode),
 			LeaseSeconds: opts.LeaseSeconds,
 		})
 	}
-	handler := subscriptionHandler{proxy: proxy, logger: opts.Logger}
+	handler := subscriptionHandler{proxy: proxy}
 	return http.HandlerFunc(handler.ServeHTTP)
 }
 
@@ -91,9 +86,6 @@ func (h subscriptionHandler) respondError(w http.ResponseWriter, err error) {
 	if errors.As(err, &proxyErr) {
 		http.Error(w, "hub request failed", proxyErr.Status)
 		return
-	}
-	if h.logger != nil {
-		h.logger.Printf("subscription request failed: %v", err)
 	}
 	http.Error(w, "hub request failed", http.StatusInternalServerError)
 }

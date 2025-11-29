@@ -2,14 +2,13 @@ package subscriptions
 
 import (
 	"context"
+	"github.com/Its-donkey/Sharpen-live/internal/alert/streamers"
 	"io"
 	"net/http"
 	"net/http/httptest"
 	"strconv"
 	"strings"
 	"testing"
-
-	"github.com/Its-donkey/Sharpen-live/internal/alert/streamers"
 )
 
 type capturingLogger struct {

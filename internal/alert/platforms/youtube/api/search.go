@@ -4,19 +4,15 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/Its-donkey/Sharpen-live/internal/alert/platforms/youtube/ratelimit"
 	"io"
 	"net/http"
-	"net/http/httputil"
 	"net/url"
 	"strings"
 	"time"
-
-	"github.com/Its-donkey/Sharpen-live/internal/alert/logging"
-	"github.com/Its-donkey/Sharpen-live/internal/alert/platforms/youtube/ratelimit"
-	"github.com/google/uuid"
+	// SearchLiveResult represents the live search result for a channel.
 )
 
-// SearchLiveResult represents the live search result for a channel.
 type SearchLiveResult struct {
 	VideoID   string
 	StartedAt time.Time
@@ -27,7 +23,6 @@ type SearchLiveResult struct {
 type SearchClient struct {
 	APIKey     string
 	HTTPClient *http.Client
-	Logger     logging.Logger
 	BaseURL    string
 }
 
@@ -38,15 +33,10 @@ func (c SearchClient) LiveNow(ctx context.Context, channelID string) (SearchLive
 		return SearchLiveResult{}, fmt.Errorf("channelID required")
 	}
 
-	requestID := logging.RequestIDFromContext(ctx)
-	if strings.TrimSpace(requestID) == "" {
-		requestID = strings.ToUpper(uuid.New().String())
-	}
-
 	apiKey := strings.TrimSpace(c.APIKey)
 	client := c.HTTPClient
 	if client == nil {
-		client = &http.Client{Timeout: 5 * time.Second}
+		client = &http.Client{Timeout: 30 * time.Second}
 	}
 	client = ratelimit.Client(client)
 
@@ -67,12 +57,8 @@ func (c SearchClient) LiveNow(ctx context.Context, channelID string) (SearchLive
 		return SearchLiveResult{}, err
 	}
 
-	logSearchRequest(c.Logger, requestID, req)
-	start := time.Now()
-
 	resp, err := client.Do(req)
 	if err != nil {
-		logSearchFailure(c.Logger, requestID, req, err, time.Since(start))
 		return SearchLiveResult{}, err
 	}
 	defer resp.Body.Close()
@@ -81,7 +67,6 @@ func (c SearchClient) LiveNow(ctx context.Context, channelID string) (SearchLive
 	if err != nil {
 		return SearchLiveResult{}, fmt.Errorf("read search response: %w", err)
 	}
-	logSearchResponse(c.Logger, requestID, req, resp, body, time.Since(start))
 
 	if resp.StatusCode < http.StatusOK || resp.StatusCode >= http.StatusMultipleChoices {
 		return SearchLiveResult{}, fmt.Errorf("search API %s: %s", resp.Status, string(body))
@@ -129,35 +114,4 @@ type searchResponse struct {
 			ChannelID   string `json:"channelId"`
 		} `json:"snippet"`
 	} `json:"items"`
-}
-
-func logSearchRequest(logger logging.Logger, id string, req *http.Request) {
-	if logger == nil || req == nil {
-		return
-	}
-	if dump, err := httputil.DumpRequestOut(req, true); err == nil {
-		logging.LogWithID(logger, "http", id, fmt.Sprintf("YouTube search request\n%s", string(dump)))
-	} else {
-		logging.LogWithID(logger, "http", id, fmt.Sprintf("YouTube search request dump failed: %v", err))
-	}
-}
-
-func logSearchResponse(logger logging.Logger, id string, req *http.Request, resp *http.Response, body []byte, dur time.Duration) {
-	if logger == nil || resp == nil || req == nil {
-		return
-	}
-	copyResp := *resp
-	copyResp.Body = io.NopCloser(strings.NewReader(string(body)))
-	if dump, err := httputil.DumpResponse(&copyResp, true); err == nil {
-		logging.LogWithID(logger, "http", id, fmt.Sprintf("YouTube search response (%s %s) in %dms\n%s", req.Method, req.URL.String(), dur.Milliseconds(), string(dump)))
-	} else {
-		logging.LogWithID(logger, "http", id, fmt.Sprintf("YouTube search response dump failed for %s %s: %v", req.Method, req.URL.String(), err))
-	}
-}
-
-func logSearchFailure(logger logging.Logger, id string, req *http.Request, err error, dur time.Duration) {
-	if logger == nil || req == nil || err == nil {
-		return
-	}
-	logging.LogWithID(logger, "http", id, fmt.Sprintf("YouTube search request failed after %dms (%s %s): %v", dur.Milliseconds(), req.Method, req.URL.String(), err))
 }

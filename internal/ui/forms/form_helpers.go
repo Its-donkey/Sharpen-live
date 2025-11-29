@@ -4,12 +4,11 @@ import (
 	"crypto/rand"
 	"encoding/hex"
 	"fmt"
+	"github.com/Its-donkey/Sharpen-live/internal/ui/model"
+	"github.com/Its-donkey/Sharpen-live/internal/ui/state"
 	"net/url"
 	"strings"
 	"time"
-
-	"github.com/Its-donkey/Sharpen-live/internal/ui/model"
-	"github.com/Its-donkey/Sharpen-live/internal/ui/state"
 )
 
 // BuildStreamerDescription trims and normalizes the streamer description gathered from the form.

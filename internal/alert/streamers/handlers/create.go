@@ -2,9 +2,8 @@ package handlers
 
 import (
 	"encoding/json"
-	"net/http"
-
 	streamersvc "github.com/Its-donkey/Sharpen-live/internal/alert/streamers/service"
+	"net/http"
 )
 
 type createRequest struct {

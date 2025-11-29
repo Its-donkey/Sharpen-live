@@ -3,14 +3,11 @@ package handlers
 import (
 	"context"
 	"errors"
-	"io"
-	"net/http"
-	"strings"
-	"time"
-
-	"github.com/Its-donkey/Sharpen-live/internal/alert/logging"
 	youtubeservice "github.com/Its-donkey/Sharpen-live/internal/alert/platforms/youtube/service"
 	"github.com/Its-donkey/Sharpen-live/internal/alert/streamers"
+	"io"
+	"net/http"
+	"time"
 )
 
 type alertProcessor interface {
@@ -19,7 +16,6 @@ type alertProcessor interface {
 
 // AlertNotificationOptions configure POST /alerts handling.
 type AlertNotificationOptions struct {
-	Logger         logging.Logger
 	StreamersStore *streamers.Store
 	VideoLookup    youtubeservice.LiveVideoLookup
 	Processor      alertProcessor
@@ -53,38 +49,22 @@ func HandleAlertNotification(w http.ResponseWriter, r *http.Request, opts AlertN
 		RemoteAddr: r.RemoteAddr,
 	})
 	if err != nil {
-		handleAlertError(r.Context(), w, err, result, opts.Logger)
+		handleAlertError(r.Context(), w, err, result)
 		return true
 	}
 
-	if opts.Logger != nil {
-		if len(result.LiveUpdates) == 0 {
-			logWebsub(r.Context(), opts.Logger, "Processed alert notification for %d video(s); no live streams detected", result.Entries)
-		} else {
-			logWebsub(r.Context(), opts.Logger, "Processed alert notification (%d entries); live streams=%d videos=%s",
-				result.Entries,
-				len(result.LiveUpdates),
-				strings.Join(result.VideoIDs, ","),
-			)
-		}
-	}
 	w.WriteHeader(http.StatusNoContent)
 	return true
 }
 
-func handleAlertError(ctx context.Context, w http.ResponseWriter, err error, result youtubeservice.AlertProcessResult, logger logging.Logger) {
+func handleAlertError(ctx context.Context, w http.ResponseWriter, err error, result youtubeservice.AlertProcessResult) {
 	switch {
 	case errors.Is(err, youtubeservice.ErrInvalidFeed):
 		http.Error(w, "invalid atom feed", http.StatusBadRequest)
 	case errors.Is(err, youtubeservice.ErrLookupFailed):
-		if logger != nil && len(result.VideoIDs) > 0 {
-			logWebsub(ctx, logger, "failed to fetch live metadata for videos %s: %v", strings.Join(result.VideoIDs, ","), err)
-		}
+
 		w.WriteHeader(http.StatusAccepted)
 	default:
-		if logger != nil {
-			logWebsub(ctx, logger, "failed to process notification: %v", err)
-		}
 		http.Error(w, "failed to process notification", http.StatusInternalServerError)
 	}
 }

@@ -170,17 +170,20 @@ func (f *jsonLogFile) append(event interface{}) error {
 type statusRecorder struct {
 	http.ResponseWriter
 	status int
+	wrote  bool
 }
 
 func (r *statusRecorder) WriteHeader(code int) {
+	if r.wrote {
+		return
+	}
+	r.wrote = true
 	r.status = code
 	r.ResponseWriter.WriteHeader(code)
 }
 
 func (r *statusRecorder) Write(b []byte) (int, error) {
-	if r.status == 0 {
-		r.status = http.StatusOK
-	}
+	r.maybeSetStatus()
 	return r.ResponseWriter.Write(b)
 }
 
@@ -202,4 +205,15 @@ func (s *server) logf(format string, args ...interface{}) {
 		return
 	}
 	log.Printf(format, args...)
+}
+
+func (r *statusRecorder) maybeSetStatus() {
+	if r.wrote {
+		return
+	}
+	r.wrote = true
+	if r.status == 0 {
+		r.status = http.StatusOK
+	}
+	r.ResponseWriter.WriteHeader(r.status)
 }

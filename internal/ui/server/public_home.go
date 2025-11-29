@@ -3,7 +3,6 @@ package server
 import (
 	"context"
 	"encoding/json"
-	"errors"
 	"html/template"
 	"net/http"
 	"net/url"
@@ -50,16 +49,11 @@ func (s *server) handleHome(w http.ResponseWriter, r *http.Request) {
 	}
 
 	ctx := r.Context()
-	state, err := s.fetchRoster(ctx)
-	if err != nil {
-		s.logf("render home: %v", err)
-		http.Error(w, "failed to load roster", http.StatusInternalServerError)
-		return
-	}
+	state, rosterErr := s.fetchRoster(ctx)
 
 	submit := defaultSubmitState(r)
 	page := s.buildBasePageData(r, "Sharpen.Live – Synthwave Edition", s.siteDescription, "/")
-	s.renderHomeWithRoster(w, r, page, state, submit)
+	s.renderHomeWithRoster(w, r, page, state, rosterErr, submit)
 }
 
 func (s *server) handleSubmit(w http.ResponseWriter, r *http.Request) {
@@ -155,26 +149,23 @@ func (s *server) handleMetadata(w http.ResponseWriter, r *http.Request) {
 }
 
 func (s *server) renderHome(w http.ResponseWriter, r *http.Request, page basePageData, submit model.SubmitFormState) {
-	state, err := s.fetchRoster(r.Context())
-	if err != nil {
-		s.logf("render home: %v", err)
-		http.Error(w, "failed to load roster", http.StatusInternalServerError)
-		return
-	}
-	s.renderHomeWithRoster(w, r, page, state, submit)
+	state, rosterErr := s.fetchRoster(r.Context())
+	s.renderHomeWithRoster(w, r, page, state, rosterErr, submit)
 }
 
-func (s *server) renderHomeWithRoster(w http.ResponseWriter, r *http.Request, page basePageData, state []model.Streamer, submit model.SubmitFormState) {
+func (s *server) renderHomeWithRoster(w http.ResponseWriter, r *http.Request, page basePageData, state []model.Streamer, rosterErr string, submit model.SubmitFormState) {
 	page.StructuredData = s.homeStructuredData(s.absoluteURL(r, "/"))
 	data := struct {
 		basePageData
-		Roster    []model.Streamer
-		Streamers []model.Streamer
-		Submit    model.SubmitFormState
+		Roster      []model.Streamer
+		Streamers   []model.Streamer
+		RosterError string
+		Submit      model.SubmitFormState
 	}{
 		basePageData: page,
 		Roster:       state,
 		Streamers:    state,
+		RosterError:  rosterErr,
 		Submit:       submit,
 	}
 
@@ -189,13 +180,14 @@ func (s *server) renderHomeWithRoster(w http.ResponseWriter, r *http.Request, pa
 	}
 }
 
-func (s *server) fetchRoster(ctx context.Context) ([]model.Streamer, error) {
+func (s *server) fetchRoster(ctx context.Context) ([]model.Streamer, string) {
 	if s.streamersStore == nil {
-		return nil, errors.New("streamers store unavailable")
+		return nil, "streamers store unavailable"
 	}
 	records, err := s.streamersStore.List()
 	if err != nil {
-		return nil, err
+		s.logf("render home: %v", err)
+		return nil, "failed to load roster"
 	}
-	return mapStreamerRecords(records), nil
+	return mapStreamerRecords(records), ""
 }

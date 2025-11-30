@@ -104,9 +104,16 @@ func (s *server) handleAdminLogin(w http.ResponseWriter, r *http.Request) {
 	}
 	token, err := s.adminManager.Login(email, password)
 	if err != nil {
+		s.logger.Warn("admin", "login failed", map[string]any{
+			"email": email,
+			"error": err.Error(),
+		})
 		s.redirectAdmin(w, r, "", "Invalid credentials.")
 		return
 	}
+	s.logger.Info("admin", "login successful", map[string]any{
+		"email": email,
+	})
 	s.setAdminSession(w, r, token)
 	s.redirectAdmin(w, r, "Logged in successfully.", "")
 }

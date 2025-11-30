@@ -16,8 +16,10 @@ import (
 	"github.com/Its-donkey/Sharpen-live/internal/alert/submissions"
 	"github.com/Its-donkey/Sharpen-live/internal/ui/model"
 	youtubeui "github.com/Its-donkey/Sharpen-live/internal/ui/platforms/youtube"
+	"github.com/Its-donkey/Sharpen-live/logging"
 	"html/template"
 	"net/http"
+	"os"
 	"path/filepath"
 	"strings"
 	"time"
@@ -103,6 +105,8 @@ type server struct {
 	primaryHost      string
 	youtubeConfig    config.YouTubeConfig
 	fallbackErrors   []string
+	logger           *logging.Logger
+	logDir           string
 }
 
 type navAction struct {
@@ -309,6 +313,20 @@ func Run(ctx context.Context, opts Options) error {
 		siteDescription = "synth.wave tracks live synthwave, chillwave, and electronic music streams so you can ride the neon frequencies in real time."
 	}
 
+	// Initialize logging
+	logDir := filepath.Join(dataDir, "logs")
+	fileWriter, err := logging.NewFileWriter(logDir, "app.log", 50, 10)
+	if err != nil {
+		return fmt.Errorf("create log file writer: %w", err)
+	}
+	defer fileWriter.Close()
+
+	logger := logging.New(siteConfig.Key, logging.INFO, fileWriter, os.Stdout)
+	logger.Info("server", "Starting server", map[string]any{
+		"site":   siteConfig.Name,
+		"listen": opts.Listen,
+	})
+
 	srv := &server{
 		assetsDir:        assetsPath,
 		stylesPath:       "/styles.css",
@@ -330,6 +348,8 @@ func Run(ctx context.Context, opts Options) error {
 		primaryHost:      primaryHost,
 		youtubeConfig:    appConfig.YouTube,
 		fallbackErrors:   opts.FallbackErrors,
+		logger:           logger,
+		logDir:           logDir,
 	}
 
 	monitorFactory := opts.NewLeaseMonitor
@@ -396,9 +416,19 @@ func Run(ctx context.Context, opts Options) error {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 	})
 
+	// Add logging routes for catch-all site
+	if usingCatchAll {
+		mux.HandleFunc("/logs", srv.handleLogs)
+		mux.HandleFunc("/logs/stream", srv.handleLogsStream)
+	}
+
+	// Wrap with logging middleware
+	httpLogger := logging.NewHTTPLogger(logger, 10*1024)
+	handler := httpLogger.Middleware(mux)
+
 	server := &http.Server{
 		Addr:    opts.Listen,
-		Handler: mux,
+		Handler: handler,
 	}
 
 	errCh := make(chan error, 1)

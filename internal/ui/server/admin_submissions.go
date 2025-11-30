@@ -42,9 +42,18 @@ func (s *server) handleAdminSubmission(w http.ResponseWriter, r *http.Request) {
 		ID:     id,
 	})
 	if err != nil {
+		s.logger.Warn("admin", "submission moderation failed", map[string]any{
+			"submission_id": id,
+			"action":        action,
+			"error":         err.Error(),
+		})
 		s.redirectAdmin(w, r, "", adminSubmissionsErrorMessage(err))
 		return
 	}
+	s.logger.Info("admin", "submission moderated", map[string]any{
+		"submission_id": id,
+		"action":        action,
+	})
 	s.redirectAdmin(w, r, fmt.Sprintf("Submission %s.", pastTense(action)), "")
 }
 

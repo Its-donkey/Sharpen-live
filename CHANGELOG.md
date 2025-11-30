@@ -2,10 +2,13 @@
 
 ## Unreleased
 
-### Removed
-- Logging: removed entire logging system including HTTP request logging, WebSub event logging, and admin log viewer to simplify the codebase and reduce maintenance overhead.
-
 ### Added
+- Logging: comprehensive structured logging system with JSON formatting, log levels (DEBUG, INFO, WARN, ERROR, FATAL), and real-time log streaming via Server-Sent Events.
+- Logging: HTTP middleware that captures all request/response details including method, path, query, status, timing, headers (sensitive headers filtered), and body content (truncated to 1000 chars).
+- Logging: rotating file writer with automatic gzip compression of old log files and configurable size/retention limits (default 50MB per file, 10 files kept).
+- Logging: structured event logging for admin actions (login, logout, submission moderation, streamer updates/deletions) and public submissions with contextual fields.
+- Logging: web-based log viewer on catch-all site at /logs with filtering by level and category, real-time updates via SSE, and expandable JSON fields.
+- Logging: pub/sub pattern for real-time log subscribers enabling live log streaming to multiple viewers simultaneously.
 - Server/UI: run multiple branded sites from a single config (`-site` targets one; default boot spins up every entry) so Sharpen.Live and synth.wave can host their own templates/assets/log/data roots concurrently.
 - UI: add site-specific templates, OG images, neon synthwave styling, and SVG brand assets plus a synth.wave brand guide for design handoff.
 - UI: add a catch-all fallback site that surfaces the errors causing a fallback instead of silently rendering Sharpen.Live defaults.

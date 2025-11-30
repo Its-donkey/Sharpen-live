@@ -363,14 +363,14 @@ func (s *server) renderLogsHTML(w http.ResponseWriter, data logsPageData) {
 
         function formatLogEntry(entry) {
             let html = '<div class="log-header">';
-            html += '<span class="log-time">' + new Date(entry.timestamp).toLocaleString() + '</span>';
-            html += '<span class="log-level level-' + entry.level + '">' + entry.level + '</span>';
-            html += '<span class="log-category">' + entry.category + '</span>';
+            html += '<span class="log-time">' + escapeHtml(new Date(entry.timestamp).toLocaleString()) + '</span>';
+            html += '<span class="log-level level-' + escapeHtml(entry.level) + '">' + escapeHtml(entry.level) + '</span>';
+            html += '<span class="log-category">' + escapeHtml(entry.category) + '</span>';
             if (entry.request_id) {
-                html += '<span class="log-request-id">' + entry.request_id.substring(0, 8) + '</span>';
+                html += '<span class="log-request-id">' + escapeHtml(entry.request_id.substring(0, 8)) + '</span>';
             }
             if (entry.duration_ms) {
-                html += '<span class="log-duration">' + entry.duration_ms + 'ms</span>';
+                html += '<span class="log-duration">' + escapeHtml(entry.duration_ms.toString()) + 'ms</span>';
             }
             html += '</div>';
             html += '<div class="log-message">' + escapeHtml(entry.message) + '</div>';
@@ -380,7 +380,7 @@ func (s *server) renderLogsHTML(w http.ResponseWriter, data logsPageData) {
             if (entry.fields && Object.keys(entry.fields).length > 0) {
                 const id = 'fields-' + Math.random().toString(36).substring(7);
                 html += '<div class="toggle-fields" onclick="toggleFields(\'' + id + '\')">⊕ Show Details</div>';
-                html += '<div class="fields-detail" id="' + id + '"><pre>' + JSON.stringify(entry.fields, null, 2) + '</pre></div>';
+                html += '<div class="fields-detail" id="' + id + '"><pre>' + escapeHtml(JSON.stringify(entry.fields, null, 2)) + '</pre></div>';
             }
             return html;
         }

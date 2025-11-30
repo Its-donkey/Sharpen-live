@@ -1,8 +1,10 @@
 package streamers
 
 import (
-	"github.com/Its-donkey/Sharpen-live/internal/ui/model"
 	"testing"
+
+	"github.com/Its-donkey/Sharpen-live/internal/ui/model"
+	youtubeui "github.com/Its-donkey/Sharpen-live/internal/ui/platforms/youtube"
 )
 
 func TestDeriveStatus(t *testing.T) {
@@ -65,7 +67,7 @@ func TestYoutubeChannelURL(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := youtubeChannelURL(tt.det); got != tt.want {
+			if got := youtubeui.ChannelURLFromDetails(tt.det); got != tt.want {
 				t.Fatalf("expected %q got %q", tt.want, got)
 			}
 		})

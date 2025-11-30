@@ -11,6 +11,7 @@ import (
 
 	"github.com/Its-donkey/Sharpen-live/internal/ui/forms"
 	"github.com/Its-donkey/Sharpen-live/internal/ui/model"
+	youtubeui "github.com/Its-donkey/Sharpen-live/internal/ui/platforms/youtube"
 )
 
 func (s *server) homeStructuredData(homeURL string) template.JS {
@@ -84,7 +85,7 @@ func (s *server) handleSubmit(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		maybeEnrichMetadata(ctx, &state, http.DefaultClient)
+		youtubeui.MaybeEnrichMetadata(ctx, &state, http.DefaultClient)
 		if _, err := submitStreamer(ctx, s.streamerService, state); err != nil {
 			s.logf("submit streamer: %v", err)
 			state.Errors.General = append(state.Errors.General, "failed to submit streamer, please try again")

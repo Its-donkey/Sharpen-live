@@ -5,11 +5,13 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/Its-donkey/Sharpen-live/internal/ui/model"
 	"io"
 	"net/http"
 	"strings"
 	"time"
+
+	"github.com/Its-donkey/Sharpen-live/internal/ui/model"
+	youtubeui "github.com/Its-donkey/Sharpen-live/internal/ui/platforms/youtube"
 )
 
 // FetchStreamers retrieves roster data from the API, falling back to bundled JSON if needed.
@@ -143,9 +145,9 @@ func collectPlatforms(details model.ServerPlatformDetails, status model.ServerSt
 		if id == "" {
 			id = handle
 		}
-		url := youtubeLiveURL(yt, status.YouTube)
+		url := youtubeui.LiveURLFromDetails(yt, status.YouTube)
 		if url == "" {
-			url = youtubeChannelURL(yt)
+			url = youtubeui.ChannelURLFromDetails(yt)
 		}
 		if url != "" {
 			platforms = append(platforms, model.Platform{
@@ -168,35 +170,6 @@ func collectPlatforms(details model.ServerPlatformDetails, status model.ServerSt
 		})
 	}
 	return platforms
-}
-
-func youtubeChannelURL(details *model.ServerYouTubePlatform) string {
-	handle := strings.TrimSpace(details.Handle)
-	if handle != "" {
-		if !strings.HasPrefix(handle, "@") {
-			handle = "@" + handle
-		}
-		return "https://www.youtube.com/" + handle
-	}
-	channel := strings.TrimSpace(details.ChannelID)
-	if channel != "" {
-		return "https://www.youtube.com/channel/" + channel
-	}
-	const feedPrefix = "https://www.youtube.com/xml/feeds/videos.xml?channel_id="
-	if topic := strings.TrimSpace(details.Topic); strings.HasPrefix(topic, feedPrefix) {
-		return "https://www.youtube.com/channel/" + topic[len(feedPrefix):]
-	}
-	return ""
-}
-
-func youtubeLiveURL(details *model.ServerYouTubePlatform, status *model.ServerYouTubeStatus) string {
-	if status == nil || !status.Live {
-		return ""
-	}
-	if videoID := strings.TrimSpace(status.VideoID); videoID != "" {
-		return "https://www.youtube.com/watch?v=" + videoID
-	}
-	return youtubeChannelURL(details)
 }
 
 func twitchChannelURL(details *model.ServerTwitchPlatform) string {

@@ -11,6 +11,7 @@ import (
 	"github.com/Its-donkey/Sharpen-live/internal/alert/streamers"
 	streamersvc "github.com/Its-donkey/Sharpen-live/internal/alert/streamers/service"
 	"github.com/Its-donkey/Sharpen-live/internal/ui/model"
+	youtubeui "github.com/Its-donkey/Sharpen-live/internal/ui/platforms/youtube"
 )
 
 func (s *server) handleAdminStreamerUpdate(w http.ResponseWriter, r *http.Request) {
@@ -65,7 +66,7 @@ func (s *server) handleAdminStreamerUpdate(w http.ResponseWriter, r *http.Reques
 		}
 		currentPlatformURL := ""
 		if record.Platforms.YouTube != nil {
-			currentPlatformURL = youtubeChannelURLFromPlatform(record.Platforms.YouTube)
+			currentPlatformURL = youtubeui.ChannelURLFromPlatform(record.Platforms.YouTube)
 		}
 		if strings.EqualFold(strings.TrimSpace(currentPlatformURL), platformURL) {
 			s.redirectAdmin(w, r, "Streamer updated.", "")
@@ -152,7 +153,7 @@ func mapStreamerRecords(records []streamers.Record) []model.Streamer {
 		}
 		var platforms []model.Platform
 		if yt := rec.Platforms.YouTube; yt != nil {
-			if url := youtubeChannelURLFromPlatform(yt); url != "" {
+			if url := youtubeui.ChannelURLFromPlatform(yt); url != "" {
 				platforms = append(platforms, model.Platform{Name: "YouTube", ChannelURL: url})
 			}
 		}

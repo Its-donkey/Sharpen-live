@@ -5,11 +5,9 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
-	"net/url"
 	"strconv"
 	"strings"
 
-	liveinfo "github.com/Its-donkey/Sharpen-live/internal/alert/platforms/youtube/liveinfo"
 	streamersvc "github.com/Its-donkey/Sharpen-live/internal/alert/streamers/service"
 	"github.com/Its-donkey/Sharpen-live/internal/ui/forms"
 	"github.com/Its-donkey/Sharpen-live/internal/ui/model"
@@ -120,35 +118,6 @@ func removePlatformRow(platforms []model.PlatformFormRow, row int) []model.Platf
 	out = append(out, platforms[:row]...)
 	out = append(out, platforms[row+1:]...)
 	return out
-}
-
-func maybeEnrichMetadata(ctx context.Context, form *model.SubmitFormState, client *http.Client) {
-	if form == nil {
-		return
-	}
-	target := ""
-	for _, p := range form.Platforms {
-		if url := strings.TrimSpace(p.ChannelURL); url != "" {
-			target = url
-			break
-		}
-	}
-	if target == "" {
-		return
-	}
-	parsed, err := url.Parse(target)
-	if err != nil {
-		return
-	}
-	results, err := (&liveinfo.Client{HTTPClient: client}).Fetch(ctx, []string{parsed.String()})
-	if err != nil {
-		return
-	}
-	if video, ok := results[parsed.String()]; ok {
-		if form.Description == "" && video.Title != "" {
-			form.Description = video.Title
-		}
-	}
 }
 
 func submitStreamer(ctx context.Context, streamerSvc StreamerService, form model.SubmitFormState) (string, error) {

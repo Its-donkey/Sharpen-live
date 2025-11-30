@@ -1,4 +1,4 @@
-package server
+package youtube
 
 import (
 	"net/http"
@@ -9,22 +9,29 @@ import (
 	"github.com/Its-donkey/Sharpen-live/internal/alert/streamers"
 )
 
-func (s *server) buildAlertsHandler(streamersStore *streamers.Store) http.Handler {
-	opts := youtubehandlers.AlertNotificationOptions{
-		StreamersStore: streamersStore,
-	}
-	return s.handleAlerts(opts)
+// WebSubLogger records webhook outcomes without tying the package to the UI server logger.
+type WebSubLogger interface {
+	RecordWebSub(r *http.Request, outcome string)
 }
 
-func (s *server) handleAlerts(notificationOpts youtubehandlers.AlertNotificationOptions) http.Handler {
+type AlertsHandlerOptions struct {
+	StreamersStore *streamers.Store
+	Logger         WebSubLogger
+}
+
+func NewAlertsHandler(opts AlertsHandlerOptions) http.Handler {
+	notificationOpts := youtubehandlers.AlertNotificationOptions{
+		StreamersStore: opts.StreamersStore,
+	}
 	allowedMethods := strings.Join([]string{http.MethodGet, http.MethodPost}, ", ")
+
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if !youtubehandlers.IsAlertPath(r.URL.Path) {
 			http.NotFound(w, r)
 			return
 		}
 
-		platform := alertPlatform(r)
+		platform := PlatformFromRequest(r)
 
 		switch r.Method {
 		case http.MethodGet:
@@ -32,8 +39,8 @@ func (s *server) handleAlerts(notificationOpts youtubehandlers.AlertNotification
 				if youtubehandlers.HandleSubscriptionConfirmation(w, r, youtubehandlers.SubscriptionConfirmationOptions{
 					StreamersStore: notificationOpts.StreamersStore,
 				}) {
-					if s != nil && s.logger != nil {
-						s.logger.RecordWebSub(r, "verification")
+					if opts.Logger != nil {
+						opts.Logger.RecordWebSub(r, "verification")
 					}
 					return
 				}
@@ -49,8 +56,8 @@ func (s *server) handleAlerts(notificationOpts youtubehandlers.AlertNotification
 				return
 			}
 			if youtubehandlers.HandleAlertNotification(w, r, notificationOpts) {
-				if s != nil && s.logger != nil {
-					s.logger.RecordWebSub(r, "notification")
+				if opts.Logger != nil {
+					opts.Logger.RecordWebSub(r, "notification")
 				}
 				return
 			}
@@ -62,13 +69,13 @@ func (s *server) handleAlerts(notificationOpts youtubehandlers.AlertNotification
 	})
 }
 
-func alertCallbackPaths(callbackURL string) []string {
+func CallbackPaths(callbackURL string) []string {
 	return dedupePaths(map[string]string{
 		"default": resolveCallbackPath(callbackURL),
 	})
 }
 
-func alertPlatform(r *http.Request) string {
+func PlatformFromRequest(r *http.Request) string {
 	ua := strings.ToLower(r.Header.Get("User-Agent"))
 	from := strings.ToLower(r.Header.Get("From"))
 	switch {

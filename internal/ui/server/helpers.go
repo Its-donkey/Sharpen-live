@@ -6,7 +6,6 @@ import (
 	"time"
 
 	"github.com/Its-donkey/Sharpen-live/internal/alert/config"
-	"github.com/Its-donkey/Sharpen-live/internal/alert/streamers"
 	"github.com/Its-donkey/Sharpen-live/internal/ui/model"
 )
 
@@ -95,38 +94,6 @@ func statusLabel(status string) string {
 		return label
 	}
 	return status
-}
-
-func youtubeChannelURLFromPlatform(yt *streamers.YouTubePlatform) string {
-	if yt == nil {
-		return ""
-	}
-	if url := youtubeChannelURL(yt.Handle); url != "" {
-		return url
-	}
-	if id := strings.TrimSpace(yt.ChannelID); id != "" {
-		return "https://www.youtube.com/channel/" + id
-	}
-	return ""
-}
-
-func youtubeChannelURL(handle string) string {
-	handle = strings.TrimSpace(handle)
-	if handle == "" {
-		return ""
-	}
-	if !strings.HasPrefix(handle, "@") {
-		handle = "@" + handle
-	}
-	return "https://www.youtube.com/" + handle
-}
-
-func youtubeLiveURL(channelURL string) string {
-	channelURL = strings.TrimSpace(channelURL)
-	if channelURL == "" {
-		return ""
-	}
-	return channelURL + "/live"
 }
 
 func twitchChannelURL(handle string) string {

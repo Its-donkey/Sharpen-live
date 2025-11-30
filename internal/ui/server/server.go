@@ -15,6 +15,7 @@ import (
 	streamersvc "github.com/Its-donkey/Sharpen-live/internal/alert/streamers/service"
 	"github.com/Its-donkey/Sharpen-live/internal/alert/submissions"
 	"github.com/Its-donkey/Sharpen-live/internal/ui/model"
+	youtubeui "github.com/Its-donkey/Sharpen-live/internal/ui/platforms/youtube"
 	"html/template"
 	"net/http"
 	"path/filepath"
@@ -368,7 +369,7 @@ func Run(ctx context.Context, opts Options) error {
 		defer monitor.Stop()
 	}
 
-	alertPaths := alertCallbackPaths(appConfig.YouTube.CallbackURL)
+	alertPaths := youtubeui.CallbackPaths(appConfig.YouTube.CallbackURL)
 
 	mux := http.NewServeMux()
 	mux.HandleFunc("/", srv.handleHome)
@@ -394,7 +395,10 @@ func Run(ctx context.Context, opts Options) error {
 	mux.Handle("/api/streamers/watch", streamersWatch)
 	mux.HandleFunc("/api/youtube/metadata", srv.handleMetadata)
 	if baseStore, ok := streamersStore.(*streamers.Store); ok {
-		alertsHandler := srv.buildAlertsHandler(baseStore)
+		alertsHandler := youtubeui.NewAlertsHandler(youtubeui.AlertsHandlerOptions{
+			StreamersStore: baseStore,
+			Logger:         srv.logger,
+		})
 		for _, path := range alertPaths {
 			mux.Handle(path, alertsHandler)
 		}

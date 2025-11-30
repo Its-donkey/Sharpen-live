@@ -110,8 +110,8 @@ func (s *server) handleSubmit(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		for _, row := range removedRows {
-			state.Platforms = removePlatformRow(state.Platforms, row)
+		for _, rowID := range removedRows {
+			state.Platforms = removePlatformRow(state.Platforms, rowID)
 		}
 
 		state.Errors = forms.ValidateSubmitForm(&state)

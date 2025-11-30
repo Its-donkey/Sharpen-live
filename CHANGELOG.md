@@ -28,6 +28,7 @@
 - YouTube API: prefer `YOUTUBE_API_KEY`/`YT_API_KEY` environment values for both config loading and the player client default key instead of the baked-in sample key.
 - Logging: write every site’s HTTP/general/WebSub logs to the base `app.logs` directory instead of separate per-site log folders.
 - Logging: emit full HTTP request/response dumps (with correlation IDs) for YouTube status checks so timeouts and upstream failures can be debugged.
+- Logging: move site logging into a shared `logging` package at the repo root and reuse it across the UI server and YouTube alert wiring.
 - UI: move YouTube-specific helpers/handlers into `internal/ui/platforms/youtube` and reuse them across forms, streamers, and server wiring for clearer ownership.
 
 ### Fixed
@@ -62,14 +63,17 @@
 - UI: expand the home intro copy and span it across the full width to spotlight live sharpening streams.
 - Roster: swap YouTube text labels for the YouTube logo on platform links.
 - UI: remove the home page “Live Knife Sharpening Studio” heading to keep the intro concise.
+- UI: brand home, submit, streamer, and admin page metadata per site so each brand renders the correct title/description.
 - Roster: auto-reload browsers when `streamers.json` changes via the watch endpoint.
 - Roster: size the YouTube logo pill to match the text-height badges.
 - Roster: show platform links only when a streamer is online and disable profile links for now.
+- Roster: map live/busy/offline state from stored status so status pills and platform links reflect reality.
 - Guard WebSub hub.challenge and reject malformed values to avoid reflected content.
 - Harden YouTube WebSub requests by validating hub, topic, and callback URLs.
 - Admin: validate admin tokens for settings/log streams instead of accepting any non-empty value.
 - Admin: ensure `/admin/logs` streams valid server-sent events so the Activity tab shows live logs again.
 - Admin: wrap long log messages/details so the log feed stays within its card layout.
+- Admin: remove the inline log viewer from the dashboard to keep the layout focused on submissions and roster.
 - Alert server: encode HTTP request/response log payloads as JSON so downstream log streams stay valid.
 - Alert server: emit default SSE message events on `/api/streamers/watch` so EventSource listeners receive updates.
 - Admin: populate platform fields when editing streamers so YouTube channels appear even when offline.

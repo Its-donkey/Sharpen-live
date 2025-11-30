@@ -9,9 +9,11 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/Its-donkey/Sharpen-live/internal/alert/config"
 	"github.com/Its-donkey/Sharpen-live/internal/ui/forms"
 	"github.com/Its-donkey/Sharpen-live/internal/ui/model"
 	youtubeui "github.com/Its-donkey/Sharpen-live/internal/ui/platforms/youtube"
+	"github.com/Its-donkey/Sharpen-live/logging"
 )
 
 func (s *server) homeStructuredData(homeURL string) template.JS {
@@ -21,7 +23,7 @@ func (s *server) homeStructuredData(homeURL string) template.JS {
 	org := map[string]any{
 		"@context":    "https://schema.org",
 		"@type":       "Organization",
-		"name":        s.siteName,
+		"name":        s.siteDisplayName(),
 		"url":         homeURL,
 		"description": s.defaultDescription(),
 	}
@@ -42,6 +44,41 @@ func (s *server) assetHandler(name, contentType string) http.Handler {
 	})
 }
 
+func (s *server) siteDisplayName() string {
+	if name := strings.TrimSpace(s.siteName); name != "" {
+		return name
+	}
+	return "Sharpen.Live"
+}
+
+func (s *server) homePageTitle() string {
+	name := s.siteDisplayName()
+	switch {
+	case strings.EqualFold(s.siteKey, config.CatchAllSiteKey) || strings.EqualFold(name, config.CatchAllSiteKey):
+		return "Site unavailable - review configuration"
+	case strings.EqualFold(s.siteKey, "synth-wave") || strings.EqualFold(name, "synth.wave"):
+		return name + " - Live synthwave streams"
+	default:
+		return name + " - Live knife sharpening streams"
+	}
+}
+
+func (s *server) submitPageTitle() string {
+	name := s.siteDisplayName()
+	if strings.EqualFold(s.siteKey, config.CatchAllSiteKey) || strings.EqualFold(name, config.CatchAllSiteKey) {
+		return "Submit a streamer"
+	}
+	return "Submit a streamer - " + name
+}
+
+func (s *server) streamerPageTitle(streamerName string) string {
+	name := s.siteDisplayName()
+	if strings.TrimSpace(streamerName) == "" {
+		return name
+	}
+	return strings.TrimSpace(streamerName) + " - " + name
+}
+
 func (s *server) handleHome(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
 		w.Header().Set("Allow", http.MethodGet)
@@ -53,21 +90,22 @@ func (s *server) handleHome(w http.ResponseWriter, r *http.Request) {
 	state, rosterErr := s.fetchRoster(ctx)
 
 	submit := defaultSubmitState(r)
-	page := s.buildBasePageData(r, "Sharpen.Live – Synthwave Edition", s.siteDescription, "/")
+	page := s.buildBasePageData(r, s.homePageTitle(), s.siteDescription, "/")
 	s.renderHomeWithRoster(w, r, page, state, rosterErr, submit)
 }
 
 func (s *server) handleSubmit(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
+	title := s.submitPageTitle()
 	switch r.Method {
 	case http.MethodGet:
 		state := defaultSubmitState(r)
-		page := s.buildBasePageData(r, "Sharpen.Live – Submit a Streamer", s.siteDescription, "/submit")
+		page := s.buildBasePageData(r, title, s.siteDescription, "/submit")
 		s.renderHome(w, r, page, state)
 	case http.MethodPost:
 		state, removedRows, err := parseSubmitForm(r)
 		if err != nil {
-			s.logf("parse submit form: %v", err)
+			logging.Logf(s.logger, "parse submit form: %v", err)
 			http.Error(w, "invalid request", http.StatusBadRequest)
 			return
 		}
@@ -80,17 +118,17 @@ func (s *server) handleSubmit(w http.ResponseWriter, r *http.Request) {
 		if hasSubmitErrors(state.Errors) {
 			ensureSubmitDefaults(&state)
 			w.WriteHeader(http.StatusUnprocessableEntity)
-			page := s.buildBasePageData(r, "Sharpen.Live – Submit a Streamer", s.siteDescription, "/submit")
+			page := s.buildBasePageData(r, title, s.siteDescription, "/submit")
 			s.renderHome(w, r, page, state)
 			return
 		}
 
 		youtubeui.MaybeEnrichMetadata(ctx, &state, http.DefaultClient)
 		if _, err := submitStreamer(ctx, s.streamerService, state); err != nil {
-			s.logf("submit streamer: %v", err)
+			logging.Logf(s.logger, "submit streamer: %v", err)
 			state.Errors.General = append(state.Errors.General, "failed to submit streamer, please try again")
 			ensureSubmitDefaults(&state)
-			page := s.buildBasePageData(r, "Sharpen.Live – Submit a Streamer", s.siteDescription, "/submit")
+			page := s.buildBasePageData(r, title, s.siteDescription, "/submit")
 			s.renderHome(w, r, page, state)
 			return
 		}
@@ -132,7 +170,7 @@ func (s *server) handleMetadata(w http.ResponseWriter, r *http.Request) {
 
 	meta, err := s.metadataFetcher.Fetch(ctx, u.String())
 	if err != nil {
-		s.logf("fetch metadata: %v", err)
+		logging.Logf(s.logger, "fetch metadata: %v", err)
 		http.Error(w, "failed to fetch metadata", http.StatusInternalServerError)
 		return
 	}
@@ -145,7 +183,7 @@ func (s *server) handleMetadata(w http.ResponseWriter, r *http.Request) {
 		"channelId":   meta.ChannelID,
 	}
 	if err := json.NewEncoder(w).Encode(resp); err != nil {
-		s.logf("encode metadata: %v", err)
+		logging.Logf(s.logger, "encode metadata: %v", err)
 	}
 }
 
@@ -182,7 +220,7 @@ func (s *server) renderHomeWithRoster(w http.ResponseWriter, r *http.Request, pa
 		return
 	}
 	if err := tmpl.ExecuteTemplate(w, "home", data); err != nil {
-		s.logf("execute home template: %v", err)
+		logging.Logf(s.logger, "execute home template: %v", err)
 		http.Error(w, "failed to render page", http.StatusInternalServerError)
 	}
 }
@@ -193,7 +231,7 @@ func (s *server) fetchRoster(ctx context.Context) ([]model.Streamer, string) {
 	}
 	records, err := s.streamersStore.List()
 	if err != nil {
-		s.logf("render home: %v", err)
+		logging.Logf(s.logger, "render home: %v", err)
 		return nil, "failed to load roster"
 	}
 	return mapStreamerRecords(records), ""

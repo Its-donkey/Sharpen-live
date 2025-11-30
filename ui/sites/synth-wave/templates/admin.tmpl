@@ -145,52 +145,6 @@
         {{end}}
       </section>
 
-      <section aria-labelledby="admin-logs-title">
-        <div class="admin-streamers-header">
-          <div>
-            <h3 id="admin-logs-title">Latest logs</h3>
-            <p class="admin-help">Recent entries from server logs (general, HTTP, WebSub). Showing up to {{if .LogLimit}}{{.LogLimit}}{{else}}120{{end}} per file.</p>
-          </div>
-        </div>
-        {{if .LogsError}}
-          <div class="admin-status" data-state="error">{{.LogsError}}</div>
-        {{end}}
-        {{if .Logs}}
-          <div class="admin-logs">
-            {{range .Logs}}
-            <article class="admin-card admin-log-card">
-              <div class="admin-card-header">
-                <div class="admin-card-heading">
-                  <h4>{{.Title}}</h4>
-                </div>
-              </div>
-              {{if .Error}}
-                <div class="admin-status" data-state="error">{{.Error}}</div>
-              {{else if .Entries}}
-                <div class="admin-log-feed">
-                  {{range .Entries}}
-                    <div class="admin-log-entry">
-                      <div class="admin-log-entry__meta">
-                        <span class="admin-log-time">{{.Timestamp}}</span>
-                        {{if .Meta}}<span class="admin-log-meta">{{.Meta}}</span>{{end}}
-                      </div>
-                      <div class="admin-log-message">{{.Message}}</div>
-                      {{if .Details}}
-                        <pre class="admin-log-details">{{.Details}}</pre>
-                      {{end}}
-                    </div>
-                  {{end}}
-                </div>
-              {{else}}
-                <div class="admin-empty">No log entries found.</div>
-              {{end}}
-            </article>
-            {{end}}
-          </div>
-        {{else}}
-          <div class="admin-empty">Logs are unavailable.</div>
-        {{end}}
-      </section>
     </div>
   {{end}}
 </section>

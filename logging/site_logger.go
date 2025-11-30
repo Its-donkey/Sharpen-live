@@ -1,4 +1,4 @@
-package server
+package logging
 
 import (
 	"encoding/json"
@@ -16,7 +16,8 @@ import (
 
 const maxLogEvents = 500
 
-type siteLogger struct {
+// SiteLogger writes general/HTTP/WebSub events to JSON files under a site-specific directory.
+type SiteLogger struct {
 	site      string
 	general   *jsonLogFile
 	http      *jsonLogFile
@@ -24,6 +25,11 @@ type siteLogger struct {
 	stdout    *log.Logger
 	now       func() time.Time
 	timefield string
+}
+
+// WebSubLogger captures webhook results; SiteLogger implements this.
+type WebSubLogger interface {
+	RecordWebSub(r *http.Request, outcome string)
 }
 
 type jsonLogFile struct {
@@ -58,7 +64,8 @@ type webSubLogEvent struct {
 	Outcome string `json:"outcome,omitempty"`
 }
 
-func newSiteLogger(logDir, site string) (*siteLogger, error) {
+// NewSiteLogger builds a SiteLogger rooted at logDir.
+func NewSiteLogger(logDir, site string) (*SiteLogger, error) {
 	logDir = strings.TrimSpace(logDir)
 	if logDir == "" {
 		return nil, nil
@@ -69,7 +76,7 @@ func newSiteLogger(logDir, site string) (*siteLogger, error) {
 	makeFile := func(name string) *jsonLogFile {
 		return &jsonLogFile{path: filepath.Join(logDir, name)}
 	}
-	return &siteLogger{
+	return &SiteLogger{
 		site:      site,
 		general:   makeFile("general.json"),
 		http:      makeFile("http.json"),
@@ -80,7 +87,8 @@ func newSiteLogger(logDir, site string) (*siteLogger, error) {
 	}, nil
 }
 
-func (l *siteLogger) Generalf(format string, args ...interface{}) {
+// Generalf writes a formatted message to the general log and stdout.
+func (l *SiteLogger) Generalf(format string, args ...interface{}) {
 	if l == nil {
 		return
 	}
@@ -93,7 +101,8 @@ func (l *siteLogger) Generalf(format string, args ...interface{}) {
 	})
 }
 
-func (l *siteLogger) RecordHTTP(r *http.Request, status int, duration time.Duration) {
+// RecordHTTP writes an HTTP request summary to the HTTP log.
+func (l *SiteLogger) RecordHTTP(r *http.Request, status int, duration time.Duration) {
 	if l == nil {
 		return
 	}
@@ -109,7 +118,8 @@ func (l *siteLogger) RecordHTTP(r *http.Request, status int, duration time.Durat
 	_ = l.http.append(event)
 }
 
-func (l *siteLogger) RecordWebSub(r *http.Request, outcome string) {
+// RecordWebSub writes a WebSub verification/notification entry.
+func (l *SiteLogger) RecordWebSub(r *http.Request, outcome string) {
 	if l == nil {
 		return
 	}
@@ -124,6 +134,28 @@ func (l *siteLogger) RecordWebSub(r *http.Request, outcome string) {
 		Outcome: outcome,
 	}
 	_ = l.websub.append(event)
+}
+
+// Logf logs to the SiteLogger when present, falling back to stdout.
+func Logf(l *SiteLogger, format string, args ...interface{}) {
+	if l != nil {
+		l.Generalf(format, args...)
+		return
+	}
+	log.Printf(format, args...)
+}
+
+// WithHTTPLogging wraps an http.Handler to record requests.
+func WithHTTPLogging(logger *SiteLogger, next http.Handler) http.Handler {
+	if logger == nil {
+		return next
+	}
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		rec := &statusRecorder{ResponseWriter: w, status: http.StatusOK}
+		start := time.Now()
+		next.ServeHTTP(rec, r)
+		logger.RecordHTTP(r, rec.status, time.Since(start))
+	})
 }
 
 func stripHostPort(value string) string {
@@ -185,26 +217,6 @@ func (r *statusRecorder) WriteHeader(code int) {
 func (r *statusRecorder) Write(b []byte) (int, error) {
 	r.maybeSetStatus()
 	return r.ResponseWriter.Write(b)
-}
-
-func (s *server) withHTTPLogging(next http.Handler) http.Handler {
-	if s == nil || s.logger == nil {
-		return next
-	}
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		rec := &statusRecorder{ResponseWriter: w, status: http.StatusOK}
-		start := time.Now()
-		next.ServeHTTP(rec, r)
-		s.logger.RecordHTTP(r, rec.status, time.Since(start))
-	})
-}
-
-func (s *server) logf(format string, args ...interface{}) {
-	if s != nil && s.logger != nil {
-		s.logger.Generalf(format, args...)
-		return
-	}
-	log.Printf(format, args...)
 }
 
 func (r *statusRecorder) maybeSetStatus() {

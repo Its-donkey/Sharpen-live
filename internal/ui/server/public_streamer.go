@@ -2,12 +2,12 @@ package server
 
 import (
 	"encoding/json"
-	"fmt"
 	"html/template"
 	"net/http"
 	"strings"
 
 	"github.com/Its-donkey/Sharpen-live/internal/ui/model"
+	"github.com/Its-donkey/Sharpen-live/logging"
 )
 
 func (s *server) streamerStructuredData(canonical string, streamer model.Streamer) template.JS {
@@ -65,7 +65,7 @@ func (s *server) handleStreamer(w http.ResponseWriter, r *http.Request) {
 	if s.streamersStore != nil {
 		records, err := s.streamersStore.List()
 		if err != nil {
-			s.logf("render streamer detail: %v", err)
+			logging.Logf(s.logger, "render streamer detail: %v", err)
 			http.Error(w, "failed to load streamer", http.StatusInternalServerError)
 			return
 		}
@@ -81,7 +81,7 @@ func (s *server) handleStreamer(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	page := s.buildBasePageData(r, fmt.Sprintf("%s – Sharpen.Live", streamer.Name), s.siteDescription, r.URL.Path)
+	page := s.buildBasePageData(r, s.streamerPageTitle(streamer.Name), s.siteDescription, r.URL.Path)
 	page.StructuredData = s.streamerStructuredData(s.absoluteURL(r, r.URL.Path), streamer)
 	data := struct {
 		basePageData
@@ -97,7 +97,7 @@ func (s *server) handleStreamer(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if err := tmpl.ExecuteTemplate(w, "streamer", data); err != nil {
-		s.logf("execute streamer template: %v", err)
+		logging.Logf(s.logger, "execute streamer template: %v", err)
 		http.Error(w, "failed to render page", http.StatusInternalServerError)
 	}
 }

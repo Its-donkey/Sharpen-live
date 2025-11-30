@@ -60,6 +60,7 @@
 - Submit form: fix the “Add a Streamer” toggle so it opens the hidden form as intended.
 - Submit form: stretch the lead help text across the full form grid for consistent alignment.
 - Submit form: hide the language dropdown until “Add another language” is clicked, then swap back once a choice is made.
+- Submit form: correctly parse platform rows/removals so submissions post successfully again.
 - UI: expand the home intro copy and span it across the full width to spotlight live sharpening streams.
 - Roster: swap YouTube text labels for the YouTube logo on platform links.
 - UI: remove the home page “Live Knife Sharpening Studio” heading to keep the intro concise.

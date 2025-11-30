@@ -63,7 +63,9 @@ func (s *server) handleAdmin(w http.ResponseWriter, r *http.Request) {
 	}
 	msg := strings.TrimSpace(r.URL.Query().Get("msg"))
 	errMsg := strings.TrimSpace(r.URL.Query().Get("err"))
-	base := s.buildBasePageData(r, fmt.Sprintf("Admin · %s", s.siteName), "Sharpen.Live admin dashboard for roster moderation and submissions.", "/admin")
+	siteName := s.siteDisplayName()
+	desc := fmt.Sprintf("%s admin dashboard for roster moderation and submissions.", siteName)
+	base := s.buildBasePageData(r, fmt.Sprintf("Admin · %s", siteName), desc, "/admin")
 	base.SecondaryAction = &navAction{
 		Label: "Back to site",
 		Href:  "/",

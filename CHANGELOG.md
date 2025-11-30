@@ -62,6 +62,7 @@
 - UI: expand the home intro copy and span it across the full width to spotlight live sharpening streams.
 - Roster: swap YouTube text labels for the YouTube logo on platform links.
 - UI: remove the home page “Live Knife Sharpening Studio” heading to keep the intro concise.
+- UI: brand home, submit, streamer, and admin page metadata per site so each brand renders the correct title/description.
 - Roster: auto-reload browsers when `streamers.json` changes via the watch endpoint.
 - Roster: size the YouTube logo pill to match the text-height badges.
 - Roster: show platform links only when a streamer is online and disable profile links for now.

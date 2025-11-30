@@ -7,12 +7,10 @@ import (
 
 	youtubehandlers "github.com/Its-donkey/Sharpen-live/internal/alert/platforms/youtube/handlers"
 	"github.com/Its-donkey/Sharpen-live/internal/alert/streamers"
-	"github.com/Its-donkey/Sharpen-live/logging"
 )
 
 type AlertsHandlerOptions struct {
 	StreamersStore *streamers.Store
-	Logger         logging.WebSubLogger
 }
 
 func NewAlertsHandler(opts AlertsHandlerOptions) http.Handler {
@@ -35,9 +33,6 @@ func NewAlertsHandler(opts AlertsHandlerOptions) http.Handler {
 				if youtubehandlers.HandleSubscriptionConfirmation(w, r, youtubehandlers.SubscriptionConfirmationOptions{
 					StreamersStore: notificationOpts.StreamersStore,
 				}) {
-					if opts.Logger != nil {
-						opts.Logger.RecordWebSub(r, "verification")
-					}
 					return
 				}
 				http.Error(w, "invalid subscription confirmation", http.StatusBadRequest)
@@ -52,9 +47,6 @@ func NewAlertsHandler(opts AlertsHandlerOptions) http.Handler {
 				return
 			}
 			if youtubehandlers.HandleAlertNotification(w, r, notificationOpts) {
-				if opts.Logger != nil {
-					opts.Logger.RecordWebSub(r, "notification")
-				}
 				return
 			}
 			http.Error(w, "failed to process notification", http.StatusInternalServerError)

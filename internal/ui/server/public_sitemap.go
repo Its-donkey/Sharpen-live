@@ -7,7 +7,6 @@ import (
 	"strings"
 
 	"github.com/Its-donkey/Sharpen-live/internal/alert/streamers"
-	"github.com/Its-donkey/Sharpen-live/logging"
 )
 
 type urlSet struct {
@@ -56,7 +55,7 @@ func (s *server) handleSitemap(w http.ResponseWriter, r *http.Request) {
 		var err error
 		records, err = s.streamersStore.List()
 		if err != nil {
-			logging.Logf(s.logger, "render sitemap: %v", err)
+			records = nil
 		}
 	}
 
@@ -84,7 +83,5 @@ func (s *server) handleSitemap(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Cache-Control", "public, max-age=300")
 	enc := xml.NewEncoder(w)
 	enc.Indent("", "  ")
-	if err := enc.Encode(smap); err != nil {
-		logging.Logf(s.logger, "encode sitemap: %v", err)
-	}
+	_ = enc.Encode(smap)
 }

@@ -39,13 +39,6 @@ func applyDefaults(opts Options, site config.SiteConfig) Options {
 			opts.AssetsDir = fallbackApp.Assets
 		}
 	}
-	if opts.LogDir == "" {
-		if site.App.Logs != "" {
-			opts.LogDir = site.App.Logs
-		} else {
-			opts.LogDir = fallbackApp.Logs
-		}
-	}
 	if opts.DataDir == "" {
 		if site.App.Data != "" {
 			opts.DataDir = site.App.Data
@@ -64,7 +57,6 @@ func switchToCatchAll(cfg config.Config, opts Options) (config.SiteConfig, Optio
 	opts.Site = fallback.Key
 	opts.TemplatesDir = ""
 	opts.AssetsDir = ""
-	opts.LogDir = ""
 	opts.DataDir = ""
 	opts = applyDefaults(opts, fallback)
 	return fallback, opts
@@ -113,4 +105,29 @@ func facebookPageURL(handle string) string {
 		return ""
 	}
 	return "https://www.facebook.com/" + handle
+}
+
+func adminStreamersErrorMessage(err error) string {
+	if err == nil {
+		return ""
+	}
+	return err.Error()
+}
+
+func adminSubmissionsErrorMessage(err error) string {
+	if err == nil {
+		return ""
+	}
+	return err.Error()
+}
+
+func pastTense(action string) string {
+	switch strings.ToLower(action) {
+	case "approve":
+		return "approved"
+	case "reject":
+		return "rejected"
+	default:
+		return action
+	}
 }

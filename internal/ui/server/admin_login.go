@@ -13,9 +13,6 @@ import (
 )
 
 const adminCookieName = "sharpen_admin_token"
-const adminLogLimit = 120
-const adminBodyPreviewLimit = 600
-const adminHeadersPreviewLimit = 600
 
 type adminPageData struct {
 	basePageData
@@ -27,9 +24,6 @@ type adminPageData struct {
 	Streamers        []model.Streamer
 	RosterError      string
 	AdminEmail       string
-	Logs             []logCategoryView
-	LogLimit         int
-	LogsError        string
 }
 
 type adminSubmission struct {
@@ -39,21 +33,6 @@ type adminSubmission struct {
 	Languages   []string
 	PlatformURL string
 	SubmittedAt string
-}
-
-type logCategoryView struct {
-	Title   string
-	Entries []logEntryView
-	Error   string
-}
-
-type logEntryView struct {
-	Timestamp string
-	Message   string
-	Meta      string
-	Category  string
-	RequestID string
-	Details   string
 }
 
 func (s *server) handleAdmin(w http.ResponseWriter, r *http.Request) {
@@ -101,12 +80,6 @@ func (s *server) handleAdmin(w http.ResponseWriter, r *http.Request) {
 			data.Streamers = mapStreamerRecords(records)
 		}
 	}
-	logs, logErr := s.loadAdminLogs(adminLogLimit)
-	if logErr != nil {
-		data.LogsError = logErr.Error()
-	}
-	data.Logs = logs
-	data.LogLimit = adminLogLimit
 	s.renderAdminPage(w, data)
 }
 

@@ -16,7 +16,6 @@ import (
 	"github.com/Its-donkey/Sharpen-live/internal/alert/submissions"
 	"github.com/Its-donkey/Sharpen-live/internal/ui/model"
 	youtubeui "github.com/Its-donkey/Sharpen-live/internal/ui/platforms/youtube"
-	"github.com/Its-donkey/Sharpen-live/logging"
 	"html/template"
 	"net/http"
 	"path/filepath"
@@ -29,7 +28,6 @@ type Options struct {
 	Listen         string
 	TemplatesDir   string
 	AssetsDir      string
-	LogDir         string
 	DataDir        string
 	ConfigPath     string
 	Site           string
@@ -88,14 +86,12 @@ type server struct {
 	assetsDir        string
 	stylesPath       string
 	socialImagePath  string
-	logDir           string
 	templates        map[string]*template.Template
 	currentYear      int
 	submitEndpoint   string
 	streamersStore   StreamersStore
 	streamerService  StreamerService
 	submissionsStore *submissions.Store
-	logger           *logging.SiteLogger
 	adminSubmissions AdminSubmissions
 	statusChecker    StatusChecker
 	adminManager     AdminManager
@@ -229,15 +225,6 @@ func Run(ctx context.Context, opts Options) error {
 		return fmt.Errorf("resolve assets dir: %w", err)
 	}
 
-	logDir, err := filepath.Abs(opts.LogDir)
-	if err != nil {
-		return fmt.Errorf("resolve log dir: %w", err)
-	}
-	logger, err := logging.NewSiteLogger(logDir, siteConfig.Key)
-	if err != nil {
-		return fmt.Errorf("configure logger: %w", err)
-	}
-
 	dataDir := opts.DataDir
 	if dataDir == "" {
 		dataDir = "data"
@@ -326,14 +313,12 @@ func Run(ctx context.Context, opts Options) error {
 		assetsDir:        assetsPath,
 		stylesPath:       "/styles.css",
 		socialImagePath:  "/og-image.png",
-		logDir:           logDir,
 		templates:        tmpl,
 		currentYear:      time.Now().Year(),
 		submitEndpoint:   "/submit",
 		streamersStore:   streamersStore,
 		streamerService:  streamerSvc,
 		submissionsStore: submissionsStore,
-		logger:           logger,
 		adminSubmissions: adminSubSvc,
 		statusChecker:    statusChecker,
 		adminManager:     adminMgr,
@@ -398,7 +383,6 @@ func Run(ctx context.Context, opts Options) error {
 	if baseStore, ok := streamersStore.(*streamers.Store); ok {
 		alertsHandler := youtubeui.NewAlertsHandler(youtubeui.AlertsHandlerOptions{
 			StreamersStore: baseStore,
-			Logger:         srv.logger,
 		})
 		for _, path := range alertPaths {
 			mux.Handle(path, alertsHandler)
@@ -414,24 +398,13 @@ func Run(ctx context.Context, opts Options) error {
 
 	server := &http.Server{
 		Addr:    opts.Listen,
-		Handler: logging.WithHTTPLogging(srv.logger, mux),
+		Handler: mux,
 	}
 
 	errCh := make(chan error, 1)
 	go func() {
 		errCh <- server.ListenAndServe()
 	}()
-
-	siteLabel := siteConfig.Name
-	if siteConfig.Key != "" {
-		siteLabel = fmt.Sprintf("%s (%s)", siteConfig.Name, siteConfig.Key)
-	}
-
-	logLine := fmt.Sprintf("Serving %s UI on http://%s", siteLabel, opts.Listen)
-	if len(opts.FallbackErrors) > 0 {
-		logLine = fmt.Sprintf("%s (fallback: %s)", logLine, strings.Join(opts.FallbackErrors, "; "))
-	}
-	logging.Logf(srv.logger, "%s", logLine)
 
 	select {
 	case <-ctx.Done():

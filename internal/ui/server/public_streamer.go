@@ -7,7 +7,6 @@ import (
 	"strings"
 
 	"github.com/Its-donkey/Sharpen-live/internal/ui/model"
-	"github.com/Its-donkey/Sharpen-live/logging"
 )
 
 func (s *server) streamerStructuredData(canonical string, streamer model.Streamer) template.JS {
@@ -65,7 +64,6 @@ func (s *server) handleStreamer(w http.ResponseWriter, r *http.Request) {
 	if s.streamersStore != nil {
 		records, err := s.streamersStore.List()
 		if err != nil {
-			logging.Logf(s.logger, "render streamer detail: %v", err)
 			http.Error(w, "failed to load streamer", http.StatusInternalServerError)
 			return
 		}
@@ -97,7 +95,6 @@ func (s *server) handleStreamer(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if err := tmpl.ExecuteTemplate(w, "streamer", data); err != nil {
-		logging.Logf(s.logger, "execute streamer template: %v", err)
 		http.Error(w, "failed to render page", http.StatusInternalServerError)
 	}
 }

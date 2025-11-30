@@ -13,7 +13,6 @@ import (
 	"github.com/Its-donkey/Sharpen-live/internal/ui/forms"
 	"github.com/Its-donkey/Sharpen-live/internal/ui/model"
 	youtubeui "github.com/Its-donkey/Sharpen-live/internal/ui/platforms/youtube"
-	"github.com/Its-donkey/Sharpen-live/logging"
 )
 
 func (s *server) homeStructuredData(homeURL string) template.JS {
@@ -105,7 +104,6 @@ func (s *server) handleSubmit(w http.ResponseWriter, r *http.Request) {
 	case http.MethodPost:
 		state, removedRows, err := parseSubmitForm(r)
 		if err != nil {
-			logging.Logf(s.logger, "parse submit form: %v", err)
 			http.Error(w, "invalid request", http.StatusBadRequest)
 			return
 		}
@@ -125,7 +123,6 @@ func (s *server) handleSubmit(w http.ResponseWriter, r *http.Request) {
 
 		youtubeui.MaybeEnrichMetadata(ctx, &state, http.DefaultClient)
 		if _, err := submitStreamer(ctx, s.streamerService, state); err != nil {
-			logging.Logf(s.logger, "submit streamer: %v", err)
 			state.Errors.General = append(state.Errors.General, "failed to submit streamer, please try again")
 			ensureSubmitDefaults(&state)
 			page := s.buildBasePageData(r, title, s.siteDescription, "/submit")
@@ -170,7 +167,6 @@ func (s *server) handleMetadata(w http.ResponseWriter, r *http.Request) {
 
 	meta, err := s.metadataFetcher.Fetch(ctx, u.String())
 	if err != nil {
-		logging.Logf(s.logger, "fetch metadata: %v", err)
 		http.Error(w, "failed to fetch metadata", http.StatusInternalServerError)
 		return
 	}
@@ -182,9 +178,7 @@ func (s *server) handleMetadata(w http.ResponseWriter, r *http.Request) {
 		"handle":      meta.Handle,
 		"channelId":   meta.ChannelID,
 	}
-	if err := json.NewEncoder(w).Encode(resp); err != nil {
-		logging.Logf(s.logger, "encode metadata: %v", err)
-	}
+	_ = json.NewEncoder(w).Encode(resp)
 }
 
 func (s *server) renderHome(w http.ResponseWriter, r *http.Request, page basePageData, submit model.SubmitFormState) {
@@ -220,7 +214,6 @@ func (s *server) renderHomeWithRoster(w http.ResponseWriter, r *http.Request, pa
 		return
 	}
 	if err := tmpl.ExecuteTemplate(w, "home", data); err != nil {
-		logging.Logf(s.logger, "execute home template: %v", err)
 		http.Error(w, "failed to render page", http.StatusInternalServerError)
 	}
 }
@@ -231,7 +224,6 @@ func (s *server) fetchRoster(ctx context.Context) ([]model.Streamer, string) {
 	}
 	records, err := s.streamersStore.List()
 	if err != nil {
-		logging.Logf(s.logger, "render home: %v", err)
 		return nil, "failed to load roster"
 	}
 	return mapStreamerRecords(records), ""

@@ -154,6 +154,11 @@ func (h *HTTPLogger) Middleware(next http.Handler) http.Handler {
 		}
 
 		h.logger.write(entry)
+
+		// Parse YouTube WebSub notifications if detected
+		if requestBody != "" && IsYouTubeWebSubNotification(requestBody, r.Header.Get("Content-Type")) {
+			h.logger.ParseYouTubeWebSub(requestBody, requestID)
+		}
 	})
 }
 

@@ -5,6 +5,7 @@
 ### Added
 - Logging: comprehensive structured logging system with JSON formatting, log levels (DEBUG, INFO, WARN, ERROR, FATAL), and real-time log streaming via Server-Sent Events.
 - Logging: HTTP middleware that captures all request/response details including method, path, query, status, timing, headers (sensitive headers filtered), and body content (truncated to 1000 chars).
+- Logging: YouTube WebSub notification parser that automatically detects and parses Atom XML feeds from YouTube PubSubHubbub callbacks, creating structured logs with video_id, channel_id, video_title, channel_name, and timestamps for each video notification.
 - Logging: rotating file writer with automatic gzip compression of old log files and configurable size/retention limits (default 50MB per file, 10 files kept).
 - Logging: structured event logging for admin actions (login, logout, submission moderation, streamer updates/deletions) and public submissions with contextual fields.
 - Logging: web-based log viewer on catch-all site at /logs with filtering by level and category, real-time updates via SSE, and expandable JSON fields.

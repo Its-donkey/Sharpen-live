@@ -14,8 +14,8 @@ type YouTubeAtomFeed struct {
 
 // YouTubeEntry represents a single video entry in the Atom feed.
 type YouTubeEntry struct {
-	VideoID     string    `xml:"videoId"`
-	ChannelID   string    `xml:"channelId"`
+	VideoID     string    `xml:"http://www.youtube.com/xml/schemas/2015 videoId"`
+	ChannelID   string    `xml:"http://www.youtube.com/xml/schemas/2015 channelId"`
 	Title       string    `xml:"title"`
 	Link        Link      `xml:"link"`
 	Author      Author    `xml:"author"`
@@ -46,6 +46,16 @@ func (l *Logger) ParseYouTubeWebSub(xmlBody string, requestID string) {
 		l.Warn("youtube", "failed to parse websub XML", map[string]any{
 			"error":      err.Error(),
 			"request_id": requestID,
+			"xml_sample": truncateString(xmlBody, 200),
+		})
+		return
+	}
+
+	// Log parse attempt for debugging
+	if len(feed.Entries) == 0 {
+		l.Debug("youtube", "parsed websub XML but found no entries", map[string]any{
+			"request_id": requestID,
+			"xml_sample": truncateString(xmlBody, 200),
 		})
 		return
 	}
@@ -66,6 +76,13 @@ func (l *Logger) ParseYouTubeWebSub(xmlBody string, requestID string) {
 
 		l.Info("youtube", "video notification received", fields)
 	}
+}
+
+func truncateString(s string, maxLen int) string {
+	if len(s) <= maxLen {
+		return s
+	}
+	return s[:maxLen] + "..."
 }
 
 // IsYouTubeWebSubNotification checks if the request body looks like YouTube WebSub XML.

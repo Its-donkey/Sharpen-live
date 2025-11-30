@@ -151,9 +151,10 @@ func mapStreamerRecords(records []streamers.Record) []model.Streamer {
 		if name == "" {
 			name = rec.Streamer.ID
 		}
+		status, statusLabel, isLive := mapStreamerStatus(rec.Status)
 		var platforms []model.Platform
 		if yt := rec.Platforms.YouTube; yt != nil {
-			if url := youtubeui.ChannelURLFromPlatform(yt); url != "" {
+			if url := youtubePlatformURL(yt, rec.Status, isLive); url != "" {
 				platforms = append(platforms, model.Platform{Name: "YouTube", ChannelURL: url})
 			}
 		}
@@ -177,9 +178,63 @@ func mapStreamerRecords(records []streamers.Record) []model.Streamer {
 			ID:          rec.Streamer.ID,
 			Name:        name,
 			Description: strings.TrimSpace(rec.Streamer.Description),
+			Status:      status,
+			StatusLabel: statusLabel,
 			Languages:   append([]string(nil), rec.Streamer.Languages...),
 			Platforms:   platforms,
 		})
 	}
 	return out
+}
+
+func mapStreamerStatus(status *streamers.Status) (state, label string, live bool) {
+	state = "offline"
+	label = model.StatusLabels[state]
+	if status == nil {
+		return
+	}
+
+	live = status.Live
+	if yt := status.YouTube; yt != nil && yt.Live {
+		live = true
+	}
+	if tw := status.Twitch; tw != nil && tw.Live {
+		live = true
+	}
+	if fb := status.Facebook; fb != nil && fb.Live {
+		live = true
+	}
+
+	switch {
+	case live:
+		state = "online"
+	case len(status.Platforms) > 0:
+		state = "busy"
+	default:
+		state = "offline"
+	}
+
+	if lbl := model.StatusLabels[state]; lbl != "" {
+		label = lbl
+	} else {
+		label = state
+	}
+	return
+}
+
+func youtubePlatformURL(yt *streamers.YouTubePlatform, status *streamers.Status, live bool) string {
+	channelURL := youtubeui.ChannelURLFromPlatform(yt)
+	if channelURL == "" {
+		return ""
+	}
+	if status != nil && status.YouTube != nil && status.YouTube.Live {
+		if vid := strings.TrimSpace(status.YouTube.VideoID); vid != "" {
+			return "https://www.youtube.com/watch?v=" + vid
+		}
+		return youtubeui.LiveURLFromChannel(channelURL)
+	}
+	if live {
+		return youtubeui.LiveURLFromChannel(channelURL)
+	}
+	return channelURL
 }

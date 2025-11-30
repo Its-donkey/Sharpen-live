@@ -79,7 +79,10 @@ func fileModTime(path string) (time.Time, error) {
 }
 
 func statusClass(status string) string {
-	switch status {
+	state := strings.ToLower(strings.TrimSpace(status))
+	switch state {
+	case "online", "busy", "offline":
+		return state
 	case "approved":
 		return "status-approved"
 	case "rejected":

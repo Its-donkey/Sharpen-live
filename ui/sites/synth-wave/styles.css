@@ -922,6 +922,9 @@ select.platform-select {
   border-radius: calc(var(--radius-xl) * 0.66);
   background: rgba(15, 23, 42, 0.5);
   padding: 1rem;
+  width: 100%;
+  box-sizing: border-box;
+  overflow-x: auto;
   max-height: 360px;
   overflow-y: auto;
   display: flex;
@@ -956,6 +959,8 @@ select.platform-select {
 .admin-log-message {
   margin-top: 0.15rem;
   line-height: 1.4;
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .admin-logs {
@@ -1009,6 +1014,18 @@ select.platform-select {
 
 .admin-log-entry[open] .admin-log-snippet {
   -webkit-line-clamp: unset;
+}
+
+.admin-log-details {
+  margin-top: 0.5rem;
+  padding: 0.6rem 0.75rem;
+  border-radius: 10px;
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  white-space: pre-wrap;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+  box-sizing: border-box;
 }
 
 .admin-log-body {

@@ -1,4 +1,4 @@
-package server
+package logging
 
 import (
 	"encoding/json"
@@ -14,11 +14,11 @@ func TestSiteLoggerIsPerInstance(t *testing.T) {
 	oneDir := filepath.Join(dir, "one")
 	twoDir := filepath.Join(dir, "two")
 
-	one, err := newSiteLogger(oneDir, "one")
+	one, err := NewSiteLogger(oneDir, "one")
 	if err != nil {
 		t.Fatalf("logger one: %v", err)
 	}
-	two, err := newSiteLogger(twoDir, "two")
+	two, err := NewSiteLogger(twoDir, "two")
 	if err != nil {
 		t.Fatalf("logger two: %v", err)
 	}
@@ -39,11 +39,10 @@ func TestSiteLoggerIsPerInstance(t *testing.T) {
 
 func TestHTTPLoggingRecordsRequests(t *testing.T) {
 	dir := t.TempDir()
-	logger, err := newSiteLogger(dir, "site-a")
+	logger, err := NewSiteLogger(dir, "site-a")
 	if err != nil {
 		t.Fatalf("new logger: %v", err)
 	}
-	srv := &server{logger: logger}
 
 	mux := http.NewServeMux()
 	mux.HandleFunc("/ping", func(w http.ResponseWriter, r *http.Request) {
@@ -51,7 +50,7 @@ func TestHTTPLoggingRecordsRequests(t *testing.T) {
 		_, _ = w.Write([]byte("ok"))
 	})
 
-	handler := srv.withHTTPLogging(mux)
+	handler := WithHTTPLogging(logger, mux)
 
 	req := httptest.NewRequest(http.MethodGet, "/ping", nil)
 	req.RemoteAddr = "127.0.0.1:9999"

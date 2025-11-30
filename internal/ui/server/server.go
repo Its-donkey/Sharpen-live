@@ -16,6 +16,7 @@ import (
 	"github.com/Its-donkey/Sharpen-live/internal/alert/submissions"
 	"github.com/Its-donkey/Sharpen-live/internal/ui/model"
 	youtubeui "github.com/Its-donkey/Sharpen-live/internal/ui/platforms/youtube"
+	"github.com/Its-donkey/Sharpen-live/logging"
 	"html/template"
 	"net/http"
 	"path/filepath"
@@ -94,7 +95,7 @@ type server struct {
 	streamersStore   StreamersStore
 	streamerService  StreamerService
 	submissionsStore *submissions.Store
-	logger           *siteLogger
+	logger           *logging.SiteLogger
 	adminSubmissions AdminSubmissions
 	statusChecker    StatusChecker
 	adminManager     AdminManager
@@ -232,7 +233,7 @@ func Run(ctx context.Context, opts Options) error {
 	if err != nil {
 		return fmt.Errorf("resolve log dir: %w", err)
 	}
-	logger, err := newSiteLogger(logDir, siteConfig.Key)
+	logger, err := logging.NewSiteLogger(logDir, siteConfig.Key)
 	if err != nil {
 		return fmt.Errorf("configure logger: %w", err)
 	}
@@ -413,7 +414,7 @@ func Run(ctx context.Context, opts Options) error {
 
 	server := &http.Server{
 		Addr:    opts.Listen,
-		Handler: srv.withHTTPLogging(mux),
+		Handler: logging.WithHTTPLogging(srv.logger, mux),
 	}
 
 	errCh := make(chan error, 1)
@@ -430,7 +431,7 @@ func Run(ctx context.Context, opts Options) error {
 	if len(opts.FallbackErrors) > 0 {
 		logLine = fmt.Sprintf("%s (fallback: %s)", logLine, strings.Join(opts.FallbackErrors, "; "))
 	}
-	srv.logf("%s", logLine)
+	logging.Logf(srv.logger, "%s", logLine)
 
 	select {
 	case <-ctx.Done():

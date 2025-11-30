@@ -7,16 +7,12 @@ import (
 
 	youtubehandlers "github.com/Its-donkey/Sharpen-live/internal/alert/platforms/youtube/handlers"
 	"github.com/Its-donkey/Sharpen-live/internal/alert/streamers"
+	"github.com/Its-donkey/Sharpen-live/logging"
 )
-
-// WebSubLogger records webhook outcomes without tying the package to the UI server logger.
-type WebSubLogger interface {
-	RecordWebSub(r *http.Request, outcome string)
-}
 
 type AlertsHandlerOptions struct {
 	StreamersStore *streamers.Store
-	Logger         WebSubLogger
+	Logger         logging.WebSubLogger
 }
 
 func NewAlertsHandler(opts AlertsHandlerOptions) http.Handler {

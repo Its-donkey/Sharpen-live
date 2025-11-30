@@ -28,6 +28,7 @@
 - YouTube API: prefer `YOUTUBE_API_KEY`/`YT_API_KEY` environment values for both config loading and the player client default key instead of the baked-in sample key.
 - Logging: write every site’s HTTP/general/WebSub logs to the base `app.logs` directory instead of separate per-site log folders.
 - Logging: emit full HTTP request/response dumps (with correlation IDs) for YouTube status checks so timeouts and upstream failures can be debugged.
+- Logging: move site logging into a shared `logging` package at the repo root and reuse it across the UI server and YouTube alert wiring.
 - UI: move YouTube-specific helpers/handlers into `internal/ui/platforms/youtube` and reuse them across forms, streamers, and server wiring for clearer ownership.
 
 ### Fixed

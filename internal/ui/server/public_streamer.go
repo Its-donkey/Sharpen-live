@@ -2,7 +2,6 @@ package server
 
 import (
 	"encoding/json"
-	"fmt"
 	"html/template"
 	"net/http"
 	"strings"
@@ -81,7 +80,7 @@ func (s *server) handleStreamer(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	page := s.buildBasePageData(r, fmt.Sprintf("%s – Sharpen.Live", streamer.Name), s.siteDescription, r.URL.Path)
+	page := s.buildBasePageData(r, s.streamerPageTitle(streamer.Name), s.siteDescription, r.URL.Path)
 	page.StructuredData = s.streamerStructuredData(s.absoluteURL(r, r.URL.Path), streamer)
 	data := struct {
 		basePageData

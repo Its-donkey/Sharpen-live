@@ -9,6 +9,7 @@ import (
 	"path/filepath"
 	"strings"
 
+	"github.com/Its-donkey/Sharpen-live/internal/alert/config"
 	"github.com/Its-donkey/Sharpen-live/internal/ui/forms"
 	"github.com/Its-donkey/Sharpen-live/internal/ui/model"
 	youtubeui "github.com/Its-donkey/Sharpen-live/internal/ui/platforms/youtube"
@@ -21,7 +22,7 @@ func (s *server) homeStructuredData(homeURL string) template.JS {
 	org := map[string]any{
 		"@context":    "https://schema.org",
 		"@type":       "Organization",
-		"name":        s.siteName,
+		"name":        s.siteDisplayName(),
 		"url":         homeURL,
 		"description": s.defaultDescription(),
 	}
@@ -42,6 +43,41 @@ func (s *server) assetHandler(name, contentType string) http.Handler {
 	})
 }
 
+func (s *server) siteDisplayName() string {
+	if name := strings.TrimSpace(s.siteName); name != "" {
+		return name
+	}
+	return "Sharpen.Live"
+}
+
+func (s *server) homePageTitle() string {
+	name := s.siteDisplayName()
+	switch {
+	case strings.EqualFold(s.siteKey, config.CatchAllSiteKey) || strings.EqualFold(name, config.CatchAllSiteKey):
+		return "Site unavailable - review configuration"
+	case strings.EqualFold(s.siteKey, "synth-wave") || strings.EqualFold(name, "synth.wave"):
+		return name + " - Live synthwave streams"
+	default:
+		return name + " - Live knife sharpening streams"
+	}
+}
+
+func (s *server) submitPageTitle() string {
+	name := s.siteDisplayName()
+	if strings.EqualFold(s.siteKey, config.CatchAllSiteKey) || strings.EqualFold(name, config.CatchAllSiteKey) {
+		return "Submit a streamer"
+	}
+	return "Submit a streamer - " + name
+}
+
+func (s *server) streamerPageTitle(streamerName string) string {
+	name := s.siteDisplayName()
+	if strings.TrimSpace(streamerName) == "" {
+		return name
+	}
+	return strings.TrimSpace(streamerName) + " - " + name
+}
+
 func (s *server) handleHome(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
 		w.Header().Set("Allow", http.MethodGet)
@@ -53,16 +89,17 @@ func (s *server) handleHome(w http.ResponseWriter, r *http.Request) {
 	state, rosterErr := s.fetchRoster(ctx)
 
 	submit := defaultSubmitState(r)
-	page := s.buildBasePageData(r, "Sharpen.Live – Synthwave Edition", s.siteDescription, "/")
+	page := s.buildBasePageData(r, s.homePageTitle(), s.siteDescription, "/")
 	s.renderHomeWithRoster(w, r, page, state, rosterErr, submit)
 }
 
 func (s *server) handleSubmit(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
+	title := s.submitPageTitle()
 	switch r.Method {
 	case http.MethodGet:
 		state := defaultSubmitState(r)
-		page := s.buildBasePageData(r, "Sharpen.Live – Submit a Streamer", s.siteDescription, "/submit")
+		page := s.buildBasePageData(r, title, s.siteDescription, "/submit")
 		s.renderHome(w, r, page, state)
 	case http.MethodPost:
 		state, removedRows, err := parseSubmitForm(r)
@@ -80,7 +117,7 @@ func (s *server) handleSubmit(w http.ResponseWriter, r *http.Request) {
 		if hasSubmitErrors(state.Errors) {
 			ensureSubmitDefaults(&state)
 			w.WriteHeader(http.StatusUnprocessableEntity)
-			page := s.buildBasePageData(r, "Sharpen.Live – Submit a Streamer", s.siteDescription, "/submit")
+			page := s.buildBasePageData(r, title, s.siteDescription, "/submit")
 			s.renderHome(w, r, page, state)
 			return
 		}
@@ -90,7 +127,7 @@ func (s *server) handleSubmit(w http.ResponseWriter, r *http.Request) {
 			s.logf("submit streamer: %v", err)
 			state.Errors.General = append(state.Errors.General, "failed to submit streamer, please try again")
 			ensureSubmitDefaults(&state)
-			page := s.buildBasePageData(r, "Sharpen.Live – Submit a Streamer", s.siteDescription, "/submit")
+			page := s.buildBasePageData(r, title, s.siteDescription, "/submit")
 			s.renderHome(w, r, page, state)
 			return
 		}

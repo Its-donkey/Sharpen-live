@@ -62,6 +62,7 @@
 - UI: expand the home intro copy and span it across the full width to spotlight live sharpening streams.
 - Roster: swap YouTube text labels for the YouTube logo on platform links.
 - UI: remove the home page “Live Knife Sharpening Studio” heading to keep the intro concise.
+- UI: brand home, submit, streamer, and admin page metadata per site so each brand renders the correct title/description.
 - Roster: auto-reload browsers when `streamers.json` changes via the watch endpoint.
 - Roster: size the YouTube logo pill to match the text-height badges.
 - Roster: show platform links only when a streamer is online and disable profile links for now.
@@ -70,6 +71,7 @@
 - Harden YouTube WebSub requests by validating hub, topic, and callback URLs.
 - Admin: validate admin tokens for settings/log streams instead of accepting any non-empty value.
 - Admin: ensure `/admin/logs` streams valid server-sent events so the Activity tab shows live logs again.
+- Admin: remove the inline log viewer from the dashboard to keep the layout focused on submissions and roster.
 - Alert server: encode HTTP request/response log payloads as JSON so downstream log streams stay valid.
 - Alert server: emit default SSE message events on `/api/streamers/watch` so EventSource listeners receive updates.
 - Admin: populate platform fields when editing streamers so YouTube channels appear even when offline.

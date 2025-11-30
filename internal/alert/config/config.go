@@ -11,7 +11,6 @@ import (
 const (
 	defaultAddr         = "127.0.0.1"
 	defaultPort         = ":8880"
-	defaultLogs         = "data/logs/catch-all"
 	defaultData         = "data/catch-all"
 	defaultTemplatesDir = "ui/sites/catch-all/templates"
 	defaultAssetsDir    = "ui/sites/catch-all"
@@ -35,11 +34,10 @@ type ServerConfig struct {
 	Port string `json:"port"`
 }
 
-// AppConfig configures server-rendered assets/templates, log, and data locations.
+// AppConfig configures server-rendered assets/templates and data locations.
 type AppConfig struct {
 	Templates string `json:"templates"`
 	Assets    string `json:"assets"`
-	Logs      string `json:"logs"`
 	Data      string `json:"data"`
 	Name      string `json:"name"`
 }
@@ -143,9 +141,6 @@ func Load(path string) (Config, error) {
 	if app.Assets == "" {
 		app.Assets = defaultAssetsDir
 	}
-	if app.Logs == "" {
-		app.Logs = defaultLogs
-	}
 	if app.Data == "" {
 		app.Data = defaultData
 	}
@@ -180,8 +175,6 @@ func Load(path string) (Config, error) {
 				siteApp.Name = site.App.Name
 			}
 		}
-		// Logs always use the base app logs path so every site writes to one location.
-		siteApp.Logs = app.Logs
 
 		siteName := site.Name
 		if siteName == "" {
@@ -284,13 +277,12 @@ func DefaultConfig() Config {
 }
 
 // CatchAllAppConfig returns the default catch-all app configuration, including
-// template, asset, log, and data roots.
+// template, asset, and data roots.
 func CatchAllAppConfig() AppConfig {
 	return AppConfig{
 		Name:      defaultSiteName,
 		Templates: defaultTemplatesDir,
 		Assets:    defaultAssetsDir,
-		Logs:      defaultLogs,
 		Data:      defaultData,
 	}
 }

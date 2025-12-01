@@ -5,7 +5,7 @@ Single Go server for Sharpen.Live (alerts, roster, submissions, and server-rende
 - `cmd/alertserver`: single server for UI, submissions, admin, YouTube WebSub, and JSON endpoints.
 - `internal/alert`: alert/YouTube domain logic, handlers, and platform clients.
 - `internal/ui`: shared UI logic (forms, roster mapping, helpers).
-- `ui/sites/`: per-site static assets (styles, templates, JS) including a catch-all fallback; `ui/static/` contains shared logos.
+- `ui/sites/`: per-site static assets (styles, templates, JS) including a default-site fallback; `ui/static/` contains shared logos.
 
 ## Quick start (dev)
 Run the UI + alerts server (all configured sites start when no `-site` is provided):
@@ -41,7 +41,7 @@ go test ./...
 - **Admin auth**: server-rendered `/admin` login uses credentials under `admin` in `config.json`.
 
 ## UI (SSR only)
-- **Serve locally**: `go run ./cmd/alertserver -site sharpen-live -listen 127.0.0.1:4173 -config config.json` (omit `-site` to launch every configured site; a catch-all fallback renders errors if a site cannot be loaded)
+- **Serve locally**: `go run ./cmd/alertserver -site sharpen-live -listen 127.0.0.1:4173 -config config.json` (omit `-site` to launch every configured site; a default-site fallback renders errors if a site cannot be loaded)
 - **Runtime**: the server hosts static assets and serves roster/submit/admin endpoints directly (no API proxy). The admin console is server-rendered at `/admin` using credentials from `config.json`.
 
 ## Endpoints (served by ui-server)
@@ -57,7 +57,7 @@ go test ./...
 
 ## Deploy (Linux)
 - Build: `CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o dist/alertserver ./cmd/alertserver`
-- Ship to server: `dist/alertserver`, `config.json`, and `ui/sites/` (per-site templates/assets, including the catch-all fallback) plus `data/` (includes `streamers.json`; keep writable for submissions/logs).
+- Ship to server: `dist/alertserver`, `config.json`, and `ui/sites/` (per-site templates/assets, including the default-site fallback) plus `data/` (includes `streamers.json`; keep writable for submissions/logs).
 - Run from that directory (so relative paths work):  
   `./dist/alertserver -listen 0.0.0.0:4173 -config config.json`
 - Ensure `/alerts` is reachable publicly at the `youtube.callback_url` in `config.json` (set it to your HTTPS domain + `/alerts`). Put TLS/reverse proxy (nginx/Caddy/Traefik) in front as needed.

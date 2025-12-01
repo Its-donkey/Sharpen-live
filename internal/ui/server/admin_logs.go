@@ -5,10 +5,12 @@ import (
 	"fmt"
 	"net/http"
 	"path/filepath"
+	"sort"
 	"strconv"
 	"strings"
 	"time"
 
+	"github.com/Its-donkey/Sharpen-live/internal/alert/config"
 	"github.com/Its-donkey/Sharpen-live/logging"
 )
 
@@ -31,9 +33,16 @@ func (s *server) handleLogs(w http.ResponseWriter, r *http.Request) {
 	level := strings.ToUpper(r.URL.Query().Get("level"))
 	category := r.URL.Query().Get("category")
 
-	// Read recent logs
-	logPath := filepath.Join(s.logDir, "app.log")
-	entries, err := logging.ReadRecent(logPath, limit*2) // Read more to allow for filtering
+	// Require admin for default-site log access
+	if s.siteKey == config.DefaultSiteKey {
+		if s.adminTokenFromRequest(r) == "" {
+			http.Redirect(w, r, "/admin?err=Login required to view logs", http.StatusSeeOther)
+			return
+		}
+	}
+
+	// Read recent logs (aggregated for default-site).
+	entries, err := s.readLogEntries(limit * 2) // Read more to allow for filtering
 	if err != nil {
 		s.logger.Error("logs", "Failed to read logs", err, nil)
 		http.Error(w, "Failed to read logs", http.StatusInternalServerError)
@@ -111,10 +120,39 @@ func (s *server) handleLogsStream(w http.ResponseWriter, r *http.Request) {
 	level := strings.ToUpper(r.URL.Query().Get("level"))
 	category := r.URL.Query().Get("category")
 
+	if s.siteKey == config.DefaultSiteKey && s.adminTokenFromRequest(r) == "" {
+		http.Error(w, "unauthorized", http.StatusUnauthorized)
+		return
+	}
+
 	// Create channel for log entries
 	entryCh := make(chan logging.Entry, 100)
-	unsubscribe := s.logger.Subscribe(entryCh)
-	defer unsubscribe()
+
+	// Check if this is the default-site (aggregates all logs)
+	logDirClean := filepath.Clean(s.logDir)
+	isFallback := s.siteKey == config.DefaultSiteKey ||
+		strings.Contains(logDirClean, string(filepath.Separator)+"default-site"+string(filepath.Separator)) ||
+		strings.EqualFold(strings.TrimSpace(s.siteName), config.DefaultSiteKey)
+
+	// Subscribe to appropriate loggers
+	var unsubscribers []func()
+	if isFallback {
+		// Subscribe to all loggers for cross-site aggregation
+		allLoggers := logging.AllLoggers()
+		for _, logger := range allLoggers {
+			unsubscribers = append(unsubscribers, logger.Subscribe(entryCh))
+		}
+	} else {
+		// Subscribe only to this site's logger
+		unsubscribers = append(unsubscribers, s.logger.Subscribe(entryCh))
+	}
+
+	// Unsubscribe from all loggers when done
+	defer func() {
+		for _, unsubscribe := range unsubscribers {
+			unsubscribe()
+		}
+	}()
 
 	// Send initial connection message
 	fmt.Fprintf(w, "data: {\"type\":\"connected\",\"timestamp\":\"%s\"}\n\n", time.Now().UTC().Format(time.RFC3339))
@@ -168,6 +206,57 @@ func mapKeys(m map[string]bool) []string {
 		keys = append(keys, k)
 	}
 	return keys
+}
+
+// readLogEntries loads recent log entries. For the default-site fallback, it aggregates
+// logs from all sibling site log directories to provide a cross-site view.
+func (s *server) readLogEntries(limit int) ([]logging.Entry, error) {
+	primary := filepath.Join(s.logDir, "app.log")
+
+	// Treat default-site (or when logDir path includes default-site) as the fallback that aggregates all logs.
+	logDirClean := filepath.Clean(s.logDir)
+	isFallback := s.siteKey == config.DefaultSiteKey ||
+		strings.Contains(logDirClean, string(filepath.Separator)+"default-site"+string(filepath.Separator)) ||
+		strings.EqualFold(strings.TrimSpace(s.siteName), config.DefaultSiteKey)
+
+	if !isFallback {
+		return logging.ReadRecent(primary, limit)
+	}
+
+	// Aggregate logs from all site log directories under the shared data root.
+	// Go up three levels from primary: app.log -> logs -> site-name -> data
+	dataRoot := filepath.Dir(filepath.Dir(filepath.Dir(primary)))
+	candidates, _ := filepath.Glob(filepath.Join(dataRoot, "*", "logs", "*.log"))
+
+	seen := map[string]bool{}
+	all := make([]logging.Entry, 0, limit*2)
+
+	appendFrom := func(path string) {
+		if seen[path] {
+			return
+		}
+		seen[path] = true
+		entries, err := logging.ReadRecent(path, limit)
+		if err != nil {
+			return
+		}
+		all = append(all, entries...)
+	}
+
+	appendFrom(primary)
+	for _, path := range candidates {
+		appendFrom(path)
+	}
+
+	// Sort by timestamp and keep the most recent entries.
+	sort.Slice(all, func(i, j int) bool {
+		return all[i].Timestamp.Before(all[j].Timestamp)
+	})
+	if len(all) > limit {
+		all = all[len(all)-limit:]
+	}
+
+	return all, nil
 }
 
 // renderLogsHTML renders a simple inline HTML log viewer
@@ -363,14 +452,14 @@ func (s *server) renderLogsHTML(w http.ResponseWriter, data logsPageData) {
 
         function formatLogEntry(entry) {
             let html = '<div class="log-header">';
-            html += '<span class="log-time">' + escapeHtml(new Date(entry.timestamp).toLocaleString()) + '</span>';
-            html += '<span class="log-level level-' + escapeHtml(entry.level) + '">' + escapeHtml(entry.level) + '</span>';
-            html += '<span class="log-category">' + escapeHtml(entry.category) + '</span>';
+            html += '<span class="log-time">' + new Date(entry.timestamp).toLocaleString() + '</span>';
+            html += '<span class="log-level level-' + entry.level + '">' + entry.level + '</span>';
+            html += '<span class="log-category">' + entry.category + '</span>';
             if (entry.request_id) {
-                html += '<span class="log-request-id">' + escapeHtml(entry.request_id.substring(0, 8)) + '</span>';
+                html += '<span class="log-request-id">' + entry.request_id.substring(0, 8) + '</span>';
             }
             if (entry.duration_ms) {
-                html += '<span class="log-duration">' + escapeHtml(entry.duration_ms.toString()) + 'ms</span>';
+                html += '<span class="log-duration">' + entry.duration_ms + 'ms</span>';
             }
             html += '</div>';
             html += '<div class="log-message">' + escapeHtml(entry.message) + '</div>';
@@ -380,7 +469,7 @@ func (s *server) renderLogsHTML(w http.ResponseWriter, data logsPageData) {
             if (entry.fields && Object.keys(entry.fields).length > 0) {
                 const id = 'fields-' + Math.random().toString(36).substring(7);
                 html += '<div class="toggle-fields" onclick="toggleFields(\'' + id + '\')">⊕ Show Details</div>';
-                html += '<div class="fields-detail" id="' + id + '"><pre>' + escapeHtml(JSON.stringify(entry.fields, null, 2)) + '</pre></div>';
+                html += '<div class="fields-detail" id="' + id + '"><pre>' + JSON.stringify(entry.fields, null, 2) + '</pre></div>';
             }
             return html;
         }

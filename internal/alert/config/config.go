@@ -11,11 +11,11 @@ import (
 const (
 	defaultAddr         = "127.0.0.1"
 	defaultPort         = ":8880"
-	defaultData         = "data/catch-all"
-	defaultTemplatesDir = "ui/sites/catch-all/templates"
-	defaultAssetsDir    = "ui/sites/catch-all"
-	defaultSiteName     = "Catch-all"
-	CatchAllSiteKey     = "catch-all"
+	defaultData         = "data/default-site"
+	defaultTemplatesDir = "ui/sites/default-site/templates"
+	defaultAssetsDir    = "ui/sites/default-site"
+	defaultSiteName     = "Cross Platform Streaming Notifications"
+	DefaultSiteKey      = "default-site"
 )
 
 // YouTubeConfig captures the WebSub-specific defaults persisted in config files.
@@ -131,7 +131,7 @@ func Load(path string) (Config, error) {
 		admin.TokenTTLSeconds = 86400
 	}
 
-	app := CatchAllAppConfig()
+	app := DefaultSiteAppConfig()
 	if raw.AppBlock != nil {
 		app = *raw.AppBlock
 	}
@@ -252,7 +252,7 @@ func AllSites(cfg Config) []SiteConfig {
 	return sites
 }
 
-// DefaultConfig returns a configuration populated with catch-all defaults. It
+// DefaultConfig returns a configuration populated with default-site values. It
 // is primarily used when loading config.json fails and the server needs a
 // fallback site.
 func DefaultConfig() Config {
@@ -261,7 +261,7 @@ func DefaultConfig() Config {
 			Addr: defaultAddr,
 			Port: defaultPort,
 		},
-		App: CatchAllAppConfig(),
+		App: DefaultSiteAppConfig(),
 		YouTube: YouTubeConfig{
 			HubURL:       "",
 			CallbackURL:  "",
@@ -276,9 +276,9 @@ func DefaultConfig() Config {
 	}
 }
 
-// CatchAllAppConfig returns the default catch-all app configuration, including
-// template, asset, and data roots.
-func CatchAllAppConfig() AppConfig {
+// DefaultSiteAppConfig returns the default fallback app configuration,
+// including template, asset, and data roots.
+func DefaultSiteAppConfig() AppConfig {
 	return AppConfig{
 		Name:      defaultSiteName,
 		Templates: defaultTemplatesDir,
@@ -287,10 +287,10 @@ func CatchAllAppConfig() AppConfig {
 	}
 }
 
-// CatchAllSite returns a site configuration that points at the catch-all assets
+// DefaultSite returns a site configuration that points at the fallback assets
 // and templates. Server listen values inherit from the provided config when
 // present, otherwise the defaults are applied.
-func CatchAllSite(cfg Config) SiteConfig {
+func DefaultSite(cfg Config) SiteConfig {
 	server := cfg.Server
 	if strings.TrimSpace(server.Addr) == "" {
 		server.Addr = defaultAddr
@@ -299,10 +299,10 @@ func CatchAllSite(cfg Config) SiteConfig {
 		server.Port = defaultPort
 	}
 	return SiteConfig{
-		Key:    CatchAllSiteKey,
+		Key:    DefaultSiteKey,
 		Name:   defaultSiteName,
 		Server: server,
-		App:    CatchAllAppConfig(),
+		App:    DefaultSiteAppConfig(),
 	}
 }
 

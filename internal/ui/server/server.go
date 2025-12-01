@@ -165,40 +165,40 @@ func Run(ctx context.Context, opts Options) error {
 	}
 
 	appConfig, err := config.Load(opts.ConfigPath)
-	usingCatchAll := false
+	usingDefaultSite := false
 	if err != nil {
 		appendFallback(fmt.Sprintf("failed to load config: %v", err))
 		appConfig = config.DefaultConfig()
-		usingCatchAll = true
+		usingDefaultSite = true
 	}
 	var siteConfig config.SiteConfig
-	if opts.Site == config.CatchAllSiteKey {
-		siteConfig = config.CatchAllSite(appConfig)
-		usingCatchAll = true
+	if opts.Site == config.DefaultSiteKey {
+		siteConfig = config.DefaultSite(appConfig)
+		usingDefaultSite = true
 	} else {
 		siteConfig, err = config.ResolveSite(opts.Site, appConfig)
 		if err != nil {
 			appendFallback(fmt.Sprintf("site %q not found: %v", opts.Site, err))
-			siteConfig = config.CatchAllSite(appConfig)
-			usingCatchAll = true
+			siteConfig = config.DefaultSite(appConfig)
+			usingDefaultSite = true
 		}
 	}
-	if siteConfig.Key == config.CatchAllSiteKey || strings.EqualFold(siteConfig.Name, config.CatchAllSiteKey) || strings.EqualFold(siteConfig.Name, "catch-all") {
-		usingCatchAll = true
+	if siteConfig.Key == config.DefaultSiteKey || strings.EqualFold(siteConfig.Name, config.DefaultSiteKey) || strings.EqualFold(siteConfig.Name, "default-site") {
+		usingDefaultSite = true
 	}
 	opts = applyDefaults(opts, siteConfig)
 
 	templateRoot, err := filepath.Abs(opts.TemplatesDir)
 	if err != nil {
-		if usingCatchAll {
+		if usingDefaultSite {
 			return fmt.Errorf("resolve templates dir: %w", err)
 		}
 		appendFallback(fmt.Sprintf("template path %q failed: %v", opts.TemplatesDir, err))
-		siteConfig, opts = switchToCatchAll(appConfig, opts)
-		usingCatchAll = true
+		siteConfig, opts = switchToDefaultSite(appConfig, opts)
+		usingDefaultSite = true
 		templateRoot, err = filepath.Abs(opts.TemplatesDir)
 		if err != nil {
-			return fmt.Errorf("resolve catch-all templates dir: %w", err)
+			return fmt.Errorf("resolve default-site templates dir: %w", err)
 		}
 	}
 
@@ -206,19 +206,19 @@ func Run(ctx context.Context, opts Options) error {
 	if tmpl == nil {
 		loaded, err := loadTemplates(templateRoot)
 		if err != nil {
-			if usingCatchAll {
-				return fmt.Errorf("load catch-all templates: %w", err)
+			if usingDefaultSite {
+				return fmt.Errorf("load default-site templates: %w", err)
 			}
 			appendFallback(fmt.Sprintf("failed to load templates from %s: %v", templateRoot, err))
-			siteConfig, opts = switchToCatchAll(appConfig, opts)
-			usingCatchAll = true
+			siteConfig, opts = switchToDefaultSite(appConfig, opts)
+			usingDefaultSite = true
 			templateRoot, err = filepath.Abs(opts.TemplatesDir)
 			if err != nil {
-				return fmt.Errorf("resolve catch-all templates dir: %w", err)
+				return fmt.Errorf("resolve default-site templates dir: %w", err)
 			}
 			loaded, err = loadTemplates(templateRoot)
 			if err != nil {
-				return fmt.Errorf("load catch-all templates: %w", err)
+				return fmt.Errorf("load default-site templates: %w", err)
 			}
 		}
 		tmpl = loaded
@@ -307,8 +307,8 @@ func Run(ctx context.Context, opts Options) error {
 
 	siteDescription := "Sharpen.Live tracks live knife sharpeners and bladesmith streams across YouTube, Twitch, and Facebook - find makers, tutorials, and sharpening resources."
 	switch {
-	case strings.EqualFold(siteConfig.Key, config.CatchAllSiteKey) || strings.EqualFold(siteConfig.Name, config.CatchAllSiteKey) || strings.EqualFold(siteConfig.Name, "catch-all"):
-		siteDescription = "This catch-all page appears when a requested site cannot be served. Review the errors below to restore the site configuration."
+	case strings.EqualFold(siteConfig.Key, config.DefaultSiteKey) || strings.EqualFold(siteConfig.Name, config.DefaultSiteKey) || strings.EqualFold(siteConfig.Name, "default-site"):
+		siteDescription = "Cross Platform Streaming Notifications appears when a requested site cannot be served. Review the errors below to restore the site configuration."
 	case strings.EqualFold(siteConfig.Key, "synth-wave") || strings.EqualFold(siteConfig.Name, "synth.wave"):
 		siteDescription = "synth.wave tracks live synthwave, chillwave, and electronic music streams so you can ride the neon frequencies in real time."
 	}
@@ -416,11 +416,9 @@ func Run(ctx context.Context, opts Options) error {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 	})
 
-	// Add logging routes for catch-all site
-	if usingCatchAll {
-		mux.HandleFunc("/logs", srv.handleLogs)
-		mux.HandleFunc("/logs/stream", srv.handleLogsStream)
-	}
+	mux.HandleFunc("/logs", srv.handleLogs)
+	mux.HandleFunc("/logs/stream", srv.handleLogsStream)
+	mux.HandleFunc("/oglogs", srv.handleLogs)
 
 	// Wrap with logging middleware
 	httpLogger := logging.NewHTTPLogger(logger, 10*1024)

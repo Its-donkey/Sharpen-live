@@ -40,14 +40,14 @@ func (l Level) String() string {
 
 // Entry represents a single log entry with structured fields.
 type Entry struct {
-	Timestamp time.Time         `json:"timestamp"`
-	Level     string            `json:"level"`
-	Category  string            `json:"category"`
-	Message   string            `json:"message"`
-	Fields    map[string]any    `json:"fields,omitempty"`
-	RequestID string            `json:"request_id,omitempty"`
-	Duration  *int64            `json:"duration_ms,omitempty"`
-	Error     string            `json:"error,omitempty"`
+	Timestamp time.Time      `json:"timestamp"`
+	Level     string         `json:"level"`
+	Category  string         `json:"category"`
+	Message   string         `json:"message"`
+	Fields    map[string]any `json:"fields,omitempty"`
+	RequestID string         `json:"request_id,omitempty"`
+	Duration  *int64         `json:"duration_ms,omitempty"`
+	Error     string         `json:"error,omitempty"`
 }
 
 // Logger is a structured logger that writes to multiple outputs.
@@ -59,14 +59,39 @@ type Logger struct {
 	subscribers []chan<- Entry
 }
 
-// New creates a new Logger instance.
+// Global registry for all loggers
+var (
+	registryMu sync.RWMutex
+	registry   = make(map[string]*Logger)
+)
+
+// New creates a new Logger instance and registers it in the global registry.
 func New(site string, minLevel Level, writers ...io.Writer) *Logger {
-	return &Logger{
+	l := &Logger{
 		minLevel:    minLevel,
 		writers:     writers,
 		site:        site,
 		subscribers: make([]chan<- Entry, 0),
 	}
+
+	// Register logger in global registry
+	registryMu.Lock()
+	registry[site] = l
+	registryMu.Unlock()
+
+	return l
+}
+
+// AllLoggers returns all registered loggers.
+func AllLoggers() []*Logger {
+	registryMu.RLock()
+	defer registryMu.RUnlock()
+
+	loggers := make([]*Logger, 0, len(registry))
+	for _, logger := range registry {
+		loggers = append(loggers, logger)
+	}
+	return loggers
 }
 
 // Subscribe adds a channel to receive log entries in real-time.

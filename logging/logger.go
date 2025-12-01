@@ -147,6 +147,9 @@ func (l *Logger) Warn(category, message string, fields map[string]any) {
 
 // Error logs an error message.
 func (l *Logger) Error(category, message string, err error, fields map[string]any) {
+	if ERROR < l.minLevel {
+		return
+	}
 	if fields == nil {
 		fields = make(map[string]any)
 	}
@@ -173,7 +176,8 @@ func (l *Logger) write(entry Entry) {
 
 	l.mu.RLock()
 	writers := l.writers
-	subscribers := l.subscribers
+	subscribersCopy := make([]chan<- Entry, len(l.subscribers))
+	copy(subscribersCopy, l.subscribers)
 	l.mu.RUnlock()
 
 	// Write to all configured writers
@@ -182,7 +186,7 @@ func (l *Logger) write(entry Entry) {
 	}
 
 	// Send to all subscribers (non-blocking)
-	for _, ch := range subscribers {
+	for _, ch := range subscribersCopy {
 		select {
 		case ch <- entry:
 		default:
@@ -236,6 +240,9 @@ func (c *LogContext) WithFields(fields map[string]any) *LogContext {
 
 // Info logs an info message with the context's request ID and fields.
 func (c *LogContext) Info(message string) {
+	if INFO < c.logger.minLevel {
+		return
+	}
 	entry := Entry{
 		Timestamp: time.Now().UTC(),
 		Level:     INFO.String(),
@@ -249,6 +256,9 @@ func (c *LogContext) Info(message string) {
 
 // Error logs an error message with the context's request ID and fields.
 func (c *LogContext) Error(message string, err error) {
+	if ERROR < c.logger.minLevel {
+		return
+	}
 	entry := Entry{
 		Timestamp: time.Now().UTC(),
 		Level:     ERROR.String(),
@@ -265,6 +275,9 @@ func (c *LogContext) Error(message string, err error) {
 
 // Warn logs a warning message with the context's request ID and fields.
 func (c *LogContext) Warn(message string) {
+	if WARN < c.logger.minLevel {
+		return
+	}
 	entry := Entry{
 		Timestamp: time.Now().UTC(),
 		Level:     WARN.String(),

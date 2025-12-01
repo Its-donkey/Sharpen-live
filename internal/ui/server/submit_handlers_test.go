@@ -14,7 +14,8 @@ func TestParseSubmitFormSupportsCurrentFormFields(t *testing.T) {
 		"description":  {"Streams"},
 		"platform_id":  {"row-1", "row-2"},
 		"platform_url": {"https://youtube.com/@creator", "@handle"},
-		"languages":    {"English", "French"},
+		"languages":    {"English"},
+		"languages[]":  {"French"},
 		"remove_platform": {
 			"row-2",
 		},
@@ -47,5 +48,26 @@ func TestParseSubmitFormSupportsCurrentFormFields(t *testing.T) {
 	}
 	if len(state.Languages) != 2 || state.Languages[0] != "English" || state.Languages[1] != "French" {
 		t.Fatalf("expected languages to parse, got %+v", state.Languages)
+	}
+}
+
+func TestCollectLanguagesHandlesBracketedKeysAndDedupes(t *testing.T) {
+	form := url.Values{
+		"language":    {"German"},
+		"languages":   {"English"},
+		"languages[]": {"French", "English"},
+		"language[]":  {"German", "Spanish"},
+	}
+
+	langs := collectLanguages(form)
+	want := []string{"German", "English", "French", "Spanish"}
+
+	if len(langs) != len(want) {
+		t.Fatalf("expected %d languages, got %d: %+v", len(want), len(langs), langs)
+	}
+	for idx, val := range want {
+		if langs[idx] != val {
+			t.Fatalf("expected language %q at %d, got %q (all: %+v)", val, idx, langs[idx], langs)
+		}
 	}
 }

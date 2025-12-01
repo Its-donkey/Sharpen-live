@@ -45,6 +45,7 @@
 - Submit form: always show handle platform picker when an @handle is entered, even before metadata loads.
 - Submit form: render handle platform picker markup even before a handle is typed so it can be toggled on.
 - Submit form: remove padding/border radius on handle platform selects so they render flush.
+- Submit form: accept bracketed language fields (languages[]) so submissions validate instead of returning 422.
 - Submit form: keep the handle dropdown markup consistent between SSR and WASM to avoid duplicate platform rows.
 - Submit form: place the add-language button before the dropdown for clearer horizontal controls.
 - Submit form: show selected language tags above the controls for better visibility.

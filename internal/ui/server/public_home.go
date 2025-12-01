@@ -53,7 +53,7 @@ func (s *server) siteDisplayName() string {
 func (s *server) homePageTitle() string {
 	name := s.siteDisplayName()
 	switch {
-	case strings.EqualFold(s.siteKey, config.CatchAllSiteKey) || strings.EqualFold(name, config.CatchAllSiteKey):
+	case strings.EqualFold(s.siteKey, config.DefaultSiteKey) || strings.EqualFold(name, config.DefaultSiteKey):
 		return "Site unavailable - review configuration"
 	case strings.EqualFold(s.siteKey, "synth-wave") || strings.EqualFold(name, "synth.wave"):
 		return name + " - Live synthwave streams"
@@ -64,7 +64,7 @@ func (s *server) homePageTitle() string {
 
 func (s *server) submitPageTitle() string {
 	name := s.siteDisplayName()
-	if strings.EqualFold(s.siteKey, config.CatchAllSiteKey) || strings.EqualFold(name, config.CatchAllSiteKey) {
+	if strings.EqualFold(s.siteKey, config.DefaultSiteKey) || strings.EqualFold(name, config.DefaultSiteKey) {
 		return "Submit a streamer"
 	}
 	return "Submit a streamer - " + name
@@ -123,6 +123,10 @@ func (s *server) handleSubmit(w http.ResponseWriter, r *http.Request) {
 
 		youtubeui.MaybeEnrichMetadata(ctx, &state, http.DefaultClient)
 		if _, err := submitStreamer(ctx, s.streamerService, state); err != nil {
+			s.logger.Warn("submission", "streamer submission failed", map[string]any{
+				"name":  state.Name,
+				"error": err.Error(),
+			})
 			state.Errors.General = append(state.Errors.General, "failed to submit streamer, please try again")
 			ensureSubmitDefaults(&state)
 			page := s.buildBasePageData(r, title, s.siteDescription, "/submit")
@@ -130,6 +134,11 @@ func (s *server) handleSubmit(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
+		s.logger.Info("submission", "streamer submitted", map[string]any{
+			"name":        state.Name,
+			"description": state.Description,
+			"languages":   state.Languages,
+		})
 		http.Redirect(w, r, "/?submitted=1", http.StatusSeeOther)
 	default:
 		w.Header().Set("Allow", "GET, POST")

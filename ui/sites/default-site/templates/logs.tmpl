@@ -1,0 +1,237 @@
+{{define "logs"}}
+{{template "base" .}}
+{{end}}
+
+{{define "content"}}
+<style>
+  .logs-page { background: #0a0a0a; color: #e0e0e0; padding: 24px; min-height: 100vh; }
+  .logs-page * { box-sizing: border-box; }
+  .logs-page .container { max-width: 1400px; margin: 0 auto; }
+  .logs-page h1 { font-size: 24px; margin-bottom: 20px; color: #fff; display: flex; align-items: center; }
+  .logs-page .controls { display: flex; gap: 15px; margin-bottom: 20px; flex-wrap: wrap; }
+  .logs-page .controls select,
+  .logs-page .controls input { padding: 8px 12px; background: #1a1a1a; border: 1px solid #333; color: #e0e0e0; border-radius: 4px; }
+  .logs-page .controls button { padding: 8px 16px; background: #2563eb; color: white; border: none; border-radius: 4px; cursor: pointer; }
+  .logs-page .controls button:hover { background: #1d4ed8; }
+  .logs-page .stats { display: flex; gap: 20px; margin-bottom: 20px; flex-wrap: wrap; }
+  .logs-page .stat { background: #1a1a1a; padding: 12px 20px; border-radius: 6px; border-left: 3px solid #2563eb; min-width: 160px; }
+  .logs-page .stat-label { font-size: 12px; color: #888; margin-bottom: 4px; display: block; }
+  .logs-page .stat-value { font-size: 20px; font-weight: bold; }
+  .logs-page .logs { background: #0f0f0f; border: 1px solid #222; border-radius: 8px; overflow: hidden; }
+  .logs-page .log-entry { padding: 12px 16px; border-bottom: 1px solid #1a1a1a; font-family: "SF Mono", Monaco, monospace; font-size: 13px; }
+  .logs-page .log-entry:hover { background: #1a1a1a; }
+  .logs-page .log-header { display: flex; gap: 15px; margin-bottom: 6px; align-items: center; flex-wrap: wrap; }
+  .logs-page .log-time { color: #666; }
+  .logs-page .log-level { padding: 2px 8px; border-radius: 3px; font-size: 11px; font-weight: 600; }
+  .logs-page .level-DEBUG { background: #374151; color: #9ca3af; }
+  .logs-page .level-INFO { background: #1e40af; color: #93c5fd; }
+  .logs-page .level-WARN { background: #b45309; color: #fcd34d; }
+  .logs-page .level-ERROR { background: #991b1b; color: #fca5a5; }
+  .logs-page .level-FATAL { background: #7f1d1d; color: #fca5a5; }
+  .logs-page .log-category { color: #60a5fa; }
+  .logs-page .log-request-id { color: #a78bfa; font-size: 11px; }
+  .logs-page .log-message { color: #e0e0e0; margin-bottom: 4px; }
+  .logs-page .log-fields { color: #9ca3af; font-size: 12px; }
+  .logs-page .log-error { color: #f87171; margin-top: 4px; }
+  .logs-page .log-duration { color: #34d399; font-size: 11px; }
+  .logs-page .toggle-fields { cursor: pointer; color: #60a5fa; font-size: 11px; margin-top: 4px; user-select: none; }
+  .logs-page .fields-detail { margin-top: 8px; padding: 10px; background: #1a1a1a; border-radius: 4px; display: none; }
+  .logs-page .fields-detail.show { display: block; }
+  .logs-page .fields-detail pre { color: #9ca3af; overflow-x: auto; white-space: pre-wrap; word-break: break-word; }
+  .logs-page .stream-indicator { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-left: 10px; }
+  .logs-page .stream-indicator.connected { background: #10b981; }
+  .logs-page .stream-indicator.disconnected { background: #ef4444; }
+</style>
+
+<main class="logs-page">
+  <div class="container">
+    <h1>Application Logs <span class="stream-indicator" id="stream-status"></span></h1>
+
+    <div class="controls">
+      <select id="level" onchange="updateFilters()">
+        <option value="">All Levels</option>
+        {{range .Levels}}
+          <option value="{{.}}"{{if eq . $.Level}} selected{{end}}>{{.}}</option>
+        {{end}}
+      </select>
+      <select id="category" onchange="updateFilters()">
+        <option value="">All Categories</option>
+        {{range .Categories}}
+          <option value="{{.}}"{{if eq . $.Category}} selected{{end}}>{{.}}</option>
+        {{end}}
+      </select>
+      <input type="number" id="limit" value="{{.Limit}}" min="10" max="1000" step="10" onchange="updateFilters()">
+      <button type="button" onclick="updateFilters()">Apply Filters</button>
+      <button type="button" onclick="toggleStream()">Toggle Live Stream</button>
+      <button type="button" onclick="clearLogs()">Clear Display</button>
+    </div>
+
+    <div class="stats">
+      <div class="stat">
+        <span class="stat-label">Total Entries</span>
+        <span class="stat-value" id="entry-count">{{len .Entries}}</span>
+      </div>
+      <div class="stat">
+        <span class="stat-label">Displaying</span>
+        <span class="stat-value" id="display-count">{{len .Entries}}</span>
+      </div>
+    </div>
+
+    <div class="logs" id="logs-container">
+      {{range $i, $entry := .Entries}}
+      <div class="log-entry">
+        <div class="log-header">
+          <span class="log-time">{{$entry.Timestamp.Format "2006-01-02 15:04:05"}}</span>
+          <span class="log-level level-{{$entry.Level}}">{{$entry.Level}}</span>
+          <span class="log-category">{{$entry.Category}}</span>
+          {{if $entry.RequestID}}<span class="log-request-id">{{printf "%.8s" $entry.RequestID}}</span>{{end}}
+          {{if $entry.Duration}}<span class="log-duration">{{$entry.Duration}}ms</span>{{end}}
+        </div>
+        <div class="log-message">{{$entry.Message}}</div>
+        {{if $entry.Error}}<div class="log-error">Error: {{$entry.Error}}</div>{{end}}
+        {{if $entry.Fields}}
+          {{$fieldID := printf "fields-%d" $i}}
+          <div class="toggle-fields" onclick="toggleFields('{{$fieldID}}')">⊕ Show Details</div>
+          <div class="fields-detail" id="{{$fieldID}}">
+            <pre>{{range $k, $v := $entry.Fields}}{{$k}}: {{$v}}
+{{end}}</pre>
+          </div>
+        {{end}}
+      </div>
+      {{end}}
+    </div>
+  </div>
+</main>
+
+<script>
+  let eventSource = null;
+  let isStreaming = false;
+  const logsContainer = document.getElementById('logs-container');
+  const streamStatus = document.getElementById('stream-status');
+  const displayCount = document.getElementById('display-count');
+
+  function updateFilters() {
+    const level = document.getElementById('level').value;
+    const category = document.getElementById('category').value;
+    const limit = document.getElementById('limit').value;
+    const params = new URLSearchParams();
+    if (level) params.append('level', level);
+    if (category) params.append('category', category);
+    if (limit) params.append('limit', limit);
+    window.location.href = '/logs?' + params.toString();
+  }
+
+  function toggleStream() {
+    if (isStreaming) {
+      stopStream();
+    } else {
+      startStream();
+    }
+  }
+
+  function startStream() {
+    const level = document.getElementById('level').value;
+    const category = document.getElementById('category').value;
+    const params = new URLSearchParams();
+    if (level) params.append('level', level);
+    if (category) params.append('category', category);
+
+    eventSource = new EventSource('/logs/stream?' + params.toString());
+
+    eventSource.onopen = () => {
+      isStreaming = true;
+      streamStatus.classList.add('connected');
+      streamStatus.classList.remove('disconnected');
+    };
+
+    eventSource.onerror = () => {
+      isStreaming = false;
+      streamStatus.classList.remove('connected');
+      streamStatus.classList.add('disconnected');
+      eventSource.close();
+      eventSource = null;
+    };
+
+    eventSource.onmessage = (event) => {
+      try {
+        const entry = JSON.parse(event.data);
+        if (entry.type === 'connected') return;
+        appendLogEntry(entry);
+      } catch (e) {
+        console.error('Failed to parse log entry:', e);
+      }
+    };
+  }
+
+  function stopStream() {
+    if (eventSource) {
+      eventSource.close();
+      eventSource = null;
+    }
+    isStreaming = false;
+    streamStatus.classList.remove('connected');
+    streamStatus.classList.add('disconnected');
+  }
+
+  function appendLogEntry(entry) {
+    const div = document.createElement('div');
+    div.className = 'log-entry';
+    div.innerHTML = formatLogEntry(entry);
+    logsContainer.insertBefore(div, logsContainer.firstChild);
+
+    while (logsContainer.children.length > 100) {
+      logsContainer.removeChild(logsContainer.lastChild);
+    }
+
+    updateDisplayCount();
+  }
+
+  function formatLogEntry(entry) {
+    let html = '<div class="log-header">';
+    html += '<span class="log-time">' + escapeHtml(new Date(entry.timestamp).toLocaleString()) + '</span>';
+    html += '<span class="log-level level-' + escapeHtml(entry.level) + '">' + escapeHtml(entry.level) + '</span>';
+    html += '<span class="log-category">' + escapeHtml(entry.category) + '</span>';
+    if (entry.request_id) {
+      html += '<span class="log-request-id">' + escapeHtml(entry.request_id.substring(0, 8)) + '</span>';
+    }
+    if (entry.duration_ms) {
+      html += '<span class="log-duration">' + escapeHtml(entry.duration_ms.toString()) + 'ms</span>';
+    }
+    html += '</div>';
+    html += '<div class="log-message">' + escapeHtml(entry.message) + '</div>';
+    if (entry.error) {
+      html += '<div class="log-error">Error: ' + escapeHtml(entry.error) + '</div>';
+    }
+    if (entry.fields && Object.keys(entry.fields).length > 0) {
+      const id = `fields-${Math.random().toString(36).substring(7)}`;
+      html += `<div class="toggle-fields" onclick="toggleFields('${id}')">⊕ Show Details</div>`;
+      html += `<div class="fields-detail" id="${id}"><pre>${escapeHtml(JSON.stringify(entry.fields, null, 2))}</pre></div>`;
+    }
+    return html;
+  }
+
+  function toggleFields(id) {
+    const el = document.getElementById(id);
+    if (el) {
+      el.classList.toggle('show');
+    }
+  }
+
+  function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+  }
+
+  function clearLogs() {
+    logsContainer.innerHTML = '';
+    updateDisplayCount();
+  }
+
+  function updateDisplayCount() {
+    displayCount.textContent = logsContainer.children.length;
+  }
+
+  setTimeout(startStream, 100);
+</script>
+{{end}}

@@ -10,7 +10,7 @@ import (
 )
 
 func applyDefaults(opts Options, site config.SiteConfig) Options {
-	fallbackApp := config.CatchAllAppConfig()
+	fallbackApp := config.DefaultSiteAppConfig()
 	if opts.Listen == "" {
 		addr := strings.TrimSpace(site.Server.Addr)
 		port := strings.TrimSpace(site.Server.Port)
@@ -52,8 +52,8 @@ func applyDefaults(opts Options, site config.SiteConfig) Options {
 	return opts
 }
 
-func switchToCatchAll(cfg config.Config, opts Options) (config.SiteConfig, Options) {
-	fallback := config.CatchAllSite(cfg)
+func switchToDefaultSite(cfg config.Config, opts Options) (config.SiteConfig, Options) {
+	fallback := config.DefaultSite(cfg)
 	opts.Site = fallback.Key
 	opts.TemplatesDir = ""
 	opts.AssetsDir = ""

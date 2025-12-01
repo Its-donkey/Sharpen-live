@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"net/url"
 	"strconv"
 	"strings"
 
@@ -59,12 +60,12 @@ func parseSubmitForm(r *http.Request) (model.SubmitFormState, []string, error) {
 		return model.SubmitFormState{}, nil, err
 	}
 
+	langs := collectLanguages(r.Form)
 	state := model.SubmitFormState{
 		Name:        strings.TrimSpace(r.Form.Get("name")),
 		Description: strings.TrimSpace(r.Form.Get("description")),
-		Languages:   normalizeLanguages(append([]string{}, r.Form["language"]...)),
 	}
-	state.Languages = append(state.Languages, normalizeLanguages(r.Form["languages"])...)
+	state.Languages = append(state.Languages, langs...)
 
 	removed := collectRemovedPlatforms(r.Form["remove_platform"])
 
@@ -152,6 +153,17 @@ func normalizeLanguages(values []string) []string {
 		out = append(out, v)
 	}
 	return out
+}
+
+func collectLanguages(form url.Values) []string {
+	if len(form) == 0 {
+		return nil
+	}
+	var langs []string
+	for _, key := range []string{"language", "languages", "languages[]", "language[]"} {
+		langs = append(langs, form[key]...)
+	}
+	return normalizeLanguages(langs)
 }
 
 func removePlatformRow(platforms []model.PlatformFormRow, id string) []model.PlatformFormRow {

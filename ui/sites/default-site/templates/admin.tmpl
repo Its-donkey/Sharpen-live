@@ -1,0 +1,101 @@
+{{define "admin"}}
+{{template "base" .}}
+{{end}}
+
+{{define "content"}}
+<section class="surface admin-panel" aria-live="polite">
+  <div class="admin-header">
+    <div>
+      <h2 id="admin-console-title">Default Site Admin</h2>
+      <p class="admin-help">Review fallback context and view logs for all sites.</p>
+    </div>
+	    {{if .LoggedIn}}
+    <div class="admin-header-actions">
+      <form method="post" action="/admin/status-check" class="admin-actions">
+        <button type="submit" class="admin-tab">Refresh status</button>
+      </form>
+      <form method="post" action="/admin/logout">
+        <button type="submit" class="admin-logout-button">Log out</button>
+      </form>
+    </div>
+    {{end}}
+  </div>
+
+  {{if .Flash}}
+    <div class="admin-status" data-state="success">{{.Flash}}</div>
+  {{end}}
+  {{if .Error}}
+    <div class="admin-status" data-state="error">{{.Error}}</div>
+  {{end}}
+
+{{if not .LoggedIn}}
+    <form method="post" action="/admin/login" class="admin-auth">
+      <div class="form-field form-field-wide">
+        <span>Email</span>
+        <input type="email" name="email" value="{{.AdminEmail}}" autocomplete="username" required />
+      </div>
+      <div class="form-field form-field-wide">
+        <span>Password</span>
+        <input type="password" name="password" value="" autocomplete="current-password" required />
+      </div>
+      <div class="submit-streamer-actions">
+        <button type="submit" class="submit-streamer-submit">Log in</button>
+      </div>
+    </form>
+    <p class="admin-help">Use the admin credentials configured on the alert server.</p>
+    {{if .FallbackErrors}}
+      <div class="status-block">
+        <h3>Fallback issues</h3>
+        <ul>
+          {{range .FallbackErrors}}<li>{{.}}</li>{{end}}
+        </ul>
+      </div>
+    {{end}}
+  {{else}}
+    <div class="admin-tabs">
+      <button type="button" class="admin-tab active" data-tab="general">General</button>
+      <button type="button" class="admin-tab" data-tab="logs">Logs</button>
+    </div>
+
+    <div class="admin-tab-panel" data-panel="general">
+      <h3>Other sites</h3>
+      {{if .OtherSites}}
+        <ul>
+          {{range .OtherSites}}<li>{{.}}</li>{{end}}
+        </ul>
+      {{else}}
+        <p>No additional sites were found alongside the default site.</p>
+      {{end}}
+      {{if .FallbackErrors}}
+        <div class="status-block">
+          <h4>Fallback issues</h4>
+          <ul>
+            {{range .FallbackErrors}}<li>{{.}}</li>{{end}}
+          </ul>
+        </div>
+      {{end}}
+    </div>
+
+    <div class="admin-tab-panel" data-panel="logs" hidden>
+      <h3>Logs</h3>
+      <p>Authenticated access is required. The view below loads the shared log viewer.</p>
+      <iframe src="/logs" title="Logs" class="admin-logs-frame" style="width: 100%; height: 900px; border: 1px solid rgba(148,163,184,0.3); border-radius: 12px;"></iframe>
+    </div>
+  {{end}}
+</section>
+
+<script>
+  (function() {
+    const tabs = document.querySelectorAll('.admin-tab');
+    const panels = document.querySelectorAll('.admin-tab-panel');
+    if (!tabs.length) return;
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        const target = tab.getAttribute('data-tab');
+        tabs.forEach(t => t.classList.toggle('active', t === tab));
+        panels.forEach(panel => panel.toggleAttribute('hidden', panel.getAttribute('data-panel') !== target));
+      });
+    });
+  })();
+</script>
+{{end}}

@@ -2,13 +2,8 @@ package server
 
 import (
 	"context"
-	adminauth "github.com/Its-donkey/Sharpen-live/internal/alert/admin/auth"
-	adminservice "github.com/Its-donkey/Sharpen-live/internal/alert/admin/service"
-	youtubeservice "github.com/Its-donkey/Sharpen-live/internal/alert/platforms/youtube/service"
-	"github.com/Its-donkey/Sharpen-live/internal/alert/streamers"
-	streamersvc "github.com/Its-donkey/Sharpen-live/internal/alert/streamers/service"
-	"github.com/Its-donkey/Sharpen-live/internal/alert/submissions"
 	"html/template"
+	"io"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
@@ -16,6 +11,14 @@ import (
 	"strings"
 	"testing"
 	"time"
+
+	adminauth "github.com/Its-donkey/Sharpen-live/internal/alert/admin/auth"
+	adminservice "github.com/Its-donkey/Sharpen-live/internal/alert/admin/service"
+	youtubeservice "github.com/Its-donkey/Sharpen-live/internal/alert/platforms/youtube/service"
+	"github.com/Its-donkey/Sharpen-live/internal/alert/streamers"
+	streamersvc "github.com/Its-donkey/Sharpen-live/internal/alert/streamers/service"
+	"github.com/Its-donkey/Sharpen-live/internal/alert/submissions"
+	"github.com/Its-donkey/Sharpen-live/logging"
 )
 
 func TestHandleHomeRendersStreamers(t *testing.T) {
@@ -353,6 +356,8 @@ func newTestServer() *server {
 		"streamer": template.Must(template.New("streamer").Parse("streamer")),
 		"admin":    template.Must(template.New("admin").Parse("admin {{.AdminEmail}} LoggedIn:{{.LoggedIn}}")),
 	}
+	// Create a test logger that discards output
+	logger := logging.New("test", logging.INFO, io.Discard)
 	return &server{
 		assetsDir:        ".",
 		stylesPath:       "/styles.css",
@@ -370,6 +375,7 @@ func newTestServer() *server {
 		socialImagePath:  "/og-image.png",
 		siteName:         "Sharpen.Live",
 		primaryHost:      "example.com",
+		logger:           logger,
 	}
 }
 

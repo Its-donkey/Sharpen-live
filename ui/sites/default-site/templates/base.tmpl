@@ -4,18 +4,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{{if .PageTitle}}{{.PageTitle}}{{else}}Catch-all Site{{end}}</title>
-  <meta name="description" content="{{if .MetaDescription}}{{.MetaDescription}}{{else}}This catch-all site appears when a requested site cannot be served.{{end}}">
+  <title>{{if .PageTitle}}{{.PageTitle}}{{else}}Cross Platform Streaming Notifications{{end}}</title>
+  <meta name="description" content="{{if .MetaDescription}}{{.MetaDescription}}{{else}}Cross Platform Streaming Notifications appears when a requested site cannot be served.{{end}}">
   {{if .CanonicalURL}}<link rel="canonical" href="{{.CanonicalURL}}">{{end}}
-  <meta property="og:site_name" content="{{if .SiteName}}{{.SiteName}}{{else}}Catch-all{{end}}">
-  <meta property="og:title" content="{{if .PageTitle}}{{.PageTitle}}{{else}}Catch-all Site{{end}}">
-  <meta property="og:description" content="{{if .MetaDescription}}{{.MetaDescription}}{{else}}This catch-all site appears when a requested site cannot be served.{{end}}">
+  <meta property="og:site_name" content="{{if .SiteName}}{{.SiteName}}{{else}}Cross Platform Streaming Notifications{{end}}">
+  <meta property="og:title" content="{{if .PageTitle}}{{.PageTitle}}{{else}}Cross Platform Streaming Notifications{{end}}">
+  <meta property="og:description" content="{{if .MetaDescription}}{{.MetaDescription}}{{else}}Cross Platform Streaming Notifications appears when a requested site cannot be served.{{end}}">
   <meta property="og:type" content="{{if .OGType}}{{.OGType}}{{else}}website{{end}}">
   {{if .CanonicalURL}}<meta property="og:url" content="{{.CanonicalURL}}">{{end}}
   {{if .SocialImage}}<meta property="og:image" content="{{.SocialImage}}">{{end}}
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="{{if .PageTitle}}{{.PageTitle}}{{else}}Catch-all Site{{end}}">
-  <meta name="twitter:description" content="{{if .MetaDescription}}{{.MetaDescription}}{{else}}This catch-all site appears when a requested site cannot be served.{{end}}">
+  <meta name="twitter:title" content="{{if .PageTitle}}{{.PageTitle}}{{else}}Cross Platform Streaming Notifications{{end}}">
+  <meta name="twitter:description" content="{{if .MetaDescription}}{{.MetaDescription}}{{else}}Cross Platform Streaming Notifications appears when a requested site cannot be served.{{end}}">
   {{if .SocialImage}}<meta name="twitter:image" content="{{.SocialImage}}">{{end}}
   {{if .Robots}}<meta name="robots" content="{{.Robots}}">{{end}}
   {{if .StructuredData}}<script type="application/ld+json">{{.StructuredData}}</script>{{end}}
@@ -26,9 +26,8 @@
   <div class="app-shell">
     <header class="site-header surface">
       <div>
-        <p class="site-label">Catch-all fallback</p>
-        <h1>{{if .SiteName}}{{.SiteName}}{{else}}Catch-all{{end}}</h1>
-        <p class="site-tagline">The requested site could not be served. This generic view keeps the server online.</p>
+        <h1>{{if .SiteName}}{{.SiteName}}{{else}}Cross Platform Streaming Notifications{{end}}</h1>
+        <p class="site-tagline">Monitoring and management of the streaming notifications websites.</p>
       </div>
     </header>
 
@@ -44,7 +43,7 @@
     {{block "content" .}}{{end}}
 
     <footer class="surface site-footer">
-      <p>&copy; {{.CurrentYear}} Catch-all site.</p>
+      <p>&copy; {{.CurrentYear}} Cross Platform Streaming Notifications.</p>
     </footer>
   </div>
 </body>

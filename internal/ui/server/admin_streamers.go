@@ -50,9 +50,17 @@ func (s *server) handleAdminStreamerUpdate(w http.ResponseWriter, r *http.Reques
 		Languages:   &languages,
 	})
 	if err != nil {
+		s.logger.Warn("admin", "streamer update failed", map[string]any{
+			"streamer_id": id,
+			"error":       err.Error(),
+		})
 		s.redirectAdmin(w, r, "", adminStreamersErrorMessage(err))
 		return
 	}
+	s.logger.Info("admin", "streamer updated", map[string]any{
+		"streamer_id": id,
+		"alias":       alias,
+	})
 	if platformURL != "" {
 		baseStore, ok := s.streamersStore.(*streamers.Store)
 		if !ok {
@@ -117,9 +125,16 @@ func (s *server) handleAdminStreamerDelete(w http.ResponseWriter, r *http.Reques
 	defer cancel()
 	err := s.streamerService.Delete(ctx, streamersvc.DeleteRequest{ID: id})
 	if err != nil {
+		s.logger.Warn("admin", "streamer delete failed", map[string]any{
+			"streamer_id": id,
+			"error":       err.Error(),
+		})
 		s.redirectAdmin(w, r, "", adminStreamersErrorMessage(err))
 		return
 	}
+	s.logger.Info("admin", "streamer deleted", map[string]any{
+		"streamer_id": id,
+	})
 	s.redirectAdmin(w, r, "Streamer removed.", "")
 }
 

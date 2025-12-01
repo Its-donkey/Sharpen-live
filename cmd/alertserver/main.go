@@ -57,15 +57,15 @@ func main() {
 	switch {
 	case configErr != nil && !siteRequested:
 		siteTargets = append(siteTargets, siteTarget{
-			cfg:    config.CatchAllSite(loadedConfig),
+			cfg:    config.DefaultSite(loadedConfig),
 			errors: fallbackErrors,
 		})
 	case siteRequested:
 		siteCfg, err := config.ResolveSite(normalizedSite, loadedConfig)
 		errors := append([]string{}, fallbackErrors...)
 		if err != nil {
-			errors = append(errors, fmt.Sprintf("site %q not found; serving %s", rawSite, config.CatchAllSiteKey))
-			siteCfg = config.CatchAllSite(loadedConfig)
+			errors = append(errors, fmt.Sprintf("site %q not found; serving %s", rawSite, config.DefaultSiteKey))
+			siteCfg = config.DefaultSite(loadedConfig)
 		}
 		siteTargets = append(siteTargets, siteTarget{
 			cfg:    siteCfg,

@@ -5,10 +5,13 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
+	"os"
+	"path/filepath"
 	"strings"
 	"time"
 
 	adminauth "github.com/Its-donkey/Sharpen-live/internal/alert/admin/auth"
+	"github.com/Its-donkey/Sharpen-live/internal/alert/config"
 	"github.com/Its-donkey/Sharpen-live/internal/ui/model"
 )
 
@@ -24,6 +27,7 @@ type adminPageData struct {
 	Streamers        []model.Streamer
 	RosterError      string
 	AdminEmail       string
+	OtherSites       []string
 }
 
 type adminSubmission struct {
@@ -80,6 +84,9 @@ func (s *server) handleAdmin(w http.ResponseWriter, r *http.Request) {
 			data.Streamers = mapStreamerRecords(records)
 		}
 	}
+	if s.siteKey == config.DefaultSiteKey {
+		data.OtherSites = listSiblingSites(s.assetsDir)
+	}
 	s.renderAdminPage(w, data)
 }
 
@@ -104,9 +111,16 @@ func (s *server) handleAdminLogin(w http.ResponseWriter, r *http.Request) {
 	}
 	token, err := s.adminManager.Login(email, password)
 	if err != nil {
+		s.logger.Warn("admin", "login failed", map[string]any{
+			"email": email,
+			"error": err.Error(),
+		})
 		s.redirectAdmin(w, r, "", "Invalid credentials.")
 		return
 	}
+	s.logger.Info("admin", "login successful", map[string]any{
+		"email": email,
+	})
 	s.setAdminSession(w, r, token)
 	s.redirectAdmin(w, r, "Logged in successfully.", "")
 }
@@ -156,6 +170,27 @@ func (v urlValues) encode() string {
 		parts = append(parts, url.QueryEscape(k)+"="+url.QueryEscape(val))
 	}
 	return strings.Join(parts, "&")
+}
+
+// listSiblingSites returns directories under ui/sites (based on assetsDir) excluding the default-site.
+func listSiblingSites(assetsDir string) []string {
+	root := filepath.Dir(filepath.Dir(filepath.Clean(assetsDir)))
+	entries, err := os.ReadDir(root)
+	if err != nil {
+		return nil
+	}
+	var sites []string
+	for _, entry := range entries {
+		if !entry.IsDir() {
+			continue
+		}
+		name := entry.Name()
+		if strings.EqualFold(name, config.DefaultSiteKey) {
+			continue
+		}
+		sites = append(sites, name)
+	}
+	return sites
 }
 
 func (s *server) adminTokenFromRequest(r *http.Request) string {

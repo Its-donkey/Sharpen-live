@@ -27,6 +27,7 @@ func loadTemplates(dir string) (map[string]*template.Template, error) {
 	streamer := filepath.Join(dir, "streamer.tmpl")
 	submit := filepath.Join(dir, "submit_form.tmpl")
 	admin := filepath.Join(dir, "admin.tmpl")
+	logs := filepath.Join(dir, "logs.tmpl")
 
 	homeTmpl, err := template.New("home").Funcs(funcs).ParseFiles(base, home, submit)
 	if err != nil {
@@ -43,10 +44,16 @@ func loadTemplates(dir string) (map[string]*template.Template, error) {
 		return nil, fmt.Errorf("parse admin templates: %w", err)
 	}
 
+	logsTmpl, err := template.New("logs").Funcs(funcs).ParseFiles(base, logs)
+	if err != nil {
+		return nil, fmt.Errorf("parse logs templates: %w", err)
+	}
+
 	templates := map[string]*template.Template{
 		"home":     homeTmpl,
 		"streamer": streamerTmpl,
 		"admin":    adminTmpl,
+		"logs":     logsTmpl,
 	}
 
 	return templates, nil

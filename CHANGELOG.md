@@ -2,13 +2,17 @@
 
 ## Unreleased
 
-### Removed
-- Logging: removed entire logging system including HTTP request logging, WebSub event logging, and admin log viewer to simplify the codebase and reduce maintenance overhead.
-
 ### Added
+- Logging: comprehensive structured logging system with JSON formatting, log levels (DEBUG, INFO, WARN, ERROR, FATAL), and real-time log streaming via Server-Sent Events.
+- Logging: HTTP middleware that captures all request/response details including method, path, query, status, timing, headers (sensitive headers filtered), and body content (truncated to 1000 chars).
+- Logging: YouTube WebSub notification parser that automatically detects and parses Atom XML feeds from YouTube PubSubHubbub callbacks, creating structured logs with video_id, channel_id, video_title, channel_name, and timestamps for each video notification.
+- Logging: rotating file writer with automatic gzip compression of old log files and configurable size/retention limits (default 50MB per file, 10 files kept).
+- Logging: structured event logging for admin actions (login, logout, submission moderation, streamer updates/deletions) and public submissions with contextual fields.
+- Logging: web-based log viewer on default-site at /logs with filtering by level and category, real-time updates via SSE, and expandable JSON fields.
+- Logging: pub/sub pattern for real-time log subscribers enabling live log streaming to multiple viewers simultaneously.
 - Server/UI: run multiple branded sites from a single config (`-site` targets one; default boot spins up every entry) so Sharpen.Live and synth.wave can host their own templates/assets/log/data roots concurrently.
 - UI: add site-specific templates, OG images, neon synthwave styling, and SVG brand assets plus a synth.wave brand guide for design handoff.
-- UI: add a catch-all fallback site that surfaces the errors causing a fallback instead of silently rendering Sharpen.Live defaults.
+- UI: add a default-site fallback that surfaces the errors causing a fallback instead of silently rendering Sharpen.Live defaults.
 - Admin: add roster “Check online status” action and API to refresh channel state on demand.
 - Submit form: detect @handles, prompt for platform, and expand to full channel URLs.
 - Submit form: preselect English and add an "Add another language" button consistent with platform controls.
@@ -25,7 +29,7 @@
 - Docs: update layout/run commands to reflect the consolidated server entrypoint.
 - Forms: split submit helpers into focused files (state, languages, platforms, secrets, description) to simplify maintenance.
 - Config/Docs: capture per-site `app.name` plus site-specific server/assets/data roots in config.json and README so multi-site deployments stay isolated.
-- UI: drop legacy root templates/assets in favour of per-site (Sharpen.Live, synth.wave) and catch-all directories.
+- UI: drop legacy root templates/assets in favour of per-site (Sharpen.Live, synth.wave) and default-site directories.
 - YouTube API: prefer `YOUTUBE_API_KEY`/`YT_API_KEY` environment values for both config loading and the player client default key instead of the baked-in sample key.
 - UI: move YouTube-specific helpers/handlers into `internal/ui/platforms/youtube` and reuse them across forms, streamers, and server wiring for clearer ownership.
 
@@ -41,6 +45,7 @@
 - Submit form: always show handle platform picker when an @handle is entered, even before metadata loads.
 - Submit form: render handle platform picker markup even before a handle is typed so it can be toggled on.
 - Submit form: remove padding/border radius on handle platform selects so they render flush.
+- Submit form: accept bracketed language fields (languages[]) so submissions validate instead of returning 422.
 - Submit form: keep the handle dropdown markup consistent between SSR and WASM to avoid duplicate platform rows.
 - Submit form: place the add-language button before the dropdown for clearer horizontal controls.
 - Submit form: show selected language tags above the controls for better visibility.

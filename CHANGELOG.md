@@ -13,6 +13,7 @@
 - Server/UI: run multiple branded sites from a single config (`-site` targets one; default boot spins up every entry) so Sharpen.Live and synth.wave can host their own templates/assets/log/data roots concurrently.
 - UI: add site-specific templates, OG images, neon synthwave styling, and SVG brand assets plus a synth.wave brand guide for design handoff.
 - UI: add a default-site fallback that surfaces the errors causing a fallback instead of silently rendering Sharpen.Live defaults.
+- Analytics: add Google tag `G-KPJPXKV81G` to Sharpen.Live pages.
 - Metadata: add `/api/metadata` backed by YouTube/Twitch/Facebook collectors to auto-fill submit forms with channel titles, handles, languages, and IDs.
 - YouTube WebSub: expose the configured callback route and subscribe channels (with HMAC secrets and lease tracking) when admins approve YouTube submissions.
 - Admin: add roster “Check online status” action and API to refresh channel state on demand.

@@ -3,10 +3,8 @@ package service
 import (
 	"context"
 	"errors"
-	"github.com/Its-donkey/Sharpen-live/internal/alert/config"
 	"github.com/Its-donkey/Sharpen-live/internal/alert/streamers"
 	"github.com/Its-donkey/Sharpen-live/internal/alert/submissions"
-	"net/http"
 	"path/filepath"
 	"testing"
 	"time"
@@ -43,27 +41,20 @@ func TestSubmissionsServiceApprove(t *testing.T) {
 	dir := t.TempDir()
 	subStore := submissions.NewStore(filepath.Join(dir, "subs.json"))
 	pending, err := subStore.Append(submissions.Submission{
-		ID:          "sub_1",
-		Alias:       "Test",
-		PlatformURL: "https://youtube.com/channel/abc",
+		ID:    "sub_1",
+		Alias: "Test",
+		Platforms: map[string]submissions.PlatformInfo{
+			"youtube": {URL: "https://youtube.com/channel/UC123", ChannelID: "UC123"},
+		},
 		SubmittedAt: time.Now(),
 	})
 	if err != nil {
 		t.Fatalf("append submission: %v", err)
 	}
 	streamStore := streamers.NewStore(filepath.Join(dir, "streamers.json"))
-	onboarder := &stubOnboarder{}
 	svc := NewSubmissionsService(SubmissionsOptions{
 		SubmissionsStore: subStore,
 		StreamersStore:   streamStore,
-		Onboarder:        onboarder,
-		YouTubeClient:    http.DefaultClient,
-		YouTube: config.YouTubeConfig{
-			HubURL:       "https://hub.example.com",
-			CallbackURL:  "https://callback.example.com",
-			Verify:       "async",
-			LeaseSeconds: 60,
-		},
 	})
 	result, err := svc.Process(context.Background(), ActionRequest{Action: ActionApprove, ID: pending.ID})
 	if err != nil {
@@ -71,9 +62,6 @@ func TestSubmissionsServiceApprove(t *testing.T) {
 	}
 	if result.Status != ActionApprove {
 		t.Fatalf("expected approve status, got %s", result.Status)
-	}
-	if !onboarder.called {
-		t.Fatalf("expected onboarding to be triggered")
 	}
 	records, err := streamStore.List()
 	if err != nil {
@@ -124,32 +112,4 @@ func TestSubmissionsServiceValidation(t *testing.T) {
 	if _, err := svc.Process(context.Background(), ActionRequest{Action: ActionReject, ID: "nope"}); !errors.Is(err, submissions.ErrNotFound) {
 		t.Fatalf("expected not found, got %v", err)
 	}
-}
-
-func TestSubmissionsServiceIgnoresOnboardingErrors(t *testing.T) {
-	dir := t.TempDir()
-	subStore := submissions.NewStore(filepath.Join(dir, "subs.json"))
-	if _, err := subStore.Append(submissions.Submission{ID: "sub_1", Alias: "Test", PlatformURL: "https://youtube.com", SubmittedAt: time.Now()}); err != nil {
-		t.Fatalf("append submission: %v", err)
-	}
-	streamStore := streamers.NewStore(filepath.Join(dir, "streamers.json"))
-	onboarder := &stubOnboarder{err: errors.New("boom")}
-	svc := NewSubmissionsService(SubmissionsOptions{
-		SubmissionsStore: subStore,
-		StreamersStore:   streamStore,
-		Onboarder:        onboarder,
-	})
-	if _, err := svc.Process(context.Background(), ActionRequest{Action: ActionApprove, ID: "sub_1"}); err != nil {
-		t.Fatalf("expected approval to succeed despite onboarding error: %v", err)
-	}
-}
-
-type stubOnboarder struct {
-	called bool
-	err    error
-}
-
-func (s *stubOnboarder) FromURL(ctx context.Context, record streamers.Record, url string) error {
-	s.called = true
-	return s.err
 }

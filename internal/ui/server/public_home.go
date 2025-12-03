@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"html/template"
 	"net/http"
-	"net/url"
 	"path/filepath"
 	"strings"
 
@@ -144,50 +143,6 @@ func (s *server) handleSubmit(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Allow", "GET, POST")
 		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
 	}
-}
-
-func (s *server) handleMetadata(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodPost {
-		w.Header().Set("Allow", http.MethodPost)
-		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
-		return
-	}
-
-	var payload struct {
-		URL string `json:"url"`
-	}
-	if err := json.NewDecoder(r.Body).Decode(&payload); err != nil {
-		http.Error(w, "invalid JSON body", http.StatusBadRequest)
-		return
-	}
-
-	ctx := r.Context()
-	target := strings.TrimSpace(payload.URL)
-	u, err := url.Parse(target)
-	if err != nil || !u.IsAbs() {
-		http.Error(w, "invalid url", http.StatusBadRequest)
-		return
-	}
-
-	if s.metadataFetcher == nil {
-		http.Error(w, "metadata service unavailable", http.StatusServiceUnavailable)
-		return
-	}
-
-	meta, err := s.metadataFetcher.Fetch(ctx, u.String())
-	if err != nil {
-		http.Error(w, "failed to fetch metadata", http.StatusInternalServerError)
-		return
-	}
-
-	w.Header().Set("Content-Type", "application/json")
-	resp := map[string]string{
-		"description": meta.Description,
-		"title":       meta.Title,
-		"handle":      meta.Handle,
-		"channelId":   meta.ChannelID,
-	}
-	_ = json.NewEncoder(w).Encode(resp)
 }
 
 func (s *server) renderHome(w http.ResponseWriter, r *http.Request, page basePageData, submit model.SubmitFormState) {

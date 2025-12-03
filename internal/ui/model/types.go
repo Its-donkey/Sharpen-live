@@ -155,10 +155,11 @@ type MetadataRequest struct {
 
 // MetadataResponse is the server-provided metadata for a streaming channel.
 type MetadataResponse struct {
-	Description string `json:"description"`
-	Title       string `json:"title"`
-	Handle      string `json:"handle"`
-	ChannelID   string `json:"channelId"`
+	Description string   `json:"description"`
+	Title       string   `json:"title"`
+	Handle      string   `json:"handle"`
+	ChannelID   string   `json:"channelId"`
+	Languages   []string `json:"languages"`
 }
 
 // LanguageOption provides label/value pairs for the language picker.

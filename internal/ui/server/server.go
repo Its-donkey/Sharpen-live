@@ -14,11 +14,13 @@ import (
 	"github.com/Its-donkey/Sharpen-live/internal/alert/streamers"
 	streamersvc "github.com/Its-donkey/Sharpen-live/internal/alert/streamers/service"
 	"github.com/Its-donkey/Sharpen-live/internal/alert/submissions"
+	"github.com/Its-donkey/Sharpen-live/internal/metadata"
 	"github.com/Its-donkey/Sharpen-live/internal/ui/model"
 	youtubeui "github.com/Its-donkey/Sharpen-live/internal/ui/platforms/youtube"
 	"github.com/Its-donkey/Sharpen-live/logging"
 	"html/template"
 	"net/http"
+	"net/url"
 	"os"
 	"path/filepath"
 	"strings"
@@ -81,6 +83,11 @@ type StatusChecker interface {
 	CheckAll(ctx context.Context) (adminservice.StatusCheckResult, error)
 }
 
+// MetadataService fetches channel metadata for a given URL.
+type MetadataService interface {
+	Fetch(ctx context.Context, url string) (*metadata.Metadata, error)
+}
+
 // LeaseMonitorFactory constructs a lease monitor. Useful for tests that avoid background goroutines.
 type LeaseMonitorFactory func(context.Context, subscriptions.LeaseMonitorConfig) *subscriptions.LeaseMonitor
 
@@ -97,6 +104,7 @@ type server struct {
 	adminSubmissions AdminSubmissions
 	statusChecker    StatusChecker
 	adminManager     AdminManager
+	metadataService  MetadataService
 	adminEmail       string
 	metadataFetcher  MetadataFetcher
 	siteName         string
@@ -253,10 +261,8 @@ func Run(ctx context.Context, opts Options) error {
 			return fmt.Errorf("streamer service requires *streamers.Store when not injected")
 		}
 		streamerSvc = streamersvc.New(streamersvc.Options{
-			Streamers:     baseStore,
-			Submissions:   submissionsStore,
-			YouTubeClient: &http.Client{Timeout: 10 * time.Second},
-			YouTubeHubURL: appConfig.YouTube.HubURL,
+			Streamers:   baseStore,
+			Submissions: submissionsStore,
 		})
 	}
 	metadataSvc := opts.MetadataFetcher
@@ -266,6 +272,55 @@ func Run(ctx context.Context, opts Options) error {
 			Timeout: 5 * time.Second,
 		}
 	}
+
+	// Initialize logging
+	logDir := filepath.Join(dataDir, "logs")
+	fileWriter, err := logging.NewFileWriter(logDir, "app.log", 50, 10)
+	if err != nil {
+		return fmt.Errorf("create log file writer: %w", err)
+	}
+	defer fileWriter.Close()
+
+	logger := logging.New(siteConfig.Key, logging.INFO, fileWriter, os.Stdout)
+	logger.Info("server", "Starting server", map[string]any{
+		"site":   siteConfig.Name,
+		"listen": opts.Listen,
+	})
+
+	// Initialize metadata service
+	metadataService := metadata.NewService(&http.Client{
+		Timeout: 10 * time.Second,
+	}, logger)
+
+	// Resolve WebSub callback URL and path - prioritize config.json over env var
+	websubCallbackURL := strings.TrimSpace(appConfig.YouTube.CallbackURL)
+	websubCallbackSource := ""
+	if websubCallbackURL != "" {
+		websubCallbackSource = "config.json (youtube.callback_url)"
+	} else {
+		websubCallbackURL = strings.TrimSpace(os.Getenv("WEBSUB_CALLBACK_BASE_URL"))
+		if websubCallbackURL != "" {
+			websubCallbackSource = "environment variable (WEBSUB_CALLBACK_BASE_URL)"
+		}
+	}
+
+	websubCallbackPath := "/webhooks/youtube/websub"
+	if websubCallbackURL != "" {
+		// Extract path from callback URL for route registration
+		if parsed, err := url.Parse(websubCallbackURL); err == nil {
+			if parsed.Path != "" && parsed.Path != "/" {
+				websubCallbackPath = parsed.Path
+			}
+		}
+		logger.Info("websub", "YouTube WebSub configured", map[string]any{
+			"callbackUrl":  websubCallbackURL,
+			"callbackPath": websubCallbackPath,
+			"source":       websubCallbackSource,
+		})
+	} else {
+		logger.Warn("websub", "YouTube WebSub not configured - set config.json youtube.callback_url or WEBSUB_CALLBACK_BASE_URL env var", nil)
+	}
+
 	adminSubSvc := opts.AdminSubmissions
 	if adminSubSvc == nil {
 		baseStore, ok := streamersStore.(*streamers.Store)
@@ -273,10 +328,10 @@ func Run(ctx context.Context, opts Options) error {
 			return fmt.Errorf("admin submissions requires *streamers.Store when not injected")
 		}
 		adminSubSvc = adminservice.NewSubmissionsService(adminservice.SubmissionsOptions{
-			SubmissionsStore: submissionsStore,
-			StreamersStore:   baseStore,
-			YouTubeClient:    &http.Client{Timeout: 10 * time.Second},
-			YouTube:          appConfig.YouTube,
+			SubmissionsStore:      submissionsStore,
+			StreamersStore:        baseStore,
+			WebSubCallbackBaseURL: websubCallbackURL,
+			MetadataService:       metadataService,
 		})
 	}
 	adminMgr := opts.AdminManager
@@ -303,7 +358,7 @@ func Run(ctx context.Context, opts Options) error {
 		}
 	}
 
-	primaryHost := canonicalHostFromURL(appConfig.YouTube.CallbackURL)
+	primaryHost := canonicalHostFromURL(websubCallbackURL)
 
 	siteDescription := "Sharpen.Live tracks live knife sharpeners and bladesmith streams across YouTube, Twitch, and Facebook - find makers, tutorials, and sharpening resources."
 	switch {
@@ -312,20 +367,6 @@ func Run(ctx context.Context, opts Options) error {
 	case strings.EqualFold(siteConfig.Key, "synth-wave") || strings.EqualFold(siteConfig.Name, "synth.wave"):
 		siteDescription = "synth.wave tracks live synthwave, chillwave, and electronic music streams so you can ride the neon frequencies in real time."
 	}
-
-	// Initialize logging
-	logDir := filepath.Join(dataDir, "logs")
-	fileWriter, err := logging.NewFileWriter(logDir, "app.log", 50, 10)
-	if err != nil {
-		return fmt.Errorf("create log file writer: %w", err)
-	}
-	defer fileWriter.Close()
-
-	logger := logging.New(siteConfig.Key, logging.INFO, fileWriter, os.Stdout)
-	logger.Info("server", "Starting server", map[string]any{
-		"site":   siteConfig.Name,
-		"listen": opts.Listen,
-	})
 
 	srv := &server{
 		assetsDir:        assetsPath,
@@ -341,6 +382,7 @@ func Run(ctx context.Context, opts Options) error {
 		statusChecker:    statusChecker,
 		adminManager:     adminMgr,
 		adminEmail:       appConfig.Admin.Email,
+		metadataService:  metadataService,
 		metadataFetcher:  metadataSvc,
 		siteName:         siteConfig.Name,
 		siteKey:          siteConfig.Key,
@@ -399,7 +441,11 @@ func Run(ctx context.Context, opts Options) error {
 	})
 	mux.Handle("/streamers/watch", streamersWatch)
 	mux.Handle("/api/streamers/watch", streamersWatch)
+	mux.HandleFunc("/api/metadata", srv.handleMetadata)
 	mux.HandleFunc("/api/youtube/metadata", srv.handleMetadata)
+	if websubCallbackURL != "" {
+		mux.HandleFunc(websubCallbackPath, srv.handleYouTubeWebSub)
+	}
 	if baseStore, ok := streamersStore.(*streamers.Store); ok {
 		alertsHandler := youtubeui.NewAlertsHandler(youtubeui.AlertsHandlerOptions{
 			StreamersStore: baseStore,

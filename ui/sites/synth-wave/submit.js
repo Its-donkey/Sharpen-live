@@ -22,6 +22,17 @@
 
   let inflightTarget = '';
   let debounceTimer;
+  const setChannelId = (channelId) => {
+    const firstRow = form.querySelector('.platform-row');
+    if (!firstRow) return;
+    const channelInput = firstRow.querySelector('.platform-channel-id');
+    if (!channelInput) return;
+    if (channelId) {
+      channelInput.value = channelId;
+    } else {
+      channelInput.value = '';
+    }
+  };
 
   function log(...args) {
     if (window && window.console) {
@@ -73,7 +84,7 @@
     inflightTarget = url;
     log('fetching metadata for', url);
     try {
-      const resp = await fetch('/api/youtube/metadata', {
+      const resp = await fetch('/api/metadata', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ url })
@@ -98,6 +109,11 @@
         } else if (data.handle && data.handle.trim() !== '') {
           nameInput.value = data.handle.trim();
         }
+      }
+      if (data.channelId) {
+        setChannelId(data.channelId.trim());
+      } else {
+        setChannelId('');
       }
     } catch (err) {
       inflightTarget = '';
@@ -170,6 +186,149 @@
     if (firstVal && firstVal.trim() !== '') {
       queueMetadataFetch(firstVal);
     }
+  }
+
+  // ------- Platform row management -------
+  let platformRowCounter = 0;
+  let maxPlatforms = 0;
+  let platformRowsContainer = null;
+  let addPlatformButton = null;
+
+  function updateAddButtonState() {
+    if (!addPlatformButton || !platformRowsContainer || !maxPlatforms) return;
+    const totalRows = platformRowsContainer.querySelectorAll('.platform-row').length;
+    addPlatformButton.disabled = totalRows >= maxPlatforms;
+  }
+
+  function initPlatformRowManagement() {
+    const platformFieldset = form.querySelector('.platform-fieldset');
+    if (!platformFieldset) return;
+
+    platformRowsContainer = platformFieldset.querySelector('.platform-rows');
+    addPlatformButton = platformFieldset.querySelector('.add-platform-button');
+    if (!platformRowsContainer || !addPlatformButton) return;
+
+    const parsedMax = parseInt(addPlatformButton.dataset.maxPlatforms || '', 10);
+    maxPlatforms = Number.isNaN(parsedMax) ? 0 : parsedMax;
+
+    // Initialize counter based on existing rows
+    const existingRows = platformRowsContainer.querySelectorAll('.platform-row');
+    platformRowCounter = existingRows.length;
+
+    // Add platform button handler
+    addPlatformButton.addEventListener('click', (e) => {
+      e.preventDefault();
+      addPlatformRow();
+    });
+
+    // Bind remove handlers to existing rows
+    bindRemoveHandlers();
+    updateAddButtonState();
+  }
+
+  function addPlatformRow() {
+    if (!platformRowsContainer || !addPlatformButton) return;
+
+    const existingRows = platformRowsContainer.querySelectorAll('.platform-row');
+    if (existingRows.length === 0) return;
+    if (maxPlatforms && existingRows.length >= maxPlatforms) return;
+
+    // Clone the first row as template
+    const template = existingRows[0];
+    const newRow = template.cloneNode(true);
+
+    // Generate new row ID
+    const newRowId = `row-${platformRowCounter++}`;
+    newRow.setAttribute('data-platform-row', newRowId);
+
+    // Update hidden ID input
+    const idInput = newRow.querySelector('input[name="platform_id"]');
+    if (idInput) idInput.value = newRowId;
+    const channelIdInput = newRow.querySelector('.platform-channel-id');
+    if (channelIdInput) {
+      channelIdInput.value = '';
+    }
+
+    // Clear the URL input
+    const urlInput = newRow.querySelector('.channel-url-input');
+    if (urlInput) {
+      urlInput.value = '';
+      urlInput.removeAttribute('id'); // Remove id to avoid duplicates
+    }
+
+    // Reset platform select
+    const platformSelect = newRow.querySelector('.platform-select select');
+    if (platformSelect) {
+      platformSelect.value = '';
+      platformSelect.removeAttribute('data-row');
+      platformSelect.setAttribute('data-row', newRowId);
+    }
+
+    // Hide platform select wrapper initially
+    const selectWrapper = newRow.querySelector('.platform-select');
+    if (selectWrapper) {
+      selectWrapper.classList.add('platform-select-hidden');
+    }
+
+    // Ensure remove button exists and is visible
+    let removeButton = newRow.querySelector('.remove-platform-button');
+    if (!removeButton) {
+      // Create remove button if it doesn't exist
+      const buttonContainer = newRow.querySelector('.platform-row-inner');
+      removeButton = document.createElement('button');
+      removeButton.type = 'button';
+      removeButton.className = 'remove-platform-button';
+      removeButton.name = 'remove_platform';
+      removeButton.textContent = 'Remove';
+      newRow.insertBefore(removeButton, buttonContainer.nextSibling);
+    }
+    removeButton.value = newRowId;
+
+    // Clear any error messages
+    const errorMsg = newRow.querySelector('.field-error-text');
+    if (errorMsg) errorMsg.remove();
+
+    // Remove error class from label
+    const urlLabel = newRow.querySelector('.platform-url');
+    if (urlLabel) urlLabel.classList.remove('form-field-error');
+
+    // Append new row
+    platformRowsContainer.appendChild(newRow);
+
+    // Rebind all handlers
+    bindPlatformInputs();
+    bindRemoveHandlers();
+    updateAddButtonState();
+
+    // Focus new input
+    if (urlInput) urlInput.focus();
+  }
+
+  function bindRemoveHandlers() {
+    const removeButtons = form.querySelectorAll('.remove-platform-button');
+    removeButtons.forEach((btn) => {
+      // Remove old listeners by cloning
+      const newBtn = btn.cloneNode(true);
+      btn.parentNode.replaceChild(newBtn, btn);
+
+      newBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const rowId = newBtn.value;
+        const row = form.querySelector(`.platform-row[data-platform-row="${rowId}"]`);
+        if (!row) return;
+
+        // Only remove if there's more than one row
+        const allRows = form.querySelectorAll('.platform-row');
+        if (allRows.length <= 1) return;
+
+        row.remove();
+
+        // Rebind handlers after removal
+        bindPlatformInputs();
+        bindRemoveHandlers();
+        updateAddButtonState();
+      });
+    });
   }
 
   // ------- Language picker helpers -------
@@ -288,8 +447,9 @@
   }
 
   function init() {
-    bindPlatformInputs();
     initLanguagePicker();
+    initPlatformRowManagement(); // Initialize platform add/remove handlers
+    bindPlatformInputs();
     initStreamersWatch();
   }
 

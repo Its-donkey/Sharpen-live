@@ -94,6 +94,7 @@ func collectPlatformRows(r *http.Request) []model.PlatformFormRow {
 	urls := r.Form["platform_url"]
 	presets := r.Form["platform_preset"]
 	handles := r.Form["platform_handle"]
+	channelIDs := r.Form["platform_channel_id"]
 
 	max := len(urls)
 	for i := 0; i < max; i++ {
@@ -102,6 +103,7 @@ func collectPlatformRows(r *http.Request) []model.PlatformFormRow {
 			Preset:     safeFormIndex(presets, i),
 			Handle:     safeFormIndex(handles, i),
 			ChannelURL: strings.TrimSpace(urls[i]),
+			ChannelID:  safeFormIndex(channelIDs, i),
 		}
 		if row.ID == "" {
 			row.ID = fmt.Sprintf("row-%d", i)
@@ -195,11 +197,16 @@ func submitStreamer(ctx context.Context, streamerSvc StreamerService, form model
 	if streamerSvc == nil {
 		return "", errors.New("streamer service unavailable")
 	}
+
+	// Build the platforms map from form data
+	platformsMap := forms.BuildPlatformsMap(form.Platforms)
+
 	req := streamersvc.CreateRequest{
 		Alias:       strings.TrimSpace(form.Name),
 		Description: forms.BuildStreamerDescription(form.Description, form.Platforms),
 		Languages:   append([]string(nil), form.Languages...),
 		PlatformURL: forms.FirstPlatformURL(form.Platforms),
+		Platforms:   platformsMap,
 	}
 	result, err := streamerSvc.Create(ctx, req)
 	if err != nil {

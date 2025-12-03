@@ -13,6 +13,8 @@
 - Server/UI: run multiple branded sites from a single config (`-site` targets one; default boot spins up every entry) so Sharpen.Live and synth.wave can host their own templates/assets/log/data roots concurrently.
 - UI: add site-specific templates, OG images, neon synthwave styling, and SVG brand assets plus a synth.wave brand guide for design handoff.
 - UI: add a default-site fallback that surfaces the errors causing a fallback instead of silently rendering Sharpen.Live defaults.
+- Metadata: add `/api/metadata` backed by YouTube/Twitch/Facebook collectors to auto-fill submit forms with channel titles, handles, languages, and IDs.
+- YouTube WebSub: expose the configured callback route and subscribe channels (with HMAC secrets and lease tracking) when admins approve YouTube submissions.
 - Admin: add roster “Check online status” action and API to refresh channel state on demand.
 - Submit form: detect @handles, prompt for platform, and expand to full channel URLs.
 - Submit form: preselect English and add an "Add another language" button consistent with platform controls.
@@ -31,6 +33,8 @@
 - Config/Docs: capture per-site `app.name` plus site-specific server/assets/data roots in config.json and README so multi-site deployments stay isolated.
 - UI: drop legacy root templates/assets in favour of per-site (Sharpen.Live, synth.wave) and default-site directories.
 - YouTube API: prefer `YOUTUBE_API_KEY`/`YT_API_KEY` environment values for both config loading and the player client default key instead of the baked-in sample key.
+- Submissions: store per-platform maps (URL/handle/channelId/label) and auto-subscribe YouTube channels against the configured WebSub callback during admin approval.
+- Submit form: add/remove platform rows client-side and keep hidden channel IDs in sync while only the first row triggers metadata fetches.
 - UI: move YouTube-specific helpers/handlers into `internal/ui/platforms/youtube` and reuse them across forms, streamers, and server wiring for clearer ownership.
 
 ### Fixed

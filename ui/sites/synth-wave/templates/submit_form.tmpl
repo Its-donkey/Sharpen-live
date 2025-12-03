@@ -21,6 +21,7 @@
 					<label class="form-field form-field-inline platform-url highlight-change {{if $rowErr.Channel}}form-field-error{{end}}" id="platform-url-field-{{$row.ID}}">
 					<span>Channel URL</span>
 					<input type="hidden" name="platform_id" value="{{$row.ID}}">
+					<input type="hidden" class="platform-channel-id" name="platform_channel_id" value="{{$row.ChannelID}}">
 					<input type="url" class="channel-url-input" name="platform_url" placeholder="https://example.com/live or @handle" value="{{$row.ChannelURL}}" required>
 					</label>
 					{{if $row.Handle}}
@@ -46,7 +47,7 @@
 					{{end}}
 				</div>
 				{{if gt (len $.State.Platforms) 1}}
-					<button type="submit" class="remove-platform-button" name="remove_platform" value="{{$row.ID}}">Remove</button>
+					<button type="button" class="remove-platform-button" name="remove_platform" value="{{$row.ID}}">Remove</button>
 				{{end}}
 				{{if $rowErr.Channel}}
 					<p class="field-error-text">Provide a valid channel URL.</p>
@@ -54,7 +55,7 @@
 				</div>
 			{{end}}
 			</div>
-			<button type="submit" class="add-platform-button" name="action" value="add-platform" {{if ge (len .State.Platforms) .MaxPlatforms}}disabled{{end}}>+ Add another platform</button>
+			<button type="button" class="add-platform-button" name="action" value="add-platform" data-max-platforms="{{.MaxPlatforms}}" {{if ge (len .State.Platforms) .MaxPlatforms}}disabled{{end}}>+ Add another platform</button>
 		</fieldset>
 
 		<label class="form-field {{if .State.Errors.Name}}form-field-error{{end}}" id="field-name">

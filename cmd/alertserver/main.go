@@ -5,12 +5,13 @@ import (
 	"errors"
 	"flag"
 	"fmt"
-	"github.com/Its-donkey/Sharpen-live/internal/alert/config"
-	uiserver "github.com/Its-donkey/Sharpen-live/internal/ui/server"
 	"os"
 	"os/signal"
 	"strings"
 	"syscall"
+
+	"github.com/Its-donkey/Sharpen-live/internal/alert/config"
+	uiserver "github.com/Its-donkey/Sharpen-live/internal/ui/server"
 )
 
 func main() {
@@ -35,7 +36,14 @@ func main() {
 	dataDir := flag.String("data", "", "directory for data files (streamers/submissions); defaults to config.json app.data")
 	configPath := flag.String("config", "config.json", "path to server configuration")
 	site := flag.String("site", "", "site key to serve (defaults to all configured sites when empty)")
+	twitchClientID := flag.String("twitch-client-id", "", "Twitch Client ID (used when TWITCH_CLIENT_ID is unset)")
+	twitchClientSecret := flag.String("twitch-client-secret", "", "Twitch Client Secret (used when TWITCH_CLIENT_SECRET is unset)")
+	youtubeAPIKey := flag.String("youtube-api-key", "", "YouTube API Key (used when YOUTUBE_API_KEY is unset)")
 	flag.Parse()
+
+	ensureEnv("TWITCH_CLIENT_ID", *twitchClientID)
+	ensureEnv("TWITCH_CLIENT_SECRET", *twitchClientSecret)
+	ensureEnv("YOUTUBE_API_KEY", *youtubeAPIKey)
 
 	loadedConfig, configErr := config.Load(*configPath)
 	fallbackErrors := []string{}
@@ -132,4 +140,12 @@ func main() {
 
 func normalizeSiteKey(siteArg string) string {
 	return config.NormaliseSiteKey(siteArg)
+}
+
+// ensureEnv sets an environment variable when it's currently unset and a fallback is provided.
+func ensureEnv(key, fallback string) {
+	if strings.TrimSpace(os.Getenv(key)) != "" || strings.TrimSpace(fallback) == "" {
+		return
+	}
+	_ = os.Setenv(key, strings.TrimSpace(fallback))
 }

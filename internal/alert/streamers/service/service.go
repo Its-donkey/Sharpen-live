@@ -39,7 +39,8 @@ type CreateRequest struct {
 	Alias       string
 	Description string
 	Languages   []string
-	PlatformURL string
+	PlatformURL string // Deprecated: use Platforms instead
+	Platforms   map[string]submissions.PlatformInfo
 }
 
 // CreateResult captures the stored submission returned by Create.
@@ -102,6 +103,7 @@ func (s *Service) Create(ctx context.Context, req CreateRequest) (CreateResult, 
 		Description: strings.TrimSpace(req.Description),
 		Languages:   langs,
 		PlatformURL: strings.TrimSpace(req.PlatformURL),
+		Platforms:   req.Platforms,
 	}
 	saved, err := s.submissions.Append(submission)
 	if err != nil {

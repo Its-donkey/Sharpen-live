@@ -70,11 +70,30 @@ type YouTubeStatus struct {
 	StartedAt time.Time `json:"startedAt,omitempty"`
 }
 
-// TwitchStatus stores Twitch live metadata.
-type TwitchStatus struct {
-	Live      bool      `json:"live"`
-	StreamID  string    `json:"streamId,omitempty"`
-	StartedAt time.Time `json:"startedAt,omitempty"`
+// YouTubePlatform stores YouTube-specific metadata and WebSub subscription details.
+type YouTubePlatform struct {
+	Handle            string     `json:"handle,omitempty"`
+	ChannelID         string     `json:"channelId,omitempty"`
+	ChannelURL        string     `json:"channelUrl,omitempty"`
+	HubSecret         string     `json:"hubSecret,omitempty"`
+	HubLeaseDate      string     `json:"hubLeaseDate,omitempty"`
+	Topic             string     `json:"topic,omitempty"`
+	CallbackURL       string     `json:"callbackUrl,omitempty"`
+	HubURL            string     `json:"hubUrl,omitempty"`
+	VerifyMode        string     `json:"verifyMode,omitempty"`
+	LeaseSeconds      int        `json:"leaseSeconds,omitempty"`
+	WebSubHubURL      string     `json:"websubHubUrl,omitempty"`
+	WebSubTopicURL    string     `json:"websubTopicUrl,omitempty"`
+	WebSubCallbackURL string     `json:"websubCallbackUrl,omitempty"`
+	WebSubSecret      string     `json:"websubSecret,omitempty"`
+	WebSubLeaseExpiry *time.Time `json:"websubLeaseExpiry,omitempty"`
+	WebSubSubscribed  bool       `json:"websubSubscribed"`
+}
+
+// FacebookPlatform stores Facebook-specific metadata.
+type FacebookPlatform struct {
+	PageID      string `json:"pageId,omitempty"`
+	AccessToken string `json:"accessToken,omitempty"`
 }
 
 // FacebookStatus stores Facebook Live metadata.
@@ -84,29 +103,17 @@ type FacebookStatus struct {
 	StartedAt time.Time `json:"startedAt,omitempty"`
 }
 
-// YouTubePlatform stores YouTube-specific metadata.
-type YouTubePlatform struct {
-	Handle       string `json:"handle"`
-	ChannelID    string `json:"channelId,omitempty"`
-	HubSecret    string `json:"hubSecret,omitempty"`
-	HubLeaseDate string `json:"hubLeaseDate,omitempty"`
-	Topic        string `json:"topic,omitempty"`
-	CallbackURL  string `json:"callbackUrl,omitempty"`
-	HubURL       string `json:"hubUrl,omitempty"`
-	VerifyMode   string `json:"verifyMode,omitempty"`
-	LeaseSeconds int    `json:"leaseSeconds,omitempty"`
-}
-
-// FacebookPlatform stores Facebook-specific metadata.
-type FacebookPlatform struct {
-	PageID      string `json:"pageId,omitempty"`
-	AccessToken string `json:"accessToken,omitempty"`
-}
-
 // TwitchPlatform stores Twitch-specific metadata.
 type TwitchPlatform struct {
 	Username      string `json:"username,omitempty"`
 	BroadcasterID string `json:"broadcasterId,omitempty"`
+}
+
+// TwitchStatus stores Twitch live metadata.
+type TwitchStatus struct {
+	Live      bool      `json:"live"`
+	StreamID  string    `json:"streamId,omitempty"`
+	StartedAt time.Time `json:"startedAt,omitempty"`
 }
 
 var (

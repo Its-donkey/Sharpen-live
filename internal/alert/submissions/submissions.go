@@ -36,15 +36,26 @@ type File struct {
 	Submissions []Submission `json:"submissions"`
 }
 
+// PlatformInfo holds information about a specific streaming platform
+type PlatformInfo struct {
+	URL       string `json:"url"`
+	Platform  string `json:"platform,omitempty"`
+	Preset    string `json:"preset,omitempty"`
+	Handle    string `json:"handle,omitempty"`
+	ChannelID string `json:"channelId,omitempty"`
+	Label     string `json:"label,omitempty"`
+}
+
 // Submission captures the data submitted by a user awaiting admin review.
 type Submission struct {
-	ID          string    `json:"id"`
-	Alias       string    `json:"alias"`
-	Description string    `json:"description,omitempty"`
-	Languages   []string  `json:"languages,omitempty"`
-	PlatformURL string    `json:"platformUrl,omitempty"`
-	SubmittedAt time.Time `json:"submittedAt"`
-	SubmittedBy string    `json:"submittedBy,omitempty"`
+	ID          string                  `json:"id"`
+	Alias       string                  `json:"alias"`
+	Description string                  `json:"description,omitempty"`
+	Languages   []string                `json:"languages,omitempty"`
+	PlatformURL string                  `json:"platformUrl,omitempty"` // Deprecated: use Platforms instead
+	Platforms   map[string]PlatformInfo `json:"platforms,omitempty"`
+	SubmittedAt time.Time               `json:"submittedAt"`
+	SubmittedBy string                  `json:"submittedBy,omitempty"`
 }
 
 // StoreOption customises the store behaviour.

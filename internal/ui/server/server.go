@@ -442,15 +442,20 @@ func Run(ctx context.Context, opts Options) error {
 	mux.Handle("/streamers/watch", streamersWatch)
 	mux.Handle("/api/streamers/watch", streamersWatch)
 	mux.HandleFunc("/api/metadata", srv.handleMetadata)
-	mux.HandleFunc("/api/youtube/metadata", srv.handleMetadata)
+	// mux.HandleFunc("/api/youtube/metadata", srv.handleMetadata)
+	websubRegistered := false
 	if websubCallbackURL != "" {
 		mux.HandleFunc(websubCallbackPath, srv.handleYouTubeWebSub)
+		websubRegistered = true
 	}
 	if baseStore, ok := streamersStore.(*streamers.Store); ok {
 		alertsHandler := youtubeui.NewAlertsHandler(youtubeui.AlertsHandlerOptions{
 			StreamersStore: baseStore,
 		})
 		for _, path := range alertPaths {
+			if websubRegistered && path == websubCallbackPath {
+				continue
+			}
 			mux.Handle(path, alertsHandler)
 		}
 	}

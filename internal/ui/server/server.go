@@ -20,7 +20,6 @@ import (
 	"github.com/Its-donkey/Sharpen-live/logging"
 	"html/template"
 	"net/http"
-	"net/url"
 	"os"
 	"path/filepath"
 	"strings"
@@ -261,8 +260,10 @@ func Run(ctx context.Context, opts Options) error {
 			return fmt.Errorf("streamer service requires *streamers.Store when not injected")
 		}
 		streamerSvc = streamersvc.New(streamersvc.Options{
-			Streamers:   baseStore,
-			Submissions: submissionsStore,
+			Streamers:          baseStore,
+			Submissions:        submissionsStore,
+			YouTubeHubURL:      appConfig.YouTube.HubURL,
+			YouTubeCallbackURL: appConfig.YouTube.CallbackURL,
 		})
 	}
 	metadataSvc := opts.MetadataFetcher
@@ -304,18 +305,17 @@ func Run(ctx context.Context, opts Options) error {
 		}
 	}
 
-	websubCallbackPath := "/webhooks/youtube/websub"
+	// Always register the handler at /alerts (the path after reverse proxy stripping)
+	// The full callback URL (e.g., https://sharpen.live/dev/alerts) is sent to YouTube,
+	// but the reverse proxy strips prefixes before forwarding to the Go app
+	websubCallbackPath := "/alerts"
+
 	if websubCallbackURL != "" {
-		// Extract path from callback URL for route registration
-		if parsed, err := url.Parse(websubCallbackURL); err == nil {
-			if parsed.Path != "" && parsed.Path != "/" {
-				websubCallbackPath = parsed.Path
-			}
-		}
 		logger.Info("websub", "YouTube WebSub configured", map[string]any{
-			"callbackUrl":  websubCallbackURL,
-			"callbackPath": websubCallbackPath,
-			"source":       websubCallbackSource,
+			"callbackUrl":         websubCallbackURL,
+			"localHandlerPath":    websubCallbackPath,
+			"source":              websubCallbackSource,
+			"note":                "Handler registered at local path; reverse proxy handles URL rewriting",
 		})
 	} else {
 		logger.Warn("websub", "YouTube WebSub not configured - set config.json youtube.callback_url or WEBSUB_CALLBACK_BASE_URL env var", nil)
@@ -408,6 +408,7 @@ func Run(ctx context.Context, opts Options) error {
 				HubURL:       appConfig.YouTube.HubURL,
 				Mode:         "subscribe",
 				Verify:       appConfig.YouTube.Verify,
+				CallbackURL:  appConfig.YouTube.CallbackURL,
 				LeaseSeconds: appConfig.YouTube.LeaseSeconds,
 			},
 			OnError: func(err error) {

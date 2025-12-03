@@ -17,6 +17,7 @@ type Options struct {
 	Mode         string // subscribe or unsubscribe; must be provided
 	Verify       string
 	LeaseSeconds int
+	CallbackURL  string
 }
 
 // buildYouTubeSubscriptionData centralises the shared logic for:
@@ -96,6 +97,9 @@ func ManageSubscription(ctx context.Context, record streamers.Record, opts Optio
 		hubURL = strings.TrimSpace(opts.HubURL)
 	}
 	callback := strings.TrimSpace(yt.CallbackURL)
+	if callback == "" {
+		callback = strings.TrimSpace(opts.CallbackURL)
+	}
 
 	subscribeReq := YouTubeRequest{
 		HubURL:       hubURL,

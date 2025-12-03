@@ -20,18 +20,20 @@ var ErrSubscription = errors.New("subscription error")
 
 // Options configures a Service instance.
 type Options struct {
-	Streamers     *streamers.Store
-	Submissions   *submissions.Store
-	YouTubeClient *http.Client
-	YouTubeHubURL string
+	Streamers          *streamers.Store
+	Submissions        *submissions.Store
+	YouTubeClient      *http.Client
+	YouTubeHubURL      string
+	YouTubeCallbackURL string
 }
 
 // Service implements the business logic for streamer operations.
 type Service struct {
-	streamers     *streamers.Store
-	submissions   *submissions.Store
-	youtubeClient *http.Client
-	youtubeHubURL string
+	streamers          *streamers.Store
+	submissions        *submissions.Store
+	youtubeClient      *http.Client
+	youtubeHubURL      string
+	youtubeCallbackURL string
 }
 
 // CreateRequest captures the fields accepted by Create.
@@ -64,10 +66,11 @@ type DeleteRequest struct {
 // New instantiates a Service.
 func New(opts Options) *Service {
 	return &Service{
-		streamers:     opts.Streamers,
-		submissions:   opts.Submissions,
-		youtubeClient: opts.YouTubeClient,
-		youtubeHubURL: strings.TrimSpace(opts.YouTubeHubURL),
+		streamers:          opts.Streamers,
+		submissions:        opts.Submissions,
+		youtubeClient:      opts.YouTubeClient,
+		youtubeHubURL:      strings.TrimSpace(opts.YouTubeHubURL),
+		youtubeCallbackURL: strings.TrimSpace(opts.YouTubeCallbackURL),
 	}
 }
 
@@ -183,9 +186,10 @@ func (s *Service) unsubscribe(ctx context.Context, record streamers.Record) erro
 	ctx, cancel := context.WithTimeout(ctx, 15*time.Second)
 	defer cancel()
 	unsubOpts := subscriptions.Options{
-		Client: client,
-		HubURL: s.youtubeHubURL,
-		Mode:   "unsubscribe",
+		Client:      client,
+		HubURL:      s.youtubeHubURL,
+		CallbackURL: s.youtubeCallbackURL,
+		Mode:        "unsubscribe",
 	}
 	if err := subscriptions.ManageSubscription(ctx, record, unsubOpts); err != nil {
 		return fmt.Errorf("%w: %v", ErrSubscription, err)

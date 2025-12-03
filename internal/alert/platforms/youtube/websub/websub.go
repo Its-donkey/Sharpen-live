@@ -39,31 +39,44 @@ type SubscriptionResult struct {
 
 // Subscribe initiates a WebSub subscription to a YouTube channel
 func Subscribe(req SubscriptionRequest) (*SubscriptionResult, error) {
+	fmt.Printf("=== WebSub Subscribe START ===\n")
+	fmt.Printf("  Channel ID: %s\n", req.ChannelID)
+	fmt.Printf("  Callback URL: %s\n", req.CallbackURL)
+	fmt.Printf("  Secret provided: %v\n", req.Secret != "")
+	fmt.Printf("  Lease seconds: %d\n", req.LeaseSeconds)
+
 	if req.ChannelID == "" {
+		fmt.Printf("ERROR: Channel ID is required\n")
 		return nil, fmt.Errorf("channel ID is required")
 	}
 	if req.CallbackURL == "" {
+		fmt.Printf("ERROR: Callback URL is required\n")
 		return nil, fmt.Errorf("callback URL is required")
 	}
 
 	// Generate secret if not provided
 	secret := req.Secret
 	if secret == "" {
+		fmt.Printf("INFO: Generating new secret...\n")
 		var err error
 		secret, err = generateSecret()
 		if err != nil {
+			fmt.Printf("ERROR: Failed to generate secret: %v\n", err)
 			return nil, fmt.Errorf("generate secret: %w", err)
 		}
+		fmt.Printf("INFO: Secret generated successfully (length: %d)\n", len(secret))
 	}
 
 	// Set default lease seconds
 	leaseSeconds := req.LeaseSeconds
 	if leaseSeconds == 0 {
 		leaseSeconds = DefaultLeaseSeconds
+		fmt.Printf("INFO: Using default lease seconds: %d\n", leaseSeconds)
 	}
 
 	// Build topic URL
 	topicURL := fmt.Sprintf("https://www.youtube.com/xml/feeds/videos.xml?channel_id=%s", req.ChannelID)
+	fmt.Printf("INFO: Topic URL: %s\n", topicURL)
 
 	// Prepare subscription request
 	form := url.Values{}
@@ -74,21 +87,53 @@ func Subscribe(req SubscriptionRequest) (*SubscriptionResult, error) {
 	form.Set("hub.secret", secret)
 	form.Set("hub.lease_seconds", fmt.Sprintf("%d", leaseSeconds))
 
+	fmt.Printf("INFO: Sending subscription request to hub: %s\n", YouTubeWebSubHub)
+	fmt.Printf("INFO: Request parameters:\n")
+	fmt.Printf("  hub.callback: %s\n", form.Get("hub.callback"))
+	fmt.Printf("  hub.topic: %s\n", form.Get("hub.topic"))
+	fmt.Printf("  hub.mode: %s\n", form.Get("hub.mode"))
+	fmt.Printf("  hub.verify: %s\n", form.Get("hub.verify"))
+	fmt.Printf("  hub.secret: [%d chars]\n", len(form.Get("hub.secret")))
+	fmt.Printf("  hub.lease_seconds: %s\n", form.Get("hub.lease_seconds"))
+
 	// Send subscription request
 	resp, err := http.PostForm(YouTubeWebSubHub, form)
 	if err != nil {
+		fmt.Printf("ERROR: Failed to send subscription request: %v\n", err)
 		return nil, fmt.Errorf("post subscription request: %w", err)
 	}
 	defer resp.Body.Close()
 
+	fmt.Printf("INFO: Hub response status: %d %s\n", resp.StatusCode, resp.Status)
+	fmt.Printf("INFO: Response headers:\n")
+	for key, values := range resp.Header {
+		for _, value := range values {
+			fmt.Printf("  %s: %s\n", key, value)
+		}
+	}
+
+	// Read response body
+	body, readErr := io.ReadAll(resp.Body)
+	if readErr != nil {
+		fmt.Printf("WARNING: Failed to read response body: %v\n", readErr)
+	} else if len(body) > 0 {
+		fmt.Printf("INFO: Response body: %s\n", string(body))
+	} else {
+		fmt.Printf("INFO: Response body is empty\n")
+	}
+
 	// Check response status
 	if resp.StatusCode != http.StatusAccepted && resp.StatusCode != http.StatusNoContent {
-		body, _ := io.ReadAll(resp.Body)
+		fmt.Printf("ERROR: Subscription request failed with status %d: %s\n", resp.StatusCode, string(body))
 		return nil, fmt.Errorf("subscription request failed with status %d: %s", resp.StatusCode, string(body))
 	}
 
 	// Calculate lease expiry
 	leaseExpiry := time.Now().UTC().Add(time.Duration(leaseSeconds) * time.Second)
+	fmt.Printf("INFO: Calculated lease expiry: %s\n", leaseExpiry.Format("2006-01-02 15:04:05 MST"))
+
+	fmt.Printf("SUCCESS: WebSub subscription request accepted by hub\n")
+	fmt.Printf("=== WebSub Subscribe END ===\n")
 
 	return &SubscriptionResult{
 		HubURL:      YouTubeWebSubHub,
@@ -101,14 +146,21 @@ func Subscribe(req SubscriptionRequest) (*SubscriptionResult, error) {
 
 // Unsubscribe cancels a WebSub subscription
 func Unsubscribe(channelID, callbackURL string) error {
+	fmt.Printf("=== WebSub Unsubscribe START ===\n")
+	fmt.Printf("  Channel ID: %s\n", channelID)
+	fmt.Printf("  Callback URL: %s\n", callbackURL)
+
 	if channelID == "" {
+		fmt.Printf("ERROR: Channel ID is required\n")
 		return fmt.Errorf("channel ID is required")
 	}
 	if callbackURL == "" {
+		fmt.Printf("ERROR: Callback URL is required\n")
 		return fmt.Errorf("callback URL is required")
 	}
 
 	topicURL := fmt.Sprintf("https://www.youtube.com/xml/feeds/videos.xml?channel_id=%s", channelID)
+	fmt.Printf("INFO: Topic URL: %s\n", topicURL)
 
 	form := url.Values{}
 	form.Set("hub.callback", callbackURL)
@@ -116,16 +168,45 @@ func Unsubscribe(channelID, callbackURL string) error {
 	form.Set("hub.mode", "unsubscribe")
 	form.Set("hub.verify", "async")
 
+	fmt.Printf("INFO: Sending unsubscribe request to hub: %s\n", YouTubeWebSubHub)
+	fmt.Printf("INFO: Request parameters:\n")
+	fmt.Printf("  hub.callback: %s\n", form.Get("hub.callback"))
+	fmt.Printf("  hub.topic: %s\n", form.Get("hub.topic"))
+	fmt.Printf("  hub.mode: %s\n", form.Get("hub.mode"))
+	fmt.Printf("  hub.verify: %s\n", form.Get("hub.verify"))
+
 	resp, err := http.PostForm(YouTubeWebSubHub, form)
 	if err != nil {
+		fmt.Printf("ERROR: Failed to send unsubscribe request: %v\n", err)
 		return fmt.Errorf("post unsubscribe request: %w", err)
 	}
 	defer resp.Body.Close()
 
+	fmt.Printf("INFO: Hub response status: %d %s\n", resp.StatusCode, resp.Status)
+	fmt.Printf("INFO: Response headers:\n")
+	for key, values := range resp.Header {
+		for _, value := range values {
+			fmt.Printf("  %s: %s\n", key, value)
+		}
+	}
+
+	// Read response body
+	body, readErr := io.ReadAll(resp.Body)
+	if readErr != nil {
+		fmt.Printf("WARNING: Failed to read response body: %v\n", readErr)
+	} else if len(body) > 0 {
+		fmt.Printf("INFO: Response body: %s\n", string(body))
+	} else {
+		fmt.Printf("INFO: Response body is empty\n")
+	}
+
 	if resp.StatusCode != http.StatusAccepted && resp.StatusCode != http.StatusNoContent {
-		body, _ := io.ReadAll(resp.Body)
+		fmt.Printf("ERROR: Unsubscribe request failed with status %d: %s\n", resp.StatusCode, string(body))
 		return fmt.Errorf("unsubscribe request failed with status %d: %s", resp.StatusCode, string(body))
 	}
+
+	fmt.Printf("SUCCESS: WebSub unsubscribe request accepted by hub\n")
+	fmt.Printf("=== WebSub Unsubscribe END ===\n")
 
 	return nil
 }

@@ -120,6 +120,7 @@ func FromURL(ctx context.Context, record streamers.Record, channelURL string, op
 		Client:       client,
 		HubURL:       hubURL,
 		Mode:         "subscribe",
+		CallbackURL:  callbackURL,
 		LeaseSeconds: leaseSeconds,
 		Verify:       verifyMode,
 	}

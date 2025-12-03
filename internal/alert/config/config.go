@@ -20,12 +20,13 @@ const (
 
 // YouTubeConfig captures the WebSub-specific defaults persisted in config files.
 type YouTubeConfig struct {
-	HubURL       string `json:"hub_url"`
-	CallbackURL  string `json:"callback_url"`
-	LeaseSeconds int    `json:"lease_seconds"`
-	Mode         string `json:"mode"`
-	Verify       string `json:"verify"`
-	APIKey       string `json:"api_key"`
+	HubURL          string `json:"hub_url"`
+	CallbackURL     string `json:"callback_url"`
+	LocalWebSubPath string `json:"local_websub_path"` // Optional: local handler path if different from callback URL path
+	LeaseSeconds    int    `json:"lease_seconds"`
+	Mode            string `json:"mode"`
+	Verify          string `json:"verify"`
+	APIKey          string `json:"api_key"`
 }
 
 // ServerConfig configures the HTTP listener used by alert-server.

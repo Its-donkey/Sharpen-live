@@ -261,8 +261,10 @@ func Run(ctx context.Context, opts Options) error {
 			return fmt.Errorf("streamer service requires *streamers.Store when not injected")
 		}
 		streamerSvc = streamersvc.New(streamersvc.Options{
-			Streamers:   baseStore,
-			Submissions: submissionsStore,
+			Streamers:          baseStore,
+			Submissions:        submissionsStore,
+			YouTubeHubURL:      appConfig.YouTube.HubURL,
+			YouTubeCallbackURL: appConfig.YouTube.CallbackURL,
 		})
 	}
 	metadataSvc := opts.MetadataFetcher
@@ -304,18 +306,31 @@ func Run(ctx context.Context, opts Options) error {
 		}
 	}
 
+	// Determine the local handler path for WebSub verification callbacks
+	// Priority: 1) Explicit local_websub_path config, 2) Extract from callback URL, 3) Default
 	websubCallbackPath := "/webhooks/youtube/websub"
+	pathSource := "default"
+
 	if websubCallbackURL != "" {
-		// Extract path from callback URL for route registration
-		if parsed, err := url.Parse(websubCallbackURL); err == nil {
-			if parsed.Path != "" && parsed.Path != "/" {
-				websubCallbackPath = parsed.Path
+		// Check if local_websub_path is explicitly configured (for reverse proxy scenarios)
+		if localPath := strings.TrimSpace(appConfig.YouTube.LocalWebSubPath); localPath != "" {
+			websubCallbackPath = localPath
+			pathSource = "config.json (youtube.local_websub_path)"
+		} else {
+			// Extract path from callback URL (backward compatible behavior)
+			if parsed, err := url.Parse(websubCallbackURL); err == nil {
+				if parsed.Path != "" && parsed.Path != "/" {
+					websubCallbackPath = parsed.Path
+					pathSource = "extracted from callback URL"
+				}
 			}
 		}
+
 		logger.Info("websub", "YouTube WebSub configured", map[string]any{
-			"callbackUrl":  websubCallbackURL,
-			"callbackPath": websubCallbackPath,
-			"source":       websubCallbackSource,
+			"callbackUrl":      websubCallbackURL,
+			"localHandlerPath": websubCallbackPath,
+			"callbackSource":   websubCallbackSource,
+			"pathSource":       pathSource,
 		})
 	} else {
 		logger.Warn("websub", "YouTube WebSub not configured - set config.json youtube.callback_url or WEBSUB_CALLBACK_BASE_URL env var", nil)
@@ -408,6 +423,7 @@ func Run(ctx context.Context, opts Options) error {
 				HubURL:       appConfig.YouTube.HubURL,
 				Mode:         "subscribe",
 				Verify:       appConfig.YouTube.Verify,
+				CallbackURL:  appConfig.YouTube.CallbackURL,
 				LeaseSeconds: appConfig.YouTube.LeaseSeconds,
 			},
 			OnError: func(err error) {

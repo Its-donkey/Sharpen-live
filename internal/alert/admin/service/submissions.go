@@ -80,29 +80,64 @@ func (s *SubmissionsService) List(ctx context.Context) ([]submissions.Submission
 
 // Process mutates a submission according to the provided action.
 func (s *SubmissionsService) Process(ctx context.Context, req ActionRequest) (ActionResult, error) {
+	fmt.Printf("\n========================================\n")
+	fmt.Printf("=== PROCESS SUBMISSION REQUEST START ===\n")
+	fmt.Printf("========================================\n")
+	fmt.Printf("Action: %s\n", req.Action)
+	fmt.Printf("Submission ID: %s\n", req.ID)
+
 	if err := s.ensureStores(); err != nil {
+		fmt.Printf("ERROR: Store validation failed: %v\n", err)
+		fmt.Printf("=== PROCESS SUBMISSION REQUEST END (failed) ===\n\n")
 		return ActionResult{}, err
 	}
 	action := normaliseAction(req.Action)
 	if action == "" {
+		fmt.Printf("ERROR: Invalid action provided: %s\n", req.Action)
+		fmt.Printf("=== PROCESS SUBMISSION REQUEST END (failed) ===\n\n")
 		return ActionResult{}, ErrInvalidAction
 	}
+	fmt.Printf("Normalized action: %s\n", action)
+
 	id := strings.TrimSpace(req.ID)
 	if id == "" {
+		fmt.Printf("ERROR: No submission ID provided\n")
+		fmt.Printf("=== PROCESS SUBMISSION REQUEST END (failed) ===\n\n")
 		return ActionResult{}, ErrMissingIdentifier
 	}
+
+	fmt.Printf("\nINFO: Removing submission %s from submissions store...\n", id)
 	removed, err := s.submissionsStore.Remove(id)
 	if err != nil {
+		fmt.Printf("ERROR: Failed to remove submission: %v\n", err)
+		fmt.Printf("=== PROCESS SUBMISSION REQUEST END (failed) ===\n\n")
 		return ActionResult{}, err
 	}
+	fmt.Printf("SUCCESS: Submission removed from store\n")
+	fmt.Printf("  Alias: %s\n", removed.Alias)
+	fmt.Printf("  Platforms: %d\n", len(removed.Platforms))
+
 	if action == ActionApprove {
+		fmt.Printf("\n>>> ACTION IS APPROVE - Starting approval process...\n")
 		if err := s.approve(ctx, removed); err != nil {
+			fmt.Printf("\nERROR: Approval process failed: %v\n", err)
+			fmt.Printf("INFO: Re-queueing submission to submissions store...\n")
 			// requeue the submission when approval fails
 			_, _ = s.submissionsStore.Append(removed)
+			fmt.Printf("=== PROCESS SUBMISSION REQUEST END (failed) ===\n\n")
 			return ActionResult{}, err
 		}
+		fmt.Printf("\nSUCCESS: Approval process completed\n")
+		fmt.Printf("========================================\n")
+		fmt.Printf("=== PROCESS SUBMISSION REQUEST END (success) ===\n")
+		fmt.Printf("========================================\n\n")
 		return ActionResult{Status: ActionApprove, Submission: removed}, nil
 	}
+
+	fmt.Printf("\n>>> ACTION IS REJECT - Submission rejected\n")
+	fmt.Printf("========================================\n")
+	fmt.Printf("=== PROCESS SUBMISSION REQUEST END (success) ===\n")
+	fmt.Printf("========================================\n\n")
 	return ActionResult{Status: ActionReject, Submission: removed}, nil
 }
 
@@ -120,6 +155,13 @@ func (s *SubmissionsService) ensureStores() error {
 }
 
 func (s *SubmissionsService) approve(ctx context.Context, submission submissions.Submission) error {
+	fmt.Printf("\n=== APPROVE SUBMISSION START ===\n")
+	fmt.Printf("Submission ID: %s\n", submission.ID)
+	fmt.Printf("Submission Alias: %s\n", submission.Alias)
+	fmt.Printf("Submission Description: %s\n", submission.Description)
+	fmt.Printf("Submission Languages: %v\n", submission.Languages)
+	fmt.Printf("Submission Platforms: %d platform(s)\n", len(submission.Platforms))
+
 	record := streamers.Record{
 		Streamer: streamers.Streamer{
 			Alias:       strings.TrimSpace(submission.Alias),
@@ -128,16 +170,29 @@ func (s *SubmissionsService) approve(ctx context.Context, submission submissions
 		},
 	}
 
+	fmt.Printf("\nINFO: Created initial streamer record\n")
+	fmt.Printf("  Alias: %s\n", record.Streamer.Alias)
+	fmt.Printf("  Description: %s\n", record.Streamer.Description)
+	fmt.Printf("  Languages: %v\n", record.Streamer.Languages)
+
 	// Map platform details
 	if submission.Platforms != nil {
+		fmt.Printf("\nINFO: Processing %d platform(s)...\n", len(submission.Platforms))
 		for platformKey, platformInfo := range submission.Platforms {
+			fmt.Printf("\n--- Processing platform: %s ---\n", platformKey)
+			fmt.Printf("  Platform info URL: %s\n", platformInfo.URL)
+			fmt.Printf("  Platform info Channel ID: %s\n", platformInfo.ChannelID)
+			fmt.Printf("  Platform info Platform field: %s\n", platformInfo.Platform)
+
 			p := strings.ToLower(strings.TrimSpace(platformInfo.Platform))
 			if p == "" {
 				p = strings.ToLower(strings.TrimSpace(platformKey))
 			}
+			fmt.Printf("  Normalized platform: %s\n", p)
 
 			switch {
 			case p == "youtube" || strings.Contains(p, "youtube"):
+				fmt.Printf("\n*** YouTube Platform Detected ***\n")
 				channelURL := strings.TrimSpace(platformInfo.URL)
 				channelID := strings.TrimSpace(platformInfo.ChannelID)
 
@@ -146,39 +201,54 @@ func (s *SubmissionsService) approve(ctx context.Context, submission submissions
 				fmt.Printf("  Channel ID from submission: %s\n", channelID)
 
 				if channelID == "" {
+					fmt.Printf("INFO: Channel ID not in submission, attempting URL extraction...\n")
 					channelID = extractYouTubeChannelID(channelURL)
 					fmt.Printf("  Channel ID from URL extraction: %s\n", channelID)
 				}
 				if channelID == "" && s.metadataService != nil {
-					fmt.Printf("  Attempting to fetch channel ID via metadata service...\n")
+					fmt.Printf("INFO: Attempting to fetch channel ID via metadata service...\n")
 					if meta, err := s.metadataService.Fetch(ctx, channelURL); err == nil && meta != nil {
 						if cid := strings.TrimSpace(meta.ChannelID); cid != "" {
 							channelID = cid
-							fmt.Printf("  Channel ID from metadata: %s\n", channelID)
+							fmt.Printf("SUCCESS: Channel ID from metadata: %s\n", channelID)
+						} else {
+							fmt.Printf("WARNING: Metadata service returned no channel ID\n")
 						}
 					} else if err != nil {
-						fmt.Printf("  Metadata fetch error: %v\n", err)
+						fmt.Printf("ERROR: Metadata fetch error: %v\n", err)
 					}
+				} else if channelID == "" && s.metadataService == nil {
+					fmt.Printf("WARNING: No metadata service available for channel ID lookup\n")
 				}
 
 				ytPlatform := &streamers.YouTubePlatform{
 					ChannelID:  channelID,
 					ChannelURL: channelURL,
 				}
+				fmt.Printf("INFO: Created initial YouTubePlatform struct\n")
 
 				if channelID != "" {
-					fmt.Printf("INFO: Channel ID available, setting up WebSub...\n")
+					fmt.Printf("\nINFO: Channel ID available (%s), proceeding with WebSub setup...\n", channelID)
 					if subscribed, err := s.setupYouTubeWebSub(ctx, channelID, channelURL); err != nil {
-						fmt.Printf("WARNING: Failed to set up YouTube WebSub for channel %s: %v\n", channelID, err)
+						fmt.Printf("\nERROR: setupYouTubeWebSub failed for channel %s: %v\n", channelID, err)
+						fmt.Printf("WARNING: Continuing with approval but WebSub subscription may not be active\n")
 					} else if subscribed != nil {
 						ytPlatform = subscribed
-						fmt.Printf("INFO: WebSub setup successful, platform data updated\n")
+						fmt.Printf("\nSUCCESS: WebSub setup completed, platform data updated\n")
+						fmt.Printf("  WebSubSubscribed: %v\n", ytPlatform.WebSubSubscribed)
+						fmt.Printf("  WebSubHubURL: %s\n", ytPlatform.WebSubHubURL)
+						fmt.Printf("  WebSubTopicURL: %s\n", ytPlatform.WebSubTopicURL)
+						fmt.Printf("  WebSubCallbackURL: %s\n", ytPlatform.WebSubCallbackURL)
 					}
 				} else {
-					fmt.Printf("WARNING: No channel ID available for YouTube platform, skipping WebSub\n")
+					fmt.Printf("\nWARNING: No channel ID available for YouTube platform\n")
+					fmt.Printf("WARNING: WebSub subscription will NOT be set up\n")
+					fmt.Printf("WARNING: The streamer will be saved but alerts may not work\n")
 				}
 				record.Platforms.YouTube = ytPlatform
-				fmt.Printf("INFO: YouTube platform configured in record\n")
+				fmt.Printf("\nINFO: YouTube platform configured in record\n")
+				fmt.Printf("  Final ChannelID: %s\n", record.Platforms.YouTube.ChannelID)
+				fmt.Printf("  Final WebSubSubscribed: %v\n", record.Platforms.YouTube.WebSubSubscribed)
 
 				// case p == "twitch" || strings.Contains(p, "twitch"):
 				// 	username := inferTwitchUsername(platformInfo.URL, platformInfo.Handle, platformInfo.Label)
@@ -191,40 +261,63 @@ func (s *SubmissionsService) approve(ctx context.Context, submission submissions
 				// 	if pageID != "" && record.Platforms.Facebook == nil {
 				// 		record.Platforms.Facebook = &streamers.FacebookPlatform{PageID: pageID}
 				// 	}
+			default:
+				fmt.Printf("INFO: Platform %s not recognized, skipping\n", p)
 			}
 		}
+	} else {
+		fmt.Printf("\nWARNING: No platforms provided in submission\n")
 	}
 
+	fmt.Printf("\n--- Saving streamer record to store ---\n")
 	saved, err := s.streamersStore.Append(record)
 	if err != nil {
-		fmt.Printf("ERROR: Failed to save streamer record: %v\n", err)
+		fmt.Printf("\nERROR: Failed to save streamer record: %v\n", err)
+		fmt.Printf("=== APPROVE SUBMISSION END (failed) ===\n\n")
 		return err
 	}
 
 	// Verify the record was saved correctly
-	fmt.Printf("SUCCESS: Streamer record saved\n")
+	fmt.Printf("\n*** STREAMER RECORD SAVED SUCCESSFULLY ***\n")
 	fmt.Printf("  ID: %s\n", saved.Streamer.ID)
 	fmt.Printf("  Alias: %s\n", saved.Streamer.Alias)
+	fmt.Printf("  Description: %s\n", saved.Streamer.Description)
+	fmt.Printf("  Languages: %v\n", saved.Streamer.Languages)
 	if saved.Platforms.YouTube != nil {
-		fmt.Printf("  YouTube Channel ID: %s\n", saved.Platforms.YouTube.ChannelID)
-		fmt.Printf("  YouTube WebSub Subscribed: %v\n", saved.Platforms.YouTube.WebSubSubscribed)
+		fmt.Printf("\n  YouTube Platform Details:\n")
+		fmt.Printf("    Channel ID: %s\n", saved.Platforms.YouTube.ChannelID)
+		fmt.Printf("    Channel URL: %s\n", saved.Platforms.YouTube.ChannelURL)
+		fmt.Printf("    WebSub Subscribed: %v\n", saved.Platforms.YouTube.WebSubSubscribed)
 		if saved.Platforms.YouTube.WebSubSubscribed {
-			fmt.Printf("  YouTube WebSub Hub: %s\n", saved.Platforms.YouTube.WebSubHubURL)
-			fmt.Printf("  YouTube WebSub Topic: %s\n", saved.Platforms.YouTube.WebSubTopicURL)
-			fmt.Printf("  YouTube WebSub Callback: %s\n", saved.Platforms.YouTube.WebSubCallbackURL)
+			fmt.Printf("    WebSub Hub: %s\n", saved.Platforms.YouTube.WebSubHubURL)
+			fmt.Printf("    WebSub Topic: %s\n", saved.Platforms.YouTube.WebSubTopicURL)
+			fmt.Printf("    WebSub Callback: %s\n", saved.Platforms.YouTube.WebSubCallbackURL)
+			fmt.Printf("    WebSub Secret: [%d chars]\n", len(saved.Platforms.YouTube.WebSubSecret))
 			if saved.Platforms.YouTube.WebSubLeaseExpiry != nil {
-				fmt.Printf("  YouTube WebSub Expiry: %s\n", saved.Platforms.YouTube.WebSubLeaseExpiry.Format("2006-01-02 15:04:05 MST"))
+				fmt.Printf("    WebSub Expiry: %s\n", saved.Platforms.YouTube.WebSubLeaseExpiry.Format("2006-01-02 15:04:05 MST"))
 			}
+		} else {
+			fmt.Printf("    WARNING: WebSub is NOT subscribed - alerts may not work!\n")
 		}
+	} else {
+		fmt.Printf("\n  No YouTube platform configured\n")
 	}
 
+	fmt.Printf("\n=== APPROVE SUBMISSION END (success) ===\n\n")
 	return nil
 }
 
 // setupYouTubeWebSub sets up a WebSub subscription for a YouTube channel
 func (s *SubmissionsService) setupYouTubeWebSub(ctx context.Context, channelID, channelURL string) (*streamers.YouTubePlatform, error) {
+	fmt.Printf("=== setupYouTubeWebSub START ===\n")
+	fmt.Printf("  Channel ID: %s\n", channelID)
+	fmt.Printf("  Channel URL: %s\n", channelURL)
+	fmt.Printf("  WebSub callback base URL: %s\n", s.websubCallbackBaseURL)
+
 	if s.websubCallbackBaseURL == "" {
-		fmt.Printf("INFO: WebSub callback base URL not configured, skipping subscription for channel %s\n", channelID)
+		fmt.Printf("WARNING: WebSub callback base URL not configured, skipping subscription for channel %s\n", channelID)
+		fmt.Printf("INFO: Returning YouTubePlatform without WebSub subscription\n")
+		fmt.Printf("=== setupYouTubeWebSub END (skipped) ===\n")
 		return &streamers.YouTubePlatform{
 			ChannelID:  channelID,
 			ChannelURL: channelURL,
@@ -238,6 +331,8 @@ func (s *SubmissionsService) setupYouTubeWebSub(ctx context.Context, channelID, 
 	fmt.Printf("  Channel ID: %s\n", channelID)
 	fmt.Printf("  Channel URL: %s\n", channelURL)
 	fmt.Printf("  Callback URL: %s\n", callbackURL)
+	fmt.Printf("  Lease Seconds: %d (default)\n", websub.DefaultLeaseSeconds)
+	fmt.Printf("INFO: Calling websub.Subscribe...\n")
 
 	// Subscribe to WebSub
 	result, err := websub.Subscribe(websub.SubscriptionRequest{
@@ -246,16 +341,20 @@ func (s *SubmissionsService) setupYouTubeWebSub(ctx context.Context, channelID, 
 		LeaseSeconds: websub.DefaultLeaseSeconds,
 	})
 	if err != nil {
-		fmt.Printf("ERROR: Failed to subscribe to WebSub for channel %s: %v\n", channelID, err)
+		fmt.Printf("ERROR: websub.Subscribe returned error: %v\n", err)
+		fmt.Printf("=== setupYouTubeWebSub END (failed) ===\n")
 		return nil, fmt.Errorf("subscribe to websub: %w", err)
 	}
 
-	fmt.Printf("SUCCESS: WebSub subscription created for channel %s\n", channelID)
+	fmt.Printf("SUCCESS: websub.Subscribe returned successfully\n")
+	fmt.Printf("INFO: Subscription result details:\n")
 	fmt.Printf("  Hub URL: %s\n", result.HubURL)
 	fmt.Printf("  Topic URL: %s\n", result.TopicURL)
+	fmt.Printf("  Callback URL: %s\n", result.CallbackURL)
+	fmt.Printf("  Secret: [%d chars]\n", len(result.Secret))
 	fmt.Printf("  Lease Expiry: %s\n", result.LeaseExpiry.Format("2006-01-02 15:04:05 MST"))
 
-	return &streamers.YouTubePlatform{
+	ytPlatform := &streamers.YouTubePlatform{
 		ChannelID:         channelID,
 		ChannelURL:        channelURL,
 		WebSubHubURL:      result.HubURL,
@@ -264,7 +363,13 @@ func (s *SubmissionsService) setupYouTubeWebSub(ctx context.Context, channelID, 
 		WebSubSecret:      result.Secret,
 		WebSubLeaseExpiry: &result.LeaseExpiry,
 		WebSubSubscribed:  true,
-	}, nil
+	}
+
+	fmt.Printf("INFO: Created YouTubePlatform struct with WebSub details\n")
+	fmt.Printf("  WebSubSubscribed: %v\n", ytPlatform.WebSubSubscribed)
+	fmt.Printf("=== setupYouTubeWebSub END (success) ===\n")
+
+	return ytPlatform, nil
 }
 
 // extractYouTubeChannelID extracts a YouTube channel ID from various URL formats

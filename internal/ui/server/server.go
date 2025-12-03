@@ -20,6 +20,7 @@ import (
 	"github.com/Its-donkey/Sharpen-live/logging"
 	"html/template"
 	"net/http"
+	"net/url"
 	"os"
 	"path/filepath"
 	"strings"
@@ -305,17 +306,31 @@ func Run(ctx context.Context, opts Options) error {
 		}
 	}
 
-	// Always register the handler at /alerts (the path after reverse proxy stripping)
-	// The full callback URL (e.g., https://sharpen.live/dev/alerts) is sent to YouTube,
-	// but the reverse proxy strips prefixes before forwarding to the Go app
-	websubCallbackPath := "/alerts"
+	// Determine the local handler path for WebSub verification callbacks
+	// Priority: 1) Explicit local_websub_path config, 2) Extract from callback URL, 3) Default
+	websubCallbackPath := "/webhooks/youtube/websub"
+	pathSource := "default"
 
 	if websubCallbackURL != "" {
+		// Check if local_websub_path is explicitly configured (for reverse proxy scenarios)
+		if localPath := strings.TrimSpace(appConfig.YouTube.LocalWebSubPath); localPath != "" {
+			websubCallbackPath = localPath
+			pathSource = "config.json (youtube.local_websub_path)"
+		} else {
+			// Extract path from callback URL (backward compatible behavior)
+			if parsed, err := url.Parse(websubCallbackURL); err == nil {
+				if parsed.Path != "" && parsed.Path != "/" {
+					websubCallbackPath = parsed.Path
+					pathSource = "extracted from callback URL"
+				}
+			}
+		}
+
 		logger.Info("websub", "YouTube WebSub configured", map[string]any{
-			"callbackUrl":         websubCallbackURL,
-			"localHandlerPath":    websubCallbackPath,
-			"source":              websubCallbackSource,
-			"note":                "Handler registered at local path; reverse proxy handles URL rewriting",
+			"callbackUrl":      websubCallbackURL,
+			"localHandlerPath": websubCallbackPath,
+			"callbackSource":   websubCallbackSource,
+			"pathSource":       pathSource,
 		})
 	} else {
 		logger.Warn("websub", "YouTube WebSub not configured - set config.json youtube.callback_url or WEBSUB_CALLBACK_BASE_URL env var", nil)

@@ -18,6 +18,7 @@ import (
 	"github.com/Its-donkey/Sharpen-live/internal/alert/streamers"
 	streamersvc "github.com/Its-donkey/Sharpen-live/internal/alert/streamers/service"
 	"github.com/Its-donkey/Sharpen-live/internal/alert/submissions"
+	"github.com/Its-donkey/Sharpen-live/internal/metadata"
 	"github.com/Its-donkey/Sharpen-live/logging"
 )
 
@@ -236,11 +237,16 @@ func TestHandleAdminStreamerDelete(t *testing.T) {
 }
 
 func TestHandleMetadata(t *testing.T) {
-	meta := stubMetadataFetcher{data: youtubeservice.Metadata{Title: "t", Description: "d", Handle: "@h", ChannelID: "cid"}}
 	srv := newTestServer()
-	srv.metadataFetcher = meta
+	srv.metadataService = stubMetadataService{data: metadata.Metadata{
+		Title:       "t",
+		Description: "d",
+		Handle:      "@h",
+		ChannelID:   "cid",
+		Languages:   []string{"English", "es"},
+	}}
 
-	req := httptest.NewRequest(http.MethodPost, "/api/youtube/metadata", strings.NewReader(`{"url":"https://example.com"}`))
+	req := httptest.NewRequest(http.MethodPost, "/api/metadata", strings.NewReader(`{"url":"https://example.com"}`))
 	rr := httptest.NewRecorder()
 
 	srv.handleMetadata(rr, req)
@@ -255,7 +261,7 @@ func TestHandleMetadata(t *testing.T) {
 
 func TestHandleMetadataMethodNotAllowed(t *testing.T) {
 	srv := newTestServer()
-	req := httptest.NewRequest(http.MethodGet, "/api/youtube/metadata", nil)
+	req := httptest.NewRequest(http.MethodGet, "/api/metadata", nil)
 	rr := httptest.NewRecorder()
 
 	srv.handleMetadata(rr, req)
@@ -371,6 +377,7 @@ func newTestServer() *server {
 		statusChecker:    &stubStatusChecker{},
 		adminManager:     &stubAdminManager{valid: true},
 		adminEmail:       "admin@example.com",
+		metadataService:  stubMetadataService{},
 		metadataFetcher:  stubMetadataFetcher{},
 		socialImagePath:  "/og-image.png",
 		siteName:         "Sharpen.Live",
@@ -471,4 +478,16 @@ type stubMetadataFetcher struct {
 
 func (s stubMetadataFetcher) Fetch(context.Context, string) (youtubeservice.Metadata, error) {
 	return s.data, s.err
+}
+
+type stubMetadataService struct {
+	data metadata.Metadata
+	err  error
+}
+
+func (s stubMetadataService) Fetch(context.Context, string) (*metadata.Metadata, error) {
+	if s.err != nil {
+		return nil, s.err
+	}
+	return &s.data, nil
 }

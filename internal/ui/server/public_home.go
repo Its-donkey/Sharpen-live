@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"html/template"
 	"net/http"
-	"net/url"
 	"path/filepath"
 	"strings"
 

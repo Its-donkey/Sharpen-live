@@ -10,7 +10,13 @@ import (
 // handleMetadata handles POST requests to /api/metadata.
 func (s *server) handleMetadata(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
+		w.Header().Set("Allow", http.MethodPost)
 		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	if s.metadataService == nil {
+		http.Error(w, "metadata service unavailable", http.StatusServiceUnavailable)
 		return
 	}
 

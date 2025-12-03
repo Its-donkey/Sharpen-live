@@ -6,21 +6,21 @@ import (
 	"errors"
 	adminauth "github.com/Its-donkey/Sharpen-live/internal/alert/admin/auth"
 	adminservice "github.com/Its-donkey/Sharpen-live/internal/alert/admin/service"
-	"github.com/Its-donkey/Sharpen-live/internal/alert/config"
 	"github.com/Its-donkey/Sharpen-live/internal/alert/streamers"
 	"github.com/Its-donkey/Sharpen-live/internal/alert/submissions"
+	"github.com/Its-donkey/Sharpen-live/internal/metadata"
 	"net/http"
 	// SubmissionsHandlerOptions configures the admin submissions handler.
 )
 
 type SubmissionsHandlerOptions struct {
-	Authorizer       authorizer
-	Service          submissionsService
-	Manager          *adminauth.Manager
-	SubmissionsStore *submissions.Store
-	StreamersStore   *streamers.Store
-	YouTubeClient    *http.Client
-	YouTube          config.YouTubeConfig
+	Authorizer            authorizer
+	Service               submissionsService
+	Manager               *adminauth.Manager
+	SubmissionsStore      *submissions.Store
+	StreamersStore        *streamers.Store
+	WebSubCallbackBaseURL string
+	MetadataService       *metadata.Service
 }
 
 type authorizer interface {
@@ -46,10 +46,10 @@ func NewSubmissionsHandler(opts SubmissionsHandlerOptions) http.Handler {
 	svc := opts.Service
 	if svc == nil {
 		svc = adminservice.NewSubmissionsService(adminservice.SubmissionsOptions{
-			SubmissionsStore: opts.SubmissionsStore,
-			StreamersStore:   opts.StreamersStore,
-			YouTubeClient:    opts.YouTubeClient,
-			YouTube:          opts.YouTube,
+			SubmissionsStore:      opts.SubmissionsStore,
+			StreamersStore:        opts.StreamersStore,
+			WebSubCallbackBaseURL: opts.WebSubCallbackBaseURL,
+			MetadataService:       opts.MetadataService,
 		})
 	}
 	return submissionsHandler{

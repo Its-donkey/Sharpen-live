@@ -14,11 +14,13 @@ import (
 	"github.com/Its-donkey/Sharpen-live/internal/alert/streamers"
 	streamersvc "github.com/Its-donkey/Sharpen-live/internal/alert/streamers/service"
 	"github.com/Its-donkey/Sharpen-live/internal/alert/submissions"
+	"github.com/Its-donkey/Sharpen-live/internal/metadata"
 	"github.com/Its-donkey/Sharpen-live/internal/ui/model"
 	youtubeui "github.com/Its-donkey/Sharpen-live/internal/ui/platforms/youtube"
 	"github.com/Its-donkey/Sharpen-live/logging"
 	"html/template"
 	"net/http"
+	"net/url"
 	"os"
 	"path/filepath"
 	"strings"
@@ -81,6 +83,11 @@ type StatusChecker interface {
 	CheckAll(ctx context.Context) (adminservice.StatusCheckResult, error)
 }
 
+// MetadataService fetches channel metadata for a given URL.
+type MetadataService interface {
+	Fetch(ctx context.Context, url string) (*metadata.Metadata, error)
+}
+
 // LeaseMonitorFactory constructs a lease monitor. Useful for tests that avoid background goroutines.
 type LeaseMonitorFactory func(context.Context, subscriptions.LeaseMonitorConfig) *subscriptions.LeaseMonitor
 
@@ -97,7 +104,7 @@ type server struct {
 	adminSubmissions AdminSubmissions
 	statusChecker    StatusChecker
 	adminManager     AdminManager
-	metadataService  *metadata.Service
+	metadataService  MetadataService
 	adminEmail       string
 	metadataFetcher  MetadataFetcher
 	siteName         string

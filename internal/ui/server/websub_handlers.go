@@ -450,7 +450,11 @@ func (s *server) checkAllStreamersLiveStatus(ctx context.Context) {
 			record.Streamer.ID, record.Streamer.Alias, channelID)
 		checkedCount++
 
-		result, err := searchClient.LiveNow(ctx, channelID)
+		// Use individual timeout for each API call to prevent cascading failures
+		callCtx, cancel := context.WithTimeout(ctx, 15*time.Second)
+		result, err := searchClient.LiveNow(callCtx, channelID)
+		cancel()
+
 		if err != nil {
 			fmt.Printf("WARNING: Failed to check live status for %s: %v\n", record.Streamer.Alias, err)
 			s.logger.Warn("startup", "Failed to check initial live status", map[string]any{

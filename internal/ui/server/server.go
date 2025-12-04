@@ -395,9 +395,14 @@ func Run(ctx context.Context, opts Options) error {
 		logDir:           logDir,
 	}
 
-	// Check initial live status for all streamers
-	logger.Info("startup", "Performing initial live status check for all streamers", nil)
-	srv.checkAllStreamersLiveStatus(ctx)
+	// Check initial live status for all streamers in background
+	logger.Info("startup", "Starting initial live status check for all streamers in background", nil)
+	go func() {
+		// Use a fresh context with generous timeout for initial checks
+		checkCtx, cancel := context.WithTimeout(context.Background(), 5*time.Minute)
+		defer cancel()
+		srv.checkAllStreamersLiveStatus(checkCtx)
+	}()
 
 	monitorFactory := opts.NewLeaseMonitor
 	if monitorFactory == nil {

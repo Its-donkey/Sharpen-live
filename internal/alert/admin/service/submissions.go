@@ -4,9 +4,12 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"net/http"
 	"net/url"
 	"strings"
+	"time"
 
+	"github.com/Its-donkey/Sharpen-live/internal/alert/platforms/youtube/api"
 	"github.com/Its-donkey/Sharpen-live/internal/alert/platforms/youtube/websub"
 	"github.com/Its-donkey/Sharpen-live/internal/alert/streamers"
 	"github.com/Its-donkey/Sharpen-live/internal/alert/submissions"
@@ -41,6 +44,7 @@ type SubmissionsOptions struct {
 	StreamersStore        *streamers.Store
 	WebSubCallbackBaseURL string
 	MetadataService       *metadata.Service
+	YouTubeAPIKey         string
 }
 
 // SubmissionsService encapsulates streamer submission review logic.
@@ -49,6 +53,7 @@ type SubmissionsService struct {
 	streamersStore        *streamers.Store
 	websubCallbackBaseURL string
 	metadataService       *metadata.Service
+	youtubeAPIKey         string
 }
 
 // NewSubmissionsService constructs a SubmissionsService with the provided options.
@@ -66,6 +71,7 @@ func NewSubmissionsService(opts SubmissionsOptions) *SubmissionsService {
 		streamersStore:        streamersStore,
 		websubCallbackBaseURL: opts.WebSubCallbackBaseURL,
 		metadataService:       opts.MetadataService,
+		youtubeAPIKey:         opts.YouTubeAPIKey,
 	}
 	return svc
 }
@@ -303,6 +309,15 @@ func (s *SubmissionsService) approve(ctx context.Context, submission submissions
 		fmt.Printf("\n  No YouTube platform configured\n")
 	}
 
+	// Check stream status after approval if YouTube is configured
+	if saved.Platforms.YouTube != nil && saved.Platforms.YouTube.ChannelID != "" {
+		fmt.Printf("\nINFO: Checking initial stream status for channel %s\n", saved.Platforms.YouTube.ChannelID)
+		if err := s.checkAndUpdateStreamStatus(ctx, saved); err != nil {
+			fmt.Printf("WARNING: Failed to check initial stream status: %v\n", err)
+			// Don't fail the approval just because status check failed
+		}
+	}
+
 	fmt.Printf("\n=== APPROVE SUBMISSION END (success) ===\n\n")
 	return nil
 }
@@ -370,6 +385,58 @@ func (s *SubmissionsService) setupYouTubeWebSub(ctx context.Context, channelID, 
 	fmt.Printf("=== setupYouTubeWebSub END (success) ===\n")
 
 	return ytPlatform, nil
+}
+
+// checkAndUpdateStreamStatus checks if the streamer is currently live and updates their status
+func (s *SubmissionsService) checkAndUpdateStreamStatus(ctx context.Context, record streamers.Record) error {
+	if record.Platforms.YouTube == nil || record.Platforms.YouTube.ChannelID == "" {
+		return nil
+	}
+
+	// Skip if YouTube API key is not configured
+	if s.youtubeAPIKey == "" {
+		fmt.Printf("INFO: YouTube API key not configured, skipping stream status check\n")
+		return nil
+	}
+
+	channelID := record.Platforms.YouTube.ChannelID
+	fmt.Printf("INFO: Checking stream status for channel %s\n", channelID)
+
+	// Create YouTube API search client
+	searchClient := api.SearchClient{
+		APIKey:     s.youtubeAPIKey,
+		HTTPClient: &http.Client{Timeout: 30 * time.Second},
+	}
+
+	// Check if channel is live
+	result, err := searchClient.LiveNow(ctx, channelID)
+	if err != nil {
+		return fmt.Errorf("check live status: %w", err)
+	}
+
+	// Update status in database
+	if result.VideoID != "" {
+		// Channel is live
+		fmt.Printf("SUCCESS: Channel %s is LIVE with video %s\n", channelID, result.VideoID)
+		fmt.Printf("  Started at: %s\n", result.StartedAt.Format("2006-01-02 15:04:05 MST"))
+
+		_, err := s.streamersStore.SetYouTubeLive(channelID, result.VideoID, result.StartedAt)
+		if err != nil {
+			return fmt.Errorf("update live status: %w", err)
+		}
+		fmt.Printf("INFO: Updated streamer status to LIVE\n")
+	} else {
+		// Channel is not live
+		fmt.Printf("INFO: Channel %s is currently OFFLINE\n", channelID)
+
+		_, err := s.streamersStore.ClearYouTubeLive(channelID)
+		if err != nil {
+			return fmt.Errorf("clear live status: %w", err)
+		}
+		fmt.Printf("INFO: Updated streamer status to OFFLINE\n")
+	}
+
+	return nil
 }
 
 // extractYouTubeChannelID extracts a YouTube channel ID from various URL formats

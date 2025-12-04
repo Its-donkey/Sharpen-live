@@ -273,9 +273,9 @@ func (s *server) handleWebSubNotification(w http.ResponseWriter, r *http.Request
 
 // atomFeed represents the YouTube Atom feed structure
 type atomFeed struct {
-	XMLName   xml.Name `xml:"feed"`
-	ChannelID string   `xml:"http://www.youtube.com/xml/schemas/2015 channelId"`
-	Entry     struct {
+	XMLName xml.Name `xml:"feed"`
+	Entry   struct {
+		ChannelID string    `xml:"http://www.youtube.com/xml/schemas/2015 channelId"`
 		VideoID   string    `xml:"http://www.youtube.com/xml/schemas/2015 videoId"`
 		Published time.Time `xml:"published"`
 		Updated   time.Time `xml:"updated"`
@@ -300,7 +300,7 @@ func parseAtomFeed(body []byte) (atomFeedInfo, error) {
 	}
 
 	return atomFeedInfo{
-		ChannelID: strings.TrimSpace(feed.ChannelID),
+		ChannelID: strings.TrimSpace(feed.Entry.ChannelID),
 		VideoID:   strings.TrimSpace(feed.Entry.VideoID),
 		Published: feed.Entry.Published,
 		Updated:   feed.Entry.Updated,

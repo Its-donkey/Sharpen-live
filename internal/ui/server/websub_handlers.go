@@ -7,6 +7,8 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"os"
+	"path/filepath"
 	"strings"
 	"time"
 
@@ -213,65 +215,83 @@ func (s *server) handleWebSubNotification(w http.ResponseWriter, r *http.Request
 		fmt.Printf("INFO: Video published at: %s\n", feed.Published.Format("2006-01-02 15:04:05 MST"))
 	}
 
-	// Find the streamer and verify signature
-	if s.streamersStore != nil {
-		records, err := s.streamersStore.List()
+	// Find the streamer across all sites - WebSub notifications are shared across all sites
+	// so we need to check all streamer stores, not just the current site's
+	stores := s.getAllStreamerStores()
+	fmt.Printf("INFO: Searching across %d site(s) for channel ID: %s\n", len(stores), channelID)
+
+	found := false
+	for siteKey, store := range stores {
+		records, err := store.List()
 		if err != nil {
-			fmt.Printf("ERROR: Failed to list streamers: %v\n", err)
-			s.logger.Error("websub", "Failed to list streamers", err, map[string]any{"channelId": channelID})
-		} else {
-			fmt.Printf("INFO: Searching %d streamer(s) for channel ID: %s\n", len(records), channelID)
-			found := false
-			for _, record := range records {
-				if record.Platforms.YouTube != nil && record.Platforms.YouTube.ChannelID == channelID {
-					found = true
-					fmt.Printf("INFO: Found matching streamer: %s (ID: %s)\n", record.Streamer.Alias, record.Streamer.ID)
+			fmt.Printf("WARNING: Failed to list streamers for site %s: %v\n", siteKey, err)
+			s.logger.Warn("websub", "Failed to list streamers for site", map[string]any{
+				"site":      siteKey,
+				"channelId": channelID,
+				"error":     err.Error(),
+			})
+			continue
+		}
 
-					// Verify signature if we have a secret
-					if record.Platforms.YouTube.WebSubSecret != "" && signature != "" {
-						if !websub.VerifySignature(body, signature, record.Platforms.YouTube.WebSubSecret) {
-							fmt.Printf("ERROR: Signature verification failed\n")
-							s.logger.Warn("websub", "Signature verification failed", map[string]any{
-								"streamerId": record.Streamer.ID,
-								"channelId":  channelID,
-							})
-							http.Error(w, "invalid signature", http.StatusUnauthorized)
-							return
-						}
-						fmt.Printf("INFO: Signature verified successfully\n")
+		fmt.Printf("INFO: Checking %d streamer(s) in site '%s'\n", len(records), siteKey)
+		for _, record := range records {
+			if record.Platforms.YouTube != nil && record.Platforms.YouTube.ChannelID == channelID {
+				found = true
+				fmt.Printf("INFO: Found matching streamer: %s (ID: %s) in site '%s'\n", record.Streamer.Alias, record.Streamer.ID, siteKey)
+
+				// Verify signature if we have a secret
+				if record.Platforms.YouTube.WebSubSecret != "" && signature != "" {
+					if !websub.VerifySignature(body, signature, record.Platforms.YouTube.WebSubSecret) {
+						fmt.Printf("ERROR: Signature verification failed\n")
+						s.logger.Warn("websub", "Signature verification failed", map[string]any{
+							"streamerId": record.Streamer.ID,
+							"channelId":  channelID,
+							"site":       siteKey,
+						})
+						http.Error(w, "invalid signature", http.StatusUnauthorized)
+						return
 					}
-
-					s.logger.Info("websub", "Processing notification for streamer", map[string]any{
-						"streamerId": record.Streamer.ID,
-						"alias":      record.Streamer.Alias,
-						"channelId":  channelID,
-						"videoId":    feed.VideoID,
-					})
-
-					// Check live status using YouTube API
-					if feed.VideoID != "" {
-						fmt.Printf("\nINFO: Checking live status for video %s\n", feed.VideoID)
-						if err := s.checkAndUpdateLiveStatus(r.Context(), channelID, feed.VideoID, feed.Published); err != nil {
-							fmt.Printf("WARNING: Failed to check/update live status: %v\n", err)
-							s.logger.Warn("websub", "Failed to update live status", map[string]any{
-								"error":     err.Error(),
-								"channelId": channelID,
-								"videoId":   feed.VideoID,
-							})
-						}
-					}
-
-					break
+					fmt.Printf("INFO: Signature verified successfully\n")
 				}
-			}
-			if !found {
-				fmt.Printf("WARNING: No streamer found for channel ID: %s\n", channelID)
-				s.logger.Warn("websub", "No streamer found for channel", map[string]any{
-					"channelId": channelID,
-					"videoId":   feed.VideoID,
+
+				s.logger.Info("websub", "Processing notification for streamer", map[string]any{
+					"streamerId": record.Streamer.ID,
+					"alias":      record.Streamer.Alias,
+					"channelId":  channelID,
+					"videoId":    feed.VideoID,
+					"site":       siteKey,
 				})
+
+				// Check live status using YouTube API
+				if feed.VideoID != "" {
+					fmt.Printf("\nINFO: Checking live status for video %s\n", feed.VideoID)
+					// Use the store from the site where we found the streamer
+					if err := s.checkAndUpdateLiveStatusWithStore(r.Context(), store, channelID, feed.VideoID, feed.Published); err != nil {
+						fmt.Printf("WARNING: Failed to check/update live status: %v\n", err)
+						s.logger.Warn("websub", "Failed to update live status", map[string]any{
+							"error":     err.Error(),
+							"channelId": channelID,
+							"videoId":   feed.VideoID,
+							"site":      siteKey,
+						})
+					}
+				}
+
+				break
 			}
 		}
+
+		if found {
+			break
+		}
+	}
+
+	if !found {
+		fmt.Printf("WARNING: No streamer found for channel ID: %s across all sites\n", channelID)
+		s.logger.Warn("websub", "No streamer found for channel", map[string]any{
+			"channelId": channelID,
+			"videoId":   feed.VideoID,
+		})
 	}
 
 	fmt.Printf("INFO: Responding with 200 OK\n")
@@ -534,4 +554,105 @@ func (s *server) checkAllStreamersLiveStatus(ctx context.Context) {
 		"live":    liveCount,
 		"errors":  errorCount,
 	})
+}
+
+// getAllStreamerStores returns all streamer stores across all sites
+func (s *server) getAllStreamerStores() map[string]*streamers.Store {
+	stores := make(map[string]*streamers.Store)
+
+	// Add the current site's store
+	if baseStore, ok := s.streamersStore.(*streamers.Store); ok {
+		stores[s.siteKey] = baseStore
+	}
+
+	// Scan data directory for other site stores
+	dataDir := filepath.Dir(s.streamersStore.Path())
+	parentDir := filepath.Dir(dataDir)
+
+	entries, err := os.ReadDir(parentDir)
+	if err != nil {
+		fmt.Printf("WARNING: Could not scan data directory: %v\n", err)
+		return stores
+	}
+
+	for _, entry := range entries {
+		if !entry.IsDir() {
+			continue
+		}
+
+		siteKey := entry.Name()
+		if siteKey == s.siteKey {
+			continue // Already added
+		}
+
+		streamersPath := filepath.Join(parentDir, siteKey, "streamers.json")
+		if _, err := os.Stat(streamersPath); err == nil {
+			stores[siteKey] = streamers.NewStore(streamersPath)
+		}
+	}
+
+	return stores
+}
+
+// checkAndUpdateLiveStatusWithStore checks if a video is live and updates the streamer status using a specific store
+func (s *server) checkAndUpdateLiveStatusWithStore(ctx context.Context, store *streamers.Store, channelID, videoID string, publishedAt time.Time) error {
+	if store == nil {
+		return fmt.Errorf("store is nil")
+	}
+
+	// Skip YouTube API calls if API key is not configured
+	if s.youtubeConfig.APIKey == "" {
+		fmt.Printf("WARNING: YouTube API key not configured, skipping live status check for video %s\n", videoID)
+		s.logger.Warn("websub", "YouTube API key not configured, cannot verify live status", map[string]any{
+			"channelId": channelID,
+			"videoId":   videoID,
+		})
+		return nil
+	}
+
+	fmt.Printf("INFO: Checking if video %s is a live stream\n", videoID)
+
+	// Use YouTube API to check if the channel is currently live
+	searchClient := api.SearchClient{
+		APIKey:     s.youtubeConfig.APIKey,
+		HTTPClient: &http.Client{Timeout: 30 * time.Second},
+	}
+
+	result, err := searchClient.LiveNow(ctx, channelID)
+	if err != nil {
+		return fmt.Errorf("check live status: %w", err)
+	}
+
+	// Update status based on whether the channel is live
+	if result.VideoID != "" && result.VideoID == videoID {
+		// The video from the notification is currently live
+		fmt.Printf("SUCCESS: Video %s is LIVE\n", videoID)
+		fmt.Printf("  Started at: %s\n", result.StartedAt.Format("2006-01-02 15:04:05 MST"))
+
+		_, err := store.SetYouTubeLive(channelID, videoID, result.StartedAt)
+		if err != nil {
+			return fmt.Errorf("set live status: %w", err)
+		}
+		fmt.Printf("INFO: Updated streamer status to LIVE\n")
+	} else if result.VideoID != "" {
+		// Channel is live but with a different video
+		fmt.Printf("INFO: Channel is live with different video: %s (notification was for %s)\n", result.VideoID, videoID)
+
+		_, err := store.SetYouTubeLive(channelID, result.VideoID, result.StartedAt)
+		if err != nil {
+			return fmt.Errorf("set live status: %w", err)
+		}
+		fmt.Printf("INFO: Updated streamer status to LIVE with current video\n")
+	} else {
+		// Channel is not currently live - video may have ended or not started yet
+		fmt.Printf("INFO: Channel is not currently live (video %s may have ended or not started)\n", videoID)
+
+		_, err := store.ClearYouTubeLive(channelID)
+		if err != nil {
+			return fmt.Errorf("clear live status: %w", err)
+		}
+		fmt.Printf("INFO: Updated streamer status to OFFLINE\n")
+	}
+
+	return nil
 }

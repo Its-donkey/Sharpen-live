@@ -4,10 +4,8 @@ import (
 	"net/http"
 	"net/url"
 	"strings"
-	"time"
 
 	youtubehandlers "github.com/Its-donkey/Sharpen-live/internal/alert/platforms/youtube/handlers"
-	"github.com/Its-donkey/Sharpen-live/internal/alert/platforms/youtube/liveinfo"
 	"github.com/Its-donkey/Sharpen-live/internal/alert/streamers"
 )
 
@@ -18,7 +16,6 @@ type AlertsHandlerOptions struct {
 func NewAlertsHandler(opts AlertsHandlerOptions) http.Handler {
 	notificationOpts := youtubehandlers.AlertNotificationOptions{
 		StreamersStore: opts.StreamersStore,
-		VideoLookup:    &liveinfo.Client{HTTPClient: &http.Client{Timeout: 10 * time.Second}},
 	}
 	allowedMethods := strings.Join([]string{http.MethodGet, http.MethodPost}, ", ")
 
@@ -28,15 +25,27 @@ func NewAlertsHandler(opts AlertsHandlerOptions) http.Handler {
 			return
 		}
 
+		platform := PlatformFromRequest(r)
+
 		switch r.Method {
 		case http.MethodGet:
-			if youtubehandlers.HandleSubscriptionConfirmation(w, r, youtubehandlers.SubscriptionConfirmationOptions{
-				StreamersStore: notificationOpts.StreamersStore,
-			}) {
+			if platform == "youtube" {
+				if youtubehandlers.HandleSubscriptionConfirmation(w, r, youtubehandlers.SubscriptionConfirmationOptions{
+					StreamersStore: notificationOpts.StreamersStore,
+				}) {
+					return
+				}
+				http.Error(w, "invalid subscription confirmation", http.StatusBadRequest)
 				return
 			}
-			http.Error(w, "invalid subscription confirmation", http.StatusBadRequest)
+			w.Header().Set("Allow", allowedMethods)
+			http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
 		case http.MethodPost:
+			if platform != "youtube" {
+				w.Header().Set("Allow", allowedMethods)
+				http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
+				return
+			}
 			if youtubehandlers.HandleAlertNotification(w, r, notificationOpts) {
 				return
 			}
@@ -50,8 +59,7 @@ func NewAlertsHandler(opts AlertsHandlerOptions) http.Handler {
 
 func CallbackPaths(callbackURL string) []string {
 	return dedupePaths(map[string]string{
-		"default": "/alerts",
-		"config":  resolveCallbackPath(callbackURL),
+		"default": resolveCallbackPath(callbackURL),
 	})
 }
 

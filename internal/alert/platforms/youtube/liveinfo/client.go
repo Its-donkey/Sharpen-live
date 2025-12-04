@@ -26,18 +26,15 @@ type VideoInfo struct {
 	ChannelID            string
 	Title                string
 	LiveBroadcastContent string
-	Live                 bool
-	IsLiveNow            bool
 	ActualStartTime      time.Time
-	ActualEndTime        time.Time
 }
 
 // IsLive reports whether the video is currently live.
 func (v VideoInfo) IsLive() bool {
-	if v.Live || v.IsLiveNow {
+	if strings.EqualFold(v.LiveBroadcastContent, "live") {
 		return true
 	}
-	return strings.EqualFold(v.LiveBroadcastContent, "live") && v.ActualEndTime.IsZero()
+	return !v.ActualStartTime.IsZero()
 }
 
 // Fetch retrieves metadata for each supplied video ID.
@@ -127,15 +124,11 @@ func (c *Client) fetchSingle(ctx context.Context, client *http.Client, baseURL, 
 		ID:        id,
 		ChannelID: payload.VideoDetails.ChannelID,
 		Title:     payload.VideoDetails.Title,
-		Live:      payload.VideoDetails.IsLive,
 	}
-	broadcast := payload.Microformat.PlayerMicroformatRenderer.LiveBroadcastDetails
-	info.IsLiveNow = broadcast.IsLiveNow
-	if info.Live || info.IsLiveNow {
+	if payload.VideoDetails.IsLiveContent || payload.VideoDetails.IsLive {
 		info.LiveBroadcastContent = "live"
 	}
-	info.ActualStartTime = parseRFC3339(broadcast.StartTimestamp)
-	info.ActualEndTime = parseRFC3339(broadcast.EndTimestamp)
+	info.ActualStartTime = parseRFC3339(payload.Microformat.PlayerMicroformatRenderer.LiveBroadcastDetails.StartTimestamp)
 	return info, nil
 }
 
@@ -204,8 +197,6 @@ type playerResponse struct {
 		PlayerMicroformatRenderer struct {
 			LiveBroadcastDetails struct {
 				StartTimestamp string `json:"startTimestamp"`
-				EndTimestamp   string `json:"endTimestamp"`
-				IsLiveNow      bool   `json:"isLiveNow"`
 			} `json:"liveBroadcastDetails"`
 		} `json:"playerMicroformatRenderer"`
 	} `json:"microformat"`

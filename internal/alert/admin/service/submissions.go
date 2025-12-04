@@ -393,13 +393,19 @@ func (s *SubmissionsService) checkAndUpdateStreamStatus(ctx context.Context, rec
 		return nil
 	}
 
+	// Skip if YouTube API key is not configured
+	if s.youtubeAPIKey == "" {
+		fmt.Printf("INFO: YouTube API key not configured, skipping stream status check\n")
+		return nil
+	}
+
 	channelID := record.Platforms.YouTube.ChannelID
 	fmt.Printf("INFO: Checking stream status for channel %s\n", channelID)
 
 	// Create YouTube API search client
 	searchClient := api.SearchClient{
 		APIKey:     s.youtubeAPIKey,
-		HTTPClient: &http.Client{Timeout: 10 * time.Second},
+		HTTPClient: &http.Client{Timeout: 30 * time.Second},
 	}
 
 	// Check if channel is live

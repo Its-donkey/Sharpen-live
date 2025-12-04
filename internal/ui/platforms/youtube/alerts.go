@@ -28,27 +28,15 @@ func NewAlertsHandler(opts AlertsHandlerOptions) http.Handler {
 			return
 		}
 
-		platform := PlatformFromRequest(r)
-
 		switch r.Method {
 		case http.MethodGet:
-			if platform == "youtube" {
-				if youtubehandlers.HandleSubscriptionConfirmation(w, r, youtubehandlers.SubscriptionConfirmationOptions{
-					StreamersStore: notificationOpts.StreamersStore,
-				}) {
-					return
-				}
-				http.Error(w, "invalid subscription confirmation", http.StatusBadRequest)
+			if youtubehandlers.HandleSubscriptionConfirmation(w, r, youtubehandlers.SubscriptionConfirmationOptions{
+				StreamersStore: notificationOpts.StreamersStore,
+			}) {
 				return
 			}
-			w.Header().Set("Allow", allowedMethods)
-			http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
+			http.Error(w, "invalid subscription confirmation", http.StatusBadRequest)
 		case http.MethodPost:
-			if platform != "youtube" {
-				w.Header().Set("Allow", allowedMethods)
-				http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
-				return
-			}
 			if youtubehandlers.HandleAlertNotification(w, r, notificationOpts) {
 				return
 			}

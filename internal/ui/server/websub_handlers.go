@@ -325,7 +325,7 @@ func (s *server) checkAndUpdateLiveStatus(ctx context.Context, channelID, videoI
 	// Use YouTube API to check if the channel is currently live
 	searchClient := api.SearchClient{
 		APIKey:     s.youtubeConfig.APIKey,
-		HTTPClient: &http.Client{Timeout: 10 * time.Second},
+		HTTPClient: &http.Client{Timeout: 30 * time.Second},
 	}
 
 	result, err := searchClient.LiveNow(ctx, channelID)
@@ -433,7 +433,7 @@ func (s *server) checkAllStreamersLiveStatus(ctx context.Context) {
 
 	searchClient := api.SearchClient{
 		APIKey:     s.youtubeConfig.APIKey,
-		HTTPClient: &http.Client{Timeout: 10 * time.Second},
+		HTTPClient: &http.Client{Timeout: 30 * time.Second},
 	}
 
 	checkedCount := 0
@@ -451,7 +451,8 @@ func (s *server) checkAllStreamersLiveStatus(ctx context.Context) {
 		checkedCount++
 
 		// Use individual timeout for each API call to prevent cascading failures
-		callCtx, cancel := context.WithTimeout(ctx, 15*time.Second)
+		// Timeout is slightly longer than HTTP client timeout (30s) to allow graceful completion
+		callCtx, cancel := context.WithTimeout(ctx, 35*time.Second)
 		result, err := searchClient.LiveNow(callCtx, channelID)
 		cancel()
 

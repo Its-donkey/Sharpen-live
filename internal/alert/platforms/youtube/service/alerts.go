@@ -35,6 +35,7 @@ type AlertProcessResult struct {
 	VideoIDs      []string
 	LiveUpdates   []LiveUpdate
 	SkippedVideos []SkippedVideo
+	Offline       []OfflineUpdate
 }
 
 // LiveUpdate describes a streamer whose live status was updated.
@@ -49,6 +50,12 @@ type LiveUpdate struct {
 type SkippedVideo struct {
 	VideoID string
 	Reason  string
+}
+
+// OfflineUpdate describes a streamer whose live status was cleared.
+type OfflineUpdate struct {
+	ChannelID string
+	VideoID   string
 }
 
 var (
@@ -83,6 +90,10 @@ func (p AlertProcessor) Process(ctx context.Context, req AlertProcessRequest) (A
 	}
 	videoIDs := extractVideoIDs(feed)
 	result.VideoIDs = videoIDs
+	channelStates := map[string]channelStatus{}
+	if records, err := p.Streamers.List(); err == nil {
+		channelStates = indexChannelStates(records)
+	}
 	info, err := p.VideoLookup.Fetch(ctx, videoIDs)
 	if err != nil {
 		return result, fmt.Errorf("%w: %v", ErrLookupFailed, err)
@@ -93,12 +104,22 @@ func (p AlertProcessor) Process(ctx context.Context, req AlertProcessRequest) (A
 		if id == "" || channelID == "" {
 			continue
 		}
+		state := channelStates[normalizeChannelID(channelID)]
 		video, ok := info[id]
 		if !ok {
 			result.SkippedVideos = append(result.SkippedVideos, SkippedVideo{VideoID: id, Reason: "metadata missing"})
 			continue
 		}
 		if !video.IsLive() {
+			if state.live && (state.videoID == "" || strings.EqualFold(state.videoID, id)) {
+				if _, updateErr := p.Streamers.UpdateYouTubeLiveStatus(channelID, streamers.YouTubeLiveStatus{Live: false}); updateErr != nil {
+					result.SkippedVideos = append(result.SkippedVideos, SkippedVideo{VideoID: id, Reason: updateErr.Error()})
+					continue
+				}
+				result.Offline = append(result.Offline, OfflineUpdate{ChannelID: channelID, VideoID: id})
+				channelStates[normalizeChannelID(channelID)] = channelStatus{live: false}
+				continue
+			}
 			result.SkippedVideos = append(result.SkippedVideos, SkippedVideo{VideoID: id, Reason: "not live"})
 			continue
 		}
@@ -121,8 +142,41 @@ func (p AlertProcessor) Process(ctx context.Context, req AlertProcessRequest) (A
 			Title:     entry.Title,
 			StartedAt: startedAt,
 		})
+		channelStates[normalizeChannelID(channelID)] = channelStatus{live: true, videoID: id}
 	}
 	return result, nil
+}
+
+type channelStatus struct {
+	live    bool
+	videoID string
+}
+
+func indexChannelStates(records []streamers.Record) map[string]channelStatus {
+	index := make(map[string]channelStatus, len(records))
+	for _, record := range records {
+		yt := record.Platforms.YouTube
+		if yt == nil {
+			continue
+		}
+		channelID := normalizeChannelID(yt.ChannelID)
+		if channelID == "" {
+			continue
+		}
+		status := channelStatus{}
+		if record.Status != nil && record.Status.YouTube != nil {
+			status.live = record.Status.Live || record.Status.YouTube.Live
+			status.videoID = strings.TrimSpace(record.Status.YouTube.VideoID)
+		} else if record.Status != nil {
+			status.live = record.Status.Live
+		}
+		index[channelID] = status
+	}
+	return index
+}
+
+func normalizeChannelID(channelID string) string {
+	return strings.TrimPrefix(strings.ToUpper(strings.TrimSpace(channelID)), "UC")
 }
 
 type youtubeFeed struct {

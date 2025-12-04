@@ -17,7 +17,7 @@ func TestClientFetchParsesLivePage(t *testing.T) {
 			t.Fatalf("missing video id")
 		}
 		w.Header().Set("Content-Type", "text/html")
-		w.Write([]byte(`<!doctype html><html><head><script>var ytInitialPlayerResponse = {"videoDetails":{"videoId":"abc123","channelId":"UCdemo","title":"Live demo","isLiveContent":true},"microformat":{"playerMicroformatRenderer":{"liveBroadcastDetails":{"startTimestamp":"2025-11-16T09:02:41Z"}}}};;</script></head><body></body></html>`))
+		w.Write([]byte(`<!doctype html><html><head><script>var ytInitialPlayerResponse = {"videoDetails":{"videoId":"abc123","channelId":"UCdemo","title":"Live demo","isLiveContent":true,"isLive":true},"microformat":{"playerMicroformatRenderer":{"liveBroadcastDetails":{"startTimestamp":"2025-11-16T09:02:41Z","isLiveNow":true}}}};;</script></head><body></body></html>`))
 	}))
 	defer server.Close()
 
@@ -73,13 +73,19 @@ func TestClientFetchSkipsFailures(t *testing.T) {
 }
 
 func TestVideoInfoIsLive(t *testing.T) {
-	if !(VideoInfo{LiveBroadcastContent: "live"}).IsLive() {
-		t.Fatalf("expected live content to be true")
+	cases := []struct {
+		name string
+		info VideoInfo
+		live bool
+	}{
+		{name: "live flag", info: VideoInfo{Live: true}, live: true},
+		{name: "live now", info: VideoInfo{IsLiveNow: true}, live: true},
+		{name: "ended stream", info: VideoInfo{LiveBroadcastContent: "live", ActualEndTime: time.Now()}, live: false},
+		{name: "offline default", info: VideoInfo{}, live: false},
 	}
-	if !(VideoInfo{ActualStartTime: time.Now()}).IsLive() {
-		t.Fatalf("expected actual start time to imply live")
-	}
-	if (VideoInfo{}).IsLive() {
-		t.Fatalf("expected zero value to be offline")
+	for _, tc := range cases {
+		if tc.info.IsLive() != tc.live {
+			t.Fatalf("%s: expected live=%v, got %v", tc.name, tc.live, tc.info.IsLive())
+		}
 	}
 }

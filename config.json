@@ -40,7 +40,7 @@
         "youtube": {
                 "hub_url": "https://pubsubhubbub.appspot.com/subscribe",
                 "callback_url": "https://sharpen.live/dev/alerts",
-                "api_key": "AIzaSyC-8QlqXoOoeBB9Pnrg6M31GC9PANrzvCU",
+                "api_key": "YOUR_YOUTUBE_API_KEY_HERE",
                 "lease_seconds": 864000,
                 "verify": "async"
         }

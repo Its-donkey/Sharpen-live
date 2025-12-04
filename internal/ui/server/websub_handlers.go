@@ -220,8 +220,11 @@ func (s *server) handleWebSubNotification(w http.ResponseWriter, r *http.Request
 			fmt.Printf("ERROR: Failed to list streamers: %v\n", err)
 			s.logger.Error("websub", "Failed to list streamers", err, map[string]any{"channelId": channelID})
 		} else {
+			fmt.Printf("INFO: Searching %d streamer(s) for channel ID: %s\n", len(records), channelID)
+			found := false
 			for _, record := range records {
 				if record.Platforms.YouTube != nil && record.Platforms.YouTube.ChannelID == channelID {
+					found = true
 					fmt.Printf("INFO: Found matching streamer: %s (ID: %s)\n", record.Streamer.Alias, record.Streamer.ID)
 
 					// Verify signature if we have a secret
@@ -260,6 +263,13 @@ func (s *server) handleWebSubNotification(w http.ResponseWriter, r *http.Request
 
 					break
 				}
+			}
+			if !found {
+				fmt.Printf("WARNING: No streamer found for channel ID: %s\n", channelID)
+				s.logger.Warn("websub", "No streamer found for channel", map[string]any{
+					"channelId": channelID,
+					"videoId":   feed.VideoID,
+				})
 			}
 		}
 	}
@@ -318,6 +328,16 @@ func (s *server) checkAndUpdateLiveStatus(ctx context.Context, channelID, videoI
 	store, ok := s.streamersStore.(*streamers.Store)
 	if !ok {
 		return fmt.Errorf("streamers store is not a *streamers.Store")
+	}
+
+	// Skip YouTube API calls if API key is not configured
+	if s.youtubeConfig.APIKey == "" {
+		fmt.Printf("WARNING: YouTube API key not configured, skipping live status check for video %s\n", videoID)
+		s.logger.Warn("websub", "YouTube API key not configured, cannot verify live status", map[string]any{
+			"channelId": channelID,
+			"videoId":   videoID,
+		})
+		return nil
 	}
 
 	fmt.Printf("INFO: Checking if video %s is a live stream\n", videoID)

@@ -332,6 +332,7 @@ func Run(ctx context.Context, opts Options) error {
 			StreamersStore:        baseStore,
 			WebSubCallbackBaseURL: websubCallbackURL,
 			MetadataService:       metadataService,
+			YouTubeAPIKey:         appConfig.YouTube.APIKey,
 		})
 	}
 	adminMgr := opts.AdminManager
@@ -393,6 +394,10 @@ func Run(ctx context.Context, opts Options) error {
 		logger:           logger,
 		logDir:           logDir,
 	}
+
+	// Check initial live status for all streamers
+	logger.Info("startup", "Performing initial live status check for all streamers", nil)
+	srv.checkAllStreamersLiveStatus(ctx)
 
 	monitorFactory := opts.NewLeaseMonitor
 	if monitorFactory == nil {

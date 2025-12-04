@@ -236,23 +236,25 @@ func (s *server) handleWebSubNotification(w http.ResponseWriter, r *http.Request
 		fmt.Printf("INFO: Checking %d streamer(s) in site '%s'\n", len(records), siteKey)
 		for _, record := range records {
 			if record.Platforms.YouTube != nil && record.Platforms.YouTube.ChannelID == channelID {
-				found = true
 				fmt.Printf("INFO: Found matching streamer: %s (ID: %s) in site '%s'\n", record.Streamer.Alias, record.Streamer.ID, siteKey)
 
 				// Verify signature if we have a secret
 				if record.Platforms.YouTube.WebSubSecret != "" && signature != "" {
 					if !websub.VerifySignature(body, signature, record.Platforms.YouTube.WebSubSecret) {
-						fmt.Printf("ERROR: Signature verification failed\n")
-						s.logger.Warn("websub", "Signature verification failed", map[string]any{
+						fmt.Printf("WARNING: Signature verification failed for site '%s', checking other sites\n", siteKey)
+						s.logger.Warn("websub", "Signature verification failed, continuing search", map[string]any{
 							"streamerId": record.Streamer.ID,
 							"channelId":  channelID,
 							"site":       siteKey,
 						})
-						http.Error(w, "invalid signature", http.StatusUnauthorized)
-						return
+						// Continue to check other sites - the streamer might exist in multiple sites
+						// with different secrets, and we need to find the one with the matching secret
+						continue
 					}
-					fmt.Printf("INFO: Signature verified successfully\n")
+					fmt.Printf("INFO: Signature verified successfully for site '%s'\n", siteKey)
 				}
+
+				found = true
 
 				s.logger.Info("websub", "Processing notification for streamer", map[string]any{
 					"streamerId": record.Streamer.ID,

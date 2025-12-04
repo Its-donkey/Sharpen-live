@@ -312,10 +312,10 @@ func Run(ctx context.Context, opts Options) error {
 
 	if websubCallbackURL != "" {
 		logger.Info("websub", "YouTube WebSub configured", map[string]any{
-			"callbackUrl":         websubCallbackURL,
-			"localHandlerPath":    websubCallbackPath,
-			"source":              websubCallbackSource,
-			"note":                "Handler registered at local path; reverse proxy handles URL rewriting",
+			"callbackUrl":      websubCallbackURL,
+			"localHandlerPath": websubCallbackPath,
+			"source":           websubCallbackSource,
+			"note":             "Handler registered at local path; reverse proxy handles URL rewriting",
 		})
 	} else {
 		logger.Warn("websub", "YouTube WebSub not configured - set config.json youtube.callback_url or WEBSUB_CALLBACK_BASE_URL env var", nil)
@@ -454,19 +454,11 @@ func Run(ctx context.Context, opts Options) error {
 	mux.Handle("/api/streamers/watch", streamersWatch)
 	mux.HandleFunc("/api/metadata", srv.handleMetadata)
 	// mux.HandleFunc("/api/youtube/metadata", srv.handleMetadata)
-	websubRegistered := false
-	if websubCallbackURL != "" {
-		mux.HandleFunc(websubCallbackPath, srv.handleYouTubeWebSub)
-		websubRegistered = true
-	}
 	if baseStore, ok := streamersStore.(*streamers.Store); ok {
 		alertsHandler := youtubeui.NewAlertsHandler(youtubeui.AlertsHandlerOptions{
 			StreamersStore: baseStore,
 		})
 		for _, path := range alertPaths {
-			if websubRegistered && path == websubCallbackPath {
-				continue
-			}
 			mux.Handle(path, alertsHandler)
 		}
 	}

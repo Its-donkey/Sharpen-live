@@ -10,7 +10,7 @@ import (
 )
 
 func applyDefaults(opts Options, site config.SiteConfig) Options {
-	fallbackApp := config.DefaultSiteAppConfig()
+	fallbackApp := config.AlertserverAppConfig()
 	if opts.Listen == "" {
 		addr := strings.TrimSpace(site.Server.Addr)
 		port := strings.TrimSpace(site.Server.Port)
@@ -52,8 +52,8 @@ func applyDefaults(opts Options, site config.SiteConfig) Options {
 	return opts
 }
 
-func switchToDefaultSite(cfg config.Config, opts Options) (config.SiteConfig, Options) {
-	fallback := config.DefaultSite(cfg)
+func switchToAlertserver(cfg config.Config, opts Options) (config.SiteConfig, Options) {
+	fallback := config.Alertserver(cfg)
 	opts.Site = fallback.Key
 	opts.TemplatesDir = ""
 	opts.AssetsDir = ""

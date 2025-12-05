@@ -23,6 +23,8 @@
 - Docs: add Go engineering guidelines covering file responsibilities, testing, and logging practices.
 
 ### Changed
+- UI: redesign the default-site admin “Control Room” with a light glassy layout, inline log viewer, refreshed stats/toggles, and new typographic palette to distinguish it from other sites.
+- UI: rename the default-site fallback branding to “Alertserver Admin” across templates and meta tags.
 - Server: consolidate alerts, roster, submissions, and admin into a single `cmd/alertserver` binary (no separate proxy) and host YouTube WebSub callbacks + lease monitor in-process.
 - UI: remove WASM bundle/static entrypoints; everything is server-rendered.
 - API surface: drop public streamers CRUD/config/admin APIs; only SSE watch, metadata, and `/alerts` remain exposed.
@@ -40,6 +42,9 @@
 
 ### Fixed
 - Home page now renders even when roster loading fails, surfacing the error inline instead of crashing the template.
+- Admin: show sibling sites on default-site by scanning the sites directory instead of the UI root and populate the list before login so it’s visible immediately.
+- Admin: fall back to configured site keys when assets aren’t present so default-site still lists sharpen-live and synth-wave.
+- Admin: treat asset path matches as default-site so fallback renders sibling sites even when the site key is empty.
 - Submit form template now binds directly to the submit form state and status badges render with the correct helper signature, preventing template execution errors on the home page.
 - Metadata: restrict metadata fetches to an allowlist of hosts and normalise URLs before issuing upstream requests to avoid uncontrolled destinations.
 - Admin: Refresh Status now falls back to live YouTube watch-page metadata so live streams get written to `data/streamers.json` even when the player API doesn’t flag them.

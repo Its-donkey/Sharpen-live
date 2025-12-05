@@ -11,11 +11,11 @@ import (
 const (
 	defaultAddr         = "127.0.0.1"
 	defaultPort         = ":8880"
-	defaultData         = "data/default-site"
-	defaultTemplatesDir = "ui/sites/default-site/templates"
-	defaultAssetsDir    = "ui/sites/default-site"
+	defaultData         = "data/alertserver"
+	defaultTemplatesDir = "ui/sites/alertserver/templates"
+	defaultAssetsDir    = "ui/sites/alertserver"
 	alertserverName     = "Alertserver Admin"
-	AlertserverKey      = "default-site"
+	AlertserverKey      = "alertserver"
 )
 
 // YouTubeConfig captures the WebSub-specific defaults persisted in config files.

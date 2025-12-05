@@ -100,7 +100,7 @@ func Load(path string) (Config, error) {
 	if raw.YouTubeBlock != nil {
 		yt = *raw.YouTubeBlock
 	}
-	if yt.APIKey == "" {
+	if yt.APIKey == "" || yt.APIKey == "YOUR_YOUTUBE_API_KEY_HERE"{
 		yt.APIKey = youtubeAPIKeyFromEnv()
 	}
 

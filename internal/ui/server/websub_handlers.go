@@ -165,16 +165,6 @@ func (s *server) handleWebSubNotification(w http.ResponseWriter, r *http.Request
 	fmt.Printf("Remote Address: %s\n", r.RemoteAddr)
 	fmt.Printf("Content-Type: %s\n", r.Header.Get("Content-Type"))
 
-	// Check if YouTube is enabled for this site
-	if !s.isYouTubeEnabled() {
-		fmt.Printf("INFO: YouTube disabled for site, accepting notification without processing\n")
-		s.logger.Info("websub", "YouTube disabled, skipping notification processing", map[string]any{
-			"siteKey": s.siteKey,
-		})
-		w.WriteHeader(http.StatusOK)
-		return
-	}
-
 	// Read the body
 	body, err := io.ReadAll(r.Body)
 	if err != nil {
@@ -287,6 +277,18 @@ func (s *server) handleWebSubNotification(w http.ResponseWriter, r *http.Request
 				}
 
 				found = true
+
+				// Check if YouTube is enabled for this specific site
+				if !isYouTubeEnabledForStore(store) {
+					fmt.Printf("INFO: YouTube disabled for site '%s', skipping API calls\n", siteKey)
+					s.logger.Info("websub", "YouTube disabled for site, skipping API calls", map[string]any{
+						"streamerId": record.Streamer.ID,
+						"alias":      record.Streamer.Alias,
+						"channelId":  channelID,
+						"site":       siteKey,
+					})
+					break
+				}
 
 				s.logger.Info("websub", "Processing notification for streamer", map[string]any{
 					"streamerId": record.Streamer.ID,

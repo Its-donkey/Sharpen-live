@@ -169,8 +169,7 @@ func parseLanguagesInput(raw string) []string {
 }
 
 func mapStreamerRecords(records []streamers.Record) []model.Streamer {
-	online := make([]model.Streamer, 0, len(records))
-	offline := make([]model.Streamer, 0, len(records))
+	out := make([]model.Streamer, 0, len(records))
 	for _, rec := range records {
 		name := strings.TrimSpace(rec.Streamer.Alias)
 		if name == "" {
@@ -199,7 +198,7 @@ func mapStreamerRecords(records []streamers.Record) []model.Streamer {
 				})
 			}
 		}
-		mapped := model.Streamer{
+		out = append(out, model.Streamer{
 			ID:          rec.Streamer.ID,
 			Name:        name,
 			Description: strings.TrimSpace(rec.Streamer.Description),
@@ -207,14 +206,9 @@ func mapStreamerRecords(records []streamers.Record) []model.Streamer {
 			StatusLabel: statusLabel,
 			Languages:   append([]string(nil), rec.Streamer.Languages...),
 			Platforms:   platforms,
-		}
-		if isLive {
-			online = append(online, mapped)
-		} else {
-			offline = append(offline, mapped)
-		}
+		})
 	}
-	return append(online, offline...)
+	return out
 }
 
 func mapStreamerStatus(status *streamers.Status) (state, label string, live bool) {

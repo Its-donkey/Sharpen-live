@@ -26,6 +26,16 @@ func (s *server) isYouTubeEnabled() bool {
 	return settingsStore.IsYouTubeEnabled()
 }
 
+// isYouTubeEnabledForStore checks if YouTube integration is enabled for a specific store's site.
+func isYouTubeEnabledForStore(store interface{ Path() string }) bool {
+	dataDir := store.Path()
+	if strings.HasSuffix(dataDir, "/streamers.json") {
+		dataDir = strings.TrimSuffix(dataDir, "/streamers.json")
+	}
+	settingsStore := settings.New(dataDir)
+	return settingsStore.IsYouTubeEnabled()
+}
+
 func (s *server) handleAdminYouTubeSettings(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		http.Redirect(w, r, "/admin", http.StatusSeeOther)

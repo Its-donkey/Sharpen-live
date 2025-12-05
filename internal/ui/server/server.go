@@ -5,6 +5,14 @@ import (
 	"encoding/xml"
 	"errors"
 	"fmt"
+	"html/template"
+	"net/http"
+	"os"
+	"path/filepath"
+	"strings"
+	"sync"
+	"time"
+
 	adminauth "github.com/Its-donkey/Sharpen-live/internal/alert/admin/auth"
 	adminservice "github.com/Its-donkey/Sharpen-live/internal/alert/admin/service"
 	"github.com/Its-donkey/Sharpen-live/internal/alert/config"
@@ -18,13 +26,6 @@ import (
 	"github.com/Its-donkey/Sharpen-live/internal/ui/model"
 	youtubeui "github.com/Its-donkey/Sharpen-live/internal/ui/platforms/youtube"
 	"github.com/Its-donkey/Sharpen-live/logging"
-	"html/template"
-	"net/http"
-	"os"
-	"path/filepath"
-	"strings"
-	"time"
-	// Options configures the UI HTTP server.
 )
 
 type Options struct {
@@ -114,6 +115,10 @@ type server struct {
 	fallbackErrors   []string
 	logger           *logging.Logger
 	logDir           string
+
+	// Store cache for multi-site WebSub support
+	storeCache   map[string]*streamers.Store
+	storeCacheMu sync.RWMutex
 }
 
 type navAction struct {
@@ -393,6 +398,7 @@ func Run(ctx context.Context, opts Options) error {
 		fallbackErrors:   opts.FallbackErrors,
 		logger:           logger,
 		logDir:           logDir,
+		storeCache:       make(map[string]*streamers.Store),
 	}
 
 	// Check initial live status for all streamers in background

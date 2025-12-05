@@ -606,13 +606,40 @@ func (s *server) checkAllStreamersLiveStatus(ctx context.Context) {
 	})
 }
 
-// getAllStreamerStores returns all streamer stores across all sites
+// getAllStreamerStores returns all streamer stores across all sites.
+// Uses a cache to ensure concurrent WebSub notifications use the same store instances,
+// preventing race conditions when updating the same site's streamers.json file.
 func (s *server) getAllStreamerStores() map[string]*streamers.Store {
-	stores := make(map[string]*streamers.Store)
+	// First, try to read from cache with read lock
+	s.storeCacheMu.RLock()
+	if len(s.storeCache) > 0 {
+		// Return a copy of the cache to avoid external modifications
+		stores := make(map[string]*streamers.Store, len(s.storeCache))
+		for k, v := range s.storeCache {
+			stores[k] = v
+		}
+		s.storeCacheMu.RUnlock()
+		return stores
+	}
+	s.storeCacheMu.RUnlock()
 
+	// Cache is empty, acquire write lock to populate it
+	s.storeCacheMu.Lock()
+	defer s.storeCacheMu.Unlock()
+
+	// Double-check after acquiring write lock (another goroutine might have populated it)
+	if len(s.storeCache) > 0 {
+		stores := make(map[string]*streamers.Store, len(s.storeCache))
+		for k, v := range s.storeCache {
+			stores[k] = v
+		}
+		return stores
+	}
+
+	// Populate the cache
 	// Add the current site's store
 	if baseStore, ok := s.streamersStore.(*streamers.Store); ok {
-		stores[s.siteKey] = baseStore
+		s.storeCache[s.siteKey] = baseStore
 	}
 
 	// Scan data directory for other site stores
@@ -622,6 +649,11 @@ func (s *server) getAllStreamerStores() map[string]*streamers.Store {
 	entries, err := os.ReadDir(parentDir)
 	if err != nil {
 		fmt.Printf("WARNING: Could not scan data directory: %v\n", err)
+		// Return at least the current site's store if available
+		stores := make(map[string]*streamers.Store, len(s.storeCache))
+		for k, v := range s.storeCache {
+			stores[k] = v
+		}
 		return stores
 	}
 
@@ -637,10 +669,15 @@ func (s *server) getAllStreamerStores() map[string]*streamers.Store {
 
 		streamersPath := filepath.Join(parentDir, siteKey, "streamers.json")
 		if _, err := os.Stat(streamersPath); err == nil {
-			stores[siteKey] = streamers.NewStore(streamersPath)
+			s.storeCache[siteKey] = streamers.NewStore(streamersPath)
 		}
 	}
 
+	// Return a copy of the populated cache
+	stores := make(map[string]*streamers.Store, len(s.storeCache))
+	for k, v := range s.storeCache {
+		stores[k] = v
+	}
 	return stores
 }
 

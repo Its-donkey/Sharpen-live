@@ -45,10 +45,12 @@ type AppConfig struct {
 
 // SiteConfig captures per-site overrides for server/app settings.
 type SiteConfig struct {
-	Key    string
-	Name   string       `json:"name"`
-	Server ServerConfig `json:"server"`
-	App    AppConfig    `json:"app"`
+	Key            string
+	Name           string       `json:"name"`
+	Description    string       `json:"description"`
+	YouTubeEnabled *bool        `json:"youtube_enabled,omitempty"`
+	Server         ServerConfig `json:"server"`
+	App            AppConfig    `json:"app"`
 }
 
 // AdminConfig stores credentials for admin-authenticated APIs.
@@ -80,9 +82,11 @@ type fileConfig struct {
 }
 
 type siteFileConfig struct {
-	Name   string        `json:"name"`
-	Server *ServerConfig `json:"server"`
-	App    *AppConfig    `json:"app"`
+	Name           string        `json:"name"`
+	Description    string        `json:"description"`
+	YouTubeEnabled *bool         `json:"youtube_enabled,omitempty"`
+	Server         *ServerConfig `json:"server"`
+	App            *AppConfig    `json:"app"`
 }
 
 // Load reads the JSON config at the given path and returns the parsed structure.
@@ -186,10 +190,12 @@ func Load(path string) (Config, error) {
 		}
 
 		sites[key] = SiteConfig{
-			Key:    key,
-			Name:   siteName,
-			Server: siteServer,
-			App:    siteApp,
+			Key:            key,
+			Name:           siteName,
+			Description:    site.Description,
+			YouTubeEnabled: site.YouTubeEnabled,
+			Server:         siteServer,
+			App:            siteApp,
 		}
 	}
 
@@ -213,15 +219,58 @@ func MustLoad(path string) Config {
 	return cfg
 }
 
+// Save writes the configuration back to a JSON file at the given path.
+func Save(cfg Config, path string) error {
+	// Convert Config back to fileConfig format
+	raw := fileConfig{
+		ServerBlock: &cfg.Server,
+		AppBlock: &AppConfig{
+			Templates: cfg.App.Templates,
+			Assets:    cfg.App.Assets,
+			Data:      cfg.App.Data,
+			Name:      cfg.App.Name,
+		},
+		YouTubeBlock: &cfg.YouTube,
+		AdminBlock:   &cfg.Admin,
+		Sites:        make(map[string]siteFileConfig),
+	}
+
+	// Convert sites
+	for key, site := range cfg.Sites {
+		raw.Sites[key] = siteFileConfig{
+			Name:           site.Name,
+			Description:    site.Description,
+			YouTubeEnabled: site.YouTubeEnabled,
+			Server:         &site.Server,
+			App:            &site.App,
+		}
+	}
+
+	// Marshal to JSON with indentation
+	data, err := json.MarshalIndent(raw, "", "\t")
+	if err != nil {
+		return fmt.Errorf("marshal config: %w", err)
+	}
+
+	// Write to file
+	if err := os.WriteFile(path, data, 0644); err != nil {
+		return fmt.Errorf("write config: %w", err)
+	}
+
+	return nil
+}
+
 // ResolveSite returns the combined configuration for the requested site. The
 // empty site key resolves to the base (Sharpen.Live) configuration.
 func ResolveSite(key string, cfg Config) (SiteConfig, error) {
 	if key == "" {
 		return SiteConfig{
-			Key:    "",
-			Name:   cfg.App.Name,
-			Server: cfg.Server,
-			App:    cfg.App,
+			Key:            "",
+			Name:           cfg.App.Name,
+			Description:    "",
+			YouTubeEnabled: nil, // Use global default
+			Server:         cfg.Server,
+			App:            cfg.App,
 		}, nil
 	}
 
@@ -236,17 +285,21 @@ func ResolveSite(key string, cfg Config) (SiteConfig, error) {
 // Sharpen.Live site.
 func AllSites(cfg Config) []SiteConfig {
 	sites := []SiteConfig{{
-		Key:    "",
-		Name:   cfg.App.Name,
-		Server: cfg.Server,
-		App:    cfg.App,
+		Key:            "",
+		Name:           cfg.App.Name,
+		Description:    "",
+		YouTubeEnabled: nil,
+		Server:         cfg.Server,
+		App:            cfg.App,
 	}}
 	for key, site := range cfg.Sites {
 		sites = append(sites, SiteConfig{
-			Key:    site.Key,
-			Name:   site.Name,
-			Server: site.Server,
-			App:    site.App,
+			Key:            site.Key,
+			Name:           site.Name,
+			Description:    site.Description,
+			YouTubeEnabled: site.YouTubeEnabled,
+			Server:         site.Server,
+			App:            site.App,
 		})
 		sites[len(sites)-1].Key = key
 	}
@@ -300,10 +353,12 @@ func DefaultSite(cfg Config) SiteConfig {
 		server.Port = defaultPort
 	}
 	return SiteConfig{
-		Key:    DefaultSiteKey,
-		Name:   defaultSiteName,
-		Server: server,
-		App:    DefaultSiteAppConfig(),
+		Key:            DefaultSiteKey,
+		Name:           defaultSiteName,
+		Description:    "Fallback site for multi-tenant streaming notifications",
+		YouTubeEnabled: nil,
+		Server:         server,
+		App:            DefaultSiteAppConfig(),
 	}
 }
 

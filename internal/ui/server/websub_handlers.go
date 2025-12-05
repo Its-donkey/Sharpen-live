@@ -279,7 +279,7 @@ func (s *server) handleWebSubNotification(w http.ResponseWriter, r *http.Request
 				found = true
 
 				// Check if YouTube is enabled for this specific site
-				if !isYouTubeEnabledForStore(store) {
+				if !isYouTubeEnabledForSiteKey(s.configPath, siteKey) {
 					fmt.Printf("INFO: YouTube disabled for site '%s', skipping API calls\n", siteKey)
 					s.logger.Info("websub", "YouTube disabled for site, skipping API calls", map[string]any{
 						"streamerId": record.Streamer.ID,

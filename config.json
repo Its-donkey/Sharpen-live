@@ -12,6 +12,8 @@
         "sites": {
                 "sharpen-live": {
                         "name": "sharpen.live",
+                        "description": "Primary streaming notifications site for sharpen.live community",
+                        "youtube_enabled": true,
                         "server": {
                                 "addr": "127.0.0.1",
                                 "port": ":18886"
@@ -25,6 +27,8 @@
                 },
                 "synth-wave": {
                         "name": "synth.wave",
+                        "description": "Secondary streaming notifications site for synth.wave community",
+                        "youtube_enabled": true,
                         "server": {
                                 "addr": "127.0.0.1",
                                 "port": ":18885"

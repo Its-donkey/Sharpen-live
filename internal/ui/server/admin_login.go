@@ -62,6 +62,10 @@ func (s *server) handleAdmin(w http.ResponseWriter, r *http.Request) {
 		Error:        errMsg,
 		AdminEmail:   s.adminEmail,
 	}
+	if s.siteKey == config.DefaultSiteKey {
+		data.OtherSites = listSiblingSites(s.assetsDir)
+		data.IsDefaultSite = true
+	}
 	token := s.adminTokenFromRequest(r)
 	if token == "" {
 		s.renderAdminPage(w, data)
@@ -85,10 +89,6 @@ func (s *server) handleAdmin(w http.ResponseWriter, r *http.Request) {
 		} else {
 			data.Streamers = mapStreamerRecords(records)
 		}
-	}
-	if s.siteKey == config.DefaultSiteKey {
-		data.OtherSites = listSiblingSites(s.assetsDir)
-		data.IsDefaultSite = true
 	}
 	// Load YouTube site configurations
 	youtubeConfigs, err := s.getYouTubeSiteConfigs()

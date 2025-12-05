@@ -289,59 +289,16 @@ func (s *server) handleWebSubNotification(w http.ResponseWriter, r *http.Request
 	}
 
 	if !found {
-		fmt.Printf("WARNING: No streamer found with valid signature for channel ID: %s across all sites\n", channelID)
-		fmt.Printf("INFO: Checking if streamer exists without signature verification\n")
+		fmt.Printf("ERROR: Signature verification failed or no matching streamer found for channel ID: %s\n", channelID)
+		fmt.Printf("=== WEBSUB NOTIFICATION END (rejected - invalid signature) ===\n\n")
 
-		// If signature verification failed for all sites, try processing without verification
-		// This handles cases where the stored secret doesn't match the subscription secret
-		for siteKey, store := range stores {
-			records, err := store.List()
-			if err != nil {
-				continue
-			}
+		s.logger.Error("websub", "Rejected notification - signature verification failed", nil, map[string]any{
+			"channelId": channelID,
+			"videoId":   feed.VideoID,
+		})
 
-			for _, record := range records {
-				if record.Platforms.YouTube != nil && record.Platforms.YouTube.ChannelID == channelID {
-					fmt.Printf("WARNING: Processing notification for %s without signature verification (site: %s)\n", record.Streamer.Alias, siteKey)
-					s.logger.Warn("websub", "Processing without signature verification", map[string]any{
-						"streamerId": record.Streamer.ID,
-						"alias":      record.Streamer.Alias,
-						"channelId":  channelID,
-						"site":       siteKey,
-						"reason":     "Signature verification failed for all sites",
-					})
-
-					// Check live status using YouTube API
-					if feed.VideoID != "" {
-						fmt.Printf("\nINFO: Checking live status for video %s\n", feed.VideoID)
-						if err := s.checkAndUpdateLiveStatusWithStore(r.Context(), store, channelID, feed.VideoID, feed.Published); err != nil {
-							fmt.Printf("WARNING: Failed to check/update live status: %v\n", err)
-							s.logger.Warn("websub", "Failed to update live status", map[string]any{
-								"error":     err.Error(),
-								"channelId": channelID,
-								"videoId":   feed.VideoID,
-								"site":      siteKey,
-							})
-						}
-					}
-
-					found = true
-					break
-				}
-			}
-
-			if found {
-				break
-			}
-		}
-
-		if !found {
-			fmt.Printf("WARNING: No streamer found for channel ID: %s across all sites\n", channelID)
-			s.logger.Warn("websub", "No streamer found for channel", map[string]any{
-				"channelId": channelID,
-				"videoId":   feed.VideoID,
-			})
-		}
+		http.Error(w, "signature verification failed", http.StatusUnauthorized)
+		return
 	}
 
 	fmt.Printf("INFO: Responding with 200 OK\n")

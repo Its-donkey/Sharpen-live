@@ -36,7 +36,7 @@
     <div class="admin-banner success" role="status">{{.Flash}}</div>
   {{end}}
   {{if .Error}}
-    <div class="admin-banner error" role="status">{{.Error}}</div>
+    <div class="admin-banner error" role="status"><pre style="white-space: pre-wrap; margin: 0; font-family: inherit;">{{.Error}}</pre></div>
   {{end}}
 
   {{if not .LoggedIn}}

@@ -36,7 +36,29 @@ func (s *server) handleAdminStatusCheck(w http.ResponseWriter, r *http.Request) 
 		s.redirectAdmin(w, r, "", err.Error())
 		return
 	}
+
 	msg := fmt.Sprintf("Checked %d channel(s): online %d, offline %d, updated %d, failed %d.",
 		result.Checked, result.Online, result.Offline, result.Updated, result.Failed)
-	s.redirectAdmin(w, r, msg, "")
+
+	// If there are failures, provide detailed error information
+	var errMsg string
+	if result.Failed > 0 && len(result.FailureList) > 0 {
+		errMsg = "Status check failures:\n"
+		// Show up to 10 failures in the UI
+		displayCount := len(result.FailureList)
+		if displayCount > 10 {
+			displayCount = 10
+		}
+		for i := 0; i < displayCount; i++ {
+			failure := result.FailureList[i]
+			errMsg += fmt.Sprintf("• %s (channel: %s): %s\n",
+				failure.StreamerName, failure.ChannelID, failure.Error)
+		}
+		if len(result.FailureList) > 10 {
+			remaining := len(result.FailureList) - 10
+			errMsg += fmt.Sprintf("... and %d more failure(s). Check server logs for complete details.", remaining)
+		}
+	}
+
+	s.redirectAdmin(w, r, msg, errMsg)
 }

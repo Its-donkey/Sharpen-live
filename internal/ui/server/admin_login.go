@@ -158,7 +158,7 @@ func (s *server) renderAdminPage(w http.ResponseWriter, data adminPageData) {
 	}
 }
 
-func configuredSiteKeys(cfg config.AppConfig) []string {
+func configuredSiteKeys(cfg config.Config) []string {
 	var keys []string
 	for rawKey, site := range cfg.Sites {
 		key := strings.TrimSpace(site.Key)

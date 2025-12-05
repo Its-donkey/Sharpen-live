@@ -7,6 +7,7 @@ import (
 	"net/url"
 	"os"
 	"path/filepath"
+	"sort"
 	"strings"
 	"time"
 
@@ -29,7 +30,7 @@ type adminPageData struct {
 	AdminEmail       string
 	OtherSites       []string
 	YouTubeSites     []YouTubeSiteConfig
-	IsDefaultSite    bool
+	IsAlertserver    bool
 }
 
 type adminSubmission struct {
@@ -62,6 +63,10 @@ func (s *server) handleAdmin(w http.ResponseWriter, r *http.Request) {
 		Error:        errMsg,
 		AdminEmail:   s.adminEmail,
 	}
+	if s.isAlertserver() {
+		data.OtherSites = s.resolveOtherSites()
+		data.IsAlertserver = true
+	}
 	token := s.adminTokenFromRequest(r)
 	if token == "" {
 		s.renderAdminPage(w, data)
@@ -86,10 +91,6 @@ func (s *server) handleAdmin(w http.ResponseWriter, r *http.Request) {
 			data.Streamers = mapStreamerRecords(records)
 		}
 	}
-	if s.siteKey == config.DefaultSiteKey {
-		data.OtherSites = listSiblingSites(s.assetsDir)
-		data.IsDefaultSite = true
-	}
 	// Load YouTube site configurations
 	youtubeConfigs, err := s.getYouTubeSiteConfigs()
 	if err != nil {
@@ -98,8 +99,8 @@ func (s *server) handleAdmin(w http.ResponseWriter, r *http.Request) {
 		})
 	} else {
 		s.logger.Info("admin", "loaded YouTube configs", map[string]any{
-			"count":    len(youtubeConfigs),
-			"siteKey":  s.siteKey,
+			"count":   len(youtubeConfigs),
+			"siteKey": s.siteKey,
 		})
 		data.YouTubeSites = youtubeConfigs
 	}
@@ -157,6 +158,53 @@ func (s *server) renderAdminPage(w http.ResponseWriter, data adminPageData) {
 	}
 }
 
+func configuredSiteKeys(cfg config.Config) []string {
+	var keys []string
+	for rawKey, site := range cfg.Sites {
+		key := strings.TrimSpace(site.Key)
+		if key == "" {
+			key = strings.TrimSpace(rawKey)
+		}
+		if strings.EqualFold(key, config.AlertserverKey) {
+			continue
+		}
+		keys = append(keys, key)
+	}
+	sort.Strings(keys)
+	return keys
+}
+
+func (s *server) resolveOtherSites() []string {
+	seen := make(map[string]struct{})
+	add := func(val string) {
+		v := strings.TrimSpace(val)
+		if v == "" || strings.EqualFold(v, config.AlertserverKey) {
+			return
+		}
+		seen[v] = struct{}{}
+	}
+	for _, key := range s.availableSites {
+		add(key)
+	}
+	for _, key := range listSiblingSites(s.assetsDir) {
+		add(key)
+	}
+	var result []string
+	for key := range seen {
+		result = append(result, key)
+	}
+	sort.Strings(result)
+	return result
+}
+
+func (s *server) isAlertserver() bool {
+	if strings.EqualFold(s.siteKey, config.AlertserverKey) {
+		return true
+	}
+	clean := filepath.Clean(s.assetsDir)
+	return strings.Contains(clean, string(filepath.Separator)+config.AlertserverKey)
+}
+
 func (s *server) redirectAdmin(w http.ResponseWriter, r *http.Request, msg, errMsg string) {
 	values := make(urlValues)
 	values.setIf("msg", msg)
@@ -190,7 +238,7 @@ func (v urlValues) encode() string {
 
 // listSiblingSites returns directories under ui/sites (based on assetsDir) excluding the default-site.
 func listSiblingSites(assetsDir string) []string {
-	root := filepath.Dir(filepath.Dir(filepath.Clean(assetsDir)))
+	root := filepath.Dir(filepath.Clean(assetsDir))
 	entries, err := os.ReadDir(root)
 	if err != nil {
 		return nil
@@ -201,7 +249,7 @@ func listSiblingSites(assetsDir string) []string {
 			continue
 		}
 		name := entry.Name()
-		if strings.EqualFold(name, config.DefaultSiteKey) {
+		if strings.EqualFold(name, config.AlertserverKey) {
 			continue
 		}
 		sites = append(sites, name)

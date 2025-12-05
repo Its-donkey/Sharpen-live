@@ -3,119 +3,186 @@
 {{end}}
 
 {{define "content"}}
-<section class="surface admin-panel" aria-live="polite">
-  <div class="admin-header">
-    <div>
-      <h2 id="admin-console-title">Default Site Admin</h2>
-      <p class="admin-help">Review fallback context and view logs for all sites.</p>
+<section class="admin-shell admin-lumen" aria-live="polite">
+  <header class="surface admin-masthead">
+    <div class="masthead-text">
+      <p class="eyebrow">Default-site fallback</p>
+      <h2 id="admin-console-title">Control Room</h2>
+      <p class="admin-help">A calmer view to triage why the fallback is live, toggle integrations, and read logs without jumping tabs.</p>
+      <div class="pill-row">
+        <span class="pill tone-accent">{{if .FallbackErrors}}Fallback needs attention{{else}}Fallback steady{{end}}</span>
+        <span class="pill">Sites detected: {{len .OtherSites}}</span>
+        <span class="pill tone-ghost">Logs require auth</span>
+      </div>
     </div>
-	    {{if .LoggedIn}}
-    <div class="admin-header-actions">
-      <form method="post" action="/admin/status-check" class="admin-actions">
-        <button type="submit" class="admin-tab">Refresh status</button>
-      </form>
-      <form method="post" action="/admin/logout">
-        <button type="submit" class="admin-logout-button">Log out</button>
-      </form>
+    <div class="masthead-actions">
+      {{if .LoggedIn}}
+        <div class="button-row">
+          <form method="post" action="/admin/status-check">
+            <button type="submit" class="action-button primary">Refresh status</button>
+          </form>
+          <form method="post" action="/admin/logout">
+            <button type="submit" class="action-button ghost">Log out</button>
+          </form>
+        </div>
+        <p class="admin-help subtle">Signed in. Actions apply across every site loaded beside the fallback.</p>
+      {{else}}
+        <p class="admin-help subtle">Sign in to unlock controls and the embedded log monitor.</p>
+      {{end}}
     </div>
-    {{end}}
-  </div>
+  </header>
 
   {{if .Flash}}
-    <div class="admin-status" data-state="success">{{.Flash}}</div>
+    <div class="admin-banner success" role="status">{{.Flash}}</div>
   {{end}}
   {{if .Error}}
-    <div class="admin-status" data-state="error">{{.Error}}</div>
+    <div class="admin-banner error" role="status">{{.Error}}</div>
   {{end}}
 
-{{if not .LoggedIn}}
-    <form method="post" action="/admin/login" class="admin-auth">
-      <div class="form-field form-field-wide">
-        <span>Email</span>
-        <input type="email" name="email" value="{{.AdminEmail}}" autocomplete="username" required />
-      </div>
-      <div class="form-field form-field-wide">
-        <span>Password</span>
-        <input type="password" name="password" value="" autocomplete="current-password" required />
-      </div>
-      <div class="submit-streamer-actions">
-        <button type="submit" class="submit-streamer-submit">Log in</button>
-      </div>
-    </form>
-    <p class="admin-help">Use the admin credentials configured on the alert server.</p>
-    {{if .FallbackErrors}}
-      <div class="status-block">
-        <h3>Fallback issues</h3>
-        <ul>
-          {{range .FallbackErrors}}<li>{{.}}</li>{{end}}
-        </ul>
-      </div>
-    {{end}}
-  {{else}}
-    <div class="admin-tabs">
-      <button type="button" class="admin-tab active" data-tab="general">General</button>
-      <button type="button" class="admin-tab" data-tab="logs">Logs</button>
-    </div>
-
-    <div class="admin-tab-panel" data-panel="general">
-      {{if .YouTubeSites}}
-      <section class="admin-youtube-settings">
-        <h3>YouTube Settings</h3>
-        <p class="admin-help">Control YouTube integration for all sites.</p>
-        <div class="admin-youtube-controls">
-          {{range .YouTubeSites}}
-          <form method="post" action="/admin/youtube/settings" class="admin-youtube-toggle">
-            <input type="hidden" name="site_key" value="{{.SiteKey}}">
-            <div class="admin-youtube-site">
-              <label class="admin-youtube-label">
-                <input type="checkbox" name="youtube_enabled" value="true" {{if .Enabled}}checked{{end}} onchange="this.form.submit()">
-                <span class="admin-youtube-site-name">{{.SiteName}}</span>
-              </label>
-            </div>
-          </form>
-          {{end}}
+  {{if not .LoggedIn}}
+    <div class="admin-grid auth-layout">
+      <div class="surface admin-card login-card">
+        <div class="admin-card-header">
+          <p class="eyebrow">Access controls</p>
+          <h3>Log in</h3>
+          <p class="admin-help">Use the admin credentials configured on the alert server.</p>
         </div>
-      </section>
-      {{end}}
+        <form method="post" action="/admin/login" class="admin-auth">
+          <div class="form-field form-field-wide">
+            <span>Email</span>
+            <input type="email" name="email" value="{{.AdminEmail}}" autocomplete="username" required />
+          </div>
+          <div class="form-field form-field-wide">
+            <span>Password</span>
+            <input type="password" name="password" value="" autocomplete="current-password" required />
+          </div>
+          <div class="submit-streamer-actions">
+            <button type="submit" class="submit-streamer-submit">Access console</button>
+          </div>
+        </form>
+        <p class="admin-help subtle">Unlock YouTube toggles, quick status refresh, and the live log viewer.</p>
+      </div>
 
-      <h3>Other sites</h3>
-      {{if .OtherSites}}
-        <ul>
-          {{range .OtherSites}}<li>{{.}}</li>{{end}}
-        </ul>
-      {{else}}
-        <p>No additional sites were found alongside the default site.</p>
-      {{end}}
-      {{if .FallbackErrors}}
-        <div class="status-block">
-          <h4>Fallback issues</h4>
-          <ul>
+      <div class="surface admin-card info-card">
+        <div class="admin-card-header">
+          <p class="eyebrow">Fallback snapshot</p>
+          <h3>What we know</h3>
+        </div>
+        {{if .FallbackErrors}}
+          <ul class="fallback-list">
             {{range .FallbackErrors}}<li>{{.}}</li>{{end}}
           </ul>
-        </div>
-      {{end}}
-    </div>
+        {{else}}
+          <p>No errors were reported while loading the target site.</p>
+        {{end}}
 
-    <div class="admin-tab-panel" data-panel="logs" hidden>
-      <h3>Logs</h3>
-      <p>Authenticated access is required. The view below loads the shared log viewer.</p>
-      <iframe src="/logs" title="Logs" class="admin-logs-frame" style="width: 100%; height: 900px; border: 1px solid rgba(148,163,184,0.3); border-radius: 12px;"></iframe>
+        <div class="other-sites">
+          <p class="eyebrow">Other sites nearby</p>
+          {{if .OtherSites}}
+            <div class="site-chip-row">
+              {{range .OtherSites}}<span class="site-chip">{{.}}</span>{{end}}
+            </div>
+          {{else}}
+            <p class="admin-help subtle">No additional sites detected alongside the fallback.</p>
+          {{end}}
+        </div>
+      </div>
+    </div>
+  {{else}}
+    <div class="admin-grid dashboard">
+      <div class="surface admin-card stat-deck span-2">
+        <div class="admin-card-header">
+          <p class="eyebrow">Operational pulse</p>
+          <h3>Live snapshot</h3>
+        </div>
+        <div class="stat-row">
+          <div class="stat-chip">
+            <p class="stat-label">Fallback errors</p>
+            <p class="stat-value">{{len .FallbackErrors}}</p>
+            <p class="stat-note">Surfaced during template/config resolution.</p>
+          </div>
+          <div class="stat-chip">
+            <p class="stat-label">Discovered sites</p>
+            <p class="stat-value">{{len .OtherSites}}</p>
+            <p class="stat-note">Directories loaded alongside default-site.</p>
+          </div>
+          <div class="stat-chip">
+            <p class="stat-label">YouTube toggles</p>
+            <p class="stat-value">{{len .YouTubeSites}}</p>
+            <p class="stat-note">Enable or pause per site instantly.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="surface admin-card">
+        <div class="admin-card-header">
+          <p class="eyebrow">YouTube</p>
+          <h3>Integration switches</h3>
+          <p class="admin-help">Flip a site on or off; the form submits immediately.</p>
+        </div>
+        {{if .YouTubeSites}}
+          <div class="admin-youtube-list">
+            {{range .YouTubeSites}}
+            <form method="post" action="/admin/youtube/settings" class="admin-youtube-toggle">
+              <input type="hidden" name="site_key" value="{{.SiteKey}}">
+              <label class="admin-youtube-label">
+                <input type="checkbox" name="youtube_enabled" value="true" class="admin-toggle" {{if .Enabled}}checked{{end}} onchange="this.form.submit()">
+                <div class="admin-youtube-details">
+                  <span class="admin-youtube-site-name">{{.SiteName}}</span>
+                  <span class="admin-youtube-meta">Key: {{.SiteKey}}</span>
+                </div>
+                <span class="pill {{if .Enabled}}tone-accent{{else}}tone-warn{{end}}">{{if .Enabled}}Enabled{{else}}Disabled{{end}}</span>
+              </label>
+            </form>
+            {{end}}
+          </div>
+        {{else}}
+          <p class="admin-help subtle">No YouTube-enabled sites were found.</p>
+        {{end}}
+      </div>
+
+      <div class="surface admin-card info-card">
+        <div class="admin-card-header">
+          <p class="eyebrow">Investigation</p>
+          <h3>Fallback issues</h3>
+        </div>
+        {{if .FallbackErrors}}
+          <ul class="fallback-list">
+            {{range .FallbackErrors}}<li>{{.}}</li>{{end}}
+          </ul>
+        {{else}}
+          <p class="admin-help subtle">No specific errors were captured. Check logs for more detail.</p>
+        {{end}}
+      </div>
+
+      <div class="surface admin-card info-card">
+        <div class="admin-card-header">
+          <p class="eyebrow">Topology</p>
+          <h3>Other sites</h3>
+          <p class="admin-help">Cross-check what else is deployed alongside the fallback.</p>
+        </div>
+        {{if .OtherSites}}
+          <div class="site-chip-row">
+            {{range .OtherSites}}<span class="site-chip">{{.}}</span>{{end}}
+          </div>
+        {{else}}
+          <p>No additional sites were found alongside the default site.</p>
+        {{end}}
+      </div>
+
+      <div class="surface admin-card log-card span-2">
+        <div class="admin-card-header log-card-header">
+          <div>
+            <p class="eyebrow">Observability</p>
+            <h3>Aggregated logs</h3>
+            <p class="admin-help">The embedded viewer pulls all site logs, including the fallback.</p>
+          </div>
+          <a class="action-button ghost" href="/logs" target="_blank" rel="noreferrer">Open in new tab</a>
+        </div>
+        <p class="admin-help subtle">If the viewer shows a login or fallback page, your admin session may have expired—refresh status to re-auth.</p>
+        <iframe src="/logs" title="Logs" class="admin-logs-frame" loading="lazy"></iframe>
+      </div>
     </div>
   {{end}}
 </section>
-
-<script>
-  (function() {
-    const tabs = document.querySelectorAll('.admin-tab');
-    const panels = document.querySelectorAll('.admin-tab-panel');
-    if (!tabs.length) return;
-    tabs.forEach(tab => {
-      tab.addEventListener('click', () => {
-        const target = tab.getAttribute('data-tab');
-        tabs.forEach(t => t.classList.toggle('active', t === tab));
-        panels.forEach(panel => panel.toggleAttribute('hidden', panel.getAttribute('data-panel') !== target));
-      });
-    });
-  })();
-</script>
 {{end}}

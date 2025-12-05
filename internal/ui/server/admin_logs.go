@@ -34,7 +34,7 @@ func (s *server) handleLogs(w http.ResponseWriter, r *http.Request) {
 	category := r.URL.Query().Get("category")
 
 	// Require admin for default-site log access
-	if s.siteKey == config.DefaultSiteKey {
+	if s.siteKey == config.AlertserverKey {
 		if s.adminTokenFromRequest(r) == "" {
 			http.Redirect(w, r, "/admin?err=Login required to view logs", http.StatusSeeOther)
 			return
@@ -120,7 +120,7 @@ func (s *server) handleLogsStream(w http.ResponseWriter, r *http.Request) {
 	level := strings.ToUpper(r.URL.Query().Get("level"))
 	category := r.URL.Query().Get("category")
 
-	if s.siteKey == config.DefaultSiteKey && s.adminTokenFromRequest(r) == "" {
+	if s.siteKey == config.AlertserverKey && s.adminTokenFromRequest(r) == "" {
 		http.Error(w, "unauthorized", http.StatusUnauthorized)
 		return
 	}
@@ -130,9 +130,9 @@ func (s *server) handleLogsStream(w http.ResponseWriter, r *http.Request) {
 
 	// Check if this is the default-site (aggregates all logs)
 	logDirClean := filepath.Clean(s.logDir)
-	isFallback := s.siteKey == config.DefaultSiteKey ||
+	isFallback := s.siteKey == config.AlertserverKey ||
 		strings.Contains(logDirClean, string(filepath.Separator)+"default-site"+string(filepath.Separator)) ||
-		strings.EqualFold(strings.TrimSpace(s.siteName), config.DefaultSiteKey)
+		strings.EqualFold(strings.TrimSpace(s.siteName), config.AlertserverKey)
 
 	// Subscribe to appropriate loggers
 	var unsubscribers []func()
@@ -215,9 +215,9 @@ func (s *server) readLogEntries(limit int) ([]logging.Entry, error) {
 
 	// Treat default-site (or when logDir path includes default-site) as the fallback that aggregates all logs.
 	logDirClean := filepath.Clean(s.logDir)
-	isFallback := s.siteKey == config.DefaultSiteKey ||
+	isFallback := s.siteKey == config.AlertserverKey ||
 		strings.Contains(logDirClean, string(filepath.Separator)+"default-site"+string(filepath.Separator)) ||
-		strings.EqualFold(strings.TrimSpace(s.siteName), config.DefaultSiteKey)
+		strings.EqualFold(strings.TrimSpace(s.siteName), config.AlertserverKey)
 
 	if !isFallback {
 		return logging.ReadRecent(primary, limit)

@@ -18,6 +18,7 @@ import (
 type YouTubeMetaCollect struct {
 	client *http.Client
 	logger *logging.Logger
+	apiKey string
 }
 
 // Matches returns true if the URL is a YouTube URL.
@@ -44,7 +45,11 @@ func (s *YouTubeMetaCollect) Collect(ctx context.Context, url string) (*Metadata
 	}
 
 	// Create YouTube service using API key.
-	service, err := youtube.NewService(ctx, option.WithAPIKey(os.Getenv("YOUTUBE_API_KEY")))
+	apiKey := strings.TrimSpace(s.apiKey)
+	if apiKey == "" {
+		apiKey = os.Getenv("YOUTUBE_API_KEY")
+	}
+	service, err := youtube.NewService(ctx, option.WithAPIKey(apiKey))
 	if err != nil {
 		logError("Metadata - YouTube", "error creating YouTube service", err, map[string]any{
 			"url": url,

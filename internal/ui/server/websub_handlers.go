@@ -238,8 +238,19 @@ func (s *server) handleWebSubNotification(w http.ResponseWriter, r *http.Request
 			if record.Platforms.YouTube != nil && record.Platforms.YouTube.ChannelID == channelID {
 				fmt.Printf("INFO: Found matching streamer: %s (ID: %s) in site '%s'\n", record.Streamer.Alias, record.Streamer.ID, siteKey)
 
-				// Verify signature if we have a secret
-				if record.Platforms.YouTube.WebSubSecret != "" && signature != "" {
+				// Verify signature if we have a secret stored
+				if record.Platforms.YouTube.WebSubSecret != "" {
+					// Secret exists - signature verification is REQUIRED
+					if signature == "" {
+						fmt.Printf("WARNING: Streamer has secret but notification has no signature, rejecting for site '%s'\n", siteKey)
+						s.logger.Warn("websub", "Missing signature for streamer with secret", map[string]any{
+							"streamerId": record.Streamer.ID,
+							"channelId":  channelID,
+							"site":       siteKey,
+						})
+						continue
+					}
+
 					if !websub.VerifySignature(body, signature, record.Platforms.YouTube.WebSubSecret) {
 						fmt.Printf("WARNING: Signature verification failed for site '%s', checking other sites\n", siteKey)
 						s.logger.Warn("websub", "Signature verification failed, continuing search", map[string]any{
@@ -252,6 +263,17 @@ func (s *server) handleWebSubNotification(w http.ResponseWriter, r *http.Request
 						continue
 					}
 					fmt.Printf("INFO: Signature verified successfully for site '%s'\n", siteKey)
+				} else {
+					// No secret stored - this is likely a legacy streamer from before WebSubSecret was added
+					// Accept the notification but log a warning
+					fmt.Printf("WARNING: No WebSubSecret stored for streamer '%s' - accepting without verification\n", record.Streamer.Alias)
+					s.logger.Warn("websub", "Processing notification without signature verification - no secret stored", map[string]any{
+						"streamerId": record.Streamer.ID,
+						"alias":      record.Streamer.Alias,
+						"channelId":  channelID,
+						"site":       siteKey,
+						"note":       "Resubscribe this streamer to enable signature verification",
+					})
 				}
 
 				found = true
@@ -289,15 +311,15 @@ func (s *server) handleWebSubNotification(w http.ResponseWriter, r *http.Request
 	}
 
 	if !found {
-		fmt.Printf("ERROR: Signature verification failed or no matching streamer found for channel ID: %s\n", channelID)
-		fmt.Printf("=== WEBSUB NOTIFICATION END (rejected - invalid signature) ===\n\n")
+		fmt.Printf("ERROR: No matching streamer found or signature verification failed for channel ID: %s\n", channelID)
+		fmt.Printf("=== WEBSUB NOTIFICATION END (rejected) ===\n\n")
 
-		s.logger.Error("websub", "Rejected notification - signature verification failed", nil, map[string]any{
+		s.logger.Error("websub", "Rejected notification - no matching streamer or signature verification failed", nil, map[string]any{
 			"channelId": channelID,
 			"videoId":   feed.VideoID,
 		})
 
-		http.Error(w, "signature verification failed", http.StatusUnauthorized)
+		http.Error(w, "no matching streamer or signature verification failed", http.StatusUnauthorized)
 		return
 	}
 

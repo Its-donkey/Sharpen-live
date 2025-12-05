@@ -291,7 +291,7 @@ func Run(ctx context.Context, opts Options) error {
 	// Initialize metadata service
 	metadataService := metadata.NewService(&http.Client{
 		Timeout: 10 * time.Second,
-	}, logger)
+	}, logger, appConfig.YouTube.APIKey)
 
 	// Resolve WebSub callback URL and path - prioritize config.json over env var
 	websubCallbackURL := strings.TrimSpace(appConfig.YouTube.CallbackURL)

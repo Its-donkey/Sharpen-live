@@ -34,7 +34,7 @@ type Service struct {
 }
 
 // NewService creates a new metadata collection request with the given HTTP client.
-func NewService(httpClient *http.Client, logger *logging.Logger) *Service {
+func NewService(httpClient *http.Client, logger *logging.Logger, youtubeAPIKey string) *Service {
 	if httpClient == nil {
 		httpClient = &http.Client{}
 	}
@@ -44,7 +44,7 @@ func NewService(httpClient *http.Client, logger *logging.Logger) *Service {
 	return &Service{
 		httpClient: httpClient,
 		platforms: []PlatformMetadataCollector{
-			&YouTubeMetaCollect{client: httpClient, logger: logger},
+			&YouTubeMetaCollect{client: httpClient, logger: logger, apiKey: youtubeAPIKey},
 			&TwitchMetadata{client: httpClient, logger: logger},
 			&FacebookScraper{client: httpClient},
 		},

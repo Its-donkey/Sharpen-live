@@ -23,6 +23,7 @@
 - Docs: add Go engineering guidelines covering file responsibilities, testing, and logging practices.
 
 ### Changed
+- UI: redesign the default-site admin “Control Room” with a light glassy layout, inline log viewer, refreshed stats/toggles, and new typographic palette to distinguish it from other sites.
 - Server: consolidate alerts, roster, submissions, and admin into a single `cmd/alertserver` binary (no separate proxy) and host YouTube WebSub callbacks + lease monitor in-process.
 - UI: remove WASM bundle/static entrypoints; everything is server-rendered.
 - API surface: drop public streamers CRUD/config/admin APIs; only SSE watch, metadata, and `/alerts` remain exposed.

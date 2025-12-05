@@ -30,7 +30,7 @@ type adminPageData struct {
 	AdminEmail       string
 	OtherSites       []string
 	YouTubeSites     []YouTubeSiteConfig
-	IsDefaultSite    bool
+	IsAlertserver    bool
 }
 
 type adminSubmission struct {
@@ -63,9 +63,9 @@ func (s *server) handleAdmin(w http.ResponseWriter, r *http.Request) {
 		Error:        errMsg,
 		AdminEmail:   s.adminEmail,
 	}
-	if s.isDefaultSite() {
+	if s.isAlertserver() {
 		data.OtherSites = s.resolveOtherSites()
-		data.IsDefaultSite = true
+		data.IsAlertserver = true
 	}
 	token := s.adminTokenFromRequest(r)
 	if token == "" {
@@ -165,7 +165,7 @@ func configuredSiteKeys(cfg config.Config) []string {
 		if key == "" {
 			key = strings.TrimSpace(rawKey)
 		}
-		if strings.EqualFold(key, config.DefaultSiteKey) {
+		if strings.EqualFold(key, config.AlertserverKey) {
 			continue
 		}
 		keys = append(keys, key)
@@ -178,7 +178,7 @@ func (s *server) resolveOtherSites() []string {
 	seen := make(map[string]struct{})
 	add := func(val string) {
 		v := strings.TrimSpace(val)
-		if v == "" || strings.EqualFold(v, config.DefaultSiteKey) {
+		if v == "" || strings.EqualFold(v, config.AlertserverKey) {
 			return
 		}
 		seen[v] = struct{}{}
@@ -197,12 +197,12 @@ func (s *server) resolveOtherSites() []string {
 	return result
 }
 
-func (s *server) isDefaultSite() bool {
-	if strings.EqualFold(s.siteKey, config.DefaultSiteKey) {
+func (s *server) isAlertserver() bool {
+	if strings.EqualFold(s.siteKey, config.AlertserverKey) {
 		return true
 	}
 	clean := filepath.Clean(s.assetsDir)
-	return strings.Contains(clean, string(filepath.Separator)+config.DefaultSiteKey)
+	return strings.Contains(clean, string(filepath.Separator)+config.AlertserverKey)
 }
 
 func (s *server) redirectAdmin(w http.ResponseWriter, r *http.Request, msg, errMsg string) {
@@ -249,7 +249,7 @@ func listSiblingSites(assetsDir string) []string {
 			continue
 		}
 		name := entry.Name()
-		if strings.EqualFold(name, config.DefaultSiteKey) {
+		if strings.EqualFold(name, config.AlertserverKey) {
 			continue
 		}
 		sites = append(sites, name)

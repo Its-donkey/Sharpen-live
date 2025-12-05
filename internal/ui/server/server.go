@@ -179,37 +179,37 @@ func Run(ctx context.Context, opts Options) error {
 	}
 
 	appConfig, err := config.Load(opts.ConfigPath)
-	usingDefaultSite := false
+	usingAlertserver := false
 	if err != nil {
 		appendFallback(fmt.Sprintf("failed to load config: %v", err))
 		appConfig = config.DefaultConfig()
-		usingDefaultSite = true
+		usingAlertserver = true
 	}
 	var siteConfig config.SiteConfig
-	if opts.Site == config.DefaultSiteKey {
-		siteConfig = config.DefaultSite(appConfig)
-		usingDefaultSite = true
+	if opts.Site == config.AlertserverKey {
+		siteConfig = config.Alertserver(appConfig)
+		usingAlertserver = true
 	} else {
 		siteConfig, err = config.ResolveSite(opts.Site, appConfig)
 		if err != nil {
 			appendFallback(fmt.Sprintf("site %q not found: %v", opts.Site, err))
-			siteConfig = config.DefaultSite(appConfig)
-			usingDefaultSite = true
+			siteConfig = config.Alertserver(appConfig)
+			usingAlertserver = true
 		}
 	}
-	if siteConfig.Key == config.DefaultSiteKey || strings.EqualFold(siteConfig.Name, config.DefaultSiteKey) || strings.EqualFold(siteConfig.Name, "default-site") {
-		usingDefaultSite = true
+	if siteConfig.Key == config.AlertserverKey || strings.EqualFold(siteConfig.Name, config.AlertserverKey) || strings.EqualFold(siteConfig.Name, "default-site") {
+		usingAlertserver = true
 	}
 	opts = applyDefaults(opts, siteConfig)
 
 	templateRoot, err := filepath.Abs(opts.TemplatesDir)
 	if err != nil {
-		if usingDefaultSite {
+		if usingAlertserver {
 			return fmt.Errorf("resolve templates dir: %w", err)
 		}
 		appendFallback(fmt.Sprintf("template path %q failed: %v", opts.TemplatesDir, err))
-		siteConfig, opts = switchToDefaultSite(appConfig, opts)
-		usingDefaultSite = true
+		siteConfig, opts = switchToAlertserver(appConfig, opts)
+		usingAlertserver = true
 		templateRoot, err = filepath.Abs(opts.TemplatesDir)
 		if err != nil {
 			return fmt.Errorf("resolve default-site templates dir: %w", err)
@@ -220,12 +220,12 @@ func Run(ctx context.Context, opts Options) error {
 	if tmpl == nil {
 		loaded, err := loadTemplates(templateRoot)
 		if err != nil {
-			if usingDefaultSite {
+			if usingAlertserver {
 				return fmt.Errorf("load default-site templates: %w", err)
 			}
 			appendFallback(fmt.Sprintf("failed to load templates from %s: %v", templateRoot, err))
-			siteConfig, opts = switchToDefaultSite(appConfig, opts)
-			usingDefaultSite = true
+			siteConfig, opts = switchToAlertserver(appConfig, opts)
+			usingAlertserver = true
 			templateRoot, err = filepath.Abs(opts.TemplatesDir)
 			if err != nil {
 				return fmt.Errorf("resolve default-site templates dir: %w", err)
@@ -370,8 +370,8 @@ func Run(ctx context.Context, opts Options) error {
 
 	siteDescription := "Sharpen.Live tracks live knife sharpeners and bladesmith streams across YouTube, Twitch, and Facebook - find makers, tutorials, and sharpening resources."
 	switch {
-	case strings.EqualFold(siteConfig.Key, config.DefaultSiteKey) || strings.EqualFold(siteConfig.Name, config.DefaultSiteKey) || strings.EqualFold(siteConfig.Name, "default-site"):
-		siteDescription = "Cross Platform Streaming Notifications appears when a requested site cannot be served. Review the errors below to restore the site configuration."
+	case strings.EqualFold(siteConfig.Key, config.AlertserverKey) || strings.EqualFold(siteConfig.Name, config.AlertserverKey) || strings.EqualFold(siteConfig.Name, "default-site"):
+		siteDescription = "Alertserver Admin appears when a requested site cannot be served. Review the errors below to restore the site configuration."
 	case strings.EqualFold(siteConfig.Key, "synth-wave") || strings.EqualFold(siteConfig.Name, "synth.wave"):
 		siteDescription = "synth.wave tracks live synthwave, chillwave, and electronic music streams so you can ride the neon frequencies in real time."
 	}

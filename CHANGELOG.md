@@ -24,6 +24,7 @@
 
 ### Changed
 - UI: redesign the default-site admin “Control Room” with a light glassy layout, inline log viewer, refreshed stats/toggles, and new typographic palette to distinguish it from other sites.
+- UI: rename the default-site fallback branding to “Alertserver Admin” across templates and meta tags.
 - Server: consolidate alerts, roster, submissions, and admin into a single `cmd/alertserver` binary (no separate proxy) and host YouTube WebSub callbacks + lease monitor in-process.
 - UI: remove WASM bundle/static entrypoints; everything is server-rendered.
 - API surface: drop public streamers CRUD/config/admin APIs; only SSE watch, metadata, and `/alerts` remain exposed.

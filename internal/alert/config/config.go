@@ -14,8 +14,10 @@ const (
 	defaultData         = "data/default-site"
 	defaultTemplatesDir = "ui/sites/default-site/templates"
 	defaultAssetsDir    = "ui/sites/default-site"
-	defaultSiteName     = "Cross Platform Streaming Notifications"
+	defaultSiteName     = "Alertserver Admin"
 	DefaultSiteKey      = "default-site"
+	AlertserverKey      = DefaultSiteKey
+	AlertserverName     = defaultSiteName
 )
 
 // YouTubeConfig captures the WebSub-specific defaults persisted in config files.
@@ -104,7 +106,7 @@ func Load(path string) (Config, error) {
 	if raw.YouTubeBlock != nil {
 		yt = *raw.YouTubeBlock
 	}
-	if yt.APIKey == "" || yt.APIKey == "YOUR_YOUTUBE_API_KEY_HERE"{
+	if yt.APIKey == "" || yt.APIKey == "YOUR_YOUTUBE_API_KEY_HERE" {
 		yt.APIKey = youtubeAPIKeyFromEnv()
 	}
 
@@ -360,6 +362,16 @@ func DefaultSite(cfg Config) SiteConfig {
 		Server:         server,
 		App:            DefaultSiteAppConfig(),
 	}
+}
+
+// AlertserverAppConfig exposes the default-site fallback configuration under the Alertserver branding.
+func AlertserverAppConfig() AppConfig {
+	return DefaultSiteAppConfig()
+}
+
+// Alertserver returns the default fallback site configuration using the Alertserver naming.
+func Alertserver(cfg Config) SiteConfig {
+	return DefaultSite(cfg)
 }
 
 func youtubeAPIKeyFromEnv() string {

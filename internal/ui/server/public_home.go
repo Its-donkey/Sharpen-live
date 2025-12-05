@@ -52,7 +52,7 @@ func (s *server) siteDisplayName() string {
 func (s *server) homePageTitle() string {
 	name := s.siteDisplayName()
 	switch {
-	case strings.EqualFold(s.siteKey, config.DefaultSiteKey) || strings.EqualFold(name, config.DefaultSiteKey):
+	case strings.EqualFold(s.siteKey, config.AlertserverKey) || strings.EqualFold(name, config.AlertserverKey):
 		return "Site unavailable - review configuration"
 	case strings.EqualFold(s.siteKey, "synth-wave") || strings.EqualFold(name, "synth.wave"):
 		return name + " - Live synthwave streams"
@@ -63,7 +63,7 @@ func (s *server) homePageTitle() string {
 
 func (s *server) submitPageTitle() string {
 	name := s.siteDisplayName()
-	if strings.EqualFold(s.siteKey, config.DefaultSiteKey) || strings.EqualFold(name, config.DefaultSiteKey) {
+	if strings.EqualFold(s.siteKey, config.AlertserverKey) || strings.EqualFold(name, config.AlertserverKey) {
 		return "Submit a streamer"
 	}
 	return "Submit a streamer - " + name

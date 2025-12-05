@@ -100,7 +100,7 @@ func (s *server) handleAdminYouTubeSettings(w http.ResponseWriter, r *http.Reque
 	}
 
 	// Update the YouTube enabled setting for the target site
-	if targetSiteKey == "" || targetSiteKey == config.DefaultSiteKey {
+	if targetSiteKey == "" || targetSiteKey == config.AlertserverKey {
 		// For empty or default site key, this would be updating the base config
 		// But we're using per-site settings, so log a warning
 		s.logger.Warn("admin", "attempted to update YouTube for base config", map[string]any{
@@ -153,7 +153,7 @@ func (s *server) getYouTubeSiteConfigs() ([]YouTubeSiteConfig, error) {
 	}
 
 	// If on default-site, show all sites
-	if s.siteKey == config.DefaultSiteKey {
+	if s.siteKey == config.AlertserverKey {
 		var configs []YouTubeSiteConfig
 
 		// Add each configured site

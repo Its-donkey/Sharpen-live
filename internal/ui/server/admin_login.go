@@ -63,7 +63,7 @@ func (s *server) handleAdmin(w http.ResponseWriter, r *http.Request) {
 		Error:        errMsg,
 		AdminEmail:   s.adminEmail,
 	}
-	if s.siteKey == config.DefaultSiteKey {
+	if s.isDefaultSite() {
 		data.OtherSites = s.resolveOtherSites()
 		data.IsDefaultSite = true
 	}
@@ -195,6 +195,14 @@ func (s *server) resolveOtherSites() []string {
 	}
 	sort.Strings(result)
 	return result
+}
+
+func (s *server) isDefaultSite() bool {
+	if strings.EqualFold(s.siteKey, config.DefaultSiteKey) {
+		return true
+	}
+	clean := filepath.Clean(s.assetsDir)
+	return strings.Contains(clean, string(filepath.Separator)+config.DefaultSiteKey)
 }
 
 func (s *server) redirectAdmin(w http.ResponseWriter, r *http.Request, msg, errMsg string) {

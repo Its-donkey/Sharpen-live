@@ -28,6 +28,8 @@ type adminPageData struct {
 	RosterError      string
 	AdminEmail       string
 	OtherSites       []string
+	YouTubeSites     []YouTubeSiteConfig
+	IsDefaultSite    bool
 }
 
 type adminSubmission struct {
@@ -86,6 +88,20 @@ func (s *server) handleAdmin(w http.ResponseWriter, r *http.Request) {
 	}
 	if s.siteKey == config.DefaultSiteKey {
 		data.OtherSites = listSiblingSites(s.assetsDir)
+		data.IsDefaultSite = true
+	}
+	// Load YouTube site configurations
+	youtubeConfigs, err := s.getYouTubeSiteConfigs()
+	if err != nil {
+		s.logger.Warn("admin", "failed to load YouTube configs", map[string]any{
+			"error": err.Error(),
+		})
+	} else {
+		s.logger.Info("admin", "loaded YouTube configs", map[string]any{
+			"count":    len(youtubeConfigs),
+			"siteKey":  s.siteKey,
+		})
+		data.YouTubeSites = youtubeConfigs
 	}
 	s.renderAdminPage(w, data)
 }

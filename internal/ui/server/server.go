@@ -112,6 +112,7 @@ type server struct {
 	siteDescription  string
 	primaryHost      string
 	youtubeConfig    config.YouTubeConfig
+	configPath       string
 	fallbackErrors   []string
 	logger           *logging.Logger
 	logDir           string
@@ -395,6 +396,7 @@ func Run(ctx context.Context, opts Options) error {
 		siteDescription:  siteDescription,
 		primaryHost:      primaryHost,
 		youtubeConfig:    appConfig.YouTube,
+		configPath:       opts.ConfigPath,
 		fallbackErrors:   opts.FallbackErrors,
 		logger:           logger,
 		logDir:           logDir,
@@ -453,6 +455,7 @@ func Run(ctx context.Context, opts Options) error {
 	mux.HandleFunc("/admin/streamers/update", srv.handleAdminStreamerUpdate)
 	mux.HandleFunc("/admin/streamers/delete", srv.handleAdminStreamerDelete)
 	mux.HandleFunc("/admin/status-check", srv.handleAdminStatusCheck)
+	mux.HandleFunc("/admin/youtube/settings", srv.handleAdminYouTubeSettings)
 	streamersWatch := streamersWatchHandler(streamersWatchOptions{
 		FilePath: srv.streamersStore.Path(),
 	})

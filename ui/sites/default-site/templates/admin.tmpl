@@ -58,6 +58,26 @@
     </div>
 
     <div class="admin-tab-panel" data-panel="general">
+      {{if .YouTubeSites}}
+      <section class="admin-youtube-settings">
+        <h3>YouTube Settings</h3>
+        <p class="admin-help">Control YouTube integration for all sites.</p>
+        <div class="admin-youtube-controls">
+          {{range .YouTubeSites}}
+          <form method="post" action="/admin/youtube/settings" class="admin-youtube-toggle">
+            <input type="hidden" name="site_key" value="{{.SiteKey}}">
+            <div class="admin-youtube-site">
+              <label class="admin-youtube-label">
+                <input type="checkbox" name="youtube_enabled" value="true" {{if .Enabled}}checked{{end}} onchange="this.form.submit()">
+                <span class="admin-youtube-site-name">{{.SiteName}}</span>
+              </label>
+            </div>
+          </form>
+          {{end}}
+        </div>
+      </section>
+      {{end}}
+
       <h3>Other sites</h3>
       {{if .OtherSites}}
         <ul>

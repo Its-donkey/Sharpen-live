@@ -17,6 +17,14 @@ func (s *server) handleAdminStatusCheck(w http.ResponseWriter, r *http.Request) 
 		s.redirectAdmin(w, r, "", "Log in to refresh channel status.")
 		return
 	}
+	// Check if YouTube is enabled for this site
+	if !s.isYouTubeEnabled() {
+		s.logger.Info("admin", "YouTube disabled, skipping status check", map[string]any{
+			"siteKey": s.siteKey,
+		})
+		s.redirectAdmin(w, r, "", "YouTube is disabled for this site.")
+		return
+	}
 	if s.statusChecker == nil {
 		s.redirectAdmin(w, r, "", "Status checks unavailable.")
 		return

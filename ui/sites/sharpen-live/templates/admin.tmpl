@@ -44,6 +44,32 @@
     </form>
     <p class="admin-help">Use the admin credentials configured on the alert server.</p>
   {{else}}
+    {{if .YouTubeSites}}
+    <section class="surface admin-youtube-settings" aria-labelledby="admin-youtube-title">
+      <h3 id="admin-youtube-title">YouTube Settings</h3>
+      <p class="admin-help">Control YouTube integration for {{if .IsDefaultSite}}all sites{{else}}this site{{end}}.</p>
+      <div class="admin-youtube-controls">
+        {{range .YouTubeSites}}
+        <form method="post" action="/admin/youtube/settings" class="admin-youtube-toggle">
+          <input type="hidden" name="site_key" value="{{.SiteKey}}">
+          <div class="admin-youtube-site">
+            {{if $.IsDefaultSite}}
+            <label class="admin-youtube-label">
+              <input type="checkbox" name="youtube_enabled" value="true" {{if .Enabled}}checked{{end}} onchange="this.form.submit()">
+              <span class="admin-youtube-site-name">{{.SiteName}}</span>
+            </label>
+            {{else}}
+            <label class="admin-youtube-label">
+              <input type="checkbox" name="youtube_enabled" value="true" {{if .Enabled}}checked{{end}} onchange="this.form.submit()">
+              <span>Enable YouTube notifications</span>
+            </label>
+            {{end}}
+          </div>
+        </form>
+        {{end}}
+      </div>
+    </section>
+    {{end}}
     <div class="admin-grid">
       <section aria-labelledby="admin-submissions-title">
         <div class="admin-streamers-header">

@@ -1,0 +1,9 @@
+{{define "submit_form"}}
+<section class="surface">
+  <h2 id="submit-streamer-title">Submissions unavailable</h2>
+  <p>This default site view cannot accept submissions. Restore the target site to re-enable the submit form.</p>
+  {{if .State.ResultState}}
+    <div class="submit-streamer-result" data-state="{{.State.ResultState}}" role="status">{{.State.ResultMessage}}</div>
+  {{end}}
+</section>
+{{end}}

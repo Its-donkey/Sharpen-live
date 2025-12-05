@@ -1,0 +1,51 @@
+{{define "base"}}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{if .PageTitle}}{{.PageTitle}}{{else}}Alertserver Admin{{end}}</title>
+  <meta name="description" content="{{if .MetaDescription}}{{.MetaDescription}}{{else}}Alertserver Admin appears when a requested site cannot be served.{{end}}">
+  {{if .CanonicalURL}}<link rel="canonical" href="{{.CanonicalURL}}">{{end}}
+  <meta property="og:site_name" content="{{if .SiteName}}{{.SiteName}}{{else}}Alertserver Admin{{end}}">
+  <meta property="og:title" content="{{if .PageTitle}}{{.PageTitle}}{{else}}Alertserver Admin{{end}}">
+  <meta property="og:description" content="{{if .MetaDescription}}{{.MetaDescription}}{{else}}Alertserver Admin appears when a requested site cannot be served.{{end}}">
+  <meta property="og:type" content="{{if .OGType}}{{.OGType}}{{else}}website{{end}}">
+  {{if .CanonicalURL}}<meta property="og:url" content="{{.CanonicalURL}}">{{end}}
+  {{if .SocialImage}}<meta property="og:image" content="{{.SocialImage}}">{{end}}
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{{if .PageTitle}}{{.PageTitle}}{{else}}Alertserver Admin{{end}}">
+  <meta name="twitter:description" content="{{if .MetaDescription}}{{.MetaDescription}}{{else}}Alertserver Admin appears when a requested site cannot be served.{{end}}">
+  {{if .SocialImage}}<meta name="twitter:image" content="{{.SocialImage}}">{{end}}
+  {{if .Robots}}<meta name="robots" content="{{.Robots}}">{{end}}
+  {{if .StructuredData}}<script type="application/ld+json">{{.StructuredData}}</script>{{end}}
+  <link rel="stylesheet" href="{{if .StylesheetPath}}{{.StylesheetPath}}{{else}}/styles.css{{end}}">
+  <script src="/submit.js" defer></script>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="site-header surface">
+      <div>
+        <h1>{{if .SiteName}}{{.SiteName}}{{else}}Alertserver Admin{{end}}</h1>
+        <p class="site-tagline">Monitoring and management of the streaming notifications websites.</p>
+      </div>
+    </header>
+
+    {{if .FallbackErrors}}
+    <section class="fallback-banner surface" aria-live="polite">
+      <h2>Why you're seeing this</h2>
+      <ul>
+        {{range .FallbackErrors}}<li>{{.}}</li>{{end}}
+      </ul>
+    </section>
+    {{end}}
+
+    {{block "content" .}}{{end}}
+
+    <footer class="surface site-footer">
+      <p>&copy; {{.CurrentYear}} Alertserver Admin.</p>
+    </footer>
+  </div>
+</body>
+</html>
+{{end}}

@@ -11,6 +11,7 @@
 - Logging: web-based log viewer on default-site at /logs with filtering by level and category, real-time updates via SSE, and expandable JSON fields.
 - Logging: pub/sub pattern for real-time log subscribers enabling live log streaming to multiple viewers simultaneously.
 - Server/UI: run multiple branded sites from a single config (`-site` targets one; default boot spins up every entry) so Sharpen.Live and synth.wave can host their own templates/assets/log/data roots concurrently.
+- UI: add an `alertserver` site that mirrors the default-site fallback assets so the default config paths resolve without missing templates.
 - UI: add site-specific templates, OG images, neon synthwave styling, and SVG brand assets plus a synth.wave brand guide for design handoff.
 - UI: add a default-site fallback that surfaces the errors causing a fallback instead of silently rendering Sharpen.Live defaults.
 - Analytics: add Google tag `G-KPJPXKV81G` to Sharpen.Live pages.

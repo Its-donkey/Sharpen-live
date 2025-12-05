@@ -11,13 +11,11 @@ import (
 const (
 	defaultAddr         = "127.0.0.1"
 	defaultPort         = ":8880"
-	defaultData         = "data/default-site"
-	defaultTemplatesDir = "ui/sites/default-site/templates"
-	defaultAssetsDir    = "ui/sites/default-site"
-	defaultSiteName     = "Alertserver Admin"
-	DefaultSiteKey      = "default-site"
-	AlertserverKey      = DefaultSiteKey
-	AlertserverName     = defaultSiteName
+	defaultData         = "data/alertserver"
+	defaultTemplatesDir = "ui/sites/alertserver/templates"
+	defaultAssetsDir    = "ui/sites/alertserver"
+	alertserverName     = "Alertserver Admin"
+	AlertserverKey      = "alertserver"
 )
 
 // YouTubeConfig captures the WebSub-specific defaults persisted in config files.
@@ -138,7 +136,7 @@ func Load(path string) (Config, error) {
 		admin.TokenTTLSeconds = 86400
 	}
 
-	app := DefaultSiteAppConfig()
+	app := AlertserverAppConfig()
 	if raw.AppBlock != nil {
 		app = *raw.AppBlock
 	}
@@ -152,7 +150,7 @@ func Load(path string) (Config, error) {
 		app.Data = defaultData
 	}
 	if app.Name == "" {
-		app.Name = defaultSiteName
+		app.Name = alertserverName
 	}
 
 	sites := map[string]SiteConfig{}
@@ -187,7 +185,7 @@ func Load(path string) (Config, error) {
 		if siteName == "" {
 			siteName = siteApp.Name
 			if siteName == "" {
-				siteName = defaultSiteName
+				siteName = alertserverName
 			}
 		}
 
@@ -317,7 +315,7 @@ func DefaultConfig() Config {
 			Addr: defaultAddr,
 			Port: defaultPort,
 		},
-		App: DefaultSiteAppConfig(),
+		App: AlertserverAppConfig(),
 		YouTube: YouTubeConfig{
 			HubURL:       "",
 			CallbackURL:  "",
@@ -332,21 +330,21 @@ func DefaultConfig() Config {
 	}
 }
 
-// DefaultSiteAppConfig returns the default fallback app configuration,
+// AlertserverAppConfig returns the default fallback app configuration,
 // including template, asset, and data roots.
-func DefaultSiteAppConfig() AppConfig {
+func AlertserverAppConfig() AppConfig {
 	return AppConfig{
-		Name:      defaultSiteName,
+		Name:      alertserverName,
 		Templates: defaultTemplatesDir,
 		Assets:    defaultAssetsDir,
 		Data:      defaultData,
 	}
 }
 
-// DefaultSite returns a site configuration that points at the fallback assets
+// Alertserver returns a site configuration that points at the fallback assets
 // and templates. Server listen values inherit from the provided config when
 // present, otherwise the defaults are applied.
-func DefaultSite(cfg Config) SiteConfig {
+func Alertserver(cfg Config) SiteConfig {
 	server := cfg.Server
 	if strings.TrimSpace(server.Addr) == "" {
 		server.Addr = defaultAddr
@@ -355,23 +353,13 @@ func DefaultSite(cfg Config) SiteConfig {
 		server.Port = defaultPort
 	}
 	return SiteConfig{
-		Key:            DefaultSiteKey,
-		Name:           defaultSiteName,
+		Key:            AlertserverKey,
+		Name:           alertserverName,
 		Description:    "Fallback site for multi-tenant streaming notifications",
 		YouTubeEnabled: nil,
 		Server:         server,
-		App:            DefaultSiteAppConfig(),
+		App:            AlertserverAppConfig(),
 	}
-}
-
-// AlertserverAppConfig exposes the default-site fallback configuration under the Alertserver branding.
-func AlertserverAppConfig() AppConfig {
-	return DefaultSiteAppConfig()
-}
-
-// Alertserver returns the default fallback site configuration using the Alertserver naming.
-func Alertserver(cfg Config) SiteConfig {
-	return DefaultSite(cfg)
 }
 
 func youtubeAPIKeyFromEnv() string {

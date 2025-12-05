@@ -165,6 +165,16 @@ func (s *server) handleWebSubNotification(w http.ResponseWriter, r *http.Request
 	fmt.Printf("Remote Address: %s\n", r.RemoteAddr)
 	fmt.Printf("Content-Type: %s\n", r.Header.Get("Content-Type"))
 
+	// Check if YouTube is enabled for this site
+	if !s.isYouTubeEnabled() {
+		fmt.Printf("INFO: YouTube disabled for site, accepting notification without processing\n")
+		s.logger.Info("websub", "YouTube disabled, skipping notification processing", map[string]any{
+			"siteKey": s.siteKey,
+		})
+		w.WriteHeader(http.StatusOK)
+		return
+	}
+
 	// Read the body
 	body, err := io.ReadAll(r.Body)
 	if err != nil {
@@ -469,6 +479,16 @@ func extractChannelIDFromAtomFeed(body []byte) string {
 // checkAllStreamersLiveStatus checks the live status of all streamers with YouTube channels
 func (s *server) checkAllStreamersLiveStatus(ctx context.Context) {
 	fmt.Printf("\n=== INITIAL LIVE STATUS CHECK START ===\n")
+
+	// Check if YouTube is enabled for this site
+	if !s.isYouTubeEnabled() {
+		fmt.Printf("INFO: YouTube disabled for site, skipping initial status check\n")
+		s.logger.Info("startup", "YouTube disabled, skipping initial status check", map[string]any{
+			"siteKey": s.siteKey,
+		})
+		fmt.Printf("=== INITIAL LIVE STATUS CHECK END ===\n\n")
+		return
+	}
 
 	if s.streamersStore == nil {
 		fmt.Printf("WARNING: Streamers store is nil, skipping initial status check\n")

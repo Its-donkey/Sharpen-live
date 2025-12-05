@@ -62,6 +62,15 @@ func (s *server) handleAdminStreamerUpdate(w http.ResponseWriter, r *http.Reques
 		"alias":       alias,
 	})
 	if platformURL != "" {
+		// Check if YouTube is enabled before allowing platform updates
+		if !s.isYouTubeEnabled() {
+			s.logger.Warn("admin", "YouTube disabled, skipping platform update", map[string]any{
+				"streamerId": id,
+				"siteKey":    s.siteKey,
+			})
+			s.redirectAdmin(w, r, "", "YouTube is disabled for this site. Enable it in settings to update platforms.")
+			return
+		}
 		baseStore, ok := s.streamersStore.(*streamers.Store)
 		if !ok {
 			s.redirectAdmin(w, r, "", "Platform updates are unavailable.")

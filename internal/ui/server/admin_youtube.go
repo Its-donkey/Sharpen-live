@@ -11,9 +11,19 @@ import (
 
 // YouTubeSiteConfig represents YouTube configuration for a site.
 type YouTubeSiteConfig struct {
-	SiteKey string
+	SiteKey  string
 	SiteName string
-	Enabled bool
+	Enabled  bool
+}
+
+// isYouTubeEnabled checks if YouTube integration is enabled for the current site.
+func (s *server) isYouTubeEnabled() bool {
+	dataDir := s.streamersStore.Path()
+	if strings.HasSuffix(dataDir, "/streamers.json") {
+		dataDir = strings.TrimSuffix(dataDir, "/streamers.json")
+	}
+	settingsStore := settings.New(dataDir)
+	return settingsStore.IsYouTubeEnabled()
 }
 
 func (s *server) handleAdminYouTubeSettings(w http.ResponseWriter, r *http.Request) {

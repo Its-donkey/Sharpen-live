@@ -97,6 +97,10 @@ func (s *server) handleAdmin(w http.ResponseWriter, r *http.Request) {
 			"error": err.Error(),
 		})
 	} else {
+		s.logger.Info("admin", "loaded YouTube configs", map[string]any{
+			"count":    len(youtubeConfigs),
+			"siteKey":  s.siteKey,
+		})
 		data.YouTubeSites = youtubeConfigs
 	}
 	s.renderAdminPage(w, data)

@@ -116,6 +116,7 @@ type server struct {
 	fallbackErrors   []string
 	logger           *logging.Logger
 	logDir           string
+	availableSites   []string
 
 	// Store cache for multi-site WebSub support
 	storeCache   map[string]*streamers.Store
@@ -318,10 +319,10 @@ func Run(ctx context.Context, opts Options) error {
 
 	if websubCallbackURL != "" {
 		logger.Info("websub", "YouTube WebSub configured", map[string]any{
-			"callbackUrl":         websubCallbackURL,
-			"localHandlerPath":    websubCallbackPath,
-			"source":              websubCallbackSource,
-			"note":                "Handler registered at local path; reverse proxy handles URL rewriting",
+			"callbackUrl":      websubCallbackURL,
+			"localHandlerPath": websubCallbackPath,
+			"source":           websubCallbackSource,
+			"note":             "Handler registered at local path; reverse proxy handles URL rewriting",
 		})
 	} else {
 		logger.Warn("websub", "YouTube WebSub not configured - set config.json youtube.callback_url or WEBSUB_CALLBACK_BASE_URL env var", nil)
@@ -400,6 +401,7 @@ func Run(ctx context.Context, opts Options) error {
 		fallbackErrors:   opts.FallbackErrors,
 		logger:           logger,
 		logDir:           logDir,
+		availableSites:   configuredSiteKeys(appConfig),
 		storeCache:       make(map[string]*streamers.Store),
 	}
 

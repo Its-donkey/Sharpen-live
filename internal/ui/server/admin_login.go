@@ -7,6 +7,7 @@ import (
 	"net/url"
 	"os"
 	"path/filepath"
+	"sort"
 	"strings"
 	"time"
 
@@ -63,7 +64,7 @@ func (s *server) handleAdmin(w http.ResponseWriter, r *http.Request) {
 		AdminEmail:   s.adminEmail,
 	}
 	if s.siteKey == config.DefaultSiteKey {
-		data.OtherSites = listSiblingSites(s.assetsDir)
+		data.OtherSites = s.resolveOtherSites()
 		data.IsDefaultSite = true
 	}
 	token := s.adminTokenFromRequest(r)
@@ -98,8 +99,8 @@ func (s *server) handleAdmin(w http.ResponseWriter, r *http.Request) {
 		})
 	} else {
 		s.logger.Info("admin", "loaded YouTube configs", map[string]any{
-			"count":    len(youtubeConfigs),
-			"siteKey":  s.siteKey,
+			"count":   len(youtubeConfigs),
+			"siteKey": s.siteKey,
 		})
 		data.YouTubeSites = youtubeConfigs
 	}
@@ -155,6 +156,45 @@ func (s *server) renderAdminPage(w http.ResponseWriter, data adminPageData) {
 	if err := tmpl.ExecuteTemplate(w, "admin", data); err != nil {
 		http.Error(w, "template error", http.StatusInternalServerError)
 	}
+}
+
+func configuredSiteKeys(cfg config.AppConfig) []string {
+	var keys []string
+	for rawKey, site := range cfg.Sites {
+		key := strings.TrimSpace(site.Key)
+		if key == "" {
+			key = strings.TrimSpace(rawKey)
+		}
+		if strings.EqualFold(key, config.DefaultSiteKey) {
+			continue
+		}
+		keys = append(keys, key)
+	}
+	sort.Strings(keys)
+	return keys
+}
+
+func (s *server) resolveOtherSites() []string {
+	seen := make(map[string]struct{})
+	add := func(val string) {
+		v := strings.TrimSpace(val)
+		if v == "" || strings.EqualFold(v, config.DefaultSiteKey) {
+			return
+		}
+		seen[v] = struct{}{}
+	}
+	for _, key := range s.availableSites {
+		add(key)
+	}
+	for _, key := range listSiblingSites(s.assetsDir) {
+		add(key)
+	}
+	var result []string
+	for key := range seen {
+		result = append(result, key)
+	}
+	sort.Strings(result)
+	return result
 }
 
 func (s *server) redirectAdmin(w http.ResponseWriter, r *http.Request, msg, errMsg string) {

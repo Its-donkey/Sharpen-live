@@ -25,7 +25,7 @@
     <div class="admin-status" data-state="success">{{.Flash}}</div>
   {{end}}
   {{if .Error}}
-    <div class="admin-status" data-state="error">{{.Error}}</div>
+    <div class="admin-status" data-state="error"><pre style="white-space: pre-wrap; margin: 0; font-family: inherit;">{{.Error}}</pre></div>
   {{end}}
 
   {{if not .LoggedIn}}
@@ -47,13 +47,13 @@
     {{if .YouTubeSites}}
     <section class="surface admin-youtube-settings" aria-labelledby="admin-youtube-title">
       <h3 id="admin-youtube-title">YouTube Settings</h3>
-      <p class="admin-help">Control YouTube integration for {{if .IsDefaultSite}}all sites{{else}}this site{{end}}.</p>
+      <p class="admin-help">Control YouTube integration for {{if .IsAlertserver}}all sites{{else}}this site{{end}}.</p>
       <div class="admin-youtube-controls">
         {{range .YouTubeSites}}
         <form method="post" action="/admin/youtube/settings" class="admin-youtube-toggle">
           <input type="hidden" name="site_key" value="{{.SiteKey}}">
           <div class="admin-youtube-site">
-            {{if $.IsDefaultSite}}
+            {{if $.IsAlertserver}}
             <label class="admin-youtube-label">
               <input type="checkbox" name="youtube_enabled" value="true" {{if .Enabled}}checked{{end}} onchange="this.form.submit()">
               <span class="admin-youtube-site-name">{{.SiteName}}</span>

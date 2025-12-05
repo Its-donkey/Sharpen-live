@@ -190,7 +190,7 @@ func (v urlValues) encode() string {
 
 // listSiblingSites returns directories under ui/sites (based on assetsDir) excluding the default-site.
 func listSiblingSites(assetsDir string) []string {
-	root := filepath.Dir(filepath.Dir(filepath.Clean(assetsDir)))
+	root := filepath.Dir(filepath.Clean(assetsDir))
 	entries, err := os.ReadDir(root)
 	if err != nil {
 		return nil

@@ -41,6 +41,7 @@
 
 ### Fixed
 - Home page now renders even when roster loading fails, surfacing the error inline instead of crashing the template.
+- Admin: show sibling sites on default-site by scanning the sites directory instead of the UI root.
 - Submit form template now binds directly to the submit form state and status badges render with the correct helper signature, preventing template execution errors on the home page.
 - Metadata: restrict metadata fetches to an allowlist of hosts and normalise URLs before issuing upstream requests to avoid uncontrolled destinations.
 - Admin: Refresh Status now falls back to live YouTube watch-page metadata so live streams get written to `data/streamers.json` even when the player API doesn’t flag them.

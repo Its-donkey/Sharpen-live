@@ -48,6 +48,7 @@
     <h1>Application Logs <span class="stream-indicator" id="stream-status"></span></h1>
 
     <div class="controls">
+      <a href="/admin" style="padding: 8px 16px; background: #374151; color: white; text-decoration: none; border-radius: 4px; display: inline-block;">← Back to Admin</a>
       <select id="level" onchange="updateFilters()">
         <option value="">All Levels</option>
         {{range .Levels}}

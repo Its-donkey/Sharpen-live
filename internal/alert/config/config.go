@@ -12,8 +12,8 @@ const (
 	defaultAddr         = "127.0.0.1"
 	defaultPort         = ":8880"
 	defaultData         = "data/alertserver"
-	defaultTemplatesDir = "ui/sites/alertserver/templates"
-	defaultAssetsDir    = "ui/sites/alertserver"
+	defaultTemplatesDir = "ui/sites/default-site/templates"
+	defaultAssetsDir    = "ui/sites/default-site"
 	alertserverName     = "Alertserver Admin"
 	AlertserverKey      = "alertserver"
 )

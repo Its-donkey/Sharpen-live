@@ -18,6 +18,8 @@
     <div class="masthead-actions">
       {{if .LoggedIn}}
         <div class="button-row">
+          <a href="/admin/config" class="action-button ghost">Configuration</a>
+          <a href="/logs" class="action-button ghost">Logs</a>
           <form method="post" action="/admin/status-check">
             <button type="submit" class="action-button primary">Refresh status</button>
           </form>
@@ -80,7 +82,13 @@
           <p class="eyebrow">Other sites nearby</p>
           {{if .OtherSites}}
             <div class="site-chip-row">
-              {{range .OtherSites}}<span class="site-chip">{{.}}</span>{{end}}
+              {{range .OtherSites}}
+                {{if .AdminURL}}
+                  <a href="{{.AdminURL}}" class="site-chip" target="_blank" rel="noopener">{{.Name}}</a>
+                {{else}}
+                  <span class="site-chip">{{.Name}}</span>
+                {{end}}
+              {{end}}
             </div>
           {{else}}
             <p class="admin-help subtle">No additional sites detected alongside the fallback.</p>
@@ -163,25 +171,19 @@
         </div>
         {{if .OtherSites}}
           <div class="site-chip-row">
-            {{range .OtherSites}}<span class="site-chip">{{.}}</span>{{end}}
+            {{range .OtherSites}}
+              {{if .AdminURL}}
+                <a href="{{.AdminURL}}" class="site-chip" target="_blank" rel="noopener">{{.Name}}</a>
+              {{else}}
+                <span class="site-chip">{{.Name}}</span>
+              {{end}}
+            {{end}}
           </div>
         {{else}}
           <p>No additional sites were found alongside the default site.</p>
         {{end}}
       </div>
 
-      <div class="surface admin-card log-card span-2">
-        <div class="admin-card-header log-card-header">
-          <div>
-            <p class="eyebrow">Observability</p>
-            <h3>Aggregated logs</h3>
-            <p class="admin-help">The embedded viewer pulls all site logs, including the fallback.</p>
-          </div>
-          <a class="action-button ghost" href="/logs" target="_blank" rel="noreferrer">Open in new tab</a>
-        </div>
-        <p class="admin-help subtle">If the viewer shows a login or fallback page, your admin session may have expired—refresh status to re-auth.</p>
-        <iframe src="/logs" title="Logs" class="admin-logs-frame" loading="lazy"></iframe>
-      </div>
     </div>
   {{end}}
 </section>

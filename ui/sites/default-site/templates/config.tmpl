@@ -1,0 +1,164 @@
+{{define "config"}}
+{{template "base" .}}
+{{end}}
+
+{{define "content"}}
+<section class="admin-shell admin-lumen" aria-live="polite">
+  <header class="surface admin-masthead">
+    <div class="masthead-text">
+      <p class="eyebrow">Platform Integration</p>
+      <h2 id="config-title">Configuration</h2>
+      <p class="admin-help">View and manage platform integration settings for YouTube, Twitch, and Facebook.</p>
+      <div class="pill-row">
+        <span class="pill {{if .YouTubeConfig.Enabled}}tone-accent{{else}}tone-ghost{{end}}">YouTube: {{if .YouTubeConfig.Enabled}}Active{{else}}Inactive{{end}}</span>
+        <span class="pill {{if .TwitchConfig.Enabled}}tone-accent{{else}}tone-ghost{{end}}">Twitch: {{if .TwitchConfig.Enabled}}Active{{else}}Inactive{{end}}</span>
+        <span class="pill {{if .FacebookConfig.Enabled}}tone-accent{{else}}tone-ghost{{end}}">Facebook: {{if .FacebookConfig.Enabled}}Active{{else}}Inactive{{end}}</span>
+      </div>
+    </div>
+    <div class="masthead-actions">
+      {{if .LoggedIn}}
+        <div class="button-row">
+          <a href="/admin" class="action-button ghost">Back to admin</a>
+        </div>
+      {{else}}
+        <p class="admin-help subtle">Sign in to view configuration details.</p>
+      {{end}}
+    </div>
+  </header>
+
+  {{if .Flash}}
+    <div class="admin-banner success" role="status">{{.Flash}}</div>
+  {{end}}
+  {{if .Error}}
+    <div class="admin-banner error" role="status"><pre style="white-space: pre-wrap; margin: 0; font-family: inherit;">{{.Error}}</pre></div>
+  {{end}}
+
+  {{if not .LoggedIn}}
+    <div class="admin-grid auth-layout">
+      <div class="surface admin-card login-card">
+        <div class="admin-card-header">
+          <p class="eyebrow">Access required</p>
+          <h3>Log in to view configuration</h3>
+          <p class="admin-help">Configuration settings require admin authentication.</p>
+        </div>
+        <div class="submit-streamer-actions">
+          <a href="/admin" class="submit-streamer-submit">Go to login</a>
+        </div>
+      </div>
+    </div>
+  {{else}}
+    <div class="admin-grid dashboard">
+      <!-- YouTube Configuration -->
+      <div class="surface admin-card span-2">
+        <div class="admin-card-header">
+          <p class="eyebrow">YouTube Integration</p>
+          <h3>YouTube WebSub Configuration</h3>
+          <p class="admin-help">Global YouTube integration settings for WebSub notifications.</p>
+        </div>
+        <div class="config-details">
+          <div class="config-row">
+            <span class="config-label">Status</span>
+            <span class="config-value">
+              <span class="pill {{if .YouTubeConfig.Enabled}}tone-accent{{else}}tone-warn{{end}}">
+                {{if .YouTubeConfig.Enabled}}Enabled{{else}}Disabled{{end}}
+              </span>
+            </span>
+          </div>
+          <div class="config-row">
+            <span class="config-label">Hub URL</span>
+            <span class="config-value">{{.YouTubeConfig.HubURL}}</span>
+          </div>
+          <div class="config-row">
+            <span class="config-label">Callback URL</span>
+            <span class="config-value">{{.YouTubeConfig.CallbackURL}}</span>
+          </div>
+          <div class="config-row">
+            <span class="config-label">API Key</span>
+            <span class="config-value">{{.YouTubeConfig.APIKey}}</span>
+          </div>
+          <div class="config-row">
+            <span class="config-label">Lease Seconds</span>
+            <span class="config-value">{{.YouTubeConfig.LeaseSeconds}} ({{.YouTubeConfig.LeaseSeconds | formatDays}} days)</span>
+          </div>
+          {{if .YouTubeConfig.Mode}}
+          <div class="config-row">
+            <span class="config-label">Mode</span>
+            <span class="config-value">{{.YouTubeConfig.Mode}}</span>
+          </div>
+          {{end}}
+          {{if .YouTubeConfig.Verify}}
+          <div class="config-row">
+            <span class="config-label">Verify</span>
+            <span class="config-value">{{.YouTubeConfig.Verify}}</span>
+          </div>
+          {{end}}
+        </div>
+      </div>
+
+      <!-- Twitch Configuration -->
+      <div class="surface admin-card">
+        <div class="admin-card-header">
+          <p class="eyebrow">Twitch Integration</p>
+          <h3>Twitch Configuration</h3>
+          <p class="admin-help">Twitch platform integration settings.</p>
+        </div>
+        <div class="config-details">
+          <div class="config-row">
+            <span class="config-label">Status</span>
+            <span class="config-value">
+              <span class="pill {{if .TwitchConfig.Enabled}}tone-accent{{else}}tone-warn{{end}}">
+                {{if .TwitchConfig.Enabled}}Enabled{{else}}Disabled{{end}}
+              </span>
+            </span>
+          </div>
+          {{if .TwitchConfig.Enabled}}
+          <div class="config-row">
+            <span class="config-label">Hub URL</span>
+            <span class="config-value">{{.TwitchConfig.HubURL}}</span>
+          </div>
+          {{else}}
+          <p class="admin-help subtle">Twitch integration is not currently configured.</p>
+          {{end}}
+        </div>
+      </div>
+
+      <!-- Facebook Configuration -->
+      <div class="surface admin-card">
+        <div class="admin-card-header">
+          <p class="eyebrow">Facebook Integration</p>
+          <h3>Facebook Configuration</h3>
+          <p class="admin-help">Facebook platform integration settings.</p>
+        </div>
+        <div class="config-details">
+          <div class="config-row">
+            <span class="config-label">Status</span>
+            <span class="config-value">
+              <span class="pill {{if .FacebookConfig.Enabled}}tone-accent{{else}}tone-warn{{end}}">
+                {{if .FacebookConfig.Enabled}}Enabled{{else}}Disabled{{end}}
+              </span>
+            </span>
+          </div>
+          {{if .FacebookConfig.Enabled}}
+          <div class="config-row">
+            <span class="config-label">Hub URL</span>
+            <span class="config-value">{{.FacebookConfig.HubURL}}</span>
+          </div>
+          {{else}}
+          <p class="admin-help subtle">Facebook integration is not currently configured.</p>
+          {{end}}
+        </div>
+      </div>
+
+      <!-- Configuration File Location -->
+      <div class="surface admin-card span-2 info-card">
+        <div class="admin-card-header">
+          <p class="eyebrow">Configuration File</p>
+          <h3>Settings Location</h3>
+          <p class="admin-help">These settings are stored in the server configuration file.</p>
+        </div>
+        <p class="admin-help subtle">To modify these settings, edit the <code>config.json</code> file and restart the server. Per-site YouTube toggles can be managed from the main admin dashboard.</p>
+      </div>
+    </div>
+  {{end}}
+</section>
+{{end}}

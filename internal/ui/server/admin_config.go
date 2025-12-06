@@ -72,33 +72,33 @@ func (s *server) handleAdminConfig(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		data.Error = "Failed to load configuration: " + err.Error()
 	} else {
-		// Use GLOBAL platform config for display (cfg.Platforms)
+		// Use GLOBAL platform config for display
 		// Global YouTube configuration - defaults to enabled if not set
 		youtubeEnabled := true
-		if cfg.Platforms.YouTube.Enabled != nil {
-			youtubeEnabled = *cfg.Platforms.YouTube.Enabled
+		if cfg.YouTube.Enabled != nil {
+			youtubeEnabled = *cfg.YouTube.Enabled
 		}
 		data.YouTubeConfig = YouTubeConfigDisplay{
 			Enabled:      youtubeEnabled,
-			HubURL:       cfg.Platforms.YouTube.HubURL,
-			CallbackURL:  cfg.Platforms.YouTube.CallbackURL,
-			APIKey:       maskAPIKey(cfg.Platforms.YouTube.APIKey),
-			LeaseSeconds: cfg.Platforms.YouTube.LeaseSeconds,
-			Mode:         cfg.Platforms.YouTube.Mode,
-			Verify:       cfg.Platforms.YouTube.Verify,
+			HubURL:       cfg.YouTube.HubURL,
+			CallbackURL:  cfg.YouTube.CallbackURL,
+			APIKey:       maskAPIKey(cfg.YouTube.APIKey),
+			LeaseSeconds: cfg.YouTube.LeaseSeconds,
+			Mode:         cfg.YouTube.Mode,
+			Verify:       cfg.YouTube.Verify,
 		}
 
 		// Global Twitch configuration - defaults to enabled if not set
 		twitchEnabled := true
-		if cfg.Platforms.Twitch.Enabled != nil {
-			twitchEnabled = *cfg.Platforms.Twitch.Enabled
+		if cfg.Twitch.Enabled != nil {
+			twitchEnabled = *cfg.Twitch.Enabled
 		}
 		data.TwitchConfig = TwitchConfigDisplay{
 			Enabled:        twitchEnabled,
-			CallbackURL:    cfg.Platforms.Twitch.CallbackURL,
-			ClientID:       maskAPIKey(cfg.Platforms.Twitch.ClientID),
-			ClientSecret:   maskSecret(cfg.Platforms.Twitch.ClientSecret),
-			EventSubSecret: maskSecret(cfg.Platforms.Twitch.EventSubSecret),
+			CallbackURL:    cfg.Twitch.CallbackURL,
+			ClientID:       maskAPIKey(cfg.Twitch.ClientID),
+			ClientSecret:   maskSecret(cfg.Twitch.ClientSecret),
+			EventSubSecret: maskSecret(cfg.Twitch.EventSubSecret),
 		}
 
 		// Facebook configuration (placeholder for now)
@@ -199,9 +199,9 @@ func (s *server) handleAdminPlatformSettings(w http.ResponseWriter, r *http.Requ
 
 	switch platform {
 	case "youtube":
-		cfg.Platforms.YouTube.Enabled = &enabled
+		cfg.YouTube.Enabled = &enabled
 	case "twitch":
-		cfg.Platforms.Twitch.Enabled = &enabled
+		cfg.Twitch.Enabled = &enabled
 	default:
 		http.Redirect(w, r, "/admin/config?err="+fmt.Sprintf("Unknown platform: %s", platform), http.StatusSeeOther)
 		return

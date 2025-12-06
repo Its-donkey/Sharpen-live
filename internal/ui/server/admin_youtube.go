@@ -33,9 +33,9 @@ func (s *server) isYouTubeEnabled() bool {
 		return true // Default to enabled if site can't be resolved
 	}
 
-	// Check site-specific YouTube.Enabled setting
-	if site.YouTube.Enabled != nil {
-		return *site.YouTube.Enabled
+	// Check site-specific YouTubeEnabled setting
+	if site.YouTubeEnabled != nil {
+		return *site.YouTubeEnabled
 	}
 
 	return true // Default to enabled if no setting
@@ -53,9 +53,9 @@ func isYouTubeEnabledForSiteKey(configPath, siteKey string) bool {
 		return true // Default to enabled if site can't be resolved
 	}
 
-	// Check site-specific YouTube.Enabled setting
-	if site.YouTube.Enabled != nil {
-		return *site.YouTube.Enabled
+	// Check site-specific YouTubeEnabled setting
+	if site.YouTubeEnabled != nil {
+		return *site.YouTubeEnabled
 	}
 
 	return true // Default to enabled if no setting
@@ -124,8 +124,8 @@ func (s *server) handleAdminYouTubeSettings(w http.ResponseWriter, r *http.Reque
 		return
 	}
 
-	// Update the YouTube.Enabled field
-	site.YouTube.Enabled = &enabled
+	// Update the YouTubeEnabled field
+	site.YouTubeEnabled = &enabled
 	cfg.Sites[targetSiteKey] = site
 
 	// Save config back to file
@@ -170,10 +170,10 @@ func (s *server) getYouTubeSiteConfigs() ([]YouTubeSiteConfig, error) {
 				continue
 			}
 
-			// Use site-specific YouTube.Enabled, default to true
+			// Use site-specific YouTubeEnabled, default to true
 			enabled := true
-			if site.YouTube.Enabled != nil {
-				enabled = *site.YouTube.Enabled
+			if site.YouTubeEnabled != nil {
+				enabled = *site.YouTubeEnabled
 			}
 			configs = append(configs, YouTubeSiteConfig{
 				SiteKey:  key,
@@ -191,10 +191,10 @@ func (s *server) getYouTubeSiteConfigs() ([]YouTubeSiteConfig, error) {
 		return nil, err
 	}
 
-	// Use site-specific YouTube.Enabled, default to true
+	// Use site-specific YouTubeEnabled, default to true
 	enabled := true
-	if site.YouTube.Enabled != nil {
-		enabled = *site.YouTube.Enabled
+	if site.YouTubeEnabled != nil {
+		enabled = *site.YouTubeEnabled
 	}
 
 	return []YouTubeSiteConfig{

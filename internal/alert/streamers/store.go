@@ -103,10 +103,14 @@ type FacebookStatus struct {
 	StartedAt time.Time `json:"startedAt,omitempty"`
 }
 
-// TwitchPlatform stores Twitch-specific metadata.
+// TwitchPlatform stores Twitch-specific metadata and EventSub subscription details.
 type TwitchPlatform struct {
-	Username      string `json:"username,omitempty"`
-	BroadcasterID string `json:"broadcasterId,omitempty"`
+	Username                 string `json:"username,omitempty"`
+	BroadcasterID            string `json:"broadcasterId,omitempty"`
+	EventSubOnlineID         string `json:"eventsubOnlineId,omitempty"`
+	EventSubOfflineID        string `json:"eventsubOfflineId,omitempty"`
+	EventSubCallbackURL      string `json:"eventsubCallbackUrl,omitempty"`
+	EventSubSubscribed       bool   `json:"eventsubSubscribed"`
 }
 
 // TwitchStatus stores Twitch live metadata.
@@ -755,4 +759,54 @@ func readFile(path string) (File, error) {
 		return File{}, fmt.Errorf("parse streamers file: %w", err)
 	}
 	return fileData, nil
+}
+
+// GetByTwitchBroadcasterID returns the streamer record for the given Twitch broadcaster ID.
+func (s *Store) GetByTwitchBroadcasterID(broadcasterID string) (Record, error) {
+	if s == nil {
+		return Record{}, errors.New("streamers store is nil")
+	}
+	broadcasterID = strings.TrimSpace(broadcasterID)
+	if broadcasterID == "" {
+		return Record{}, errors.New("twitch broadcaster id is required")
+	}
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	fileData, err := s.readFileLocked()
+	if err != nil {
+		return Record{}, err
+	}
+	for _, record := range fileData.Records {
+		if broadcasterMatches(record.Platforms.Twitch, broadcasterID) {
+			return record, nil
+		}
+	}
+	return Record{}, fmt.Errorf("%w: twitch broadcaster %s", ErrStreamerNotFound, broadcasterID)
+}
+
+// UpdateTwitchPlatform updates the Twitch platform configuration for a streamer.
+func (s *Store) UpdateTwitchPlatform(streamerID string, platform *TwitchPlatform) (Record, error) {
+	if s == nil {
+		return Record{}, errors.New("streamers store is nil")
+	}
+	streamerID = strings.TrimSpace(streamerID)
+	if streamerID == "" {
+		return Record{}, errors.New("streamer id is required")
+	}
+	var updated Record
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	err := s.updateFileLocked(func(file *File) error {
+		for i := range file.Records {
+			if !strings.EqualFold(file.Records[i].Streamer.ID, streamerID) {
+				continue
+			}
+			file.Records[i].Platforms.Twitch = platform
+			file.Records[i].UpdatedAt = time.Now().UTC()
+			updated = file.Records[i]
+			return nil
+		}
+		return fmt.Errorf("%w: %s", ErrStreamerNotFound, streamerID)
+	})
+	return updated, err
 }

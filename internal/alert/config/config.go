@@ -30,13 +30,13 @@ type YouTubeConfig struct {
 	APIKey          string `json:"api_key"`
 }
 
-// TwitchConfig captures Twitch EventSub and API configuration.
+// TwitchConfig captures Twitch EventSub configuration.
 type TwitchConfig struct {
-	Enabled        *bool  `json:"enabled,omitempty"`
-	ClientID       string `json:"client_id"`
-	ClientSecret   string `json:"client_secret"`
-	EventSubSecret string `json:"eventsub_secret"` // Shared secret for verifying EventSub webhook signatures
-	CallbackURL    string `json:"callback_url"`    // Public URL for EventSub callbacks
+	Enabled       *bool  `json:"enabled,omitempty"`
+	ClientID      string `json:"client_id"`
+	ClientSecret  string `json:"client_secret"`
+	EventSubSecret string `json:"eventsub_secret"`
+	CallbackURL   string `json:"callback_url"`
 }
 
 // ServerConfig configures the HTTP listener used by alert-server.
@@ -53,15 +53,16 @@ type AppConfig struct {
 	Name      string `json:"name"`
 }
 
-// SiteConfig captures per-site overrides for server/app/platform settings.
+// SiteConfig captures per-site overrides for server/app settings.
 type SiteConfig struct {
-	Key         string
-	Name        string        `json:"name"`
-	Description string        `json:"description"`
-	Server      ServerConfig  `json:"server"`
-	App         AppConfig     `json:"app"`
-	YouTube     YouTubeConfig `json:"youtube"`
-	Twitch      TwitchConfig  `json:"twitch"`
+	Key            string
+	Name           string       `json:"name"`
+	Description    string       `json:"description"`
+	YouTubeEnabled *bool        `json:"youtube_enabled,omitempty"`
+	TwitchEnabled  *bool        `json:"twitch_enabled,omitempty"`
+	TwitchCallback string       `json:"twitch_callback,omitempty"`
+	Server         ServerConfig `json:"server"`
+	App            AppConfig    `json:"app"`
 }
 
 // AdminConfig stores credentials for admin-authenticated APIs.
@@ -71,19 +72,19 @@ type AdminConfig struct {
 	TokenTTLSeconds int    `json:"token_ttl_seconds"`
 }
 
-// PlatformsConfig holds global platform defaults shared across all sites.
-type PlatformsConfig struct {
-	YouTube YouTubeConfig `json:"youtube"`
-	Twitch  TwitchConfig  `json:"twitch"`
-}
-
 // Config represents the combined runtime settings parsed from config.json.
 type Config struct {
-	Server    ServerConfig
-	App       AppConfig
-	Admin     AdminConfig
-	Platforms PlatformsConfig
-	Sites     map[string]SiteConfig
+	Server  ServerConfig
+	App     AppConfig
+	YouTube YouTubeConfig
+	Twitch  TwitchConfig
+	Admin   AdminConfig
+	Sites   map[string]SiteConfig
+}
+
+type platformsFileConfig struct {
+	YouTube *YouTubeConfig `json:"youtube"`
+	Twitch  *TwitchConfig  `json:"twitch"`
 }
 
 type fileConfig struct {
@@ -91,19 +92,27 @@ type fileConfig struct {
 	Addr           string                    `json:"addr"`
 	Port           string                    `json:"port"`
 	AppBlock       *AppConfig                `json:"app"`
-	PlatformsBlock *PlatformsConfig          `json:"platforms"`
 	Sites          map[string]siteFileConfig `json:"sites"`
-	AdminBlock     *AdminConfig              `json:"admin"`
+	PlatformsBlock *platformsFileConfig      `json:"platforms"`
+	YouTubeBlock   *YouTubeConfig            `json:"youtube"`
+	YouTubeConfig
+	AdminBlock *AdminConfig `json:"admin"`
 	AdminConfig
 }
 
+type siteTwitchConfig struct {
+	Enabled     *bool  `json:"enabled,omitempty"`
+	CallbackURL string `json:"callback_url,omitempty"`
+}
+
 type siteFileConfig struct {
-	Name        string         `json:"name"`
-	Description string         `json:"description"`
-	Server      *ServerConfig  `json:"server"`
-	App         *AppConfig     `json:"app"`
-	YouTube     *YouTubeConfig `json:"youtube"`
-	Twitch      *TwitchConfig  `json:"twitch"`
+	Name           string            `json:"name"`
+	Description    string            `json:"description"`
+	YouTubeEnabled *bool             `json:"youtube_enabled,omitempty"`
+	YouTube        *YouTubeConfig    `json:"youtube,omitempty"`
+	Twitch         *siteTwitchConfig `json:"twitch,omitempty"`
+	Server         *ServerConfig     `json:"server"`
+	App            *AppConfig        `json:"app"`
 }
 
 // Load reads the JSON config at the given path and returns the parsed structure.
@@ -115,6 +124,27 @@ func Load(path string) (Config, error) {
 	var raw fileConfig
 	if err := json.Unmarshal(data, &raw); err != nil {
 		return Config{}, fmt.Errorf("decode config: %w", err)
+	}
+
+	yt := raw.YouTubeConfig
+	if raw.PlatformsBlock != nil && raw.PlatformsBlock.YouTube != nil {
+		yt = *raw.PlatformsBlock.YouTube
+	} else if raw.YouTubeBlock != nil {
+		yt = *raw.YouTubeBlock
+	}
+	if yt.APIKey == "" || yt.APIKey == "YOUR_YOUTUBE_API_KEY_HERE" {
+		yt.APIKey = youtubeAPIKeyFromEnv()
+	}
+
+	var twitch TwitchConfig
+	if raw.PlatformsBlock != nil && raw.PlatformsBlock.Twitch != nil {
+		twitch = *raw.PlatformsBlock.Twitch
+	}
+	if twitch.ClientID == "" {
+		twitch.ClientID = twitchClientIDFromEnv()
+	}
+	if twitch.ClientSecret == "" {
+		twitch.ClientSecret = twitchClientSecretFromEnv()
 	}
 
 	server := ServerConfig{
@@ -162,26 +192,6 @@ func Load(path string) (Config, error) {
 		app.Name = alertserverName
 	}
 
-	// Parse global platforms config with environment fallbacks
-	var platforms PlatformsConfig
-	if raw.PlatformsBlock != nil {
-		platforms = *raw.PlatformsBlock
-	}
-	// Apply environment variable fallbacks for global YouTube
-	if platforms.YouTube.APIKey == "" || platforms.YouTube.APIKey == "YOUR_YOUTUBE_API_KEY_HERE" {
-		platforms.YouTube.APIKey = youtubeAPIKeyFromEnv()
-	}
-	// Apply environment variable fallbacks for global Twitch
-	if platforms.Twitch.ClientID == "" || platforms.Twitch.ClientID == "YOUR_TWITCH_CLIENT_ID_HERE" {
-		platforms.Twitch.ClientID = twitchEnvValue("TWITCH_CLIENT_ID")
-	}
-	if platforms.Twitch.ClientSecret == "" || platforms.Twitch.ClientSecret == "YOUR_TWITCH_CLIENT_SECRET_HERE" {
-		platforms.Twitch.ClientSecret = twitchEnvValue("TWITCH_CLIENT_SECRET")
-	}
-	if platforms.Twitch.EventSubSecret == "" || platforms.Twitch.EventSubSecret == "YOUR_TWITCH_EVENTSUB_SECRET_HERE" {
-		platforms.Twitch.EventSubSecret = twitchEnvValue("TWITCH_EVENTSUB_SECRET")
-	}
-
 	sites := map[string]SiteConfig{}
 	for key, site := range raw.Sites {
 		siteServer := server
@@ -218,76 +228,32 @@ func Load(path string) (Config, error) {
 			}
 		}
 
-		// Build site-specific YouTube config: start from global, override with site-specific
-		siteYouTube := platforms.YouTube // Start with global defaults
-		if site.YouTube != nil {
-			// Override with site-specific values
-			if site.YouTube.Enabled != nil {
-				siteYouTube.Enabled = site.YouTube.Enabled
-			}
-			if site.YouTube.CallbackURL != "" {
-				siteYouTube.CallbackURL = site.YouTube.CallbackURL
-			}
-			if site.YouTube.LocalWebSubPath != "" {
-				siteYouTube.LocalWebSubPath = site.YouTube.LocalWebSubPath
-			}
-			// Allow site-specific overrides of global settings if provided
-			if site.YouTube.HubURL != "" {
-				siteYouTube.HubURL = site.YouTube.HubURL
-			}
-			if site.YouTube.LeaseSeconds != 0 {
-				siteYouTube.LeaseSeconds = site.YouTube.LeaseSeconds
-			}
-			if site.YouTube.Mode != "" {
-				siteYouTube.Mode = site.YouTube.Mode
-			}
-			if site.YouTube.Verify != "" {
-				siteYouTube.Verify = site.YouTube.Verify
-			}
-			if site.YouTube.APIKey != "" {
-				siteYouTube.APIKey = site.YouTube.APIKey
-			}
-		}
-
-		// Build site-specific Twitch config: start from global, override with site-specific
-		siteTwitch := platforms.Twitch // Start with global defaults
+		var twitchEnabled *bool
+		var twitchCallback string
 		if site.Twitch != nil {
-			// Override with site-specific values
-			if site.Twitch.Enabled != nil {
-				siteTwitch.Enabled = site.Twitch.Enabled
-			}
-			if site.Twitch.CallbackURL != "" {
-				siteTwitch.CallbackURL = site.Twitch.CallbackURL
-			}
-			// Allow site-specific overrides of global settings if provided
-			if site.Twitch.ClientID != "" {
-				siteTwitch.ClientID = site.Twitch.ClientID
-			}
-			if site.Twitch.ClientSecret != "" {
-				siteTwitch.ClientSecret = site.Twitch.ClientSecret
-			}
-			if site.Twitch.EventSubSecret != "" {
-				siteTwitch.EventSubSecret = site.Twitch.EventSubSecret
-			}
+			twitchEnabled = site.Twitch.Enabled
+			twitchCallback = site.Twitch.CallbackURL
 		}
 
 		sites[key] = SiteConfig{
-			Key:         key,
-			Name:        siteName,
-			Description: site.Description,
-			Server:      siteServer,
-			App:         siteApp,
-			YouTube:     siteYouTube,
-			Twitch:      siteTwitch,
+			Key:            key,
+			Name:           siteName,
+			Description:    site.Description,
+			YouTubeEnabled: site.YouTubeEnabled,
+			TwitchEnabled:  twitchEnabled,
+			TwitchCallback: twitchCallback,
+			Server:         siteServer,
+			App:            siteApp,
 		}
 	}
 
 	cfg := Config{
-		Server:    server,
-		App:       app,
-		Admin:     admin,
-		Platforms: platforms,
-		Sites:     sites,
+		Server:  server,
+		App:     app,
+		YouTube: yt,
+		Twitch:  twitch,
+		Admin:   admin,
+		Sites:   sites,
 	}
 
 	return cfg, nil
@@ -313,40 +279,19 @@ func Save(cfg Config, path string) error {
 			Data:      cfg.App.Data,
 			Name:      cfg.App.Name,
 		},
-		PlatformsBlock: &cfg.Platforms,
-		AdminBlock:     &cfg.Admin,
-		Sites:          make(map[string]siteFileConfig),
+		YouTubeBlock: &cfg.YouTube,
+		AdminBlock:   &cfg.Admin,
+		Sites:        make(map[string]siteFileConfig),
 	}
 
-	// Convert sites - preserve all site-specific platform fields
+	// Convert sites
 	for key, site := range cfg.Sites {
-		// Preserve full site-specific YouTube config
-		siteYouTube := &YouTubeConfig{
-			Enabled:         site.YouTube.Enabled,
-			HubURL:          site.YouTube.HubURL,
-			CallbackURL:     site.YouTube.CallbackURL,
-			LocalWebSubPath: site.YouTube.LocalWebSubPath,
-			LeaseSeconds:    site.YouTube.LeaseSeconds,
-			Mode:            site.YouTube.Mode,
-			Verify:          site.YouTube.Verify,
-			APIKey:          site.YouTube.APIKey,
-		}
-		// Preserve full site-specific Twitch config
-		siteTwitch := &TwitchConfig{
-			Enabled:        site.Twitch.Enabled,
-			ClientID:       site.Twitch.ClientID,
-			ClientSecret:   site.Twitch.ClientSecret,
-			EventSubSecret: site.Twitch.EventSubSecret,
-			CallbackURL:    site.Twitch.CallbackURL,
-		}
-
 		raw.Sites[key] = siteFileConfig{
-			Name:        site.Name,
-			Description: site.Description,
-			Server:      &site.Server,
-			App:         &site.App,
-			YouTube:     siteYouTube,
-			Twitch:      siteTwitch,
+			Name:           site.Name,
+			Description:    site.Description,
+			YouTubeEnabled: site.YouTubeEnabled,
+			Server:         &site.Server,
+			App:            &site.App,
 		}
 	}
 
@@ -365,24 +310,17 @@ func Save(cfg Config, path string) error {
 }
 
 // ResolveSite returns the combined configuration for the requested site. The
-// empty site key resolves to the base configuration with global platform configs.
-// The alertserver key returns the fallback alertserver configuration.
+// empty site key resolves to the base (Sharpen.Live) configuration.
 func ResolveSite(key string, cfg Config) (SiteConfig, error) {
 	if key == "" {
 		return SiteConfig{
-			Key:         "",
-			Name:        cfg.App.Name,
-			Description: "",
-			Server:      cfg.Server,
-			App:         cfg.App,
-			YouTube:     cfg.Platforms.YouTube,
-			Twitch:      cfg.Platforms.Twitch,
+			Key:            "",
+			Name:           cfg.App.Name,
+			Description:    "",
+			YouTubeEnabled: nil, // Use global default
+			Server:         cfg.Server,
+			App:            cfg.App,
 		}, nil
-	}
-
-	// Handle the alertserver fallback site
-	if key == AlertserverKey {
-		return Alertserver(cfg), nil
 	}
 
 	site, ok := cfg.Sites[key]
@@ -392,22 +330,27 @@ func ResolveSite(key string, cfg Config) (SiteConfig, error) {
 	return site, nil
 }
 
-// AllSites returns the alertserver site plus all configured sites from config.
-// The alertserver site is always included first as it is the built-in admin site.
+// AllSites returns the list of configured sites, including the base
+// Sharpen.Live site.
 func AllSites(cfg Config) []SiteConfig {
-	// Always include the alertserver site first
-	sites := []SiteConfig{Alertserver(cfg)}
-
+	sites := []SiteConfig{{
+		Key:            "",
+		Name:           cfg.App.Name,
+		Description:    "",
+		YouTubeEnabled: nil,
+		Server:         cfg.Server,
+		App:            cfg.App,
+	}}
 	for key, site := range cfg.Sites {
 		sites = append(sites, SiteConfig{
-			Key:         key,
-			Name:        site.Name,
-			Description: site.Description,
-			Server:      site.Server,
-			App:         site.App,
-			YouTube:     site.YouTube,
-			Twitch:      site.Twitch,
+			Key:            site.Key,
+			Name:           site.Name,
+			Description:    site.Description,
+			YouTubeEnabled: site.YouTubeEnabled,
+			Server:         site.Server,
+			App:            site.App,
 		})
+		sites[len(sites)-1].Key = key
 	}
 	return sites
 }
@@ -422,11 +365,17 @@ func DefaultConfig() Config {
 			Port: defaultPort,
 		},
 		App: AlertserverAppConfig(),
+		YouTube: YouTubeConfig{
+			HubURL:       "",
+			CallbackURL:  "",
+			LeaseSeconds: 0,
+			Verify:       "",
+			APIKey:       "",
+		},
 		Admin: AdminConfig{
 			TokenTTLSeconds: 86400,
 		},
-		Platforms: PlatformsConfig{},
-		Sites:     map[string]SiteConfig{},
+		Sites: map[string]SiteConfig{},
 	}
 }
 
@@ -443,8 +392,7 @@ func AlertserverAppConfig() AppConfig {
 
 // Alertserver returns a site configuration that points at the fallback assets
 // and templates. Server listen values inherit from the provided config when
-// present, otherwise the defaults are applied. Platform configs inherit from
-// the global platforms config.
+// present, otherwise the defaults are applied.
 func Alertserver(cfg Config) SiteConfig {
 	server := cfg.Server
 	if strings.TrimSpace(server.Addr) == "" {
@@ -454,13 +402,13 @@ func Alertserver(cfg Config) SiteConfig {
 		server.Port = defaultPort
 	}
 	return SiteConfig{
-		Key:         AlertserverKey,
-		Name:        alertserverName,
-		Description: "Fallback site for multi-tenant streaming notifications",
-		Server:      server,
-		App:         AlertserverAppConfig(),
-		YouTube:     cfg.Platforms.YouTube,
-		Twitch:      cfg.Platforms.Twitch,
+		Key:            AlertserverKey,
+		Name:           alertserverName,
+		Description:    "Fallback site for multi-tenant streaming notifications",
+		YouTubeEnabled: nil,
+		TwitchEnabled:  nil,
+		Server:         server,
+		App:            AlertserverAppConfig(),
 	}
 }
 
@@ -477,6 +425,10 @@ func youtubeAPIKeyFromEnv() string {
 	return ""
 }
 
-func twitchEnvValue(key string) string {
-	return strings.TrimSpace(os.Getenv(key))
+func twitchClientIDFromEnv() string {
+	return strings.TrimSpace(os.Getenv("TWITCH_CLIENT_ID"))
+}
+
+func twitchClientSecretFromEnv() string {
+	return strings.TrimSpace(os.Getenv("TWITCH_CLIENT_SECRET"))
 }

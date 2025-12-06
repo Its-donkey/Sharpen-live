@@ -287,9 +287,12 @@ func (s *SubmissionsService) approve(ctx context.Context, submission submissions
 				if err != nil {
 					fmt.Printf("ERROR: setupTwitchEventSub failed: %v\n", err)
 					fmt.Printf("WARNING: Continuing with approval but EventSub may not be active\n")
-					// Still save the platform without EventSub
-					twitchPlatform = &streamers.TwitchPlatform{
-						Username: username,
+					// Use returned platform if available (preserves broadcaster ID),
+					// otherwise create minimal platform with just username
+					if twitchPlatform == nil {
+						twitchPlatform = &streamers.TwitchPlatform{
+							Username: username,
+						}
 					}
 				}
 

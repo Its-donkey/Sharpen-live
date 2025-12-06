@@ -318,17 +318,26 @@ func Save(cfg Config, path string) error {
 		Sites:          make(map[string]siteFileConfig),
 	}
 
-	// Convert sites - save site-specific overrides only
+	// Convert sites - preserve all site-specific platform fields
 	for key, site := range cfg.Sites {
-		// Create site-specific YouTube config (only site-specific fields)
+		// Preserve full site-specific YouTube config
 		siteYouTube := &YouTubeConfig{
-			Enabled:     site.YouTube.Enabled,
-			CallbackURL: site.YouTube.CallbackURL,
+			Enabled:         site.YouTube.Enabled,
+			HubURL:          site.YouTube.HubURL,
+			CallbackURL:     site.YouTube.CallbackURL,
+			LocalWebSubPath: site.YouTube.LocalWebSubPath,
+			LeaseSeconds:    site.YouTube.LeaseSeconds,
+			Mode:            site.YouTube.Mode,
+			Verify:          site.YouTube.Verify,
+			APIKey:          site.YouTube.APIKey,
 		}
-		// Create site-specific Twitch config (only site-specific fields)
+		// Preserve full site-specific Twitch config
 		siteTwitch := &TwitchConfig{
-			Enabled:     site.Twitch.Enabled,
-			CallbackURL: site.Twitch.CallbackURL,
+			Enabled:        site.Twitch.Enabled,
+			ClientID:       site.Twitch.ClientID,
+			ClientSecret:   site.Twitch.ClientSecret,
+			EventSubSecret: site.Twitch.EventSubSecret,
+			CallbackURL:    site.Twitch.CallbackURL,
 		}
 
 		raw.Sites[key] = siteFileConfig{

@@ -330,6 +330,25 @@
           "type": "string",
           "pattern": "^[0-9]+$",
           "description": "Twitch broadcaster ID."
+        },
+        "eventsubOnlineId": {
+          "type": "string",
+          "description": "EventSub subscription ID for stream.online events."
+        },
+        "eventsubOfflineId": {
+          "type": "string",
+          "description": "EventSub subscription ID for stream.offline events."
+        },
+        "eventsubCallbackUrl": {
+          "type": "string",
+          "format": "uri",
+          "pattern": "^https://",
+          "description": "Callback URL for EventSub notifications."
+        },
+        "eventsubSubscribed": {
+          "type": "boolean",
+          "description": "Whether EventSub subscriptions are active.",
+          "readOnly": true
         }
       },
       "required": ["username"]

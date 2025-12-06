@@ -248,12 +248,12 @@ func (s *server) readLogEntries(limit int) ([]logging.Entry, error) {
 		appendFrom(path)
 	}
 
-	// Sort by timestamp and keep the most recent entries.
+	// Sort by timestamp descending (newest first) and keep the most recent entries.
 	sort.Slice(all, func(i, j int) bool {
-		return all[i].Timestamp.Before(all[j].Timestamp)
+		return all[j].Timestamp.Before(all[i].Timestamp)
 	})
 	if len(all) > limit {
-		all = all[len(all)-limit:]
+		all = all[:limit]
 	}
 
 	return all, nil

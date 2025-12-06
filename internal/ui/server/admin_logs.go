@@ -61,9 +61,9 @@ func (s *server) handleLogs(w http.ResponseWriter, r *http.Request) {
 		filtered = append(filtered, entry)
 	}
 
-	// Take only the requested limit
+	// Take only the requested limit (entries are already sorted newest-first)
 	if len(filtered) > limit {
-		filtered = filtered[len(filtered)-limit:]
+		filtered = filtered[:limit]
 	}
 
 	// Get unique categories and levels for filters

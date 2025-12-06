@@ -10,6 +10,7 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/Its-donkey/Sharpen-live/internal/alert/platforms/youtube/api"
@@ -520,79 +521,110 @@ func (s *server) checkAllStreamersLiveStatus(ctx context.Context) {
 		return
 	}
 
-	fmt.Printf("INFO: Checking live status for %d streamer(s)\n", len(records))
+	fmt.Printf("INFO: Checking live status for %d streamer(s) concurrently\n", len(records))
 
 	searchClient := api.SearchClient{
 		APIKey:     s.youtubeConfig.APIKey,
 		HTTPClient: &http.Client{Timeout: 30 * time.Second},
 	}
 
-	checkedCount := 0
-	liveCount := 0
-	errorCount := 0
+	// Use sync primitives for concurrent checking
+	type result struct {
+		checkedCount int
+		liveCount    int
+		errorCount   int
+	}
+	var (
+		mu     sync.Mutex
+		wg     sync.WaitGroup
+		counts result
+	)
 
+	// Check each streamer concurrently
 	for _, record := range records {
 		if record.Platforms.YouTube == nil || record.Platforms.YouTube.ChannelID == "" {
 			continue
 		}
 
-		channelID := record.Platforms.YouTube.ChannelID
-		fmt.Printf("\nINFO: Checking streamer %s (alias: %s) - YouTube channel: %s\n",
-			record.Streamer.ID, record.Streamer.Alias, channelID)
-		checkedCount++
+		wg.Add(1)
+		go func(rec streamers.Record) {
+			defer wg.Done()
 
-		// Use individual timeout for each API call to prevent cascading failures
-		// Timeout is slightly longer than HTTP client timeout (30s) to allow graceful completion
-		callCtx, cancel := context.WithTimeout(ctx, 35*time.Second)
-		result, err := searchClient.LiveNow(callCtx, channelID)
-		cancel()
+			channelID := rec.Platforms.YouTube.ChannelID
+			fmt.Printf("\nINFO: Checking streamer %s (alias: %s) - YouTube channel: %s\n",
+				rec.Streamer.ID, rec.Streamer.Alias, channelID)
 
-		if err != nil {
-			fmt.Printf("WARNING: Failed to check live status for %s: %v\n", record.Streamer.Alias, err)
-			s.logger.Warn("startup", "Failed to check initial live status", map[string]any{
-				"streamerId": record.Streamer.ID,
-				"alias":      record.Streamer.Alias,
-				"channelId":  channelID,
-				"error":      err.Error(),
-			})
-			errorCount++
-			continue
-		}
+			mu.Lock()
+			counts.checkedCount++
+			mu.Unlock()
 
-		if result.VideoID != "" {
-			// Channel is live
-			fmt.Printf("SUCCESS: Streamer %s is LIVE with video %s\n", record.Streamer.Alias, result.VideoID)
-			fmt.Printf("  Started at: %s\n", result.StartedAt.Format("2006-01-02 15:04:05 MST"))
+			// Use individual timeout for each API call to prevent cascading failures
+			// Timeout is slightly longer than HTTP client timeout (30s) to allow graceful completion
+			callCtx, cancel := context.WithTimeout(ctx, 35*time.Second)
+			liveResult, err := searchClient.LiveNow(callCtx, channelID)
+			cancel()
 
-			_, err := store.SetYouTubeLive(channelID, result.VideoID, result.StartedAt)
 			if err != nil {
-				fmt.Printf("ERROR: Failed to set live status for %s: %v\n", record.Streamer.Alias, err)
-				s.logger.Error("startup", "Failed to set initial live status", err, map[string]any{
-					"streamerId": record.Streamer.ID,
-					"alias":      record.Streamer.Alias,
+				fmt.Printf("WARNING: Failed to check live status for %s: %v\n", rec.Streamer.Alias, err)
+				s.logger.Warn("startup", "Failed to check initial live status", map[string]any{
+					"streamerId": rec.Streamer.ID,
+					"alias":      rec.Streamer.Alias,
 					"channelId":  channelID,
-					"videoId":    result.VideoID,
+					"error":      err.Error(),
 				})
-				errorCount++
+				mu.Lock()
+				counts.errorCount++
+				mu.Unlock()
+				return
+			}
+
+			if liveResult.VideoID != "" {
+				// Channel is live
+				fmt.Printf("SUCCESS: Streamer %s is LIVE with video %s\n", rec.Streamer.Alias, liveResult.VideoID)
+				fmt.Printf("  Started at: %s\n", liveResult.StartedAt.Format("2006-01-02 15:04:05 MST"))
+
+				_, err := store.SetYouTubeLive(channelID, liveResult.VideoID, liveResult.StartedAt)
+				if err != nil {
+					fmt.Printf("ERROR: Failed to set live status for %s: %v\n", rec.Streamer.Alias, err)
+					s.logger.Error("startup", "Failed to set initial live status", err, map[string]any{
+						"streamerId": rec.Streamer.ID,
+						"alias":      rec.Streamer.Alias,
+						"channelId":  channelID,
+						"videoId":    liveResult.VideoID,
+					})
+					mu.Lock()
+					counts.errorCount++
+					mu.Unlock()
+				} else {
+					mu.Lock()
+					counts.liveCount++
+					mu.Unlock()
+				}
 			} else {
-				liveCount++
-			}
-		} else {
-			// Channel is offline
-			fmt.Printf("INFO: Streamer %s is OFFLINE\n", record.Streamer.Alias)
+				// Channel is offline
+				fmt.Printf("INFO: Streamer %s is OFFLINE\n", rec.Streamer.Alias)
 
-			_, err := store.ClearYouTubeLive(channelID)
-			if err != nil {
-				fmt.Printf("ERROR: Failed to clear live status for %s: %v\n", record.Streamer.Alias, err)
-				s.logger.Error("startup", "Failed to clear initial live status", err, map[string]any{
-					"streamerId": record.Streamer.ID,
-					"alias":      record.Streamer.Alias,
-					"channelId":  channelID,
-				})
-				errorCount++
+				_, err := store.ClearYouTubeLive(channelID)
+				if err != nil {
+					fmt.Printf("ERROR: Failed to clear live status for %s: %v\n", rec.Streamer.Alias, err)
+					s.logger.Error("startup", "Failed to clear initial live status", err, map[string]any{
+						"streamerId": rec.Streamer.ID,
+						"alias":      rec.Streamer.Alias,
+						"channelId":  channelID,
+					})
+					mu.Lock()
+					counts.errorCount++
+					mu.Unlock()
+				}
 			}
-		}
+		}(record)
 	}
+
+	// Wait for all checks to complete
+	wg.Wait()
+	checkedCount := counts.checkedCount
+	liveCount := counts.liveCount
+	errorCount := counts.errorCount
 
 	fmt.Printf("\n=== INITIAL LIVE STATUS CHECK COMPLETE ===\n")
 	fmt.Printf("  Total streamers checked: %d\n", checkedCount)

@@ -176,12 +176,17 @@ func (s *server) getYouTubeSiteConfigs() ([]YouTubeSiteConfig, error) {
 		return nil, err
 	}
 
-	// If on default-site, show all sites
+	// If on default-site, show all sites (except alertserver itself)
 	if s.siteKey == config.AlertserverKey {
 		var configs []YouTubeSiteConfig
 
-		// Add each configured site
+		// Add each configured site, excluding the alertserver/control room
 		for key, site := range cfg.Sites {
+			// Skip the alertserver key - we only want child sites
+			if key == config.AlertserverKey {
+				continue
+			}
+
 			enabled := true
 			if site.YouTubeEnabled != nil {
 				enabled = *site.YouTubeEnabled

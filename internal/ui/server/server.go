@@ -375,6 +375,8 @@ func Run(ctx context.Context, opts Options) error {
 				APIKey:     strings.TrimSpace(appConfig.YouTube.APIKey),
 				HTTPClient: &http.Client{Timeout: 5 * time.Second},
 			},
+			TwitchClientID:     appConfig.Twitch.ClientID,
+			TwitchClientSecret: appConfig.Twitch.ClientSecret,
 		}
 	}
 
@@ -425,6 +427,7 @@ func Run(ctx context.Context, opts Options) error {
 		checkCtx, cancel := context.WithTimeout(context.Background(), 5*time.Minute)
 		defer cancel()
 		srv.checkAllStreamersLiveStatus(checkCtx)
+		srv.checkAllTwitchStreamersLiveStatus(checkCtx)
 	}()
 
 	monitorFactory := opts.NewLeaseMonitor

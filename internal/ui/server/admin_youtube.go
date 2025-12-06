@@ -33,9 +33,12 @@ func (s *server) isYouTubeEnabled() bool {
 		return true // Default to enabled if site can't be resolved
 	}
 
-	// If YouTubeEnabled is nil, use global default (true)
+	// If YouTubeEnabled is nil, fall back to global YouTube.Enabled setting
 	if site.YouTubeEnabled == nil {
-		return true
+		if cfg.YouTube.Enabled != nil {
+			return *cfg.YouTube.Enabled
+		}
+		return true // Default to enabled if no global setting either
 	}
 
 	return *site.YouTubeEnabled
@@ -53,9 +56,12 @@ func isYouTubeEnabledForSiteKey(configPath, siteKey string) bool {
 		return true // Default to enabled if site can't be resolved
 	}
 
-	// If YouTubeEnabled is nil, use global default (true)
+	// If YouTubeEnabled is nil, fall back to global YouTube.Enabled setting
 	if site.YouTubeEnabled == nil {
-		return true
+		if cfg.YouTube.Enabled != nil {
+			return *cfg.YouTube.Enabled
+		}
+		return true // Default to enabled if no global setting either
 	}
 
 	return *site.YouTubeEnabled
@@ -180,6 +186,12 @@ func (s *server) getYouTubeSiteConfigs() ([]YouTubeSiteConfig, error) {
 	if s.siteKey == config.AlertserverKey {
 		var configs []YouTubeSiteConfig
 
+		// Determine global default
+		globalEnabled := true
+		if cfg.YouTube.Enabled != nil {
+			globalEnabled = *cfg.YouTube.Enabled
+		}
+
 		// Add each configured site, excluding the alertserver/control room
 		for key, site := range cfg.Sites {
 			// Skip the alertserver key - we only want child sites
@@ -187,7 +199,8 @@ func (s *server) getYouTubeSiteConfigs() ([]YouTubeSiteConfig, error) {
 				continue
 			}
 
-			enabled := true
+			// Use per-site override if set, otherwise fall back to global setting
+			enabled := globalEnabled
 			if site.YouTubeEnabled != nil {
 				enabled = *site.YouTubeEnabled
 			}
@@ -207,7 +220,14 @@ func (s *server) getYouTubeSiteConfigs() ([]YouTubeSiteConfig, error) {
 		return nil, err
 	}
 
-	enabled := true
+	// Determine global default
+	globalEnabled := true
+	if cfg.YouTube.Enabled != nil {
+		globalEnabled = *cfg.YouTube.Enabled
+	}
+
+	// Use per-site override if set, otherwise fall back to global setting
+	enabled := globalEnabled
 	if site.YouTubeEnabled != nil {
 		enabled = *site.YouTubeEnabled
 	}

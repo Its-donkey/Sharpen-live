@@ -4,6 +4,7 @@ package server
 import (
 	"fmt"
 	"html/template"
+	"os"
 	"path/filepath"
 	"strings"
 
@@ -51,17 +52,20 @@ func loadTemplates(dir string) (map[string]*template.Template, error) {
 		return nil, fmt.Errorf("parse logs templates: %w", err)
 	}
 
-	configTmpl, err := template.New("config").Funcs(funcs).ParseFiles(base, config)
-	if err != nil {
-		return nil, fmt.Errorf("parse config templates: %w", err)
-	}
-
 	templates := map[string]*template.Template{
 		"home":     homeTmpl,
 		"streamer": streamerTmpl,
 		"admin":    adminTmpl,
 		"logs":     logsTmpl,
-		"config":   configTmpl,
+	}
+
+	// Config template is optional - only default-site (parent/control room) has it
+	if _, err := os.Stat(config); err == nil {
+		configTmpl, err := template.New("config").Funcs(funcs).ParseFiles(base, config)
+		if err != nil {
+			return nil, fmt.Errorf("parse config templates: %w", err)
+		}
+		templates["config"] = configTmpl
 	}
 
 	return templates, nil

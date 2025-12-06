@@ -330,7 +330,10 @@ func Run(ctx context.Context, opts Options) error {
 			"note":             "Handler registered at local path; reverse proxy handles URL rewriting",
 		})
 	} else {
-		logger.Warn("websub", "YouTube WebSub not configured - set config.json youtube.callback_url or WEBSUB_CALLBACK_BASE_URL env var", nil)
+		logger.Warn("websub", "YouTube WebSub not configured for site", map[string]any{
+			"site": siteConfig.Key,
+			"hint": "set config.json youtube.callback_url or WEBSUB_CALLBACK_BASE_URL env var",
+		})
 	}
 
 	// Resolve Twitch EventSub callback URL from site config

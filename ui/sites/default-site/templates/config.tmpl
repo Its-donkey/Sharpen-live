@@ -89,15 +89,31 @@
       </div>
       <div class="config-details">
         <div class="config-row">
-          <span class="config-label">Status</span>
+          <span class="config-label">Global Status</span>
           <span class="config-value">
-            <span
-              class="pill {{if .YouTubeConfig.Enabled}}tone-accent{{else}}tone-warn{{
-                end
-              }}"
+            <form
+              method="post"
+              action="/admin/platform/settings"
+              style="display: inline"
             >
-              {{if .YouTubeConfig.Enabled}}Enabled{{else}}Disabled{{ end }}
-            </span>
+              <input type="hidden" name="platform" value="youtube" />
+              <input type="hidden" name="global" value="true" />
+              <label class="admin-toggle-inline">
+                <input
+                  type="checkbox"
+                  name="enabled"
+                  value="true"
+                  class="admin-toggle"
+                  {{if .YouTubeConfig.Enabled}}checked{{end}}
+                  onchange="this.form.submit()"
+                />
+                <span
+                  class="pill {{if .YouTubeConfig.Enabled}}tone-accent{{else}}tone-warn{{ end }}"
+                >
+                  {{if .YouTubeConfig.Enabled}}Enabled{{else}}Disabled{{ end }}
+                </span>
+              </label>
+            </form>
           </span>
         </div>
         <div class="config-row">
@@ -197,15 +213,31 @@
       </div>
       <div class="config-details">
         <div class="config-row">
-          <span class="config-label">Status</span>
+          <span class="config-label">Global Status</span>
           <span class="config-value">
-            <span
-              class="pill {{if .TwitchConfig.Enabled}}tone-accent{{else}}tone-warn{{
-                end
-              }}"
+            <form
+              method="post"
+              action="/admin/platform/settings"
+              style="display: inline"
             >
-              {{if .TwitchConfig.Enabled}}Enabled{{else}}Disabled{{ end }}
-            </span>
+              <input type="hidden" name="platform" value="twitch" />
+              <input type="hidden" name="global" value="true" />
+              <label class="admin-toggle-inline">
+                <input
+                  type="checkbox"
+                  name="enabled"
+                  value="true"
+                  class="admin-toggle"
+                  {{if .TwitchConfig.Enabled}}checked{{end}}
+                  onchange="this.form.submit()"
+                />
+                <span
+                  class="pill {{if .TwitchConfig.Enabled}}tone-accent{{else}}tone-warn{{ end }}"
+                >
+                  {{if .TwitchConfig.Enabled}}Enabled{{else}}Disabled{{ end }}
+                </span>
+              </label>
+            </form>
           </span>
         </div>
         <div class="config-row">

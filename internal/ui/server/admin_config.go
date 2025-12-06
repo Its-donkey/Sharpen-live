@@ -1,6 +1,7 @@
 package server
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/Its-donkey/Sharpen-live/internal/alert/config"
@@ -71,44 +72,39 @@ func (s *server) handleAdminConfig(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		data.Error = "Failed to load configuration: " + err.Error()
 	} else {
-		// Get current site's configuration
-		siteConfig, siteErr := config.ResolveSite(s.siteKey, cfg)
-		if siteErr != nil {
-			data.Error = "Failed to resolve site configuration: " + siteErr.Error()
-		} else {
-			// YouTube configuration (site-specific) - defaults to enabled if not set
-			youtubeEnabled := true
-			if siteConfig.YouTube.Enabled != nil {
-				youtubeEnabled = *siteConfig.YouTube.Enabled
-			}
-			data.YouTubeConfig = YouTubeConfigDisplay{
-				Enabled:      youtubeEnabled,
-				HubURL:       siteConfig.YouTube.HubURL,
-				CallbackURL:  siteConfig.YouTube.CallbackURL,
-				APIKey:       maskAPIKey(siteConfig.YouTube.APIKey),
-				LeaseSeconds: siteConfig.YouTube.LeaseSeconds,
-				Mode:         siteConfig.YouTube.Mode,
-				Verify:       siteConfig.YouTube.Verify,
-			}
+		// Use GLOBAL platform config for display (cfg.Platforms)
+		// Global YouTube configuration - defaults to enabled if not set
+		youtubeEnabled := true
+		if cfg.Platforms.YouTube.Enabled != nil {
+			youtubeEnabled = *cfg.Platforms.YouTube.Enabled
+		}
+		data.YouTubeConfig = YouTubeConfigDisplay{
+			Enabled:      youtubeEnabled,
+			HubURL:       cfg.Platforms.YouTube.HubURL,
+			CallbackURL:  cfg.Platforms.YouTube.CallbackURL,
+			APIKey:       maskAPIKey(cfg.Platforms.YouTube.APIKey),
+			LeaseSeconds: cfg.Platforms.YouTube.LeaseSeconds,
+			Mode:         cfg.Platforms.YouTube.Mode,
+			Verify:       cfg.Platforms.YouTube.Verify,
+		}
 
-			// Twitch configuration (site-specific) - defaults to enabled if not set
-			twitchEnabled := true
-			if siteConfig.Twitch.Enabled != nil {
-				twitchEnabled = *siteConfig.Twitch.Enabled
-			}
-			data.TwitchConfig = TwitchConfigDisplay{
-				Enabled:        twitchEnabled,
-				CallbackURL:    siteConfig.Twitch.CallbackURL,
-				ClientID:       maskAPIKey(siteConfig.Twitch.ClientID),
-				ClientSecret:   maskSecret(siteConfig.Twitch.ClientSecret),
-				EventSubSecret: maskSecret(siteConfig.Twitch.EventSubSecret),
-			}
+		// Global Twitch configuration - defaults to enabled if not set
+		twitchEnabled := true
+		if cfg.Platforms.Twitch.Enabled != nil {
+			twitchEnabled = *cfg.Platforms.Twitch.Enabled
+		}
+		data.TwitchConfig = TwitchConfigDisplay{
+			Enabled:        twitchEnabled,
+			CallbackURL:    cfg.Platforms.Twitch.CallbackURL,
+			ClientID:       maskAPIKey(cfg.Platforms.Twitch.ClientID),
+			ClientSecret:   maskSecret(cfg.Platforms.Twitch.ClientSecret),
+			EventSubSecret: maskSecret(cfg.Platforms.Twitch.EventSubSecret),
+		}
 
-			// Facebook configuration (placeholder for now)
-			data.FacebookConfig = PlatformConfigDisplay{
-				Enabled: false,
-				HubURL:  "Not configured",
-			}
+		// Facebook configuration (placeholder for now)
+		data.FacebookConfig = PlatformConfigDisplay{
+			Enabled: false,
+			HubURL:  "Not configured",
 		}
 	}
 
@@ -161,4 +157,70 @@ func maskSecret(secret string) string {
 		return "Not set"
 	}
 	return "••••••••••••"
+}
+
+// handleAdminPlatformSettings handles global platform enable/disable toggles
+func (s *server) handleAdminPlatformSettings(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		http.Redirect(w, r, "/admin/config", http.StatusSeeOther)
+		return
+	}
+
+	if err := r.ParseForm(); err != nil {
+		http.Redirect(w, r, "/admin/config?err=Invalid request", http.StatusSeeOther)
+		return
+	}
+
+	token := s.adminTokenFromRequest(r)
+	if token == "" {
+		http.Redirect(w, r, "/admin/config?err=Log in to modify platform settings", http.StatusSeeOther)
+		return
+	}
+
+	if !s.adminManager.Validate(token) {
+		http.Redirect(w, r, "/admin/config?err=Invalid session. Please log in again.", http.StatusSeeOther)
+		return
+	}
+
+	platform := r.FormValue("platform")
+	enabled := r.FormValue("enabled") == "true"
+	isGlobal := r.FormValue("global") == "true"
+
+	if !isGlobal {
+		http.Redirect(w, r, "/admin/config?err=Only global platform settings are supported", http.StatusSeeOther)
+		return
+	}
+
+	cfg, err := config.Load(s.configPath)
+	if err != nil {
+		http.Redirect(w, r, "/admin/config?err="+fmt.Sprintf("Failed to load config: %v", err), http.StatusSeeOther)
+		return
+	}
+
+	switch platform {
+	case "youtube":
+		cfg.Platforms.YouTube.Enabled = &enabled
+	case "twitch":
+		cfg.Platforms.Twitch.Enabled = &enabled
+	default:
+		http.Redirect(w, r, "/admin/config?err="+fmt.Sprintf("Unknown platform: %s", platform), http.StatusSeeOther)
+		return
+	}
+
+	if err := config.Save(cfg, s.configPath); err != nil {
+		s.logger.Warn("admin", "failed to save config after platform update", map[string]any{
+			"platform": platform,
+			"error":    err.Error(),
+		})
+		http.Redirect(w, r, "/admin/config?err="+fmt.Sprintf("Failed to save config: %v", err), http.StatusSeeOther)
+		return
+	}
+
+	s.logger.Info("admin", "Global platform settings updated", map[string]any{
+		"platform": platform,
+		"enabled":  enabled,
+	})
+
+	statusMsg := fmt.Sprintf("%s globally %s", platform, map[bool]string{true: "enabled", false: "disabled"}[enabled])
+	http.Redirect(w, r, "/admin/config?msg="+statusMsg, http.StatusSeeOther)
 }

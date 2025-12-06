@@ -286,16 +286,25 @@ func Save(cfg Config, path string) error {
 			Name:      cfg.App.Name,
 		},
 		YouTubeBlock: &cfg.YouTube,
+		TwitchBlock:  &cfg.Twitch,
 		AdminBlock:   &cfg.Admin,
 		Sites:        make(map[string]siteFileConfig),
 	}
 
 	// Convert sites
 	for key, site := range cfg.Sites {
+		var siteTwitch *siteTwitchConfig
+		if site.TwitchEnabled != nil || site.TwitchCallback != "" {
+			siteTwitch = &siteTwitchConfig{
+				Enabled:     site.TwitchEnabled,
+				CallbackURL: site.TwitchCallback,
+			}
+		}
 		raw.Sites[key] = siteFileConfig{
 			Name:           site.Name,
 			Description:    site.Description,
 			YouTubeEnabled: site.YouTubeEnabled,
+			Twitch:         siteTwitch,
 			Server:         &site.Server,
 			App:            &site.App,
 		}

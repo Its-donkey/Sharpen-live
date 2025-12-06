@@ -96,6 +96,17 @@ func (s *server) handleAdmin(w http.ResponseWriter, r *http.Request) {
 			data.RosterError = err.Error()
 		} else {
 			data.Streamers = mapStreamerRecords(records)
+			// Sort streamers with online ones at the top
+			sort.Slice(data.Streamers, func(i, j int) bool {
+				statusOrder := map[string]int{"online": 0, "busy": 1, "offline": 2}
+				orderI := statusOrder[data.Streamers[i].Status]
+				orderJ := statusOrder[data.Streamers[j].Status]
+				if orderI != orderJ {
+					return orderI < orderJ
+				}
+				// If same status, sort alphabetically by name
+				return strings.ToLower(data.Streamers[i].Name) < strings.ToLower(data.Streamers[j].Name)
+			})
 		}
 	}
 	// Load YouTube site configurations

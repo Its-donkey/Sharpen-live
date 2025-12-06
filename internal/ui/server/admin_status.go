@@ -29,7 +29,7 @@ func (s *server) handleAdminStatusCheck(w http.ResponseWriter, r *http.Request) 
 		s.redirectAdmin(w, r, "", "Status checks unavailable.")
 		return
 	}
-	ctx, cancel := context.WithTimeout(r.Context(), 20*time.Second)
+	ctx, cancel := context.WithTimeout(r.Context(), 30*time.Second)
 	defer cancel()
 	result, err := s.statusChecker.CheckAll(ctx)
 	if err != nil {

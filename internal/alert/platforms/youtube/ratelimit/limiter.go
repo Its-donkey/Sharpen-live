@@ -10,7 +10,7 @@ import (
 
 var (
 	mu       sync.Mutex
-	interval = 5 * time.Second
+	interval = 1 * time.Second
 )
 
 // throttledTransport wraps a base RoundTripper and enforces a minimum delay

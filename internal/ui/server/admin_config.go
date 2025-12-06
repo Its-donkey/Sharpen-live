@@ -64,8 +64,12 @@ func (s *server) handleAdminConfig(w http.ResponseWriter, r *http.Request) {
 		data.Error = "Failed to load configuration: " + err.Error()
 	} else {
 		// YouTube configuration
+		globalEnabled := true
+		if cfg.YouTube.Enabled != nil {
+			globalEnabled = *cfg.YouTube.Enabled
+		}
 		data.YouTubeConfig = PlatformConfigDisplay{
-			Enabled:      true, // YouTube is currently always enabled
+			Enabled:      globalEnabled,
 			HubURL:       cfg.YouTube.HubURL,
 			CallbackURL:  cfg.YouTube.CallbackURL,
 			APIKey:       maskAPIKey(cfg.YouTube.APIKey),

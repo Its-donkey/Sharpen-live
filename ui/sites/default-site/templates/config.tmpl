@@ -10,7 +10,13 @@
       <h2 id="config-title">Configuration</h2>
       <p class="admin-help">View and manage platform integration settings for YouTube, Twitch, and Facebook.</p>
       <div class="pill-row">
-        <span class="pill {{if .YouTubeConfig.Enabled}}tone-accent{{else}}tone-ghost{{end}}">YouTube: {{if .YouTubeConfig.Enabled}}Active{{else}}Inactive{{end}}</span>
+        <form method="post" action="/admin/youtube/settings" style="display: inline;">
+          <input type="hidden" name="global" value="true">
+          <input type="hidden" name="youtube_enabled" value="{{if .YouTubeConfig.Enabled}}false{{else}}true{{end}}">
+          <button type="submit" class="pill {{if .YouTubeConfig.Enabled}}tone-accent{{else}}tone-warn{{end}}" style="cursor: pointer; border: none; font: inherit;">
+            YouTube: {{if .YouTubeConfig.Enabled}}Enabled{{else}}Disabled{{end}}
+          </button>
+        </form>
         <span class="pill {{if .TwitchConfig.Enabled}}tone-accent{{else}}tone-ghost{{end}}">Twitch: {{if .TwitchConfig.Enabled}}Active{{else}}Inactive{{end}}</span>
         <span class="pill {{if .FacebookConfig.Enabled}}tone-accent{{else}}tone-ghost{{end}}">Facebook: {{if .FacebookConfig.Enabled}}Active{{else}}Inactive{{end}}</span>
       </div>
@@ -98,7 +104,7 @@
         <div class="admin-card-header" style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid rgba(31, 41, 55, 0.1);">
           <p class="eyebrow">Per-Site Controls</p>
           <h3>Site Integration Switches</h3>
-          <p class="admin-help">Enable or disable YouTube WebSub per site.</p>
+          <p class="admin-help">Override global YouTube settings for individual sites. Sites default to the global setting above.</p>
         </div>
         <div class="admin-youtube-list">
           {{range .YouTubeSites}}

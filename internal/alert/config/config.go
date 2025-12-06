@@ -20,6 +20,7 @@ const (
 
 // YouTubeConfig captures the WebSub-specific defaults persisted in config files.
 type YouTubeConfig struct {
+	Enabled         *bool  `json:"enabled,omitempty"`
 	HubURL          string `json:"hub_url"`
 	CallbackURL     string `json:"callback_url"`
 	LocalWebSubPath string `json:"local_websub_path"` // Optional: local handler path if different from callback URL path

@@ -251,6 +251,20 @@ body {
   color: #92400e;
 }
 
+button.pill {
+  transition: all 0.2s ease;
+  background-color: inherit;
+}
+
+button.pill:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 12px 24px rgba(17, 24, 39, 0.12);
+}
+
+button.pill:active {
+  transform: translateY(0);
+}
+
 .button-row {
   display: flex;
   gap: 0.65rem;

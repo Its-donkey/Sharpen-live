@@ -3,9 +3,11 @@ package websub
 import (
 	"crypto/hmac"
 	"crypto/rand"
+	"crypto/sha1"
 	"crypto/sha256"
 	"encoding/hex"
 	"fmt"
+	"hash"
 	"io"
 	"net/http"
 	"net/url"
@@ -211,18 +213,28 @@ func Unsubscribe(channelID, callbackURL string) error {
 	return nil
 }
 
-// VerifySignature verifies the HMAC-SHA256 signature of a WebSub notification
+// VerifySignature verifies the HMAC signature of a WebSub notification
+// Supports both SHA1 and SHA256 algorithms based on the signature prefix
 func VerifySignature(payload []byte, signature, secret string) bool {
 	if signature == "" || secret == "" {
 		return false
 	}
 
-	// Remove "sha256=" prefix if present
-	signature = strings.TrimPrefix(signature, "sha256=")
-	signature = strings.TrimPrefix(signature, "sha1=")
+	// Determine hash algorithm from prefix and extract the actual signature
+	var hashFunc func() hash.Hash
+	if strings.HasPrefix(signature, "sha256=") {
+		hashFunc = sha256.New
+		signature = strings.TrimPrefix(signature, "sha256=")
+	} else if strings.HasPrefix(signature, "sha1=") {
+		hashFunc = sha1.New
+		signature = strings.TrimPrefix(signature, "sha1=")
+	} else {
+		// No recognized prefix - default to SHA256 for backward compatibility
+		hashFunc = sha256.New
+	}
 
-	// Calculate expected signature
-	mac := hmac.New(sha256.New, []byte(secret))
+	// Calculate expected signature using the same algorithm YouTube used
+	mac := hmac.New(hashFunc, []byte(secret))
 	mac.Write(payload)
 	expectedMAC := mac.Sum(nil)
 	expectedSig := hex.EncodeToString(expectedMAC)

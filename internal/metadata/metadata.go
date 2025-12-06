@@ -33,19 +33,39 @@ type Service struct {
 	logger     *logging.Logger
 }
 
+// ServiceOptions configures the metadata service.
+type ServiceOptions struct {
+	HTTPClient         *http.Client
+	Logger             *logging.Logger
+	YouTubeAPIKey      string
+	TwitchClientID     string
+	TwitchClientSecret string
+}
+
 // NewService creates a new metadata collection request with the given HTTP client.
 func NewService(httpClient *http.Client, logger *logging.Logger, youtubeAPIKey string) *Service {
+	return NewServiceWithOptions(ServiceOptions{
+		HTTPClient:    httpClient,
+		Logger:        logger,
+		YouTubeAPIKey: youtubeAPIKey,
+	})
+}
+
+// NewServiceWithOptions creates a new metadata service with full configuration options.
+func NewServiceWithOptions(opts ServiceOptions) *Service {
+	httpClient := opts.HTTPClient
 	if httpClient == nil {
 		httpClient = &http.Client{}
 	}
+	logger := opts.Logger
 	if logger == nil {
 		logger = logging.New("metadata", logging.INFO, io.Discard)
 	}
 	return &Service{
 		httpClient: httpClient,
 		platforms: []PlatformMetadataCollector{
-			&YouTubeMetaCollect{client: httpClient, logger: logger, apiKey: youtubeAPIKey},
-			&TwitchMetadata{client: httpClient, logger: logger},
+			&YouTubeMetaCollect{client: httpClient, logger: logger, apiKey: opts.YouTubeAPIKey},
+			&TwitchMetadata{client: httpClient, logger: logger, clientID: opts.TwitchClientID, clientSecret: opts.TwitchClientSecret},
 			&FacebookScraper{client: httpClient},
 		},
 		logger: logger,

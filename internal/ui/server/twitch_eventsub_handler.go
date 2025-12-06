@@ -172,54 +172,13 @@ func (s *server) verifyEventSubSignature(headers EventSubHeaders, body []byte) b
 
 // getTwitchEventSubSecret returns the EventSub secret from configuration
 func (s *server) getTwitchEventSubSecret() string {
-	// Try to load from config file
-	if s.configPath != "" {
-		data, err := readTwitchConfigFromFile(s.configPath)
-		if err == nil && data.EventSubSecret != "" {
-			return data.EventSubSecret
-		}
+	// Use the already-loaded config
+	if s.twitchConfig.EventSubSecret != "" {
+		return s.twitchConfig.EventSubSecret
 	}
 	return ""
 }
 
-// twitchConfigData holds Twitch configuration
-type twitchConfigData struct {
-	EventSubSecret string `json:"eventsub_secret"`
-}
-
-// readTwitchConfigFromFile reads Twitch config from the config file
-func readTwitchConfigFromFile(configPath string) (twitchConfigData, error) {
-	type platformsBlock struct {
-		Twitch *twitchConfigData `json:"twitch"`
-	}
-	type configFile struct {
-		Platforms *platformsBlock `json:"platforms"`
-	}
-
-	data, err := io.ReadAll(mustOpen(configPath))
-	if err != nil {
-		return twitchConfigData{}, err
-	}
-
-	var cfg configFile
-	if err := json.Unmarshal(data, &cfg); err != nil {
-		return twitchConfigData{}, err
-	}
-
-	if cfg.Platforms != nil && cfg.Platforms.Twitch != nil {
-		return *cfg.Platforms.Twitch, nil
-	}
-
-	return twitchConfigData{}, fmt.Errorf("twitch config not found")
-}
-
-func mustOpen(path string) io.Reader {
-	f, err := http.Dir(".").Open(path)
-	if err != nil {
-		return strings.NewReader("")
-	}
-	return f
-}
 
 // handleEventSubVerification handles the webhook verification challenge
 func (s *server) handleEventSubVerification(w http.ResponseWriter, body []byte) {
@@ -422,6 +381,14 @@ func (s *server) handleEventSubRevocation(w http.ResponseWriter, headers EventSu
 // isTwitchEventSubEnabled checks if Twitch EventSub is enabled for the current site
 func (s *server) isTwitchEventSubEnabled() bool {
 	return isTwitchEnabledForSiteKey(s.configPath, s.siteKey)
+}
+
+func mustOpen(path string) io.Reader {
+	f, err := http.Dir(".").Open(path)
+	if err != nil {
+		return strings.NewReader("")
+	}
+	return f
 }
 
 // isTwitchEnabledForSiteKey checks if Twitch is enabled for a specific site

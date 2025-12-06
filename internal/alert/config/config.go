@@ -383,9 +383,12 @@ func ResolveSite(key string, cfg Config) (SiteConfig, error) {
 	return site, nil
 }
 
-// AllSites returns the list of configured sites only (no base site).
+// AllSites returns the alertserver site plus all configured sites from config.
+// The alertserver site is always included first as it is the built-in admin site.
 func AllSites(cfg Config) []SiteConfig {
-	var sites []SiteConfig
+	// Always include the alertserver site first
+	sites := []SiteConfig{Alertserver(cfg)}
+
 	for key, site := range cfg.Sites {
 		sites = append(sites, SiteConfig{
 			Key:         key,

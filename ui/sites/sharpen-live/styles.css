@@ -1384,6 +1384,36 @@ footer a {
   }
 }
 
+/* Site navigation chips */
+.site-chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.site-chip {
+  padding: 0.45rem 0.75rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: var(--fg-primary);
+  background: rgba(255, 255, 255, 0.05);
+  text-decoration: none;
+  display: inline-block;
+  transition: all 0.2s ease;
+  font-size: 0.9rem;
+}
+
+a.site-chip:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.4);
+  transform: translateY(-1px);
+}
+
+a.site-chip:active {
+  transform: translateY(0);
+}
+
 @media (max-width: 720px) {
   body {
     padding: 1.5rem 1rem;

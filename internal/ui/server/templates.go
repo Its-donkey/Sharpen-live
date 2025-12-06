@@ -4,6 +4,7 @@ package server
 import (
 	"fmt"
 	"html/template"
+	"os"
 	"path/filepath"
 	"strings"
 
@@ -20,6 +21,7 @@ func loadTemplates(dir string) (map[string]*template.Template, error) {
 		"statusClass":     statusClass,
 		"statusLabel":     statusLabel,
 		"lower":           strings.ToLower,
+		"formatDays":      formatDays,
 	}
 
 	base := filepath.Join(dir, "base.tmpl")
@@ -28,6 +30,7 @@ func loadTemplates(dir string) (map[string]*template.Template, error) {
 	submit := filepath.Join(dir, "submit_form.tmpl")
 	admin := filepath.Join(dir, "admin.tmpl")
 	logs := filepath.Join(dir, "logs.tmpl")
+	config := filepath.Join(dir, "config.tmpl")
 
 	homeTmpl, err := template.New("home").Funcs(funcs).ParseFiles(base, home, submit)
 	if err != nil {
@@ -56,5 +59,23 @@ func loadTemplates(dir string) (map[string]*template.Template, error) {
 		"logs":     logsTmpl,
 	}
 
+	// Config template is optional - only default-site (parent/control room) has it
+	if _, err := os.Stat(config); err == nil {
+		configTmpl, err := template.New("config").Funcs(funcs).ParseFiles(base, config)
+		if err != nil {
+			return nil, fmt.Errorf("parse config templates: %w", err)
+		}
+		templates["config"] = configTmpl
+	}
+
 	return templates, nil
+}
+
+// formatDays converts seconds to days for display
+func formatDays(seconds int) string {
+	if seconds == 0 {
+		return "0"
+	}
+	days := seconds / 86400
+	return fmt.Sprintf("%d", days)
 }

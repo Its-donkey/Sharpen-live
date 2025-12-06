@@ -12,14 +12,15 @@ const (
 	defaultAddr         = "127.0.0.1"
 	defaultPort         = ":8880"
 	defaultData         = "data/alertserver"
-	defaultTemplatesDir = "ui/sites/alertserver/templates"
-	defaultAssetsDir    = "ui/sites/alertserver"
+	defaultTemplatesDir = "ui/sites/default-site/templates"
+	defaultAssetsDir    = "ui/sites/default-site"
 	alertserverName     = "Alertserver Admin"
 	AlertserverKey      = "alertserver"
 )
 
 // YouTubeConfig captures the WebSub-specific defaults persisted in config files.
 type YouTubeConfig struct {
+	Enabled         *bool  `json:"enabled,omitempty"`
 	HubURL          string `json:"hub_url"`
 	CallbackURL     string `json:"callback_url"`
 	LocalWebSubPath string `json:"local_websub_path"` // Optional: local handler path if different from callback URL path

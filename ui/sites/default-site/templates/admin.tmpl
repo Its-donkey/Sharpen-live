@@ -18,6 +18,8 @@
     <div class="masthead-actions">
       {{if .LoggedIn}}
         <div class="button-row">
+          <a href="/admin/config" class="action-button ghost">Configuration</a>
+          <a href="/logs" class="action-button ghost">Logs</a>
           <form method="post" action="/admin/status-check">
             <button type="submit" class="action-button primary">Refresh status</button>
           </form>
@@ -27,7 +29,7 @@
         </div>
         <p class="admin-help subtle">Signed in. Actions apply across every site loaded beside the fallback.</p>
       {{else}}
-        <p class="admin-help subtle">Sign in to unlock controls and the embedded log monitor.</p>
+        <p class="admin-help subtle">Sign in to unlock configuration, logs, and monitoring controls.</p>
       {{end}}
     </div>
   </header>
@@ -60,7 +62,7 @@
             <button type="submit" class="submit-streamer-submit">Access console</button>
           </div>
         </form>
-        <p class="admin-help subtle">Unlock YouTube toggles, quick status refresh, and the live log viewer.</p>
+        <p class="admin-help subtle">Unlock configuration, quick status refresh, logs, and monitoring tools.</p>
       </div>
 
       <div class="surface admin-card info-card">
@@ -80,7 +82,13 @@
           <p class="eyebrow">Other sites nearby</p>
           {{if .OtherSites}}
             <div class="site-chip-row">
-              {{range .OtherSites}}<span class="site-chip">{{.}}</span>{{end}}
+              {{range .OtherSites}}
+                {{if .AdminURL}}
+                  <a href="{{.AdminURL}}" class="site-chip" target="_blank" rel="noopener">{{.Name}}</a>
+                {{else}}
+                  <span class="site-chip">{{.Name}}</span>
+                {{end}}
+              {{end}}
             </div>
           {{else}}
             <p class="admin-help subtle">No additional sites detected alongside the fallback.</p>
@@ -107,38 +115,11 @@
             <p class="stat-note">Directories loaded alongside default-site.</p>
           </div>
           <div class="stat-chip">
-            <p class="stat-label">YouTube toggles</p>
+            <p class="stat-label">YouTube sites</p>
             <p class="stat-value">{{len .YouTubeSites}}</p>
-            <p class="stat-note">Enable or pause per site instantly.</p>
+            <p class="stat-note">Managed via Configuration page.</p>
           </div>
         </div>
-      </div>
-
-      <div class="surface admin-card">
-        <div class="admin-card-header">
-          <p class="eyebrow">YouTube</p>
-          <h3>Integration switches</h3>
-          <p class="admin-help">Flip a site on or off; the form submits immediately.</p>
-        </div>
-        {{if .YouTubeSites}}
-          <div class="admin-youtube-list">
-            {{range .YouTubeSites}}
-            <form method="post" action="/admin/youtube/settings" class="admin-youtube-toggle">
-              <input type="hidden" name="site_key" value="{{.SiteKey}}">
-              <label class="admin-youtube-label">
-                <input type="checkbox" name="youtube_enabled" value="true" class="admin-toggle" {{if .Enabled}}checked{{end}} onchange="this.form.submit()">
-                <div class="admin-youtube-details">
-                  <span class="admin-youtube-site-name">{{.SiteName}}</span>
-                  <span class="admin-youtube-meta">Key: {{.SiteKey}}</span>
-                </div>
-                <span class="pill {{if .Enabled}}tone-accent{{else}}tone-warn{{end}}">{{if .Enabled}}Enabled{{else}}Disabled{{end}}</span>
-              </label>
-            </form>
-            {{end}}
-          </div>
-        {{else}}
-          <p class="admin-help subtle">No YouTube-enabled sites were found.</p>
-        {{end}}
       </div>
 
       <div class="surface admin-card info-card">
@@ -163,25 +144,19 @@
         </div>
         {{if .OtherSites}}
           <div class="site-chip-row">
-            {{range .OtherSites}}<span class="site-chip">{{.}}</span>{{end}}
+            {{range .OtherSites}}
+              {{if .AdminURL}}
+                <a href="{{.AdminURL}}" class="site-chip" target="_blank" rel="noopener">{{.Name}}</a>
+              {{else}}
+                <span class="site-chip">{{.Name}}</span>
+              {{end}}
+            {{end}}
           </div>
         {{else}}
           <p>No additional sites were found alongside the default site.</p>
         {{end}}
       </div>
 
-      <div class="surface admin-card log-card span-2">
-        <div class="admin-card-header log-card-header">
-          <div>
-            <p class="eyebrow">Observability</p>
-            <h3>Aggregated logs</h3>
-            <p class="admin-help">The embedded viewer pulls all site logs, including the fallback.</p>
-          </div>
-          <a class="action-button ghost" href="/logs" target="_blank" rel="noreferrer">Open in new tab</a>
-        </div>
-        <p class="admin-help subtle">If the viewer shows a login or fallback page, your admin session may have expired—refresh status to re-auth.</p>
-        <iframe src="/logs" title="Logs" class="admin-logs-frame" loading="lazy"></iframe>
-      </div>
     </div>
   {{end}}
 </section>

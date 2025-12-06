@@ -4,111 +4,124 @@
 
 {{define "content"}}
 <style>
-  .logs-page { background: #0a0a0a; color: #e0e0e0; padding: 24px; min-height: 100vh; }
-  .logs-page * { box-sizing: border-box; }
-  .logs-page .container { max-width: 1400px; margin: 0 auto; }
-  .logs-page h1 { font-size: 24px; margin-bottom: 20px; color: #fff; display: flex; align-items: center; }
-  .logs-page .controls { display: flex; gap: 15px; margin-bottom: 20px; flex-wrap: wrap; }
-  .logs-page .controls select,
-  .logs-page .controls input { padding: 8px 12px; background: #1a1a1a; border: 1px solid #333; color: #e0e0e0; border-radius: 4px; }
-  .logs-page .controls button { padding: 8px 16px; background: #2563eb; color: white; border: none; border-radius: 4px; cursor: pointer; }
-  .logs-page .controls button:hover { background: #1d4ed8; }
-  .logs-page .stats { display: flex; gap: 20px; margin-bottom: 20px; flex-wrap: wrap; }
-  .logs-page .stat { background: #1a1a1a; padding: 12px 20px; border-radius: 6px; border-left: 3px solid #2563eb; min-width: 160px; }
-  .logs-page .stat-label { font-size: 12px; color: #888; margin-bottom: 4px; display: block; }
-  .logs-page .stat-value { font-size: 20px; font-weight: bold; }
-  .logs-page .logs { background: #0f0f0f; border: 1px solid #222; border-radius: 8px; overflow: hidden; }
-  .logs-page .log-entry { padding: 12px 16px; border-bottom: 1px solid #1a1a1a; font-family: "SF Mono", Monaco, monospace; font-size: 13px; }
-  .logs-page .log-entry:hover { background: #1a1a1a; }
-  .logs-page .log-header { display: flex; gap: 15px; margin-bottom: 6px; align-items: center; flex-wrap: wrap; }
-  .logs-page .log-time { color: #666; }
-  .logs-page .log-level { padding: 2px 8px; border-radius: 3px; font-size: 11px; font-weight: 600; }
-  .logs-page .level-DEBUG { background: #374151; color: #9ca3af; }
-  .logs-page .level-INFO { background: #1e40af; color: #93c5fd; }
-  .logs-page .level-WARN { background: #b45309; color: #fcd34d; }
-  .logs-page .level-ERROR { background: #991b1b; color: #fca5a5; }
-  .logs-page .level-FATAL { background: #7f1d1d; color: #fca5a5; }
-  .logs-page .log-category { color: #60a5fa; }
-  .logs-page .log-request-id { color: #a78bfa; font-size: 11px; }
-  .logs-page .log-message { color: #e0e0e0; margin-bottom: 4px; }
-  .logs-page .log-fields { color: #9ca3af; font-size: 12px; }
-  .logs-page .log-error { color: #f87171; margin-top: 4px; }
-  .logs-page .log-duration { color: #34d399; font-size: 11px; }
-  .logs-page .toggle-fields { cursor: pointer; color: #60a5fa; font-size: 11px; margin-top: 4px; user-select: none; }
-  .logs-page .fields-detail { margin-top: 8px; padding: 10px; background: #1a1a1a; border-radius: 4px; display: none; }
-  .logs-page .fields-detail.show { display: block; }
-  .logs-page .fields-detail pre { color: #9ca3af; overflow-x: auto; white-space: pre-wrap; word-break: break-word; }
-  .logs-page .stream-indicator { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-left: 10px; }
-  .logs-page .stream-indicator.connected { background: #10b981; }
-  .logs-page .stream-indicator.disconnected { background: #ef4444; }
+  .log-entry { padding: 12px 16px; border-bottom: 1px solid rgba(31, 41, 55, 0.1); font-family: "SF Mono", Monaco, monospace; font-size: 13px; }
+  .log-entry:hover { background: rgba(31, 41, 55, 0.02); }
+  .log-header { display: flex; gap: 15px; margin-bottom: 6px; align-items: center; flex-wrap: wrap; }
+  .log-time { color: #6b7280; }
+  .log-level { padding: 2px 8px; border-radius: 3px; font-size: 11px; font-weight: 600; }
+  .level-DEBUG { background: #374151; color: #9ca3af; }
+  .level-INFO { background: #1e40af; color: #93c5fd; }
+  .level-WARN { background: #b45309; color: #fcd34d; }
+  .level-ERROR { background: #991b1b; color: #fca5a5; }
+  .level-FATAL { background: #7f1d1d; color: #fca5a5; }
+  .log-category { color: #3b82f6; }
+  .log-request-id { color: #a78bfa; font-size: 11px; }
+  .log-message { color: #1f2937; margin-bottom: 4px; }
+  .log-error { color: #dc2626; margin-top: 4px; }
+  .log-duration { color: #10b981; font-size: 11px; }
+  .toggle-fields { cursor: pointer; color: #3b82f6; font-size: 11px; margin-top: 4px; user-select: none; }
+  .toggle-fields:hover { text-decoration: underline; }
+  .fields-detail { margin-top: 8px; padding: 10px; background: rgba(31, 41, 55, 0.05); border-radius: 4px; display: none; }
+  .fields-detail.show { display: block; }
+  .fields-detail pre { color: #6b7280; overflow-x: auto; white-space: pre-wrap; word-break: break-word; margin: 0; }
+  .stream-indicator { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-left: 10px; }
+  .stream-indicator.connected { background: #10b981; }
+  .stream-indicator.disconnected { background: #ef4444; }
+  .logs-controls { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+  .logs-controls select,
+  .logs-controls input { padding: 8px 12px; border: 1px solid rgba(31, 41, 55, 0.2); border-radius: 6px; font-size: 14px; }
+  .logs-controls button { padding: 8px 16px; background: #3b82f6; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 14px; font-weight: 500; }
+  .logs-controls button:hover { background: #2563eb; }
+  .logs-stats { display: flex; gap: 16px; flex-wrap: wrap; }
+  .logs-stat { display: flex; flex-direction: column; gap: 4px; }
+  .logs-stat-label { font-size: 12px; color: #6b7280; }
+  .logs-stat-value { font-size: 20px; font-weight: 600; color: #1f2937; }
+  .logs-container { max-height: 600px; overflow-y: auto; border-radius: 8px; border: 1px solid rgba(31, 41, 55, 0.1); }
 </style>
 
-<main class="logs-page">
-  <div class="container">
-    <h1>Application Logs <span class="stream-indicator" id="stream-status"></span></h1>
-
-    <div class="controls">
-      <select id="level" onchange="updateFilters()">
-        <option value="">All Levels</option>
-        {{range .Levels}}
-          <option value="{{.}}"{{if eq . $.Level}} selected{{end}}>{{.}}</option>
-        {{end}}
-      </select>
-      <select id="category" onchange="updateFilters()">
-        <option value="">All Categories</option>
-        {{range .Categories}}
-          <option value="{{.}}"{{if eq . $.Category}} selected{{end}}>{{.}}</option>
-        {{end}}
-      </select>
-      <input type="number" id="limit" value="{{.Limit}}" min="10" max="1000" step="10" onchange="updateFilters()">
-      <button type="button" onclick="updateFilters()">Apply Filters</button>
-      <button type="button" onclick="toggleStream()">Toggle Live Stream</button>
-      <button type="button" onclick="clearLogs()">Clear Display</button>
-    </div>
-
-    <div class="stats">
-      <div class="stat">
-        <span class="stat-label">Total Entries</span>
-        <span class="stat-value" id="entry-count">{{len .Entries}}</span>
-      </div>
-      <div class="stat">
-        <span class="stat-label">Displaying</span>
-        <span class="stat-value" id="display-count">{{len .Entries}}</span>
+<section class="admin-shell admin-lumen" aria-live="polite">
+  <header class="surface admin-masthead">
+    <div class="masthead-text">
+      <p class="eyebrow">System Monitoring</p>
+      <h2 id="logs-title">Application Logs <span class="stream-indicator" id="stream-status"></span></h2>
+      <p class="admin-help">Real-time log streaming and filtering for system diagnostics.</p>
+      <div class="pill-row">
+        <span class="pill tone-accent">Total: {{len .Entries}}</span>
+        <span class="pill tone-ghost" id="display-pill">Displaying: {{len .Entries}}</span>
       </div>
     </div>
+    <div class="masthead-actions">
+      <div class="button-row">
+        <a href="/admin" class="action-button ghost">Back to admin</a>
+      </div>
+    </div>
+  </header>
 
-    <div class="logs" id="logs-container">
-      {{range $i, $entry := .Entries}}
-      <div class="log-entry">
-        <div class="log-header">
-          <span class="log-time">{{$entry.Timestamp.Format "2006-01-02 15:04:05"}}</span>
-          <span class="log-level level-{{$entry.Level}}">{{$entry.Level}}</span>
-          <span class="log-category">{{$entry.Category}}</span>
-          {{if $entry.RequestID}}<span class="log-request-id">{{printf "%.8s" $entry.RequestID}}</span>{{end}}
-          {{if $entry.Duration}}<span class="log-duration">{{$entry.Duration}}ms</span>{{end}}
-        </div>
-        <div class="log-message">{{$entry.Message}}</div>
-        {{if $entry.Error}}<div class="log-error">Error: {{$entry.Error}}</div>{{end}}
-        {{if $entry.Fields}}
-          {{$fieldID := printf "fields-%d" $i}}
-          <div class="toggle-fields" onclick="toggleFields('{{$fieldID}}')">⊕ Show Details</div>
-          <div class="fields-detail" id="{{$fieldID}}">
-            <pre>{{range $k, $v := $entry.Fields}}{{$k}}: {{$v}}
-{{end}}</pre>
+  <div class="admin-grid dashboard">
+    <div class="surface admin-card span-2">
+      <div class="admin-card-header">
+        <p class="eyebrow">Filter Controls</p>
+        <h3>Log Filters & Actions</h3>
+        <p class="admin-help">Filter logs by level or category, and manage the live stream.</p>
+      </div>
+      <div class="logs-controls">
+        <select id="level" onchange="updateFilters()">
+          <option value="">All Levels</option>
+          {{range .Levels}}
+            <option value="{{.}}"{{if eq . $.Level}} selected{{end}}>{{.}}</option>
+          {{end}}
+        </select>
+        <select id="category" onchange="updateFilters()">
+          <option value="">All Categories</option>
+          {{range .Categories}}
+            <option value="{{.}}"{{if eq . $.Category}} selected{{end}}>{{.}}</option>
+          {{end}}
+        </select>
+        <input type="number" id="limit" value="{{.Limit}}" min="10" max="1000" step="10" placeholder="Limit">
+        <button type="button" onclick="updateFilters()">Apply Filters</button>
+        <button type="button" onclick="toggleStream()">Toggle Stream</button>
+        <button type="button" onclick="clearLogs()">Clear Display</button>
+      </div>
+    </div>
+
+    <div class="surface admin-card span-2">
+      <div class="admin-card-header">
+        <p class="eyebrow">Log Entries</p>
+        <h3>Recent Activity</h3>
+      </div>
+      <div class="logs-container" id="logs-container">
+        {{range $i, $entry := .Entries}}
+        <div class="log-entry">
+          <div class="log-header">
+            <span class="log-time">{{$entry.Timestamp.Format "2006-01-02 15:04:05"}}</span>
+            <span class="log-level level-{{$entry.Level}}">{{$entry.Level}}</span>
+            <span class="log-category">{{$entry.Category}}</span>
+            {{if $entry.RequestID}}<span class="log-request-id">{{printf "%.8s" $entry.RequestID}}</span>{{end}}
+            {{if $entry.Duration}}<span class="log-duration">{{$entry.Duration}}ms</span>{{end}}
           </div>
+          <div class="log-message">{{$entry.Message}}</div>
+          {{if $entry.Error}}<div class="log-error">Error: {{$entry.Error}}</div>{{end}}
+          {{if $entry.Fields}}
+            {{$fieldID := printf "fields-%d" $i}}
+            <div class="toggle-fields" onclick="toggleFields('{{$fieldID}}')">⊕ Show Details</div>
+            <div class="fields-detail" id="{{$fieldID}}">
+              <pre>{{range $k, $v := $entry.Fields}}{{$k}}: {{$v}}
+{{end}}</pre>
+            </div>
+          {{end}}
+        </div>
         {{end}}
       </div>
-      {{end}}
     </div>
   </div>
-</main>
+</section>
 
 <script>
   let eventSource = null;
   let isStreaming = false;
   const logsContainer = document.getElementById('logs-container');
   const streamStatus = document.getElementById('stream-status');
-  const displayCount = document.getElementById('display-count');
+  const displayPill = document.getElementById('display-pill');
 
   function updateFilters() {
     const level = document.getElementById('level').value;
@@ -229,7 +242,9 @@
   }
 
   function updateDisplayCount() {
-    displayCount.textContent = logsContainer.children.length;
+    if (displayPill) {
+      displayPill.textContent = 'Displaying: ' + logsContainer.children.length;
+    }
   }
 
   setTimeout(startStream, 100);

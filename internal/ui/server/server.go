@@ -458,6 +458,7 @@ func Run(ctx context.Context, opts Options) error {
 	mux.HandleFunc("/admin/streamers/delete", srv.handleAdminStreamerDelete)
 	mux.HandleFunc("/admin/status-check", srv.handleAdminStatusCheck)
 	mux.HandleFunc("/admin/youtube/settings", srv.handleAdminYouTubeSettings)
+	mux.HandleFunc("/admin/config", srv.handleAdminConfig)
 	streamersWatch := streamersWatchHandler(streamersWatchOptions{
 		FilePath: srv.streamersStore.Path(),
 	})

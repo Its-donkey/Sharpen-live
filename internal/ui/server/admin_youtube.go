@@ -33,9 +33,12 @@ func (s *server) isYouTubeEnabled() bool {
 		return true // Default to enabled if site can't be resolved
 	}
 
-	// If YouTubeEnabled is nil, use global default (true)
+	// If YouTubeEnabled is nil, fall back to global YouTube.Enabled setting
 	if site.YouTubeEnabled == nil {
-		return true
+		if cfg.YouTube.Enabled != nil {
+			return *cfg.YouTube.Enabled
+		}
+		return true // Default to enabled if no global setting either
 	}
 
 	return *site.YouTubeEnabled
@@ -53,9 +56,12 @@ func isYouTubeEnabledForSiteKey(configPath, siteKey string) bool {
 		return true // Default to enabled if site can't be resolved
 	}
 
-	// If YouTubeEnabled is nil, use global default (true)
+	// If YouTubeEnabled is nil, fall back to global YouTube.Enabled setting
 	if site.YouTubeEnabled == nil {
-		return true
+		if cfg.YouTube.Enabled != nil {
+			return *cfg.YouTube.Enabled
+		}
+		return true // Default to enabled if no global setting either
 	}
 
 	return *site.YouTubeEnabled
@@ -85,18 +91,42 @@ func (s *server) handleAdminYouTubeSettings(w http.ResponseWriter, r *http.Reque
 
 	siteKey := r.FormValue("site_key")
 	enabled := r.FormValue("youtube_enabled") == "true"
-
-	// Determine which site to update
-	targetSiteKey := siteKey
-	if targetSiteKey == "" {
-		targetSiteKey = s.siteKey
-	}
+	isGlobal := r.FormValue("global") == "true"
 
 	// Load config
 	cfg, err := config.Load(s.configPath)
 	if err != nil {
 		s.redirectAdmin(w, r, "", fmt.Sprintf("Failed to load config: %v", err))
 		return
+	}
+
+	// Handle global YouTube toggle
+	if isGlobal {
+		cfg.YouTube.Enabled = &enabled
+		if err := config.Save(cfg, s.configPath); err != nil {
+			s.logger.Warn("admin", "failed to save config after global YouTube update", map[string]any{
+				"error": err.Error(),
+			})
+			http.Redirect(w, r, "/admin/config?err="+fmt.Sprintf("Failed to save config: %v", err), http.StatusSeeOther)
+			return
+		}
+
+		s.logger.Info("admin", "Global YouTube settings updated", map[string]any{
+			"enabled": enabled,
+		})
+
+		statusMsg := "YouTube globally enabled"
+		if !enabled {
+			statusMsg = "YouTube globally disabled"
+		}
+		http.Redirect(w, r, "/admin/config?msg="+statusMsg, http.StatusSeeOther)
+		return
+	}
+
+	// Determine which site to update
+	targetSiteKey := siteKey
+	if targetSiteKey == "" {
+		targetSiteKey = s.siteKey
 	}
 
 	// Update the YouTube enabled setting for the target site
@@ -106,14 +136,14 @@ func (s *server) handleAdminYouTubeSettings(w http.ResponseWriter, r *http.Reque
 		s.logger.Warn("admin", "attempted to update YouTube for base config", map[string]any{
 			"targetSiteKey": targetSiteKey,
 		})
-		s.redirectAdmin(w, r, "", "Cannot update YouTube settings for base configuration. Please use a specific site.")
+		http.Redirect(w, r, "/admin/config?err=Cannot update YouTube settings for base configuration. Please use a specific site.", http.StatusSeeOther)
 		return
 	}
 
 	// Find and update the site in config
 	site, exists := cfg.Sites[targetSiteKey]
 	if !exists {
-		s.redirectAdmin(w, r, "", fmt.Sprintf("Site %q not found", targetSiteKey))
+		http.Redirect(w, r, "/admin/config?err="+fmt.Sprintf("Site %q not found", targetSiteKey), http.StatusSeeOther)
 		return
 	}
 
@@ -127,7 +157,7 @@ func (s *server) handleAdminYouTubeSettings(w http.ResponseWriter, r *http.Reque
 			"site":  targetSiteKey,
 			"error": err.Error(),
 		})
-		s.redirectAdmin(w, r, "", fmt.Sprintf("Failed to save config: %v", err))
+		http.Redirect(w, r, "/admin/config?err="+fmt.Sprintf("Failed to save config: %v", err), http.StatusSeeOther)
 		return
 	}
 
@@ -142,7 +172,7 @@ func (s *server) handleAdminYouTubeSettings(w http.ResponseWriter, r *http.Reque
 	}
 	statusMsg = fmt.Sprintf("%s for %s", statusMsg, targetSiteKey)
 
-	s.redirectAdmin(w, r, statusMsg, "")
+	http.Redirect(w, r, "/admin/config?msg="+statusMsg, http.StatusSeeOther)
 }
 
 // getYouTubeSiteConfigs returns YouTube configuration for all sites or current site.
@@ -152,13 +182,25 @@ func (s *server) getYouTubeSiteConfigs() ([]YouTubeSiteConfig, error) {
 		return nil, err
 	}
 
-	// If on default-site, show all sites
+	// If on default-site, show all sites (except alertserver itself)
 	if s.siteKey == config.AlertserverKey {
 		var configs []YouTubeSiteConfig
 
-		// Add each configured site
+		// Determine global default
+		globalEnabled := true
+		if cfg.YouTube.Enabled != nil {
+			globalEnabled = *cfg.YouTube.Enabled
+		}
+
+		// Add each configured site, excluding the alertserver/control room
 		for key, site := range cfg.Sites {
-			enabled := true
+			// Skip the alertserver key - we only want child sites
+			if key == config.AlertserverKey {
+				continue
+			}
+
+			// Use per-site override if set, otherwise fall back to global setting
+			enabled := globalEnabled
 			if site.YouTubeEnabled != nil {
 				enabled = *site.YouTubeEnabled
 			}
@@ -178,7 +220,14 @@ func (s *server) getYouTubeSiteConfigs() ([]YouTubeSiteConfig, error) {
 		return nil, err
 	}
 
-	enabled := true
+	// Determine global default
+	globalEnabled := true
+	if cfg.YouTube.Enabled != nil {
+		globalEnabled = *cfg.YouTube.Enabled
+	}
+
+	// Use per-site override if set, otherwise fall back to global setting
+	enabled := globalEnabled
 	if site.YouTubeEnabled != nil {
 		enabled = *site.YouTubeEnabled
 	}

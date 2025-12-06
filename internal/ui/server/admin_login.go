@@ -18,6 +18,13 @@ import (
 
 const adminCookieName = "sharpen_admin_token"
 
+type SiteInfo struct {
+	Key      string
+	Name     string
+	URL      string
+	AdminURL string
+}
+
 type adminPageData struct {
 	basePageData
 	LoggedIn         bool
@@ -28,7 +35,7 @@ type adminPageData struct {
 	Streamers        []model.Streamer
 	RosterError      string
 	AdminEmail       string
-	OtherSites       []string
+	OtherSites       []SiteInfo
 	YouTubeSites     []YouTubeSiteConfig
 	IsAlertserver    bool
 }
@@ -63,9 +70,9 @@ func (s *server) handleAdmin(w http.ResponseWriter, r *http.Request) {
 		Error:        errMsg,
 		AdminEmail:   s.adminEmail,
 	}
-	if s.isAlertserver() {
+	data.IsAlertserver = s.isAlertserver()
+	if data.IsAlertserver {
 		data.OtherSites = s.resolveOtherSites()
-		data.IsAlertserver = true
 	}
 	token := s.adminTokenFromRequest(r)
 	if token == "" {
@@ -174,11 +181,11 @@ func configuredSiteKeys(cfg config.Config) []string {
 	return keys
 }
 
-func (s *server) resolveOtherSites() []string {
+func (s *server) resolveOtherSites() []SiteInfo {
 	seen := make(map[string]struct{})
 	add := func(val string) {
 		v := strings.TrimSpace(val)
-		if v == "" || strings.EqualFold(v, config.AlertserverKey) {
+		if v == "" || strings.EqualFold(v, config.AlertserverKey) || strings.EqualFold(v, "default-site") || strings.EqualFold(v, s.siteKey) {
 			return
 		}
 		seen[v] = struct{}{}
@@ -189,12 +196,50 @@ func (s *server) resolveOtherSites() []string {
 	for _, key := range listSiblingSites(s.assetsDir) {
 		add(key)
 	}
-	var result []string
+	var keys []string
 	for key := range seen {
-		result = append(result, key)
+		keys = append(keys, key)
 	}
-	sort.Strings(result)
+	sort.Strings(keys)
+
+	var result []SiteInfo
+	for _, key := range keys {
+		siteInfo := s.buildSiteInfo(key)
+		result = append(result, siteInfo)
+	}
 	return result
+}
+
+func (s *server) buildSiteInfo(key string) SiteInfo {
+	info := SiteInfo{
+		Key:      key,
+		Name:     key,
+		URL:      "",
+		AdminURL: "",
+	}
+
+	cfg, err := config.Load(s.configPath)
+	if err != nil {
+		return info
+	}
+
+	site, ok := cfg.Sites[key]
+	if !ok {
+		return info
+	}
+
+	if site.Name != "" {
+		info.Name = site.Name
+	}
+
+	addr := site.Server.Addr
+	port := site.Server.Port
+	if addr != "" && port != "" {
+		info.URL = fmt.Sprintf("http://%s%s", addr, port)
+		info.AdminURL = fmt.Sprintf("http://%s%s/admin", addr, port)
+	}
+
+	return info
 }
 
 func (s *server) isAlertserver() bool {
@@ -202,7 +247,11 @@ func (s *server) isAlertserver() bool {
 		return true
 	}
 	clean := filepath.Clean(s.assetsDir)
-	return strings.Contains(clean, string(filepath.Separator)+config.AlertserverKey)
+	if strings.Contains(clean, string(filepath.Separator)+config.AlertserverKey) {
+		return true
+	}
+	// Also check for "default-site" which is the actual directory name for alertserver
+	return strings.Contains(clean, string(filepath.Separator)+"default-site")
 }
 
 func (s *server) redirectAdmin(w http.ResponseWriter, r *http.Request, msg, errMsg string) {
@@ -249,7 +298,7 @@ func listSiblingSites(assetsDir string) []string {
 			continue
 		}
 		name := entry.Name()
-		if strings.EqualFold(name, config.AlertserverKey) {
+		if strings.EqualFold(name, config.AlertserverKey) || strings.EqualFold(name, "default-site") {
 			continue
 		}
 		sites = append(sites, name)

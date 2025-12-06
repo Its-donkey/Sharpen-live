@@ -562,6 +562,90 @@ func ClearYouTubeLive(path, channelID string) (Record, error) {
 }
 
 const platformYouTube = "youtube"
+const platformTwitch = "twitch"
+
+// SetTwitchLive marks the streamer associated with the provided broadcaster ID as live.
+func (s *Store) SetTwitchLive(broadcasterID, streamID string, startedAt time.Time) (Record, error) {
+	return s.updateTwitchStatus(broadcasterID, func(status *Status) {
+		if status.Twitch == nil {
+			status.Twitch = &TwitchStatus{}
+		}
+		status.Twitch.Live = true
+		status.Twitch.StreamID = streamID
+		if !startedAt.IsZero() {
+			status.Twitch.StartedAt = startedAt
+		} else {
+			status.Twitch.StartedAt = time.Time{}
+		}
+		status.Platforms = addPlatform(status.Platforms, platformTwitch)
+		status.Live = true
+	})
+}
+
+// ClearTwitchLive marks the Twitch platform as offline for the matching broadcaster ID.
+func (s *Store) ClearTwitchLive(broadcasterID string) (Record, error) {
+	return s.updateTwitchStatus(broadcasterID, func(status *Status) {
+		if status.Twitch == nil {
+			status.Twitch = &TwitchStatus{}
+		}
+		status.Twitch.Live = false
+		status.Twitch.StreamID = ""
+		status.Twitch.StartedAt = time.Time{}
+		status.Platforms = removePlatform(status.Platforms, platformTwitch)
+	})
+}
+
+// SetTwitchLive marks the streamer as live using a shared store derived from path.
+func SetTwitchLive(path, broadcasterID, streamID string, startedAt time.Time) (Record, error) {
+	return storeForPath(path).SetTwitchLive(broadcasterID, streamID, startedAt)
+}
+
+// ClearTwitchLive marks the streamer as offline using a shared store.
+func ClearTwitchLive(path, broadcasterID string) (Record, error) {
+	return storeForPath(path).ClearTwitchLive(broadcasterID)
+}
+
+func (s *Store) updateTwitchStatus(broadcasterID string, updateFn func(*Status)) (Record, error) {
+	if s == nil {
+		return Record{}, errors.New("streamers store is nil")
+	}
+	broadcasterID = strings.TrimSpace(broadcasterID)
+	if broadcasterID == "" {
+		return Record{}, errors.New("twitch broadcaster id is required")
+	}
+	var updated Record
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	err := s.updateFileLocked(func(file *File) error {
+		for i := range file.Records {
+			tw := file.Records[i].Platforms.Twitch
+			if !broadcasterMatches(tw, broadcasterID) {
+				continue
+			}
+			if file.Records[i].Status == nil {
+				file.Records[i].Status = &Status{}
+			}
+			updateFn(file.Records[i].Status)
+			refreshLiveFlag(file.Records[i].Status)
+			file.Records[i].UpdatedAt = time.Now().UTC()
+			updated = file.Records[i]
+			return nil
+		}
+		return fmt.Errorf("%w: %s", ErrStreamerNotFound, broadcasterID)
+	})
+	return updated, err
+}
+
+func broadcasterMatches(tw *TwitchPlatform, target string) bool {
+	if tw == nil {
+		return false
+	}
+	stored := strings.TrimSpace(tw.BroadcasterID)
+	if stored == "" || target == "" {
+		return false
+	}
+	return strings.EqualFold(stored, target)
+}
 
 func (s *Store) updateYouTubeStatus(channelID string, updateFn func(*Status)) (Record, error) {
 	if s == nil {

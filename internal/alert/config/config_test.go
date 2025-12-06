@@ -33,7 +33,9 @@ func TestLoadHonoursOverrides(t *testing.T) {
 	path := filepath.Join(dir, "config.json")
 	data := `{
 		"server": {"addr":"0.0.0.0","port":":9999"},
-		"youtube": {"hub_url":"https://hub","callback_url":"https://callback","lease_seconds":123},
+		"platforms": {
+			"youtube": {"hub_url":"https://hub","callback_url":"https://callback","lease_seconds":123}
+		},
 		"admin": {"email":"admin@example.com","password":"secret","token_ttl_seconds":10}
 	}`
 	if err := os.WriteFile(path, []byte(data), 0o644); err != nil {
@@ -47,8 +49,8 @@ func TestLoadHonoursOverrides(t *testing.T) {
 	if cfg.Server.Addr != "0.0.0.0" || cfg.Server.Port != ":9999" {
 		t.Fatalf("server overrides not applied: %+v", cfg.Server)
 	}
-	if cfg.YouTube.HubURL != "https://hub" || cfg.YouTube.LeaseSeconds != 123 {
-		t.Fatalf("youtube overrides not applied: %+v", cfg.YouTube)
+	if cfg.Platforms.YouTube.HubURL != "https://hub" || cfg.Platforms.YouTube.LeaseSeconds != 123 {
+		t.Fatalf("youtube overrides not applied: %+v", cfg.Platforms.YouTube)
 	}
 	if cfg.Admin.Email != "admin@example.com" || cfg.Admin.TokenTTLSeconds != 10 {
 		t.Fatalf("admin overrides not applied: %+v", cfg.Admin)
@@ -60,7 +62,9 @@ func TestLoadPrefersConfigAPIKey(t *testing.T) {
 	path := filepath.Join(dir, "config.json")
 	data := `{
 		"server": {"addr":"0.0.0.0","port":":9999"},
-		"youtube": {"api_key":"from-config"},
+		"platforms": {
+			"youtube": {"api_key":"from-config"}
+		},
 		"admin": {"email":"admin@example.com","password":"secret","token_ttl_seconds":10}
 	}`
 	if err := os.WriteFile(path, []byte(data), 0o644); err != nil {
@@ -72,8 +76,8 @@ func TestLoadPrefersConfigAPIKey(t *testing.T) {
 	if err != nil {
 		t.Fatalf("load: %v", err)
 	}
-	if cfg.YouTube.APIKey != "from-config" {
-		t.Fatalf("expected config api key, got %q", cfg.YouTube.APIKey)
+	if cfg.Platforms.YouTube.APIKey != "from-config" {
+		t.Fatalf("expected config api key, got %q", cfg.Platforms.YouTube.APIKey)
 	}
 }
 
@@ -82,7 +86,9 @@ func TestLoadFallsBackToEnvAPIKey(t *testing.T) {
 	path := filepath.Join(dir, "config.json")
 	data := `{
 		"server": {"addr":"0.0.0.0","port":":9999"},
-		"youtube": {},
+		"platforms": {
+			"youtube": {}
+		},
 		"admin": {"email":"admin@example.com","password":"secret","token_ttl_seconds":10}
 	}`
 	if err := os.WriteFile(path, []byte(data), 0o644); err != nil {
@@ -94,8 +100,8 @@ func TestLoadFallsBackToEnvAPIKey(t *testing.T) {
 	if err != nil {
 		t.Fatalf("load: %v", err)
 	}
-	if cfg.YouTube.APIKey != "from-env" {
-		t.Fatalf("expected env api key as fallback, got %q", cfg.YouTube.APIKey)
+	if cfg.Platforms.YouTube.APIKey != "from-env" {
+		t.Fatalf("expected env api key as fallback, got %q", cfg.Platforms.YouTube.APIKey)
 	}
 }
 

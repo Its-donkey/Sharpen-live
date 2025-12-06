@@ -8,12 +8,13 @@ import (
 
 type configPageData struct {
 	basePageData
-	LoggedIn      bool
-	Flash         string
-	Error         string
-	YouTubeConfig PlatformConfigDisplay
-	TwitchConfig  PlatformConfigDisplay
+	LoggedIn       bool
+	Flash          string
+	Error          string
+	YouTubeConfig  PlatformConfigDisplay
+	TwitchConfig   PlatformConfigDisplay
 	FacebookConfig PlatformConfigDisplay
+	YouTubeSites   []YouTubeSiteConfig
 }
 
 type PlatformConfigDisplay struct {
@@ -83,6 +84,16 @@ func (s *server) handleAdminConfig(w http.ResponseWriter, r *http.Request) {
 		data.FacebookConfig = PlatformConfigDisplay{
 			Enabled: false,
 			HubURL:  "Not configured",
+		}
+
+		// Load YouTube site configurations
+		youtubeConfigs, err := s.getYouTubeSiteConfigs()
+		if err != nil {
+			s.logger.Warn("admin_config", "failed to load YouTube site configs", map[string]any{
+				"error": err.Error(),
+			})
+		} else {
+			data.YouTubeSites = youtubeConfigs
 		}
 	}
 

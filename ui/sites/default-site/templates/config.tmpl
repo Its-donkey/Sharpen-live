@@ -93,6 +93,31 @@
           </div>
           {{end}}
         </div>
+
+        {{if .YouTubeSites}}
+        <div class="admin-card-header" style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid rgba(31, 41, 55, 0.1);">
+          <p class="eyebrow">Per-Site Controls</p>
+          <h3>Site Integration Switches</h3>
+          <p class="admin-help">Enable or disable YouTube WebSub per site.</p>
+        </div>
+        <div class="admin-youtube-list">
+          {{range .YouTubeSites}}
+          <form method="post" action="/admin/youtube/settings" class="admin-youtube-toggle">
+            <input type="hidden" name="site_key" value="{{.SiteKey}}">
+            <label class="admin-youtube-label">
+              <input type="checkbox" name="youtube_enabled" value="true" class="admin-toggle" {{if .Enabled}}checked{{end}} onchange="this.form.submit()">
+              <div class="admin-youtube-details">
+                <span class="admin-youtube-site-name">{{.SiteName}}</span>
+                <span class="admin-youtube-meta">Key: {{.SiteKey}}</span>
+              </div>
+              <span class="pill {{if .Enabled}}tone-accent{{else}}tone-warn{{end}}">{{if .Enabled}}Enabled{{else}}Disabled{{end}}</span>
+            </label>
+          </form>
+          {{end}}
+        </div>
+        {{else}}
+        <p class="admin-help subtle" style="margin-top: 1rem;">No YouTube-enabled sites were found.</p>
+        {{end}}
       </div>
 
       <!-- Twitch Configuration -->
@@ -156,7 +181,7 @@
           <h3>Settings Location</h3>
           <p class="admin-help">These settings are stored in the server configuration file.</p>
         </div>
-        <p class="admin-help subtle">To modify these settings, edit the <code>config.json</code> file and restart the server. Per-site YouTube toggles can be managed from the main admin dashboard.</p>
+        <p class="admin-help subtle">To modify these settings, edit the <code>config.json</code> file and restart the server. Per-site YouTube toggles can be managed above in the Site Integration Switches section.</p>
       </div>
     </div>
   {{end}}

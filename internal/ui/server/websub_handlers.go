@@ -642,35 +642,35 @@ func (s *server) checkAllStreamersLiveStatus(ctx context.Context) {
 
 // checkAllTwitchStreamersLiveStatus checks the live status of all streamers with Twitch accounts
 func (s *server) checkAllTwitchStreamersLiveStatus(ctx context.Context) {
-	fmt.Printf("\n=== INITIAL TWITCH STATUS CHECK START ===\n")
-
 	// Check if Twitch credentials are configured
 	if s.twitchConfig.ClientID == "" || s.twitchConfig.ClientSecret == "" {
-		fmt.Printf("INFO: Twitch credentials not configured, skipping initial Twitch status check\n")
-		s.logger.Info("startup", "Twitch credentials not configured, skipping initial status check", nil)
-		fmt.Printf("=== INITIAL TWITCH STATUS CHECK END ===\n\n")
+		s.logger.Info("twitch-startup", "Twitch credentials not configured, skipping initial status check", map[string]any{
+			"site": s.siteKey,
+		})
 		return
 	}
 
 	if s.streamersStore == nil {
-		fmt.Printf("WARNING: Streamers store is nil, skipping initial Twitch status check\n")
-		fmt.Printf("=== INITIAL TWITCH STATUS CHECK END ===\n\n")
+		s.logger.Warn("twitch-startup", "Streamers store is nil, skipping initial status check", map[string]any{
+			"site": s.siteKey,
+		})
 		return
 	}
 
 	// Get concrete store for status update methods
 	store, ok := s.streamersStore.(*streamers.Store)
 	if !ok {
-		fmt.Printf("WARNING: Streamers store is not *streamers.Store, skipping initial Twitch status check\n")
-		fmt.Printf("=== INITIAL TWITCH STATUS CHECK END ===\n\n")
+		s.logger.Warn("twitch-startup", "Streamers store type mismatch, skipping initial status check", map[string]any{
+			"site": s.siteKey,
+		})
 		return
 	}
 
 	records, err := s.streamersStore.List()
 	if err != nil {
-		fmt.Printf("ERROR: Failed to list streamers: %v\n", err)
-		s.logger.Error("startup", "Failed to list streamers for initial Twitch status check", err, nil)
-		fmt.Printf("=== INITIAL TWITCH STATUS CHECK END ===\n\n")
+		s.logger.Error("twitch-startup", "Failed to list streamers for initial status check", err, map[string]any{
+			"site": s.siteKey,
+		})
 		return
 	}
 
@@ -685,12 +685,16 @@ func (s *server) checkAllTwitchStreamersLiveStatus(ctx context.Context) {
 	}
 
 	if len(broadcasterIDs) == 0 {
-		fmt.Printf("INFO: No streamers with Twitch broadcaster IDs found\n")
-		fmt.Printf("=== INITIAL TWITCH STATUS CHECK END ===\n\n")
+		s.logger.Info("twitch-startup", "No streamers with Twitch broadcaster IDs found", map[string]any{
+			"site": s.siteKey,
+		})
 		return
 	}
 
-	fmt.Printf("INFO: Checking live status for %d Twitch streamer(s)\n", len(broadcasterIDs))
+	s.logger.Info("twitch-startup", "Starting initial Twitch status check", map[string]any{
+		"site":  s.siteKey,
+		"count": len(broadcasterIDs),
+	})
 
 	// Create Twitch API client
 	httpClient := &http.Client{Timeout: 30 * time.Second}
@@ -702,9 +706,9 @@ func (s *server) checkAllTwitchStreamersLiveStatus(ctx context.Context) {
 
 	results, err := twitch.GetStreams(callCtx, httpClient, auth, broadcasterIDs)
 	if err != nil {
-		fmt.Printf("ERROR: Failed to check Twitch streams: %v\n", err)
-		s.logger.Error("startup", "Failed to check Twitch streams", err, nil)
-		fmt.Printf("=== INITIAL TWITCH STATUS CHECK END ===\n\n")
+		s.logger.Error("twitch-startup", "Failed to check Twitch streams", err, map[string]any{
+			"site": s.siteKey,
+		})
 		return
 	}
 
@@ -713,33 +717,36 @@ func (s *server) checkAllTwitchStreamersLiveStatus(ctx context.Context) {
 	for broadcasterID, record := range broadcasterToRecord {
 		if streamResult, isLive := results[broadcasterID]; isLive && streamResult.IsLive {
 			// Streamer is live
-			fmt.Printf("SUCCESS: Streamer %s is LIVE on Twitch (stream: %s)\n", record.Streamer.Alias, streamResult.StreamID)
-			fmt.Printf("  Title: %s\n", streamResult.Title)
-			fmt.Printf("  Started at: %s\n", streamResult.StartedAt.Format("2006-01-02 15:04:05 MST"))
+			s.logger.Info("twitch-startup", "Streamer is LIVE on Twitch", map[string]any{
+				"alias":         record.Streamer.Alias,
+				"broadcasterID": broadcasterID,
+				"streamID":      streamResult.StreamID,
+				"title":         streamResult.Title,
+				"startedAt":     streamResult.StartedAt,
+				"site":          s.siteKey,
+			})
 
 			_, err := store.SetTwitchLive(broadcasterID, streamResult.StreamID, streamResult.StartedAt)
 			if err != nil {
-				fmt.Printf("ERROR: Failed to set Twitch live status for %s: %v\n", record.Streamer.Alias, err)
-				s.logger.Error("startup", "Failed to set Twitch live status", err, map[string]any{
+				s.logger.Error("twitch-startup", "Failed to set Twitch live status", err, map[string]any{
 					"streamerId":    record.Streamer.ID,
 					"alias":         record.Streamer.Alias,
 					"broadcasterId": broadcasterID,
+					"site":          s.siteKey,
 				})
 				errorCount++
 			} else {
 				liveCount++
 			}
 		} else {
-			// Streamer is offline
-			fmt.Printf("INFO: Streamer %s is OFFLINE on Twitch\n", record.Streamer.Alias)
-
+			// Streamer is offline - only log at debug level to avoid noise
 			_, err := store.ClearTwitchLive(broadcasterID)
 			if err != nil {
-				fmt.Printf("ERROR: Failed to clear Twitch live status for %s: %v\n", record.Streamer.Alias, err)
-				s.logger.Error("startup", "Failed to clear Twitch live status", err, map[string]any{
+				s.logger.Error("twitch-startup", "Failed to clear Twitch live status", err, map[string]any{
 					"streamerId":    record.Streamer.ID,
 					"alias":         record.Streamer.Alias,
 					"broadcasterId": broadcasterID,
+					"site":          s.siteKey,
 				})
 				errorCount++
 			} else {
@@ -748,14 +755,8 @@ func (s *server) checkAllTwitchStreamersLiveStatus(ctx context.Context) {
 		}
 	}
 
-	fmt.Printf("\n=== INITIAL TWITCH STATUS CHECK COMPLETE ===\n")
-	fmt.Printf("  Total streamers checked: %d\n", len(broadcasterIDs))
-	fmt.Printf("  Currently live: %d\n", liveCount)
-	fmt.Printf("  Offline: %d\n", offlineCount)
-	fmt.Printf("  Errors: %d\n", errorCount)
-	fmt.Printf("=============================================\n\n")
-
-	s.logger.Info("startup", "Initial Twitch status check complete", map[string]any{
+	s.logger.Info("twitch-startup", "Initial Twitch status check complete", map[string]any{
+		"site":    s.siteKey,
 		"checked": len(broadcasterIDs),
 		"live":    liveCount,
 		"offline": offlineCount,

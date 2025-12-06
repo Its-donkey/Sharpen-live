@@ -5,7 +5,6 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"encoding/json"
-	"fmt"
 	"io"
 	"net/http"
 	"strings"
@@ -83,10 +82,6 @@ type StreamOfflineEvent struct {
 
 // handleTwitchEventSub handles Twitch EventSub webhook callbacks
 func (s *server) handleTwitchEventSub(w http.ResponseWriter, r *http.Request) {
-	fmt.Printf("\n=== TWITCH EVENTSUB REQUEST START ===\n")
-	fmt.Printf("Remote Address: %s\n", r.RemoteAddr)
-	fmt.Printf("Method: %s\n", r.Method)
-
 	// Read headers
 	headers := EventSubHeaders{
 		MessageID:        r.Header.Get("Twitch-Eventsub-Message-Id"),
@@ -97,38 +92,30 @@ func (s *server) handleTwitchEventSub(w http.ResponseWriter, r *http.Request) {
 		SubscriptionType: r.Header.Get("Twitch-Eventsub-Subscription-Type"),
 	}
 
-	fmt.Printf("Message ID: %s\n", headers.MessageID)
-	fmt.Printf("Message Type: %s\n", headers.MessageType)
-	fmt.Printf("Subscription Type: %s\n", headers.SubscriptionType)
-
 	s.logger.Info("twitch-eventsub", "Received EventSub request", map[string]any{
 		"messageId":        headers.MessageID,
 		"messageType":      headers.MessageType,
 		"subscriptionType": headers.SubscriptionType,
+		"remoteAddr":       r.RemoteAddr,
 	})
 
 	// Read body
 	body, err := io.ReadAll(r.Body)
 	if err != nil {
-		fmt.Printf("ERROR: Failed to read body: %v\n", err)
 		s.logger.Error("twitch-eventsub", "Failed to read request body", err, nil)
 		http.Error(w, "failed to read body", http.StatusBadRequest)
 		return
 	}
 	defer r.Body.Close()
 
-	fmt.Printf("Body length: %d bytes\n", len(body))
-
 	// Verify signature
 	if !s.verifyEventSubSignature(headers, body) {
-		fmt.Printf("ERROR: Signature verification failed\n")
 		s.logger.Warn("twitch-eventsub", "Signature verification failed", map[string]any{
 			"messageId": headers.MessageID,
 		})
 		http.Error(w, "invalid signature", http.StatusUnauthorized)
 		return
 	}
-	fmt.Printf("INFO: Signature verified successfully\n")
 
 	// Handle based on message type
 	switch headers.MessageType {
@@ -139,22 +126,20 @@ func (s *server) handleTwitchEventSub(w http.ResponseWriter, r *http.Request) {
 	case eventsubMessageTypeRevocation:
 		s.handleEventSubRevocation(w, headers, body)
 	default:
-		fmt.Printf("WARNING: Unknown message type: %s\n", headers.MessageType)
 		s.logger.Warn("twitch-eventsub", "Unknown message type", map[string]any{
 			"messageType": headers.MessageType,
 		})
 		w.WriteHeader(http.StatusOK)
 	}
-
-	fmt.Printf("=== TWITCH EVENTSUB REQUEST END ===\n\n")
 }
 
 // verifyEventSubSignature verifies the HMAC-SHA256 signature from Twitch
 func (s *server) verifyEventSubSignature(headers EventSubHeaders, body []byte) bool {
 	secret := s.getTwitchEventSubSecret()
 	if secret == "" {
-		fmt.Printf("WARNING: No EventSub secret configured, skipping signature verification\n")
-		s.logger.Warn("twitch-eventsub", "No EventSub secret configured", nil)
+		s.logger.Warn("twitch-eventsub", "No EventSub secret configured", map[string]any{
+			"site": s.siteKey,
+		})
 		return false
 	}
 
@@ -182,23 +167,17 @@ func (s *server) getTwitchEventSubSecret() string {
 
 // handleEventSubVerification handles the webhook verification challenge
 func (s *server) handleEventSubVerification(w http.ResponseWriter, body []byte) {
-	fmt.Printf("INFO: Handling webhook verification challenge\n")
-
 	var verification EventSubVerification
 	if err := json.Unmarshal(body, &verification); err != nil {
-		fmt.Printf("ERROR: Failed to parse verification payload: %v\n", err)
 		s.logger.Error("twitch-eventsub", "Failed to parse verification payload", err, nil)
 		http.Error(w, "invalid payload", http.StatusBadRequest)
 		return
 	}
 
-	fmt.Printf("INFO: Subscription ID: %s\n", verification.Subscription.ID)
-	fmt.Printf("INFO: Subscription Type: %s\n", verification.Subscription.Type)
-	fmt.Printf("INFO: Challenge: %s\n", verification.Challenge)
-
 	s.logger.Info("twitch-eventsub", "Responding to verification challenge", map[string]any{
 		"subscriptionId":   verification.Subscription.ID,
 		"subscriptionType": verification.Subscription.Type,
+		"site":             s.siteKey,
 	})
 
 	// Respond with the challenge
@@ -209,18 +188,12 @@ func (s *server) handleEventSubVerification(w http.ResponseWriter, body []byte) 
 
 // handleEventSubNotification handles stream event notifications
 func (s *server) handleEventSubNotification(w http.ResponseWriter, headers EventSubHeaders, body []byte) {
-	fmt.Printf("INFO: Handling notification for %s\n", headers.SubscriptionType)
-
 	var notification EventSubNotification
 	if err := json.Unmarshal(body, &notification); err != nil {
-		fmt.Printf("ERROR: Failed to parse notification payload: %v\n", err)
 		s.logger.Error("twitch-eventsub", "Failed to parse notification payload", err, nil)
 		http.Error(w, "invalid payload", http.StatusBadRequest)
 		return
 	}
-
-	fmt.Printf("INFO: Subscription ID: %s\n", notification.Subscription.ID)
-	fmt.Printf("INFO: Event Type: %s\n", notification.Subscription.Type)
 
 	switch notification.Subscription.Type {
 	case eventTypeStreamOnline:
@@ -228,9 +201,9 @@ func (s *server) handleEventSubNotification(w http.ResponseWriter, headers Event
 	case eventTypeStreamOffline:
 		s.handleStreamOffline(notification)
 	default:
-		fmt.Printf("INFO: Unhandled event type: %s\n", notification.Subscription.Type)
 		s.logger.Info("twitch-eventsub", "Unhandled event type", map[string]any{
-			"eventType": notification.Subscription.Type,
+			"eventType":      notification.Subscription.Type,
+			"subscriptionId": notification.Subscription.ID,
 		})
 	}
 
@@ -242,14 +215,9 @@ func (s *server) handleEventSubNotification(w http.ResponseWriter, headers Event
 func (s *server) handleStreamOnline(notification EventSubNotification) {
 	var event StreamOnlineEvent
 	if err := json.Unmarshal(notification.Event, &event); err != nil {
-		fmt.Printf("ERROR: Failed to parse stream.online event: %v\n", err)
 		s.logger.Error("twitch-eventsub", "Failed to parse stream.online event", err, nil)
 		return
 	}
-
-	fmt.Printf("INFO: Stream ONLINE for broadcaster %s (%s)\n", event.BroadcasterUserName, event.BroadcasterUserID)
-	fmt.Printf("INFO: Stream ID: %s\n", event.ID)
-	fmt.Printf("INFO: Started at: %s\n", event.StartedAt.Format("2006-01-02 15:04:05 MST"))
 
 	s.logger.Info("twitch-eventsub", "Stream went online", map[string]any{
 		"broadcasterID":    event.BroadcasterUserID,
@@ -266,22 +234,26 @@ func (s *server) handleStreamOnline(notification EventSubNotification) {
 		_, err := store.SetTwitchLive(event.BroadcasterUserID, event.ID, event.StartedAt)
 		if err == nil {
 			found = true
-			fmt.Printf("SUCCESS: Updated streamer status to LIVE in site '%s'\n", siteKey)
 			s.logger.Info("twitch-eventsub", "Updated streamer to live", map[string]any{
-				"broadcasterID": event.BroadcasterUserID,
-				"site":          siteKey,
+				"broadcasterID":   event.BroadcasterUserID,
+				"broadcasterName": event.BroadcasterUserName,
+				"streamID":        event.ID,
+				"site":            siteKey,
 			})
 			break
 		}
 		if !strings.Contains(err.Error(), "not found") {
-			fmt.Printf("ERROR: Failed to update status in site '%s': %v\n", siteKey, err)
+			s.logger.Error("twitch-eventsub", "Failed to update streamer status", err, map[string]any{
+				"broadcasterID": event.BroadcasterUserID,
+				"site":          siteKey,
+			})
 		}
 	}
 
 	if !found {
-		fmt.Printf("WARNING: No streamer found for Twitch broadcaster %s\n", event.BroadcasterUserID)
 		s.logger.Warn("twitch-eventsub", "No streamer found for broadcaster", map[string]any{
-			"broadcasterID": event.BroadcasterUserID,
+			"broadcasterID":   event.BroadcasterUserID,
+			"broadcasterName": event.BroadcasterUserName,
 		})
 	}
 }
@@ -290,12 +262,9 @@ func (s *server) handleStreamOnline(notification EventSubNotification) {
 func (s *server) handleStreamOffline(notification EventSubNotification) {
 	var event StreamOfflineEvent
 	if err := json.Unmarshal(notification.Event, &event); err != nil {
-		fmt.Printf("ERROR: Failed to parse stream.offline event: %v\n", err)
 		s.logger.Error("twitch-eventsub", "Failed to parse stream.offline event", err, nil)
 		return
 	}
-
-	fmt.Printf("INFO: Stream OFFLINE for broadcaster %s (%s)\n", event.BroadcasterUserName, event.BroadcasterUserID)
 
 	s.logger.Info("twitch-eventsub", "Stream went offline", map[string]any{
 		"broadcasterID":    event.BroadcasterUserID,
@@ -310,49 +279,48 @@ func (s *server) handleStreamOffline(notification EventSubNotification) {
 		_, err := store.ClearTwitchLive(event.BroadcasterUserID)
 		if err == nil {
 			found = true
-			fmt.Printf("SUCCESS: Updated streamer status to OFFLINE in site '%s'\n", siteKey)
 			s.logger.Info("twitch-eventsub", "Updated streamer to offline", map[string]any{
-				"broadcasterID": event.BroadcasterUserID,
-				"site":          siteKey,
+				"broadcasterID":   event.BroadcasterUserID,
+				"broadcasterName": event.BroadcasterUserName,
+				"site":            siteKey,
 			})
 			break
 		}
 		if !strings.Contains(err.Error(), "not found") {
-			fmt.Printf("ERROR: Failed to update status in site '%s': %v\n", siteKey, err)
+			s.logger.Error("twitch-eventsub", "Failed to update streamer status", err, map[string]any{
+				"broadcasterID": event.BroadcasterUserID,
+				"site":          siteKey,
+			})
 		}
 	}
 
 	if !found {
-		fmt.Printf("WARNING: No streamer found for Twitch broadcaster %s\n", event.BroadcasterUserID)
 		s.logger.Warn("twitch-eventsub", "No streamer found for broadcaster", map[string]any{
-			"broadcasterID": event.BroadcasterUserID,
+			"broadcasterID":   event.BroadcasterUserID,
+			"broadcasterName": event.BroadcasterUserName,
 		})
 	}
 }
 
 // handleEventSubRevocation handles subscription revocation notifications
 func (s *server) handleEventSubRevocation(w http.ResponseWriter, headers EventSubHeaders, body []byte) {
-	fmt.Printf("INFO: Handling subscription revocation\n")
-
 	var notification EventSubNotification
 	if err := json.Unmarshal(body, &notification); err != nil {
-		fmt.Printf("ERROR: Failed to parse revocation payload: %v\n", err)
 		s.logger.Error("twitch-eventsub", "Failed to parse revocation payload", err, nil)
 		http.Error(w, "invalid payload", http.StatusBadRequest)
 		return
 	}
 
-	fmt.Printf("INFO: Subscription %s has been revoked\n", notification.Subscription.ID)
-	fmt.Printf("INFO: Revocation reason: %s\n", notification.Subscription.Status)
+	broadcasterID := notification.Subscription.Condition["broadcaster_user_id"]
 
 	s.logger.Warn("twitch-eventsub", "Subscription revoked", map[string]any{
 		"subscriptionId": notification.Subscription.ID,
 		"reason":         notification.Subscription.Status,
 		"type":           notification.Subscription.Type,
+		"broadcasterID":  broadcasterID,
 	})
 
 	// Update the streamer's EventSub status if we can identify them
-	broadcasterID := notification.Subscription.Condition["broadcaster_user_id"]
 	if broadcasterID != "" {
 		stores := s.getAllStreamerStores()
 		for siteKey, store := range stores {
@@ -369,7 +337,11 @@ func (s *server) handleEventSubRevocation(w http.ResponseWriter, headers EventSu
 					platform.EventSubSubscribed = false
 				}
 				store.UpdateTwitchPlatform(record.Streamer.ID, platform)
-				fmt.Printf("INFO: Updated Twitch platform for streamer in site '%s'\n", siteKey)
+				s.logger.Info("twitch-eventsub", "Cleared EventSub subscription for streamer", map[string]any{
+					"broadcasterID":    broadcasterID,
+					"subscriptionType": notification.Subscription.Type,
+					"site":             siteKey,
+				})
 				break
 			}
 		}

@@ -41,7 +41,7 @@ type liveSearcher interface {
 	LiveNow(ctx context.Context, channelID string) (youtubeapi.SearchLiveResult, error)
 }
 
-const defaultStatusCheckTimeout = 8 * time.Second
+const defaultStatusCheckTimeout = 15 * time.Second
 
 // CheckAll refreshes live status for every stored channel (YouTube only).
 func (c StatusChecker) CheckAll(ctx context.Context) (StatusCheckResult, error) {

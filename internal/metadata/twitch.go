@@ -14,8 +14,10 @@ import (
 
 // TwitchMetadata collects metadata from Twitch via the Helix API.
 type TwitchMetadata struct {
-	client *http.Client
-	logger *logging.Logger
+	client       *http.Client
+	logger       *logging.Logger
+	clientID     string
+	clientSecret string
 }
 
 // Matches returns true if the URL is a Twitch URL.
@@ -31,7 +33,7 @@ func (s *TwitchMetadata) Collect(ctx context.Context, url string) (*Metadata, er
 	defer cancel()
 
 	httpClient := s.client
-	auth := twitch.NewAuthenticator(httpClient, "", "")
+	auth := twitch.NewAuthenticator(httpClient, s.clientID, s.clientSecret)
 
 	users, err := twitch.GetUsers(ctx, httpClient, auth, nil, []string{twitchLogin})
 	if err != nil {

@@ -49,8 +49,8 @@ func TestLoadHonoursOverrides(t *testing.T) {
 	if cfg.Server.Addr != "0.0.0.0" || cfg.Server.Port != ":9999" {
 		t.Fatalf("server overrides not applied: %+v", cfg.Server)
 	}
-	if cfg.Platforms.YouTube.HubURL != "https://hub" || cfg.Platforms.YouTube.LeaseSeconds != 123 {
-		t.Fatalf("youtube overrides not applied: %+v", cfg.Platforms.YouTube)
+	if cfg.YouTube.HubURL != "https://hub" || cfg.YouTube.LeaseSeconds != 123 {
+		t.Fatalf("youtube overrides not applied: %+v", cfg.YouTube)
 	}
 	if cfg.Admin.Email != "admin@example.com" || cfg.Admin.TokenTTLSeconds != 10 {
 		t.Fatalf("admin overrides not applied: %+v", cfg.Admin)
@@ -76,8 +76,8 @@ func TestLoadPrefersConfigAPIKey(t *testing.T) {
 	if err != nil {
 		t.Fatalf("load: %v", err)
 	}
-	if cfg.Platforms.YouTube.APIKey != "from-config" {
-		t.Fatalf("expected config api key, got %q", cfg.Platforms.YouTube.APIKey)
+	if cfg.YouTube.APIKey != "from-config" {
+		t.Fatalf("expected config api key, got %q", cfg.YouTube.APIKey)
 	}
 }
 
@@ -100,8 +100,8 @@ func TestLoadFallsBackToEnvAPIKey(t *testing.T) {
 	if err != nil {
 		t.Fatalf("load: %v", err)
 	}
-	if cfg.Platforms.YouTube.APIKey != "from-env" {
-		t.Fatalf("expected env api key as fallback, got %q", cfg.Platforms.YouTube.APIKey)
+	if cfg.YouTube.APIKey != "from-env" {
+		t.Fatalf("expected env api key as fallback, got %q", cfg.YouTube.APIKey)
 	}
 }
 

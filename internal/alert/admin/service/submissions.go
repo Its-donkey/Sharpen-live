@@ -9,6 +9,7 @@ import (
 	"strings"
 	"time"
 
+	twitch "github.com/Its-donkey/Sharpen-live/internal/alert/platforms/twitch/api"
 	"github.com/Its-donkey/Sharpen-live/internal/alert/platforms/youtube/api"
 	"github.com/Its-donkey/Sharpen-live/internal/alert/platforms/youtube/websub"
 	"github.com/Its-donkey/Sharpen-live/internal/alert/streamers"
@@ -40,20 +41,28 @@ type ActionResult struct {
 
 // SubmissionsOptions configures the SubmissionsService.
 type SubmissionsOptions struct {
-	SubmissionsStore      *submissions.Store
-	StreamersStore        *streamers.Store
-	WebSubCallbackBaseURL string
-	MetadataService       *metadata.Service
-	YouTubeAPIKey         string
+	SubmissionsStore        *submissions.Store
+	StreamersStore          *streamers.Store
+	WebSubCallbackBaseURL   string
+	MetadataService         *metadata.Service
+	YouTubeAPIKey           string
+	TwitchClientID          string
+	TwitchClientSecret      string
+	TwitchEventSubSecret    string
+	TwitchEventSubCallback  string
 }
 
 // SubmissionsService encapsulates streamer submission review logic.
 type SubmissionsService struct {
-	submissionsStore      *submissions.Store
-	streamersStore        *streamers.Store
-	websubCallbackBaseURL string
-	metadataService       *metadata.Service
-	youtubeAPIKey         string
+	submissionsStore        *submissions.Store
+	streamersStore          *streamers.Store
+	websubCallbackBaseURL   string
+	metadataService         *metadata.Service
+	youtubeAPIKey           string
+	twitchClientID          string
+	twitchClientSecret      string
+	twitchEventSubSecret    string
+	twitchEventSubCallback  string
 }
 
 // NewSubmissionsService constructs a SubmissionsService with the provided options.
@@ -67,11 +76,15 @@ func NewSubmissionsService(opts SubmissionsOptions) *SubmissionsService {
 		streamersStore = streamers.NewStore(streamers.DefaultFilePath)
 	}
 	svc := &SubmissionsService{
-		submissionsStore:      submissionsStore,
-		streamersStore:        streamersStore,
-		websubCallbackBaseURL: opts.WebSubCallbackBaseURL,
-		metadataService:       opts.MetadataService,
-		youtubeAPIKey:         opts.YouTubeAPIKey,
+		submissionsStore:       submissionsStore,
+		streamersStore:         streamersStore,
+		websubCallbackBaseURL:  opts.WebSubCallbackBaseURL,
+		metadataService:        opts.MetadataService,
+		youtubeAPIKey:          opts.YouTubeAPIKey,
+		twitchClientID:         opts.TwitchClientID,
+		twitchClientSecret:     opts.TwitchClientSecret,
+		twitchEventSubSecret:   opts.TwitchEventSubSecret,
+		twitchEventSubCallback: opts.TwitchEventSubCallback,
 	}
 	return svc
 }
@@ -256,17 +269,44 @@ func (s *SubmissionsService) approve(ctx context.Context, submission submissions
 				fmt.Printf("  Final ChannelID: %s\n", record.Platforms.YouTube.ChannelID)
 				fmt.Printf("  Final WebSubSubscribed: %v\n", record.Platforms.YouTube.WebSubSubscribed)
 
-				// case p == "twitch" || strings.Contains(p, "twitch"):
-				// 	username := inferTwitchUsername(platformInfo.URL, platformInfo.Handle, platformInfo.Label)
-				// 	if username != "" && record.Platforms.Twitch == nil {
-				// 		record.Platforms.Twitch = &streamers.TwitchPlatform{Username: username}
-				// 	}
+			case p == "twitch" || strings.Contains(p, "twitch"):
+				fmt.Printf("\n*** Twitch Platform Detected ***\n")
+				twitchURL := strings.TrimSpace(platformInfo.URL)
+				fmt.Printf("INFO: Processing Twitch platform for submission\n")
+				fmt.Printf("  URL: %s\n", twitchURL)
 
-				// case p == "facebook" || strings.Contains(p, "facebook"):
-				// 	pageID := inferFacebookPageID(platformInfo.URL, platformInfo.Handle, platformInfo.Label)
-				// 	if pageID != "" && record.Platforms.Facebook == nil {
-				// 		record.Platforms.Facebook = &streamers.FacebookPlatform{PageID: pageID}
-				// 	}
+				username := extractTwitchUsername(twitchURL)
+				fmt.Printf("  Extracted Username: %s\n", username)
+
+				if username == "" {
+					fmt.Printf("WARNING: Could not extract Twitch username from URL\n")
+					break
+				}
+
+				twitchPlatform, err := s.setupTwitchEventSub(ctx, username)
+				if err != nil {
+					fmt.Printf("ERROR: setupTwitchEventSub failed: %v\n", err)
+					fmt.Printf("WARNING: Continuing with approval but EventSub may not be active\n")
+					// Use returned platform if available (preserves broadcaster ID),
+					// otherwise create minimal platform with just username
+					if twitchPlatform == nil {
+						twitchPlatform = &streamers.TwitchPlatform{
+							Username: username,
+						}
+					}
+				}
+
+				record.Platforms.Twitch = twitchPlatform
+				fmt.Printf("\nINFO: Twitch platform configured in record\n")
+				fmt.Printf("  Final Username: %s\n", record.Platforms.Twitch.Username)
+				fmt.Printf("  Final BroadcasterID: %s\n", record.Platforms.Twitch.BroadcasterID)
+				fmt.Printf("  Final EventSubSubscribed: %v\n", record.Platforms.Twitch.EventSubSubscribed)
+
+			// case p == "facebook" || strings.Contains(p, "facebook"):
+			// 	pageID := inferFacebookPageID(platformInfo.URL, platformInfo.Handle, platformInfo.Label)
+			// 	if pageID != "" && record.Platforms.Facebook == nil {
+			// 		record.Platforms.Facebook = &streamers.FacebookPlatform{PageID: pageID}
+			// 	}
 			default:
 				fmt.Printf("INFO: Platform %s not recognized, skipping\n", p)
 			}
@@ -489,3 +529,130 @@ var (
 	// ErrMissingIdentifier signals that the submission ID was omitted.
 	ErrMissingIdentifier = errors.New("submission id is required")
 )
+
+// extractTwitchUsername extracts a Twitch username from various URL formats
+func extractTwitchUsername(rawURL string) string {
+	rawURL = strings.TrimSpace(rawURL)
+	if rawURL == "" {
+		return ""
+	}
+
+	// If it doesn't look like a URL, assume it's a username
+	if !strings.Contains(rawURL, "/") && !strings.Contains(rawURL, ".") {
+		return strings.ToLower(rawURL)
+	}
+
+	parsed, err := url.Parse(rawURL)
+	if err != nil {
+		return ""
+	}
+
+	// Ensure it's a Twitch URL
+	host := strings.ToLower(parsed.Host)
+	if !strings.Contains(host, "twitch.tv") {
+		return ""
+	}
+
+	// Extract from path - format: twitch.tv/username
+	path := strings.Trim(parsed.Path, "/")
+	segments := strings.Split(path, "/")
+
+	if len(segments) >= 1 && segments[0] != "" {
+		// Ignore common non-username paths
+		firstSegment := strings.ToLower(segments[0])
+		if firstSegment == "directory" || firstSegment == "videos" || firstSegment == "clips" {
+			return ""
+		}
+		return firstSegment
+	}
+
+	return ""
+}
+
+// setupTwitchEventSub sets up EventSub subscriptions for a Twitch user
+func (s *SubmissionsService) setupTwitchEventSub(ctx context.Context, username string) (*streamers.TwitchPlatform, error) {
+	fmt.Printf("=== setupTwitchEventSub START ===\n")
+	fmt.Printf("  Username: %s\n", username)
+	fmt.Printf("  EventSub callback URL: %s\n", s.twitchEventSubCallback)
+
+	// Check if Twitch credentials are configured
+	if s.twitchClientID == "" || s.twitchClientSecret == "" {
+		fmt.Printf("WARNING: Twitch credentials not configured, skipping EventSub for user %s\n", username)
+		return &streamers.TwitchPlatform{
+			Username: username,
+		}, nil
+	}
+
+	if s.twitchEventSubCallback == "" {
+		fmt.Printf("WARNING: EventSub callback URL not configured, skipping EventSub for user %s\n", username)
+		return &streamers.TwitchPlatform{
+			Username: username,
+		}, nil
+	}
+
+	if s.twitchEventSubSecret == "" {
+		fmt.Printf("WARNING: EventSub secret not configured, skipping EventSub for user %s\n", username)
+		return &streamers.TwitchPlatform{
+			Username: username,
+		}, nil
+	}
+
+	// Create Twitch authenticator and API client
+	httpClient := &http.Client{Timeout: 30 * time.Second}
+	auth := twitch.NewAuthenticator(httpClient, s.twitchClientID, s.twitchClientSecret)
+
+	// Look up the broadcaster ID from the username
+	fmt.Printf("INFO: Looking up broadcaster ID for username %s\n", username)
+	users, err := twitch.GetUsers(ctx, httpClient, auth, nil, []string{username})
+	if err != nil {
+		return nil, fmt.Errorf("lookup twitch user: %w", err)
+	}
+	if len(users) == 0 {
+		return nil, fmt.Errorf("twitch user not found: %s", username)
+	}
+
+	broadcasterID := users[0].ID
+	fmt.Printf("SUCCESS: Found broadcaster ID: %s\n", broadcasterID)
+
+	// Create EventSub subscriptions
+	fmt.Printf("INFO: Creating EventSub subscriptions for broadcaster %s\n", broadcasterID)
+	eventsubClient := &twitch.EventSubClient{
+		HTTPClient: httpClient,
+		Auth:       auth,
+	}
+
+	result, err := eventsubClient.Subscribe(ctx, broadcasterID, s.twitchEventSubCallback, s.twitchEventSubSecret)
+	if err != nil {
+		fmt.Printf("ERROR: Failed to create EventSub subscriptions: %v\n", err)
+		// Return platform with broadcaster ID but without EventSub
+		return &streamers.TwitchPlatform{
+			Username:      username,
+			BroadcasterID: broadcasterID,
+		}, fmt.Errorf("create eventsub subscriptions: %w", err)
+	}
+
+	platform := &streamers.TwitchPlatform{
+		Username:            username,
+		BroadcasterID:       broadcasterID,
+		EventSubCallbackURL: s.twitchEventSubCallback,
+		EventSubSubscribed:  true,
+	}
+
+	if result.OnlineSubscription != nil {
+		platform.EventSubOnlineID = result.OnlineSubscription.ID
+		fmt.Printf("SUCCESS: stream.online subscription ID: %s\n", result.OnlineSubscription.ID)
+	}
+	if result.OfflineSubscription != nil {
+		platform.EventSubOfflineID = result.OfflineSubscription.ID
+		fmt.Printf("SUCCESS: stream.offline subscription ID: %s\n", result.OfflineSubscription.ID)
+	}
+
+	if len(result.Errors) > 0 {
+		fmt.Printf("WARNING: Some subscriptions failed: %v\n", result.Errors)
+		// Still mark as subscribed if at least one succeeded
+		platform.EventSubSubscribed = platform.EventSubOnlineID != "" || platform.EventSubOfflineID != ""
+	}
+
+	fmt.Printf("=== setupTwitchEventSub END (success) ===\n")
+	return platform, nil
+}

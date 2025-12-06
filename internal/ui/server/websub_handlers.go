@@ -13,6 +13,7 @@ import (
 	"sync"
 	"time"
 
+	twitch "github.com/Its-donkey/Sharpen-live/internal/alert/platforms/twitch/api"
 	"github.com/Its-donkey/Sharpen-live/internal/alert/platforms/youtube/api"
 	"github.com/Its-donkey/Sharpen-live/internal/alert/platforms/youtube/websub"
 	"github.com/Its-donkey/Sharpen-live/internal/alert/streamers"
@@ -635,6 +636,130 @@ func (s *server) checkAllStreamersLiveStatus(ctx context.Context) {
 	s.logger.Info("startup", "Initial live status check complete", map[string]any{
 		"checked": checkedCount,
 		"live":    liveCount,
+		"errors":  errorCount,
+	})
+}
+
+// checkAllTwitchStreamersLiveStatus checks the live status of all streamers with Twitch accounts
+func (s *server) checkAllTwitchStreamersLiveStatus(ctx context.Context) {
+	// Check if Twitch credentials are configured
+	if s.twitchConfig.ClientID == "" || s.twitchConfig.ClientSecret == "" {
+		s.logger.Info("twitch-startup", "Twitch credentials not configured, skipping initial status check", map[string]any{
+			"site": s.siteKey,
+		})
+		return
+	}
+
+	if s.streamersStore == nil {
+		s.logger.Warn("twitch-startup", "Streamers store is nil, skipping initial status check", map[string]any{
+			"site": s.siteKey,
+		})
+		return
+	}
+
+	// Get concrete store for status update methods
+	store, ok := s.streamersStore.(*streamers.Store)
+	if !ok {
+		s.logger.Warn("twitch-startup", "Streamers store type mismatch, skipping initial status check", map[string]any{
+			"site": s.siteKey,
+		})
+		return
+	}
+
+	records, err := s.streamersStore.List()
+	if err != nil {
+		s.logger.Error("twitch-startup", "Failed to list streamers for initial status check", err, map[string]any{
+			"site": s.siteKey,
+		})
+		return
+	}
+
+	// Collect all broadcaster IDs for batch checking
+	var broadcasterIDs []string
+	broadcasterToRecord := make(map[string]streamers.Record)
+	for _, record := range records {
+		if record.Platforms.Twitch != nil && record.Platforms.Twitch.BroadcasterID != "" {
+			broadcasterIDs = append(broadcasterIDs, record.Platforms.Twitch.BroadcasterID)
+			broadcasterToRecord[record.Platforms.Twitch.BroadcasterID] = record
+		}
+	}
+
+	if len(broadcasterIDs) == 0 {
+		s.logger.Info("twitch-startup", "No streamers with Twitch broadcaster IDs found", map[string]any{
+			"site": s.siteKey,
+		})
+		return
+	}
+
+	s.logger.Info("twitch-startup", "Starting initial Twitch status check", map[string]any{
+		"site":  s.siteKey,
+		"count": len(broadcasterIDs),
+	})
+
+	// Create Twitch API client
+	httpClient := &http.Client{Timeout: 30 * time.Second}
+	auth := twitch.NewAuthenticator(httpClient, s.twitchConfig.ClientID, s.twitchConfig.ClientSecret)
+
+	// Batch check all streamers (Twitch API supports up to 100 at once)
+	callCtx, cancel := context.WithTimeout(ctx, 35*time.Second)
+	defer cancel()
+
+	results, err := twitch.GetStreams(callCtx, httpClient, auth, broadcasterIDs)
+	if err != nil {
+		s.logger.Error("twitch-startup", "Failed to check Twitch streams", err, map[string]any{
+			"site": s.siteKey,
+		})
+		return
+	}
+
+	var liveCount, offlineCount, errorCount int
+
+	for broadcasterID, record := range broadcasterToRecord {
+		if streamResult, isLive := results[broadcasterID]; isLive && streamResult.IsLive {
+			// Streamer is live
+			s.logger.Info("twitch-startup", "Streamer is LIVE on Twitch", map[string]any{
+				"alias":         record.Streamer.Alias,
+				"broadcasterID": broadcasterID,
+				"streamID":      streamResult.StreamID,
+				"title":         streamResult.Title,
+				"startedAt":     streamResult.StartedAt,
+				"site":          s.siteKey,
+			})
+
+			_, err := store.SetTwitchLive(broadcasterID, streamResult.StreamID, streamResult.StartedAt)
+			if err != nil {
+				s.logger.Error("twitch-startup", "Failed to set Twitch live status", err, map[string]any{
+					"streamerId":    record.Streamer.ID,
+					"alias":         record.Streamer.Alias,
+					"broadcasterId": broadcasterID,
+					"site":          s.siteKey,
+				})
+				errorCount++
+			} else {
+				liveCount++
+			}
+		} else {
+			// Streamer is offline - only log at debug level to avoid noise
+			_, err := store.ClearTwitchLive(broadcasterID)
+			if err != nil {
+				s.logger.Error("twitch-startup", "Failed to clear Twitch live status", err, map[string]any{
+					"streamerId":    record.Streamer.ID,
+					"alias":         record.Streamer.Alias,
+					"broadcasterId": broadcasterID,
+					"site":          s.siteKey,
+				})
+				errorCount++
+			} else {
+				offlineCount++
+			}
+		}
+	}
+
+	s.logger.Info("twitch-startup", "Initial Twitch status check complete", map[string]any{
+		"site":    s.siteKey,
+		"checked": len(broadcasterIDs),
+		"live":    liveCount,
+		"offline": offlineCount,
 		"errors":  errorCount,
 	})
 }

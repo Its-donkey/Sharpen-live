@@ -10,6 +10,7 @@ import (
 	"sync"
 	"time"
 
+	twitchapi "github.com/Its-donkey/Sharpen-live/internal/alert/platforms/twitch/api"
 	youtubeapi "github.com/Its-donkey/Sharpen-live/internal/alert/platforms/youtube/api"
 	"github.com/Its-donkey/Sharpen-live/internal/alert/streamers"
 )
@@ -33,8 +34,10 @@ type StreamerCheckFailure struct {
 
 // StatusChecker inspects the stored roster and refreshes live status for each channel.
 type StatusChecker struct {
-	Streamers *streamers.Store
-	Search    liveSearcher
+	Streamers          *streamers.Store
+	Search             liveSearcher
+	TwitchClientID     string
+	TwitchClientSecret string
 }
 
 type liveSearcher interface {
@@ -43,7 +46,7 @@ type liveSearcher interface {
 
 const defaultStatusCheckTimeout = 15 * time.Second
 
-// CheckAll refreshes live status for every stored channel (YouTube only).
+// CheckAll refreshes live status for every stored channel (YouTube and Twitch).
 func (c StatusChecker) CheckAll(ctx context.Context) (StatusCheckResult, error) {
 	var result StatusCheckResult
 	if c.Streamers == nil {
@@ -69,7 +72,7 @@ func (c StatusChecker) CheckAll(ctx context.Context) (StatusCheckResult, error) 
 		res  StatusCheckResult
 	)
 
-	// Check each streamer concurrently
+	// Check YouTube streamers concurrently
 	for _, record := range records {
 		yt := record.Platforms.YouTube
 		if yt == nil {
@@ -134,9 +137,120 @@ func (c StatusChecker) CheckAll(ctx context.Context) (StatusCheckResult, error) 
 		}(record, *yt)
 	}
 
-	// Wait for all checks to complete
+	// Check Twitch streamers (batch API call is more efficient)
+	if c.TwitchClientID != "" && c.TwitchClientSecret != "" {
+		twitchResults, twitchErr := c.checkAllTwitch(ctx, records)
+		if twitchErr != nil {
+			fmt.Printf("ERROR: Twitch batch status check failed: %v\n", twitchErr)
+		} else {
+			mu.Lock()
+			res.Checked += twitchResults.Checked
+			res.Online += twitchResults.Online
+			res.Offline += twitchResults.Offline
+			res.Updated += twitchResults.Updated
+			res.Failed += twitchResults.Failed
+			res.FailureList = append(res.FailureList, twitchResults.FailureList...)
+			mu.Unlock()
+		}
+	}
+
+	// Wait for all YouTube checks to complete
 	wg.Wait()
 	result = res
+
+	return result, nil
+}
+
+// checkAllTwitch checks live status for all Twitch streamers in a single batch API call.
+func (c StatusChecker) checkAllTwitch(ctx context.Context, records []streamers.Record) (StatusCheckResult, error) {
+	var result StatusCheckResult
+
+	// Collect all broadcaster IDs
+	var broadcasterIDs []string
+	broadcasterToRecord := make(map[string]streamers.Record)
+	for _, record := range records {
+		if record.Platforms.Twitch != nil && record.Platforms.Twitch.BroadcasterID != "" {
+			broadcasterIDs = append(broadcasterIDs, record.Platforms.Twitch.BroadcasterID)
+			broadcasterToRecord[record.Platforms.Twitch.BroadcasterID] = record
+		}
+	}
+
+	if len(broadcasterIDs) == 0 {
+		return result, nil
+	}
+
+	result.Checked = len(broadcasterIDs)
+
+	// Create Twitch API client
+	httpClient := &http.Client{Timeout: 30 * time.Second}
+	auth := twitchapi.NewAuthenticator(httpClient, c.TwitchClientID, c.TwitchClientSecret)
+
+	// Batch check all streamers
+	statusCtx, cancel := withTimeout(ctx, 35*time.Second)
+	defer cancel()
+
+	streams, err := twitchapi.GetStreams(statusCtx, httpClient, auth, broadcasterIDs)
+	if err != nil {
+		return result, fmt.Errorf("twitch streams API: %w", err)
+	}
+
+	// Update status for each streamer
+	for broadcasterID, record := range broadcasterToRecord {
+		streamerName := record.Streamer.Alias
+		if streamerName == "" {
+			streamerName = record.Streamer.ID
+		}
+
+		currentLive := record.Status != nil && record.Status.Twitch != nil && record.Status.Twitch.Live
+		currentStreamID := ""
+		if record.Status != nil && record.Status.Twitch != nil {
+			currentStreamID = record.Status.Twitch.StreamID
+		}
+
+		if streamResult, isLive := streams[broadcasterID]; isLive && streamResult.IsLive {
+			// Streamer is live
+			if currentLive && currentStreamID == streamResult.StreamID {
+				// No change
+				result.Online++
+				continue
+			}
+
+			_, err := c.Streamers.SetTwitchLive(broadcasterID, streamResult.StreamID, streamResult.StartedAt)
+			if err != nil {
+				result.Failed++
+				result.FailureList = append(result.FailureList, StreamerCheckFailure{
+					StreamerID:   record.Streamer.ID,
+					StreamerName: streamerName,
+					ChannelID:    broadcasterID,
+					Error:        fmt.Sprintf("twitch set live: %v", err),
+				})
+				continue
+			}
+			result.Online++
+			result.Updated++
+		} else {
+			// Streamer is offline
+			if !currentLive {
+				// No change
+				result.Offline++
+				continue
+			}
+
+			_, err := c.Streamers.ClearTwitchLive(broadcasterID)
+			if err != nil {
+				result.Failed++
+				result.FailureList = append(result.FailureList, StreamerCheckFailure{
+					StreamerID:   record.Streamer.ID,
+					StreamerName: streamerName,
+					ChannelID:    broadcasterID,
+					Error:        fmt.Sprintf("twitch clear live: %v", err),
+				})
+				continue
+			}
+			result.Offline++
+			result.Updated++
+		}
+	}
 
 	return result, nil
 }

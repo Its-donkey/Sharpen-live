@@ -16,7 +16,6 @@ import (
 	adminauth "github.com/Its-donkey/Sharpen-live/internal/alert/admin/auth"
 	adminservice "github.com/Its-donkey/Sharpen-live/internal/alert/admin/service"
 	"github.com/Its-donkey/Sharpen-live/internal/alert/config"
-	twitchhandlers "github.com/Its-donkey/Sharpen-live/internal/alert/platforms/twitch/handlers"
 	youtubeapi "github.com/Its-donkey/Sharpen-live/internal/alert/platforms/youtube/api"
 	youtubeservice "github.com/Its-donkey/Sharpen-live/internal/alert/platforms/youtube/service"
 	"github.com/Its-donkey/Sharpen-live/internal/alert/platforms/youtube/subscriptions"
@@ -271,8 +270,8 @@ func Run(ctx context.Context, opts Options) error {
 		streamerSvc = streamersvc.New(streamersvc.Options{
 			Streamers:          baseStore,
 			Submissions:        submissionsStore,
-			YouTubeHubURL:      siteConfig.YouTube.HubURL,
-			YouTubeCallbackURL: siteConfig.YouTube.CallbackURL,
+			YouTubeHubURL:      appConfig.YouTube.HubURL,
+			YouTubeCallbackURL: appConfig.YouTube.CallbackURL,
 		})
 	}
 	metadataSvc := opts.MetadataFetcher
@@ -298,12 +297,16 @@ func Run(ctx context.Context, opts Options) error {
 	})
 
 	// Initialize metadata service
-	metadataService := metadata.NewService(&http.Client{
-		Timeout: 10 * time.Second,
-	}, logger, siteConfig.YouTube.APIKey)
+	metadataService := metadata.NewServiceWithOptions(metadata.ServiceOptions{
+		HTTPClient:         &http.Client{Timeout: 10 * time.Second},
+		Logger:             logger,
+		YouTubeAPIKey:      appConfig.YouTube.APIKey,
+		TwitchClientID:     appConfig.Twitch.ClientID,
+		TwitchClientSecret: appConfig.Twitch.ClientSecret,
+	})
 
 	// Resolve WebSub callback URL and path - prioritize config.json over env var
-	websubCallbackURL := strings.TrimSpace(siteConfig.YouTube.CallbackURL)
+	websubCallbackURL := strings.TrimSpace(appConfig.YouTube.CallbackURL)
 	websubCallbackSource := ""
 	if websubCallbackURL != "" {
 		websubCallbackSource = "config.json (youtube.callback_url)"
@@ -327,8 +330,14 @@ func Run(ctx context.Context, opts Options) error {
 			"note":             "Handler registered at local path; reverse proxy handles URL rewriting",
 		})
 	} else {
-		logger.Warn("websub", "YouTube WebSub not configured - set config.json youtube.callback_url or WEBSUB_CALLBACK_BASE_URL env var", nil)
+		logger.Warn("websub", "YouTube WebSub not configured for site", map[string]any{
+			"site": siteConfig.Key,
+			"hint": "set config.json youtube.callback_url or WEBSUB_CALLBACK_BASE_URL env var",
+		})
 	}
+
+	// Resolve Twitch EventSub callback URL from site config
+	twitchEventSubCallback := siteConfig.TwitchCallback
 
 	adminSubSvc := opts.AdminSubmissions
 	if adminSubSvc == nil {
@@ -337,11 +346,15 @@ func Run(ctx context.Context, opts Options) error {
 			return fmt.Errorf("admin submissions requires *streamers.Store when not injected")
 		}
 		adminSubSvc = adminservice.NewSubmissionsService(adminservice.SubmissionsOptions{
-			SubmissionsStore:      submissionsStore,
-			StreamersStore:        baseStore,
-			WebSubCallbackBaseURL: websubCallbackURL,
-			MetadataService:       metadataService,
-			YouTubeAPIKey:         siteConfig.YouTube.APIKey,
+			SubmissionsStore:       submissionsStore,
+			StreamersStore:         baseStore,
+			WebSubCallbackBaseURL:  websubCallbackURL,
+			MetadataService:        metadataService,
+			YouTubeAPIKey:          appConfig.YouTube.APIKey,
+			TwitchClientID:         appConfig.Twitch.ClientID,
+			TwitchClientSecret:     appConfig.Twitch.ClientSecret,
+			TwitchEventSubSecret:   appConfig.Twitch.EventSubSecret,
+			TwitchEventSubCallback: twitchEventSubCallback,
 		})
 	}
 	adminMgr := opts.AdminManager
@@ -362,9 +375,11 @@ func Run(ctx context.Context, opts Options) error {
 		statusChecker = adminservice.StatusChecker{
 			Streamers: baseStore,
 			Search: youtubeapi.SearchClient{
-				APIKey:     strings.TrimSpace(siteConfig.YouTube.APIKey),
+				APIKey:     strings.TrimSpace(appConfig.YouTube.APIKey),
 				HTTPClient: &http.Client{Timeout: 5 * time.Second},
 			},
+			TwitchClientID:     appConfig.Twitch.ClientID,
+			TwitchClientSecret: appConfig.Twitch.ClientSecret,
 		}
 	}
 
@@ -398,8 +413,8 @@ func Run(ctx context.Context, opts Options) error {
 		siteKey:          siteConfig.Key,
 		siteDescription:  siteDescription,
 		primaryHost:      primaryHost,
-		youtubeConfig:    siteConfig.YouTube,
-		twitchConfig:     siteConfig.Twitch,
+		youtubeConfig:    appConfig.YouTube,
+		twitchConfig:     appConfig.Twitch,
 		configPath:       opts.ConfigPath,
 		fallbackErrors:   opts.FallbackErrors,
 		logger:           logger,
@@ -415,6 +430,7 @@ func Run(ctx context.Context, opts Options) error {
 		checkCtx, cancel := context.WithTimeout(context.Background(), 5*time.Minute)
 		defer cancel()
 		srv.checkAllStreamersLiveStatus(checkCtx)
+		srv.checkAllTwitchStreamersLiveStatus(checkCtx)
 	}()
 
 	monitorFactory := opts.NewLeaseMonitor
@@ -428,11 +444,11 @@ func Run(ctx context.Context, opts Options) error {
 			Interval:      time.Minute,
 			Options: subscriptions.Options{
 				Client:       &http.Client{Timeout: 10 * time.Second},
-				HubURL:       siteConfig.YouTube.HubURL,
+				HubURL:       appConfig.YouTube.HubURL,
 				Mode:         "subscribe",
-				Verify:       siteConfig.YouTube.Verify,
-				CallbackURL:  siteConfig.YouTube.CallbackURL,
-				LeaseSeconds: siteConfig.YouTube.LeaseSeconds,
+				Verify:       appConfig.YouTube.Verify,
+				CallbackURL:  appConfig.YouTube.CallbackURL,
+				LeaseSeconds: appConfig.YouTube.LeaseSeconds,
 			},
 			OnError: func(err error) {
 
@@ -441,7 +457,7 @@ func Run(ctx context.Context, opts Options) error {
 		defer monitor.Stop()
 	}
 
-	alertPaths := youtubeui.CallbackPaths(siteConfig.YouTube.CallbackURL)
+	alertPaths := youtubeui.CallbackPaths(appConfig.YouTube.CallbackURL)
 
 	mux := http.NewServeMux()
 	mux.HandleFunc("/", srv.handleHome)
@@ -462,7 +478,6 @@ func Run(ctx context.Context, opts Options) error {
 	mux.HandleFunc("/admin/status-check", srv.handleAdminStatusCheck)
 	mux.HandleFunc("/admin/youtube/settings", srv.handleAdminYouTubeSettings)
 	mux.HandleFunc("/admin/config", srv.handleAdminConfig)
-	mux.HandleFunc("/admin/platform/settings", srv.handleAdminPlatformSettings)
 	streamersWatch := streamersWatchHandler(streamersWatchOptions{
 		FilePath: srv.streamersStore.Path(),
 	})
@@ -487,24 +502,23 @@ func Run(ctx context.Context, opts Options) error {
 		}
 	}
 	mux.HandleFunc("/streamers.json", srv.serveStreamersJSON)
-
-	// Twitch EventSub webhook handler
-	if baseStore, ok := streamersStore.(*streamers.Store); ok {
-		twitchEventSubHandler := &twitchhandlers.EventSubHandler{
-			Secret:         siteConfig.Twitch.EventSubSecret,
-			StreamersStore: baseStore,
-			Logger:         logger,
-			GetAllStores:   srv.getAllStreamerStores,
-		}
-		mux.Handle("/twitch/eventsub", twitchEventSubHandler)
-	}
-
 	mux.HandleFunc("/favicon.ico", func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusNoContent)
 	})
 	mux.HandleFunc("/login", func(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 	})
+
+	// Register Twitch EventSub webhook handler
+	if twitchEventSubCallback != "" {
+		// Register at /twitch/eventsub path (after reverse proxy strips prefix)
+		twitchEventSubPath := "/twitch/eventsub"
+		mux.HandleFunc(twitchEventSubPath, srv.handleTwitchEventSub)
+		logger.Info("twitch-eventsub", "Twitch EventSub webhook registered", map[string]any{
+			"callbackUrl":      twitchEventSubCallback,
+			"localHandlerPath": twitchEventSubPath,
+		})
+	}
 
 	mux.HandleFunc("/logs", srv.handleLogs)
 	mux.HandleFunc("/logs/stream", srv.handleLogsStream)

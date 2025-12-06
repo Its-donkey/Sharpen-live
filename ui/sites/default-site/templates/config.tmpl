@@ -21,10 +21,10 @@
           YouTube: {{if .YouTubeConfig.Enabled}}Enabled{{else}}Disabled{{ end }}
         </span>
         <span
-          class="pill {{if .TwitchConfig.Enabled}}tone-accent{{else}}tone-ghost{{
+          class="pill {{if .TwitchConfig.Enabled}}tone-accent{{else}}tone-warn{{
             end
           }}"
-          >Twitch: {{if .TwitchConfig.Enabled}}Active{{else}}Inactive{{
+          >Twitch: {{if .TwitchConfig.Enabled}}Enabled{{else}}Disabled{{
             end
           }}</span
         >
@@ -91,27 +91,13 @@
         <div class="config-row">
           <span class="config-label">Status</span>
           <span class="config-value">
-            <form
-              method="post"
-              action="/admin/youtube/settings"
-              style="display: inline"
+            <span
+              class="pill {{if .YouTubeConfig.Enabled}}tone-accent{{else}}tone-warn{{
+                end
+              }}"
             >
-              <input type="hidden" name="global" value="true" />
-              <input
-                type="hidden"
-                name="youtube_enabled"
-                value="{{if .YouTubeConfig.Enabled}}false{{else}}true{{ end }}"
-              />
-              <button
-                type="submit"
-                class="pill {{if .YouTubeConfig.Enabled}}tone-accent{{else}}tone-warn{{
-                  end
-                }}"
-                style="cursor: pointer; font: inherit"
-              >
-                {{if .YouTubeConfig.Enabled}}Enabled{{else}}Disabled{{ end }}
-              </button>
-            </form>
+              {{if .YouTubeConfig.Enabled}}Enabled{{else}}Disabled{{ end }}
+            </span>
           </span>
         </div>
         <div class="config-row">
@@ -204,8 +190,10 @@
     <div class="surface admin-card">
       <div class="admin-card-header">
         <p class="eyebrow">Twitch Integration</p>
-        <h3>Twitch Configuration</h3>
-        <p class="admin-help">Twitch platform integration settings.</p>
+        <h3>Twitch EventSub Configuration</h3>
+        <p class="admin-help">
+          Twitch platform integration settings for EventSub notifications.
+        </p>
       </div>
       <div class="config-details">
         <div class="config-row">
@@ -220,16 +208,25 @@
             </span>
           </span>
         </div>
-        {{if .TwitchConfig.Enabled}}
         <div class="config-row">
-          <span class="config-label">Hub URL</span>
-          <span class="config-value">{{.TwitchConfig.HubURL}}</span>
+          <span class="config-label">Callback URL</span>
+          <span class="config-value"
+            >{{if .TwitchConfig.CallbackURL}}{{.TwitchConfig.CallbackURL}}{{else}}Not
+            set{{ end }}</span
+          >
         </div>
-        {{else}}
-        <p class="admin-help subtle">
-          Twitch integration is not currently configured.
-        </p>
-        {{ end }}
+        <div class="config-row">
+          <span class="config-label">Client ID</span>
+          <span class="config-value">{{.TwitchConfig.ClientID}}</span>
+        </div>
+        <div class="config-row">
+          <span class="config-label">Client Secret</span>
+          <span class="config-value">{{.TwitchConfig.ClientSecret}}</span>
+        </div>
+        <div class="config-row">
+          <span class="config-label">EventSub Secret</span>
+          <span class="config-value">{{.TwitchConfig.EventSubSecret}}</span>
+        </div>
       </div>
     </div>
 

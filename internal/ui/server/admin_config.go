@@ -11,21 +11,37 @@ type configPageData struct {
 	LoggedIn       bool
 	Flash          string
 	Error          string
-	YouTubeConfig  PlatformConfigDisplay
-	TwitchConfig   PlatformConfigDisplay
+	YouTubeConfig  YouTubeConfigDisplay
+	TwitchConfig   TwitchConfigDisplay
 	FacebookConfig PlatformConfigDisplay
 	YouTubeSites   []YouTubeSiteConfig
 }
 
+// YouTubeConfigDisplay holds YouTube configuration for admin display.
+type YouTubeConfigDisplay struct {
+	Enabled      bool
+	HubURL       string
+	CallbackURL  string
+	APIKey       string
+	LeaseSeconds int
+	Mode         string
+	Verify       string
+}
+
+// TwitchConfigDisplay holds Twitch configuration for admin display.
+type TwitchConfigDisplay struct {
+	Enabled        bool
+	CallbackURL    string
+	ClientID       string
+	ClientSecret   string
+	EventSubSecret string
+}
+
+// PlatformConfigDisplay is a generic display struct for other platforms.
 type PlatformConfigDisplay struct {
 	Enabled     bool
 	HubURL      string
 	CallbackURL string
-	APIKey      string
-	LeaseSeconds int
-	Mode        string
-	Verify      string
-	// Twitch/Facebook specific fields can be added later
 }
 
 func (s *server) handleAdminConfig(w http.ResponseWriter, r *http.Request) {
@@ -50,6 +66,52 @@ func (s *server) handleAdminConfig(w http.ResponseWriter, r *http.Request) {
 		Error:        errMsg,
 	}
 
+	// Load configuration first to populate platform status (shown even when not logged in)
+	cfg, err := config.Load(s.configPath)
+	if err != nil {
+		data.Error = "Failed to load configuration: " + err.Error()
+	} else {
+		// Get current site's configuration
+		siteConfig, siteErr := config.ResolveSite(s.siteKey, cfg)
+		if siteErr != nil {
+			data.Error = "Failed to resolve site configuration: " + siteErr.Error()
+		} else {
+			// YouTube configuration (site-specific) - defaults to enabled if not set
+			youtubeEnabled := true
+			if siteConfig.YouTube.Enabled != nil {
+				youtubeEnabled = *siteConfig.YouTube.Enabled
+			}
+			data.YouTubeConfig = YouTubeConfigDisplay{
+				Enabled:      youtubeEnabled,
+				HubURL:       siteConfig.YouTube.HubURL,
+				CallbackURL:  siteConfig.YouTube.CallbackURL,
+				APIKey:       maskAPIKey(siteConfig.YouTube.APIKey),
+				LeaseSeconds: siteConfig.YouTube.LeaseSeconds,
+				Mode:         siteConfig.YouTube.Mode,
+				Verify:       siteConfig.YouTube.Verify,
+			}
+
+			// Twitch configuration (site-specific) - defaults to enabled if not set
+			twitchEnabled := true
+			if siteConfig.Twitch.Enabled != nil {
+				twitchEnabled = *siteConfig.Twitch.Enabled
+			}
+			data.TwitchConfig = TwitchConfigDisplay{
+				Enabled:        twitchEnabled,
+				CallbackURL:    siteConfig.Twitch.CallbackURL,
+				ClientID:       maskAPIKey(siteConfig.Twitch.ClientID),
+				ClientSecret:   maskSecret(siteConfig.Twitch.ClientSecret),
+				EventSubSecret: maskSecret(siteConfig.Twitch.EventSubSecret),
+			}
+
+			// Facebook configuration (placeholder for now)
+			data.FacebookConfig = PlatformConfigDisplay{
+				Enabled: false,
+				HubURL:  "Not configured",
+			}
+		}
+	}
+
 	token := s.adminTokenFromRequest(r)
 	if token == "" {
 		s.renderConfigPage(w, data)
@@ -58,47 +120,14 @@ func (s *server) handleAdminConfig(w http.ResponseWriter, r *http.Request) {
 
 	data.LoggedIn = true
 
-	// Load configuration
-	cfg, err := config.Load(s.configPath)
+	// Load YouTube site configurations (only when logged in)
+	youtubeConfigs, err := s.getYouTubeSiteConfigs()
 	if err != nil {
-		data.Error = "Failed to load configuration: " + err.Error()
+		s.logger.Warn("admin_config", "failed to load YouTube site configs", map[string]any{
+			"error": err.Error(),
+		})
 	} else {
-		// YouTube configuration
-		globalEnabled := true
-		if cfg.YouTube.Enabled != nil {
-			globalEnabled = *cfg.YouTube.Enabled
-		}
-		data.YouTubeConfig = PlatformConfigDisplay{
-			Enabled:      globalEnabled,
-			HubURL:       cfg.YouTube.HubURL,
-			CallbackURL:  cfg.YouTube.CallbackURL,
-			APIKey:       maskAPIKey(cfg.YouTube.APIKey),
-			LeaseSeconds: cfg.YouTube.LeaseSeconds,
-			Mode:         cfg.YouTube.Mode,
-			Verify:       cfg.YouTube.Verify,
-		}
-
-		// Twitch configuration (placeholder for now)
-		data.TwitchConfig = PlatformConfigDisplay{
-			Enabled: false,
-			HubURL:  "Not configured",
-		}
-
-		// Facebook configuration (placeholder for now)
-		data.FacebookConfig = PlatformConfigDisplay{
-			Enabled: false,
-			HubURL:  "Not configured",
-		}
-
-		// Load YouTube site configurations
-		youtubeConfigs, err := s.getYouTubeSiteConfigs()
-		if err != nil {
-			s.logger.Warn("admin_config", "failed to load YouTube site configs", map[string]any{
-				"error": err.Error(),
-			})
-		} else {
-			data.YouTubeSites = youtubeConfigs
-		}
+		data.YouTubeSites = youtubeConfigs
 	}
 
 	s.renderConfigPage(w, data)
@@ -124,4 +153,12 @@ func maskAPIKey(apiKey string) string {
 		return "••••••••"
 	}
 	return apiKey[:4] + "••••••••" + apiKey[len(apiKey)-4:]
+}
+
+// maskSecret masks a secret for display, showing only that it's configured or not
+func maskSecret(secret string) string {
+	if secret == "" {
+		return "Not set"
+	}
+	return "••••••••••••"
 }

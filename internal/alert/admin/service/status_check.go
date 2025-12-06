@@ -3,14 +3,15 @@ package service
 import (
 	"context"
 	"errors"
-	youtubeapi "github.com/Its-donkey/Sharpen-live/internal/alert/platforms/youtube/api"
-	"github.com/Its-donkey/Sharpen-live/internal/alert/streamers"
+	"fmt"
 	"net/http"
 	"net/url"
 	"strings"
+	"sync"
 	"time"
-	"fmt"
-	// StatusCheckResult summarises the outcome of a status refresh across all channels.
+
+	youtubeapi "github.com/Its-donkey/Sharpen-live/internal/alert/platforms/youtube/api"
+	"github.com/Its-donkey/Sharpen-live/internal/alert/streamers"
 )
 
 type StatusCheckResult struct {
@@ -61,56 +62,81 @@ func (c StatusChecker) CheckAll(ctx context.Context) (StatusCheckResult, error) 
 
 	search := c.search()
 
+	// Use sync primitives for concurrent checking
+	var (
+		mu   sync.Mutex
+		wg   sync.WaitGroup
+		res  StatusCheckResult
+	)
+
+	// Check each streamer concurrently
 	for _, record := range records {
 		yt := record.Platforms.YouTube
 		if yt == nil {
 			continue
 		}
-		result.Checked++
 
-		// Get channel ID for error reporting
-		channelID := strings.TrimSpace(yt.ChannelID)
-		if channelID == "" {
-			channelID = extractChannelID(yt.Topic)
-		}
+		wg.Add(1)
+		go func(rec streamers.Record, ytPlatform streamers.YouTubePlatform) {
+			defer wg.Done()
 
-		outcome, err := c.checkYouTube(ctx, record, *yt, search)
-		if err != nil {
-			result.Failed++
+			mu.Lock()
+			res.Checked++
+			mu.Unlock()
 
-			// Log the failure with details
-			streamerName := record.Streamer.Alias
-			if streamerName == "" {
-				streamerName = record.Streamer.ID
+			// Get channel ID for error reporting
+			channelID := strings.TrimSpace(ytPlatform.ChannelID)
+			if channelID == "" {
+				channelID = extractChannelID(ytPlatform.Topic)
 			}
 
-			failure := StreamerCheckFailure{
-				StreamerID:   record.Streamer.ID,
-				StreamerName: streamerName,
-				ChannelID:    channelID,
-				Error:        err.Error(),
-			}
-			result.FailureList = append(result.FailureList, failure)
+			outcome, err := c.checkYouTube(ctx, rec, ytPlatform, search)
+			if err != nil {
+				mu.Lock()
+				res.Failed++
 
-			// Log to stdout for server logs
-			if strings.Contains(err.Error(), "API") || strings.Contains(err.Error(), "quota") {
-				// API errors are more important
-				fmt.Printf("ERROR: Status check failed for streamer %q (channel %s): %v\n", streamerName, channelID, err)
+				// Log the failure with details
+				streamerName := rec.Streamer.Alias
+				if streamerName == "" {
+					streamerName = rec.Streamer.ID
+				}
+
+				failure := StreamerCheckFailure{
+					StreamerID:   rec.Streamer.ID,
+					StreamerName: streamerName,
+					ChannelID:    channelID,
+					Error:        err.Error(),
+				}
+				res.FailureList = append(res.FailureList, failure)
+				mu.Unlock()
+
+				// Log to stdout for server logs
+				if strings.Contains(err.Error(), "API") || strings.Contains(err.Error(), "quota") {
+					// API errors are more important
+					fmt.Printf("ERROR: Status check failed for streamer %q (channel %s): %v\n", streamerName, channelID, err)
+				} else {
+					fmt.Printf("WARN: Status check failed for streamer %q (channel %s): %v\n", streamerName, channelID, err)
+				}
+
+				return
+			}
+
+			mu.Lock()
+			if outcome.live {
+				res.Online++
 			} else {
-				fmt.Printf("WARN: Status check failed for streamer %q (channel %s): %v\n", streamerName, channelID, err)
+				res.Offline++
 			}
-
-			continue
-		}
-		if outcome.live {
-			result.Online++
-		} else {
-			result.Offline++
-		}
-		if outcome.updated {
-			result.Updated++
-		}
+			if outcome.updated {
+				res.Updated++
+			}
+			mu.Unlock()
+		}(record, *yt)
 	}
+
+	// Wait for all checks to complete
+	wg.Wait()
+	result = res
 
 	return result, nil
 }

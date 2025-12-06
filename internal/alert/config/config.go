@@ -95,6 +95,7 @@ type fileConfig struct {
 	Sites          map[string]siteFileConfig `json:"sites"`
 	PlatformsBlock *platformsFileConfig      `json:"platforms"`
 	YouTubeBlock   *YouTubeConfig            `json:"youtube"`
+	TwitchBlock    *TwitchConfig             `json:"twitch"`
 	YouTubeConfig
 	AdminBlock *AdminConfig `json:"admin"`
 	AdminConfig
@@ -139,12 +140,17 @@ func Load(path string) (Config, error) {
 	var twitch TwitchConfig
 	if raw.PlatformsBlock != nil && raw.PlatformsBlock.Twitch != nil {
 		twitch = *raw.PlatformsBlock.Twitch
+	} else if raw.TwitchBlock != nil {
+		twitch = *raw.TwitchBlock
 	}
 	if twitch.ClientID == "" {
 		twitch.ClientID = twitchClientIDFromEnv()
 	}
 	if twitch.ClientSecret == "" {
 		twitch.ClientSecret = twitchClientSecretFromEnv()
+	}
+	if twitch.EventSubSecret == "" {
+		twitch.EventSubSecret = twitchEventSubSecretFromEnv()
 	}
 
 	server := ServerConfig{
@@ -318,6 +324,8 @@ func ResolveSite(key string, cfg Config) (SiteConfig, error) {
 			Name:           cfg.App.Name,
 			Description:    "",
 			YouTubeEnabled: nil, // Use global default
+			TwitchEnabled:  cfg.Twitch.Enabled,
+			TwitchCallback: cfg.Twitch.CallbackURL,
 			Server:         cfg.Server,
 			App:            cfg.App,
 		}, nil
@@ -338,6 +346,8 @@ func AllSites(cfg Config) []SiteConfig {
 		Name:           cfg.App.Name,
 		Description:    "",
 		YouTubeEnabled: nil,
+		TwitchEnabled:  cfg.Twitch.Enabled,
+		TwitchCallback: cfg.Twitch.CallbackURL,
 		Server:         cfg.Server,
 		App:            cfg.App,
 	}}
@@ -347,6 +357,8 @@ func AllSites(cfg Config) []SiteConfig {
 			Name:           site.Name,
 			Description:    site.Description,
 			YouTubeEnabled: site.YouTubeEnabled,
+			TwitchEnabled:  site.TwitchEnabled,
+			TwitchCallback: site.TwitchCallback,
 			Server:         site.Server,
 			App:            site.App,
 		})
@@ -431,4 +443,8 @@ func twitchClientIDFromEnv() string {
 
 func twitchClientSecretFromEnv() string {
 	return strings.TrimSpace(os.Getenv("TWITCH_CLIENT_SECRET"))
+}
+
+func twitchEventSubSecretFromEnv() string {
+	return strings.TrimSpace(os.Getenv("TWITCH_EVENTSUB_SECRET"))
 }
